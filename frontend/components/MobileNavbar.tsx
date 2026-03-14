@@ -47,7 +47,7 @@ export default function MobileNavbar() {
     { icon: ZodiacIcon, label: "Zodiac", href: "/analyze/zodiac" },
     { icon: null, label: "Zodicognac", href: "/chat", isFab: true },
     { icon: HeartIcon, label: "Compat", href: "/analyze/romantic" },
-    { icon: GridIcon, label: "More", href: null, isMore: true },
+    { icon: GridIcon, label: "More", href: "#", isMore: true },
   ];
 
   const handleMoreClick = (e: React.MouseEvent) => {
