@@ -2,13 +2,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import PersonForm from "./PersonForm";
-
-export interface PersonData {
-  name: string;
-  day: number;
-  month: number;
-  mbti: string;
-}
+import { PersonData } from "@/lib/api";
 
 interface MobileChatSheetProps {
   isOpen: boolean;
