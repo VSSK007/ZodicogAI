@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import HybridForm from "../components/HybridForm";
 import CompatibilityForm from "../components/CompatibilityForm";
@@ -31,10 +32,11 @@ function HomeContent() {
   }, [searchParams, router]);
 
   return (
-    <main className="min-h-screen px-5 md:px-8 py-10 md:py-32">
+    <main className="px-5 md:px-8 py-0 md:py-32">
 
       {/* ── Hero header ──────────────────────────────────────────────────────── */}
-      <div className="max-w-4xl mx-auto text-center mb-10 md:mb-24 relative">
+      {/* Mobile: full-screen centered hero. Desktop: normal top-padded hero. */}
+      <div className="min-h-[calc(100dvh-64px)] md:min-h-0 flex flex-col justify-center md:block max-w-4xl mx-auto text-center mb-0 md:mb-24 relative pt-8 md:pt-0">
 
         {/*
           Normal mode: blue/violet breathing glow behind the title.
@@ -183,37 +185,45 @@ function HomeContent() {
           )}
         </AnimatePresence>
 
-        {/* Mobile-only CTA buttons — visible only on mobile */}
+        {/* Mobile-only CTA — navigate to dedicated pages, not inline forms */}
         {!znMode && (
-          <div className="flex flex-col gap-3 mt-8 md:hidden">
-            <button
-              onClick={() => setMode("hybrid")}
-              className={`py-3.5 rounded-2xl text-sm font-semibold transition-all tap-highlight-none min-h-[48px] ${
-                mode === "hybrid"
-                  ? "bg-[#4285f4] text-white"
-                  : "bg-white/[0.06] text-zinc-300 border border-white/[0.09] hover:bg-white/[0.09]"
-              }`}
+          <div className="md:hidden mt-8 flex flex-col gap-3">
+            <Link
+              href="/analyze/zodiac"
+              className="py-3.5 rounded-2xl text-sm font-semibold bg-[#4285f4] text-white text-center flex items-center justify-center gap-2 min-h-[48px] tap-highlight-none"
             >
-              Self Analysis
-            </button>
-            <button
-              onClick={() => setMode("compatibility")}
-              className={`py-3.5 rounded-2xl text-sm font-semibold transition-all tap-highlight-none min-h-[48px] ${
-                mode === "compatibility"
-                  ? "bg-[#4285f4] text-white"
-                  : "bg-white/[0.06] text-zinc-300 border border-white/[0.09] hover:bg-white/[0.09]"
-              }`}
+              <span>✦</span> Self Analysis
+            </Link>
+            <Link
+              href="/analyze/romantic"
+              className="py-3.5 rounded-2xl text-sm font-semibold bg-white/[0.06] text-zinc-300 border border-white/[0.09] text-center flex items-center justify-center gap-2 min-h-[48px] tap-highlight-none"
             >
-              Compatibility Analysis
-            </button>
+              <span>♥</span> Compatibility Analysis
+            </Link>
+            <Link
+              href="/chat"
+              className="py-3.5 rounded-2xl text-sm font-semibold bg-amber-500/[0.12] text-amber-400 border border-amber-500/25 text-center flex items-center justify-center gap-2 min-h-[48px] tap-highlight-none"
+            >
+              <span>◈</span> Ask Zodicognac
+            </Link>
+
+            {/* Analysis type chips */}
+            <div className="flex flex-wrap justify-center gap-2 mt-2">
+              {["Zodiac", "MBTI", "Emotional", "Romantic", "Sextrology", "Love Style", "Love Language", "Numerology", "Aura Colors"].map((f) => (
+                <span key={f} className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/[0.07] text-zinc-600">
+                  {f}
+                </span>
+              ))}
+            </div>
           </div>
         )}
       </div>
 
-      {/* ── Navigation + Forms — dissolve on Zodicognac transition ─────────── */}
+      {/* ── Navigation + Forms — desktop only, dissolve on Zodicognac transition */}
       <AnimatePresence>
         {!znMode && (
           <motion.div
+            className="hidden md:block"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
