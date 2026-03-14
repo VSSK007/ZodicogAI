@@ -38,6 +38,16 @@ function HomeContent() {
       {/* Mobile: full-screen centered hero. Desktop: normal top-padded hero. */}
       <div className="min-h-[calc(100dvh-64px)] md:min-h-0 flex flex-col justify-center md:block max-w-4xl mx-auto text-center mb-0 md:mb-24 relative pt-8 md:pt-0">
 
+        {/* Email — mobile homepage only, top of screen */}
+        {!znMode && (
+          <a
+            href="mailto:kar1mr@zodicogai.com"
+            className="md:hidden absolute top-3 left-0 right-0 text-center text-[10px] text-zinc-700 hover:text-zinc-500 transition-colors"
+          >
+            kar1mr@zodicogai.com
+          </a>
+        )}
+
         {/*
           Normal mode: blue/violet breathing glow behind the title.
           Zodicognac mode: amber slow-burn glow that pulses over 5 s.
