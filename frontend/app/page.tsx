@@ -115,7 +115,7 @@ function HomeContent() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
-              className="text-7xl font-extrabold tracking-tight text-amber-400"
+              className="text-5xl md:text-7xl font-extrabold tracking-tight text-amber-400"
               style={{ fontFamily: "var(--font-manrope)" }}
             >
               Zodicognac
@@ -276,7 +276,7 @@ function HomeContent() {
           Hidden for reduced-motion users.                                  */}
       {znMode && !reduced && (
         <motion.div
-          className="fixed bottom-0 left-0 right-0 h-px"
+          className="fixed bottom-16 md:bottom-0 left-0 right-0 h-px"
           style={{
             transformOrigin: "left",
             background:
