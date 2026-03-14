@@ -21,7 +21,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
     { label: "Zodiac", href: "/analyze/zodiac" },
     { label: "Aura Colors", href: "/analyze/color" },
     { label: "Numerology", href: "/analyze/numerology" },
-    { label: "Full Intelligence", href: "/analyze/full-relationship-intelligence" },
+    { label: "Full Intelligence", href: "/dashboard" },
   ];
 
   return (
