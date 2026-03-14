@@ -27,7 +27,7 @@ export default function MbtiSelect({ value, onChange, placeholder = "MBTI type",
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full rounded-lg bg-zinc-900 border border-white/10 px-3 py-2 text-sm text-left flex items-center focus:outline-none focus:border-white/30 transition-colors"
+        className="w-full rounded-lg bg-zinc-900 border border-white/10 px-3 py-3 md:py-2 text-sm text-left flex items-center focus:outline-none focus:border-white/30 transition-colors tap-highlight-none min-h-[44px]"
       >
         <span className={value ? "text-white" : "text-zinc-500"}>{value || placeholder}</span>
       </button>
@@ -39,7 +39,7 @@ export default function MbtiSelect({ value, onChange, placeholder = "MBTI type",
               <button
                 type="button"
                 onClick={() => { onChange(t); setOpen(false); }}
-                className={`w-full text-left px-3 py-1.5 text-sm transition-colors ${
+                className={`w-full text-left px-3 py-2.5 md:py-1.5 text-sm transition-colors tap-highlight-none ${
                   t === value
                     ? "bg-white/10 text-white"
                     : "text-zinc-300 hover:bg-white/[0.06]"

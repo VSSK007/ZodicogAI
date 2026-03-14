@@ -171,7 +171,7 @@ function ZodiacPageInner() {
   const theme  = z ? (ELEMENT_THEME[z.element] ?? ELEMENT_THEME.Air) : null;
 
   return (
-    <main className="min-h-screen px-6 py-16 max-w-3xl mx-auto">
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-3xl mx-auto">
       {/* Header — shown only when form is visible */}
       {showForm && (
         <div className="mb-10">
@@ -187,7 +187,7 @@ function ZodiacPageInner() {
       {/* "New search" toggle — shown when form is hidden (best-match mode) */}
       {!showForm && (
         <div className="mb-6 flex items-center justify-between">
-          <h1 className="text-3xl font-bold tracking-tight">Zodiac Profile</h1>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Zodiac Profile</h1>
           <button
             onClick={() => setShowForm(true)}
             className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-zinc-400 hover:text-white transition-colors"
@@ -208,7 +208,7 @@ function ZodiacPageInner() {
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <button
             onClick={handleSubmit} disabled={loading}
-            className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition"
+            className="w-full py-3.5 md:py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition min-h-[48px]"
           >
             {loading ? "Reading the stars…" : "Generate Zodiac Profile"}
           </button>
@@ -234,12 +234,12 @@ function ZodiacPageInner() {
             <div className={`rounded-2xl border ${theme.border} ${theme.bg} overflow-hidden`}>
               {/* Top bar with sign symbol + name */}
               <div className="flex items-center gap-5 px-8 pt-8 pb-6 border-b border-white/8">
-                <div className="text-8xl leading-none select-none shrink-0" style={{ color: theme.accent }}>
+                <div className="text-5xl md:text-8xl leading-none select-none shrink-0" style={{ color: theme.accent }}>
                   {meta.symbol}
                 </div>
                 <div>
                   <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">{result.name}&rsquo;s Sun Sign</p>
-                  <h2 className="text-4xl font-bold tracking-tight leading-none" style={{ color: theme.accent }}>{z.sign}</h2>
+                  <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-none" style={{ color: theme.accent }}>{z.sign}</h2>
                   <p className="text-zinc-400 text-sm mt-1 italic">{meta.archetype}</p>
                   <p className="text-zinc-600 text-xs mt-0.5">{meta.dates}</p>
                 </div>

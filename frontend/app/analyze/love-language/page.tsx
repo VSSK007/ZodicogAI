@@ -109,7 +109,7 @@ export default function LoveLanguagePage() {
   const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
 
   return (
-    <main className="min-h-screen px-6 py-16 max-w-4xl mx-auto">
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-4xl mx-auto">
       <div className="mb-10">
         <Eyebrow>Analysis</Eyebrow>
         <h1 className="text-3xl font-bold tracking-tight">Love Language</h1>
@@ -123,14 +123,14 @@ export default function LoveLanguagePage() {
       {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
       <button
         onClick={handleSubmit} disabled={loading}
-        className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-12"
+        className="w-full py-3.5 md:py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
       >
         {loading ? "Analyzing…" : "Analyze Love Languages"}
       </button>
 
       <AnimatePresence>
         {result && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-5">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-5">
 
             {/* Score + primary languages */}
             <motion.div
@@ -139,7 +139,7 @@ export default function LoveLanguagePage() {
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#14b8a6]/60 via-[#14b8a6]/20 to-transparent" />
-              <div className="p-8 flex flex-col md:flex-row items-center gap-8">
+              <div className="p-5 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8">
                 <ScoreRing score={result.love_language_compatibility_score} size={160} label="Language Alignment" color="#14b8a6" />
                 <div className="grid grid-cols-2 gap-3 flex-1">
                   <MetricCard label={`${names.a} Primary`} value={result.a_love_language.primary_language.replace(/_/g, " ")} unit="" accent="teal" />
@@ -155,7 +155,7 @@ export default function LoveLanguagePage() {
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#4285f4]/50 via-[#34a853]/30 to-transparent" />
-              <div className="p-6">
+              <div className="p-4 md:p-6">
                 <h2 className="text-sm font-semibold text-zinc-300 mb-1">Love Language Distribution</h2>
                 <div className="flex gap-4 mb-4 text-xs text-zinc-400">
                   <span className="flex items-center gap-1.5">
@@ -186,7 +186,7 @@ export default function LoveLanguagePage() {
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#4285f4]/50 via-[#34a853]/30 to-transparent" />
-              <div className="p-6">
+              <div className="p-4 md:p-6">
                 <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
                 <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
               </div>
@@ -208,7 +208,7 @@ export default function LoveLanguagePage() {
                   Gemini 2.5 Flash
                 </span>
               </div>
-              <div className="p-6 space-y-5">
+              <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
                   <div key={key} className="border-l-2 border-teal-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>

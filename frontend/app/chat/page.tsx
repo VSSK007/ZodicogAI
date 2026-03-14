@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PersonForm from "@/components/PersonForm";
 import ZodicognacMark from "@/components/ZodicognacMark";
+import MobileChatSheet from "@/components/MobileChatSheet";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { PersonData, emptyPerson, validatePerson, toPerson, apiFetch } from "@/lib/api";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -208,6 +210,7 @@ function MarkdownText({ text }: { text: string }) {
 // ── Component ─────────────────────────────────────────────────────────────────
 
 export default function ChatPage() {
+  const isMobile = useIsMobile();
   const [messages, setMessages] = useState<Message[]>([
     { role: "ai", text: "I'm Zodicognac. I've been studying people — how they attract, fight, fall apart, and fall back in — since before I had words for it. Ask me something real. Add your profiles in the sidebar and I'll ground everything in your actual signs and MBTI." },
   ]);
@@ -286,12 +289,13 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-48px)] overflow-hidden bg-[#0a0a0a]">
+    <div className="flex h-[calc(100dvh)] md:h-[calc(100vh-48px)] overflow-hidden bg-[#0a0a0a]">
 
-      {/* Profiles sidebar */}
-      <AnimatePresence>
-        {showProfiles && (
-          <motion.aside
+      {/* Desktop sidebar — hidden on mobile */}
+      <div className="hidden md:block">
+        <AnimatePresence>
+          {showProfiles && (
+            <motion.aside
             initial={{ x: -288, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -288, opacity: 0 }}
@@ -329,9 +333,36 @@ export default function ChatPage() {
                 Optional — grounds every answer in specific zodiac & MBTI data.
               </p>
             </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+            </motion.aside>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Mobile bottom sheet for profiles */}
+      <MobileChatSheet
+        isOpen={showProfiles && isMobile}
+        onClose={() => setShowProfiles(false)}
+        personA={personA}
+        personB={personB}
+        onChangeA={(v) => { setPersonA(v); setProfileSaved(false); }}
+        onChangeB={(v) => { setPersonB(v); setProfileSaved(false); }}
+        onSave={() => {
+          const aFilled = personA.name || personA.day || personA.month || personA.mbti;
+          const bFilled = personB.name || personB.day || personB.month || personB.mbti;
+          if (aFilled) {
+            const err = validatePerson(personA, "Person A");
+            if (err) { setProfileError(err); return; }
+          }
+          if (bFilled) {
+            const err = validatePerson(personB, "Person B");
+            if (err) { setProfileError(err); return; }
+          }
+          setProfileError("");
+          setProfileSaved(true);
+        }}
+        profileError={profileError}
+        profileSaved={profileSaved}
+      />
 
       {/* Main */}
       <div className="flex flex-col flex-1 min-w-0">
@@ -360,7 +391,7 @@ export default function ChatPage() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "thin", scrollbarColor: "#27272a transparent" }}>
-          <div className="max-w-[720px] mx-auto px-5 py-6 space-y-8">
+          <div className="max-w-[720px] mx-auto px-4 md:px-5 py-4 md:py-6 space-y-6 md:space-y-8">
             <AnimatePresence initial={false}>
               {messages.map((msg, i) => (
                 <motion.div
@@ -396,7 +427,7 @@ export default function ChatPage() {
                     </div>
                   ) : (
                     <div className="flex justify-end">
-                      <div className="max-w-[72%] bg-[#18181c] border border-white/[0.08] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-zinc-200 leading-relaxed">
+                      <div className="max-w-[82%] md:max-w-[72%] bg-[#18181c] border border-white/[0.08] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-zinc-200 leading-relaxed">
                         {msg.text}
                       </div>
                     </div>

@@ -138,7 +138,7 @@ export default function CompatibilityForm() {
 
       {/* INPUT */}
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <ProfileCard
           name={aName}
           setName={setAName}
@@ -167,7 +167,7 @@ export default function CompatibilityForm() {
       <button
         onClick={runCompatibility}
         disabled={loading}
-        className="bg-white text-black px-6 py-2 rounded-full disabled:opacity-50"
+        className="w-full md:w-auto bg-white text-black px-6 py-3 md:py-2 rounded-full disabled:opacity-50 font-semibold min-h-[48px] tap-highlight-none"
       >
         Compute Compatibility
       </button>
@@ -207,7 +207,7 @@ export default function CompatibilityForm() {
 
           {/* RELATIONSHIP INSIGHTS */}
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <Insight
               title="Relationship Dynamic"
               text={result.relationship_dynamic}
@@ -252,7 +252,7 @@ function ProfileCard({
           placeholder="Day"
           value={day}
           onChange={(e) => setDay(e.target.value)}
-          className="w-16 bg-zinc-900 px-3 py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none"
+          className="w-20 md:w-16 bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center"
           type="number"
           min={1}
           max={31}
@@ -261,7 +261,7 @@ function ProfileCard({
           placeholder="Mo"
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="w-16 bg-zinc-900 px-3 py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none"
+          className="w-20 md:w-16 bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center"
           type="number"
           min={1}
           max={12}
@@ -270,7 +270,7 @@ function ProfileCard({
           placeholder="MBTI"
           value={mbti}
           onChange={(e) => setMbti(e.target.value)}
-          className="w-24 bg-zinc-900 px-3 py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none uppercase"
+          className="w-28 md:w-24 bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none uppercase"
           maxLength={4}
         />
       </div>

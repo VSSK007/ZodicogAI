@@ -10,7 +10,7 @@ import MbtiSelect from "./MbtiSelect";
 // Shared input/select class — identical font treatment across all inputs
 // ---------------------------------------------------------------------------
 const INPUT =
-  "w-full rounded-lg bg-zinc-900 border border-white/10 px-3 py-2.5 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors font-[inherit]";
+  "w-full rounded-lg bg-zinc-900 border border-white/10 px-3 py-3 md:py-2.5 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors font-[inherit]";
 
 const MBTI_TYPES = [
   "INTJ","INTP","ENTJ","ENTP",
@@ -274,9 +274,9 @@ export default function HybridForm() {
   const mbtiGroup = mbti ? (MBTI_GROUP[mbti] ?? null) : null;
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
+    <div className="max-w-5xl mx-auto space-y-8 px-1 md:px-0">
       {/* ── INPUT CARD ── */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 space-y-5">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-8 space-y-4 md:space-y-5">
         <h2 className="text-xl font-semibold">Self Analysis</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -431,7 +431,7 @@ export default function HybridForm() {
 
             {/* ── AI Analysis grid ── */}
             {analysis && (
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 {(
                   [
                     ["Behavioral Core",    analysis.behavioral_core],

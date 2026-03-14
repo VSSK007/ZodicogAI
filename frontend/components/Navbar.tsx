@@ -57,7 +57,7 @@ export default function Navbar() {
         })}
 
         {/* Zodicognac — pill with scale microinteraction */}
-        <div className="ml-auto flex items-center pl-4 shrink-0">
+        <div className="ml-auto flex items-center gap-6 pl-4 shrink-0">
           <motion.div
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
@@ -81,6 +81,15 @@ export default function Navbar() {
               Zodicognac
             </Link>
           </motion.div>
+
+          {/* Contact email — desktop only */}
+          <a
+            href="mailto:kar1mr@zodicogai.com"
+            className="text-[11px] text-zinc-600 hover:text-zinc-400 transition-colors truncate"
+            title="Contact ZodicogAI"
+          >
+            kar1mr@zodicogai.com
+          </a>
         </div>
       </div>
       <div className="h-px bg-white/[0.07]" />

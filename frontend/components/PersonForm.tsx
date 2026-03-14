@@ -10,7 +10,7 @@ interface Props {
   compact?: boolean;
 }
 
-const INPUT = "rounded-lg bg-[#0d0d1a] border border-white/[0.08] px-3 py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-white/25 transition-colors";
+const INPUT = "rounded-lg bg-[#0d0d1a] border border-white/[0.08] px-3 py-3 md:py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-white/25 transition-colors";
 
 export default function PersonForm({ label, value, onChange, compact = false }: Props) {
   const set =
@@ -30,13 +30,13 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             value={value.name}
             onChange={set("name")}
           />
-          <div className="flex rounded-lg overflow-hidden border border-white/[0.08] text-sm font-medium w-16 shrink-0">
+          <div className="flex rounded-lg overflow-hidden border border-white/[0.08] text-sm font-medium w-20 md:w-16 shrink-0">
             {(["M", "F"] as const).map((g) => (
               <button
                 key={g}
                 type="button"
                 onClick={() => onChange({ ...value, gender: g })}
-                className={`flex-1 py-2 transition-colors ${
+                className={`flex-1 py-3 md:py-2 transition-colors tap-highlight-none ${
                   value.gender === g
                     ? "bg-amber-500 text-black"
                     : "bg-[#0d0d1a] text-zinc-500 hover:text-white"
@@ -55,7 +55,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             onChange={(v) => onChange({ ...value, mbti: v })}
           />
           <input
-            className={`${INPUT} w-16 shrink-0`}
+            className={`${INPUT} w-20 md:w-16 shrink-0 text-center`}
             placeholder="Day"
             type="number"
             min={1} max={31}
@@ -63,7 +63,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             onChange={set("day")}
           />
           <input
-            className={`${INPUT} w-16 shrink-0`}
+            className={`${INPUT} w-20 md:w-16 shrink-0 text-center`}
             placeholder="Mo"
             type="number"
             min={1} max={12}

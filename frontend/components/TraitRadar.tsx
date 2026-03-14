@@ -74,7 +74,7 @@ export default function TraitRadar({ a, b, nameA = "Person A", nameB = "Person B
         </div>
       )}
 
-      <div className="w-full h-[300px]">
+      <div className="w-full h-[220px] md:h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart data={data} outerRadius="72%" margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
             <PolarGrid

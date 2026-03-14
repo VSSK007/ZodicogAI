@@ -54,7 +54,7 @@ export default function EmotionalPage() {
   const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
 
   return (
-    <main className="min-h-screen px-6 py-16 max-w-4xl mx-auto">
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-4xl mx-auto">
       <div className="mb-10">
         <Eyebrow>Analysis</Eyebrow>
         <h1 className="text-3xl font-bold tracking-tight">Emotional Compatibility</h1>
@@ -68,14 +68,14 @@ export default function EmotionalPage() {
       {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
       <button
         onClick={handleSubmit} disabled={loading}
-        className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-12"
+        className="w-full py-3.5 md:py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
       >
         {loading ? "Analyzing…" : "Analyze Emotional Compatibility"}
       </button>
 
       <AnimatePresence>
         {result && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-5">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-5">
 
             {/* Score */}
             <motion.div
@@ -84,7 +84,7 @@ export default function EmotionalPage() {
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#a855f7]/60 via-[#a855f7]/20 to-transparent" />
-              <div className="p-8 flex justify-center">
+              <div className="p-5 md:p-8 flex justify-center">
                 <ScoreRing score={result.emotional_compatibility_score} size={180} label="Emotional Score" color="#a855f7" />
               </div>
             </motion.div>
@@ -93,7 +93,7 @@ export default function EmotionalPage() {
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
-              className="grid grid-cols-2 md:grid-cols-3 gap-3"
+              className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3"
             >
               <MetricCard label="Expression Similarity"   value={result.emotional_expression_similarity}   accent="purple" />
               <MetricCard label="Intensity Alignment"     value={result.emotional_intensity_alignment}     accent="purple" />
@@ -107,7 +107,7 @@ export default function EmotionalPage() {
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#4285f4]/50 via-[#34a853]/30 to-transparent" />
-              <div className="p-6">
+              <div className="p-4 md:p-6">
                 <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
                 <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
               </div>
@@ -129,7 +129,7 @@ export default function EmotionalPage() {
                   Gemini 2.5 Flash
                 </span>
               </div>
-              <div className="p-6 space-y-5">
+              <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
                   <div key={key} className="border-l-2 border-purple-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>

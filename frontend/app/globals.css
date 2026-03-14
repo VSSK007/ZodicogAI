@@ -21,6 +21,15 @@ html {
   --g-green:  #34a853;
   --g-yellow: #fbbc04;
   --g-red:    #ea4335;
+
+  /* Mobile cosmic theme tokens */
+  --mobile-bg:         #060615;
+  --mobile-card-bg:    #0e0e21;
+  --mobile-card-border: rgba(255,255,255,0.06);
+  --mobile-amber:      #f59e0b;
+
+  /* Safe area for bottom nav (iOS notches/dynamic islands) */
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* ── Omnidirectional doodle drift keyframes ─────────────────────────────────
@@ -70,7 +79,25 @@ html {
   50%      { opacity: calc(var(--star-opacity, 0.15) * 0.3); }
 }
 
+/* ── Mobile Zodicognac FAB pulse glow ────────────────────────────────────── */
+@keyframes pulse-amber {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,0.4); }
+  50%      { box-shadow: 0 0 0 12px rgba(245,158,11,0); }
+}
+
+/* ── Soft float for mobile hero mark ────────────────────────────────────── */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-8px); }
+}
+
 @layer base {
+  body.sheet-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+  }
+
   input, select, textarea, button {
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif !important;
   }
@@ -94,5 +121,29 @@ html {
   input[type=number] {
     -moz-appearance: textfield;
     appearance: textfield;
+  }
+}
+
+@layer utilities {
+  /* Remove scrollbar globally on mobile sheets */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Tap highlight suppression for mobile buttons */
+  .tap-highlight-none {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Bottom nav safe area padding */
+  .pb-safe {
+    padding-bottom: calc(16px + var(--safe-area-bottom));
+  }
+  .mb-nav {
+    margin-bottom: calc(64px + var(--safe-area-bottom));
   }
 }

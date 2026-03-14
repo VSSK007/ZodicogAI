@@ -24,8 +24,8 @@ export default function ScoreRing({
   const offset = circumference - (clamped / 100) * circumference;
 
   return (
-    <div className="flex flex-col items-center gap-3">
-      <svg width={size} height={size} className="drop-shadow-xl">
+    <div className="flex flex-col items-center gap-3 w-full">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="drop-shadow-xl w-full max-w-[180px] md:w-auto md:max-w-none">
         {/* Track */}
         <circle
           cx={center} cy={center} r={radius}

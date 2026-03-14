@@ -225,7 +225,7 @@ export default function ColorPage() {
         )}
       </AnimatePresence>
 
-      <main className="min-h-screen px-6 py-16 max-w-4xl mx-auto">
+      <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-4xl mx-auto">
         <div className="mb-10">
           <div className="flex items-center gap-1.5 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
@@ -255,7 +255,7 @@ export default function ColorPage() {
         <button
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-12"
+          className="w-full py-3.5 md:py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
         >
           {loading ? "Reading the spectrum…" : "Reveal Aura Colors"}
         </button>
@@ -267,7 +267,7 @@ export default function ColorPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="space-y-6"
+              className="space-y-4 md:space-y-6"
             >
               {isPair(result) ? (
                 <>

@@ -2,6 +2,7 @@ import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { Manrope, DM_Sans } from "next/font/google";
 import Navbar from "@/components/Navbar";
+import MobileNavbar from "@/components/MobileNavbar";
 import PageTransition from "@/components/PageTransition";
 
 const manrope = Manrope({
@@ -213,9 +214,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ))}
         </div>
 
-        <Navbar />
+        {/* Desktop navbar — hidden on mobile */}
+        <div className="hidden md:block">
+          <Navbar />
+        </div>
+
+        {/* Mobile navbar — hidden on desktop */}
+        <MobileNavbar />
+
         <PageTransition>
-          <div className="pt-12">{children}</div>
+          <div className="pt-0 md:pt-12 pb-nav md:pb-0">{children}</div>
         </PageTransition>
       </body>
     </html>

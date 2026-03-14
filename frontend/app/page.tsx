@@ -31,10 +31,10 @@ function HomeContent() {
   }, [searchParams, router]);
 
   return (
-    <main className="min-h-screen px-8 py-32">
+    <main className="min-h-screen px-5 md:px-8 py-10 md:py-32">
 
       {/* ── Hero header ──────────────────────────────────────────────────────── */}
-      <div className="max-w-4xl mx-auto text-center mb-24 relative">
+      <div className="max-w-4xl mx-auto text-center mb-10 md:mb-24 relative">
 
         {/*
           Normal mode: blue/violet breathing glow behind the title.
@@ -71,7 +71,7 @@ function HomeContent() {
         )}
 
         {/* Brand insignia — 3-D flips to Zodicognac, then breathes */}
-        <div className="flex justify-center mb-8" style={{ perspective: "600px" }}>
+        <div className="flex justify-center mb-5 md:mb-8" style={{ perspective: "600px" }}>
           <AnimatePresence mode="wait">
             {znMode ? (
               <motion.div
@@ -129,7 +129,7 @@ function HomeContent() {
                   ? undefined
                   : { visible: { transition: { staggerChildren: 0.04 } } }
               }
-              className="text-7xl font-extrabold tracking-tight select-none"
+              className="text-5xl md:text-7xl font-extrabold tracking-tight select-none leading-tight"
               style={{ fontFamily: "var(--font-manrope)" }}
             >
               {reduced
@@ -176,12 +176,38 @@ function HomeContent() {
                 delay: reduced ? 0 : 0.52,
                 ease: EASE,
               }}
-              className="text-zinc-400 mt-6 text-lg"
+              className="text-zinc-400 mt-6 text-base md:text-lg"
             >
               Hybrid Behavioral Intelligence Agent
             </motion.p>
           )}
         </AnimatePresence>
+
+        {/* Mobile-only CTA buttons — visible only on mobile */}
+        {!znMode && (
+          <div className="flex flex-col gap-3 mt-8 md:hidden">
+            <button
+              onClick={() => setMode("hybrid")}
+              className={`py-3.5 rounded-2xl text-sm font-semibold transition-all tap-highlight-none min-h-[48px] ${
+                mode === "hybrid"
+                  ? "bg-[#4285f4] text-white"
+                  : "bg-white/[0.06] text-zinc-300 border border-white/[0.09] hover:bg-white/[0.09]"
+              }`}
+            >
+              Self Analysis
+            </button>
+            <button
+              onClick={() => setMode("compatibility")}
+              className={`py-3.5 rounded-2xl text-sm font-semibold transition-all tap-highlight-none min-h-[48px] ${
+                mode === "compatibility"
+                  ? "bg-[#4285f4] text-white"
+                  : "bg-white/[0.06] text-zinc-300 border border-white/[0.09] hover:bg-white/[0.09]"
+              }`}
+            >
+              Compatibility Analysis
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Navigation + Forms — dissolve on Zodicognac transition ─────────── */}
@@ -197,8 +223,8 @@ function HomeContent() {
               ease: EASE,
             }}
           >
-            {/* Mode selector tabs */}
-            <div className="flex justify-center mb-24">
+            {/* Mode selector tabs — hidden on mobile, shown on desktop */}
+            <div className="hidden md:flex justify-center mb-24">
               <div className="flex border-b border-white/[0.08]">
                 {(["hybrid", "compatibility"] as const).map((m) => (
                   <button
