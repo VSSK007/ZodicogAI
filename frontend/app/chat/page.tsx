@@ -153,7 +153,7 @@ function renderLines(lines: string[]) {
           <span className="text-zinc-300 leading-relaxed">{renderInline(t.replace(/^\d+\.\s+/, ""))}</span>
         </div>
       );
-    return <p key={j} className="text-zinc-300 leading-relaxed">{renderInline(t)}</p>;
+    return <p key={j} className="text-zinc-300 leading-[1.8]">{renderInline(t)}</p>;
   });
 }
 
@@ -185,7 +185,7 @@ function MarkdownText({ text }: { text: string }) {
       return (
         <div key={i}>
           <SectionHeading text={ht} first={isFirst} />
-          <div className="space-y-2">{renderLines(rest)}</div>
+          <div className="space-y-3">{renderLines(rest)}</div>
         </div>
       );
     }
@@ -193,18 +193,18 @@ function MarkdownText({ text }: { text: string }) {
     // Pure bullet or numbered list
     const isList = lines.every((l) => /^[-*•]\s/.test(l.trim()) || /^\d+\.\s/.test(l.trim()));
     if (isList) {
-      return <div key={i} className="space-y-2">{renderLines(lines)}</div>;
+      return <div key={i} className="space-y-3">{renderLines(lines)}</div>;
     }
 
     // Plain text — render each line as its own paragraph so nothing clumps
     if (lines.length > 1) {
-      return <div key={i} className="space-y-2">{renderLines(lines)}</div>;
+      return <div key={i} className="space-y-3">{renderLines(lines)}</div>;
     }
 
-    return <p key={i} className="text-zinc-300 leading-relaxed">{renderInline(lines[0])}</p>;
+    return <p key={i} className="text-zinc-300 leading-[1.8]">{renderInline(lines[0])}</p>;
   });
 
-  return <div className="space-y-2">{rendered}</div>;
+  return <div className="space-y-4">{rendered}</div>;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────

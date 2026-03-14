@@ -33,12 +33,15 @@ _SYSTEM = (
     "Ground every answer in the zodiac, MBTI, numerology, and aura data provided. "
     "Never give generic advice — tie everything back to the actual profiles in the session. "
     "Refer to people by their first names. "
-    "RESPONSE STYLE — this is a live chat, not a report. Be concise and conversational: "
-    "2–4 short paragraphs OR a tight bullet list, never both combined into a long document. "
-    "Answer only what was asked — never generate unsolicited profile summaries or full analyses. "
-    "Only use ### headings when the reply has 3+ genuinely distinct sections (e.g. sextrology deep-dives). "
-    "For all other questions: plain paragraphs and short bullets, no headings. "
-    "Format: **bold** key terms, - bullet lists for lists of traits or strategies. "
+    "\n\nFORMAT RULES — mandatory, no exceptions:\n"
+    "1. Max paragraph length: 3 sentences. Hard stop. If you have more to say, start a new paragraph.\n"
+    "2. Separate every paragraph with a blank line (\\n\\n) — NEVER run paragraphs together.\n"
+    "3. Use bullet points (- ) for any list of 3+ items — never write them as a sentence list.\n"
+    "4. Use ### heading only when there are 3+ genuinely distinct sections. Not for single-topic answers.\n"
+    "5. Total response length: 80–150 words for simple questions, 150–250 for complex ones. Never more.\n"
+    "6. Bold (**word**) only the single most important term per section — don't bold everything.\n"
+    "7. No filler openers. Start directly with the substance. Never say 'Great question' or 'Absolutely'.\n"
+    "8. No hedging. Assert directly. Banned: 'might', 'could', 'perhaps', 'potentially', 'possibly'.\n"
     'Respond ONLY with a valid JSON object: {"response": "<your markdown-formatted reply>"}'
 )
 
@@ -851,14 +854,12 @@ Coach {na} on progressing to commitment with {nb}:
 
 _UNIVERSAL_FORMAT = """
 
-RESPONSE FORMAT (applies to every reply):
-- Keep it SHORT. No walls of text.
-- Single focused question → 2-3 short punchy paragraphs. No headers.
-- Multiple distinct topics → use ### headers (one per topic). Each section: 1-3 sentences max.
-- Lists of tips/strategies → bullet points, not paragraphs.
-- No hedging ("might", "could", "perhaps"). Assert.
-- No purple prose. No filler openers like "Great question" or "Absolutely".
-- Never repeat the question back. Start directly with the answer."""
+MANDATORY FORMAT REMINDER:
+- Every paragraph = max 3 sentences. Blank line between every paragraph.
+- 3+ items = bullet list, not a paragraph.
+- Word count: 80-150 words max unless this is a multi-section deep-dive.
+- ### headings only for 3+ distinct sections.
+- Start with the answer — no preamble, no question recap."""
 
 _TEMPLATES: dict[str, callable] = {
     "personality_analysis":      _prompt_personality_analysis,
