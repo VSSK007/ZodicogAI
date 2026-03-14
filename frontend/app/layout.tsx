@@ -24,6 +24,12 @@ export const metadata = {
   description: "Behavioral Intelligence Engine",
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
+
 // ── Deterministic star field (golden-angle distribution) ─────────────────────
 // Using the golden angle ratio (137.508°) to spread points without clustering.
 const STARS = Array.from({ length: 130 }, (_, i) => {
