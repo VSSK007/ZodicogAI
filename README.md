@@ -6,566 +6,315 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Frontend-Next.js-blue" />
+  <img src="https://img.shields.io/badge/Frontend-Next.js_16-blue" />
   <img src="https://img.shields.io/badge/Backend-FastAPI-green" />
   <img src="https://img.shields.io/badge/AI-Gemini%202.5%20Flash-orange" />
   <img src="https://img.shields.io/badge/License-MIT-purple" />
+  <img src="https://img.shields.io/badge/Live-zodicogai.com-brightgreen" />
 </p>
 
 ---
 
-# ZodicogAI — Hybrid Behavioral Intelligence Platform
-
 **ZodicogAI** is a full-stack relationship intelligence platform that analyzes personality, compatibility, intimacy dynamics, and attachment behavior using a hybrid system combining **astrology archetypes, MBTI typology, deterministic behavioral modeling, and AI synthesis**.
 
-The platform powers **Zodicognac**, an AI coaching agent capable of interpreting personality patterns and offering contextual insights for relationships and social interactions.
+The platform powers **Zodicognac** — an AI coaching agent grounded in real personality data, capable of interpreting behavioral patterns and offering contextual relationship coaching across 15 distinct intent categories.
 
 ---
 
-# 🌐 Live Demo
+## Live
 
-**https://zodicogai.com**
+**https://zodicogai.com** · Contact: kar1mr@zodicogai.com
 
 ---
 
-# 🧠 System Architecture
+## System Architecture
 
-ZodicogAI follows a **hybrid deterministic + AI reasoning architecture**.
+ZodicogAI follows a **hybrid deterministic + AI reasoning architecture**. Deterministic engines compute structured behavioral metrics, which are passed to Gemini for narrative synthesis.
 
-Deterministic engines compute structured behavioral metrics, which are interpreted through an AI reasoning layer powered by Gemini.
+```
+User → Next.js Frontend → FastAPI Backend → Deterministic Engines → Gemini → Response
+```
 
 ```mermaid
 flowchart TD
-
-User --> Website
-Website --> NextJS
-
-NextJS --> FastAPI
-
-FastAPI --> ZodiacEngine
-FastAPI --> MBTIEngine
-FastAPI --> CompatibilityEngine
-FastAPI --> EmotionalEngine
-FastAPI --> RomanticEngine
-FastAPI --> SextrologyEngine
-FastAPI --> NumerologyEngine
-
-FastAPI --> Gemini
-
-Gemini --> Response
-Response --> User
+  User --> Next.js
+  Next.js --> FastAPI
+  FastAPI --> ZodiacEngine
+  FastAPI --> MBTIEngine
+  FastAPI --> CompatibilityEngine
+  FastAPI --> EmotionalEngine
+  FastAPI --> RomanticEngine
+  FastAPI --> SextrologyEngine
+  FastAPI --> LoveStyleEngine
+  FastAPI --> LoveLanguageEngine
+  FastAPI --> NumerologyEngine
+  FastAPI --> ColorEngine
+  FastAPI --> DecanEngine
+  FastAPI --> RelationshipIntelligenceEngine
+  FastAPI --> Gemini
+  Gemini --> Response
+  Response --> User
 ```
 
 ---
 
-# 🧪 Behavioral Intelligence Model
+## Dual Layout Design
 
-ZodicogAI is built around a **hybrid behavioral modeling framework** combining symbolic personality systems with deterministic compatibility computation.
+ZodicogAI has intentionally distinct desktop and mobile experiences:
 
-### 1. Archetypal Layer
-
-Symbolic personality systems define baseline behavioral patterns.
-
-Frameworks used include:
-
-- Zodiac archetypes (element, modality, decan)
-- MBTI cognitive function stacks
-- Classical love style theory
-- Love language preference models
-- Pythagorean numerology
-
-These frameworks define structured personality attributes used for analysis.
+| | Desktop | Mobile |
+|---|---|---|
+| **Feel** | Analytical intelligence platform | Personal AI companion |
+| **Navigation** | Top navbar with all analysis pages | Bottom tab bar (5 tabs + center FAB) |
+| **Layout** | Data-dense dashboard | Card-based storytelling |
+| **Chat sidebar** | Persistent profile panel | Bottom sheet (slides up) |
+| **Zodicognac entry** | Pill button in top-right | Raised amber FAB in tab bar |
 
 ---
 
-### 2. Deterministic Modeling Layer
+## Features
 
-Personality traits are transformed into structured vectors and compatibility matrices.
+### Individual Analysis
 
-Examples include:
+| Feature | Description |
+|---|---|
+| **Zodiac Profile** | Sun sign, element, modality, decan nuance, archetypal trait mapping |
+| **MBTI Analysis** | 16 types, cognitive function stacks, behavioral patterns |
+| **Hybrid Profile** | Combined zodiac + MBTI behavioral synthesis with trait radar + behavioral axis map |
+| **Aura Colors** | Zodiac-derived color personality mapping, love energy palettes, power colors |
+| **Numerology** | Life Path, Expression, Lucky numbers via Pythagorean system |
 
-- element affinity tables
-- modality interaction matrices
-- personality trait similarity vectors
-- emotional responsiveness scoring
-- romantic polarity balancing
+### Pair / Compatibility Analysis
 
-Compatibility scores are computed using weighted multi-dimension models.
-
----
-
-### 3. Generative Interpretation Layer
-
-Deterministic outputs are passed to an AI reasoning layer powered by **Gemini**.
-
-The model synthesizes:
-
-- personality narratives
-- compatibility explanations
-- coaching suggestions
-- behavioral interpretations
-
-This ensures that responses remain **grounded in structured data rather than purely generative output**.
+| Dimension | What It Measures |
+|---|---|
+| **Zodiac Compatibility** | Element affinity, modality synergy, archetype similarity |
+| **Behavioral Compatibility** | Personality trait vector similarity |
+| **Emotional Compatibility** | Attachment responsiveness, emotional expression alignment |
+| **Romantic Compatibility** | Passion intensity, affection pacing, polarity balance |
+| **Intimacy / Sextrology** | Sexual archetypes, erogenous focus, bedroom dynamics |
+| **Love Style Alignment** | Eros / Storge / Ludus / Mania / Pragma / Agape interaction matrix |
+| **Love Language Alignment** | Words / Acts / Gifts / Time / Touch preference compatibility |
+| **Numerology Compatibility** | Life path and expression number synergy with pursue/avoid signal |
+| **Aura Color Harmony** | Color blend, middle-ground, and complementary color computation |
+| **Full Synastry** | Weighted synthesis across all dimensions |
 
 ---
 
-# 🧭 Design Principles
+## Zodicognac — AI Coaching Agent
 
-ZodicogAI is designed around several principles that make the system interpretable and extensible.
+Zodicognac classifies user questions into relationship coaching intents and routes them to the appropriate engine data + prompt template.
 
-### Deterministic Grounding
+**15 supported intent categories:**
 
-Compatibility scoring is computed using deterministic engines rather than AI generation.
-This ensures results are:
+| Intent | Description |
+|---|---|
+| `personality_analysis` | Trait breakdown for a specific person |
+| `compatibility_question` | Direct compatibility questions |
+| `relationship_advice` | Warm, constructive relationship guidance |
+| `flirting_guidance` | Personality-specific attraction strategies |
+| `communication_help` | Style-gap analysis and communication techniques |
+| `sextrology` | Intimate compatibility and bedroom dynamics |
+| `signal_reading` | Decode whether someone is interested |
+| `first_date_coaching` | Venue, conversation, first impression strategy |
+| `red_flags_green_flags` | Sign/MBTI-specific warning and investment signals |
+| `getting_them_back` | Re-approach strategy tailored to personality type |
+| `attachment_style_coaching` | Anxious/avoidant/secure dynamic mapping |
+| `commitment_progression` | Moving from casual to serious, type-specific |
+| `numerology_question` | Numerology-grounded relationship questions |
+| `color_question` | Aura color personality questions |
+| `general_question` | Catch-all relationship and personality questions |
 
-- reproducible
-- explainable
-- consistent
-
-AI is used only for interpretation and narrative synthesis.
-
----
-
-### Hybrid Intelligence
-
-The platform combines two complementary layers:
-
-**Symbolic Modeling**
-
-- astrology archetypes
-- personality typologies
-- compatibility matrices
-- behavioral vectors
-
-**Generative Reasoning**
-
-- conversational explanations
-- coaching insights
-- narrative synthesis
+Responses are formatted as structured markdown (headings, bullets, bold terms) and rendered with custom inline markdown parsing — no external markdown library required.
 
 ---
 
-### Modular Engine Architecture
+## Tech Stack
 
-Each behavioral domain is implemented as an independent engine module.
+### Frontend
+- **Next.js 16** (App Router, Turbopack)
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS v4**
+- **Framer Motion** — page transitions, progressive reveal, sheet animations
+- **Recharts 3** — trait radar charts, scatter behavioral maps
 
-Examples include:
-
-- zodiac_engine
-- mbti_engine
-- emotional_engine
-- romantic_engine
-- sextrology_engine
-- numerology_engine
-
-This modular architecture allows the system to evolve as new models are introduced.
-
----
-
-### Multi-Dimensional Compatibility
-
-Rather than producing a single compatibility score, ZodicogAI evaluates relationships across multiple behavioral dimensions including:
-
-- emotional alignment
-- romantic chemistry
-- behavioral similarity
-- intimacy dynamics
-- communication style
-
-The final compatibility score is a **weighted synthesis of multiple interaction layers**.
+### Backend
+- **FastAPI**
+- **Python 3.10+**
+- **Pydantic v2** — request/response schema validation
+- **Uvicorn**
+- **google-genai SDK** — Gemini 2.5 Flash (primary) + Gemini 2.0 Flash Lite (fallback)
 
 ---
 
-# ✨ Core Features
-
-## Individual Personality Analysis
-
-### Zodiac Profile
-
-- Sun sign interpretation
-- Element classification (Fire, Earth, Air, Water)
-- Modality analysis (Cardinal, Fixed, Mutable)
-- Decan personality nuance
-- Archetypal trait mapping
-
----
-
-### MBTI Typology
-
-- 16 personality types
-- Cognitive function stacks
-- Behavioral communication patterns
-- Social interaction styles
-
----
-
-### Hybrid Personality Synthesis
-
-Zodiac archetypes and MBTI cognition combine into a **unified behavioral profile**.
-
-Outputs include:
-
-- trait radar charts
-- behavioral axis maps
-- psychological summaries
-
----
-
-### Color Analysis
-
-Symbolic aura color interpretation derived from zodiac archetypes including:
-
-- personality color mapping
-- attraction energy palettes
-- emotional resonance colors
-
----
-
-### Numerology
-
-Pythagorean numerology calculations including:
-
-- Life Path Number
-- Expression Number
-- Personality Number
-
----
-
-# ❤️ Compatibility Analysis (8 Dimensions)
-
-ZodicogAI evaluates relationships across eight behavioral dimensions.
-
-1. **Zodiac Compatibility**
-   Element affinity, modality synergy, archetype similarity.
-
-2. **Behavioral Compatibility**
-   Personality trait similarity derived from zodiac and MBTI vectors.
-
-3. **Emotional Compatibility**
-   Attachment responsiveness and emotional expression alignment.
-
-4. **Romantic Compatibility**
-   Passion intensity, affection pacing, polarity balance.
-
-5. **Intimacy Compatibility**
-   Sexual archetypes and intimacy dynamics.
-
-6. **Love Style Alignment**
-   Eros, Storge, Ludus, Mania, Pragma, Agape interaction mapping.
-
-7. **Love Language Alignment**
-   Words, acts, gifts, time, touch preference compatibility.
-
-8. **Numerology Compatibility**
-   Life path and expression number synergy.
-
----
-
-# 🤖 Zodicognac AI Coaching
-
-Zodicognac acts as the conversational intelligence layer.
-
-User questions are classified into relationship coaching intents and routed to the appropriate engines.
-
-Supported coaching scenarios include:
-
-- Signal interpretation
-- First date guidance
-- Red flag / green flag analysis
-- Reconnection strategies
-- Attachment style coaching
-- Relationship progression advice
-
----
-
-# 📊 Visualization System
-
-The frontend includes interactive visualizations such as:
-
-- Trait radar charts
-- Compatibility score rings
-- Metric cards
-- Behavioral axis maps
-- Love language comparisons
-- Love style comparisons
-
-Animations are implemented using **Framer Motion** for progressive analysis reveals.
-
----
-
-# 🏗 Tech Stack
-
-## Frontend
-
-- Next.js
-- React
-- Tailwind CSS
-- Framer Motion
-- Recharts
-- TypeScript
-
----
-
-## Backend
-
-- FastAPI
-- Python 3.10+
-- Pydantic v2
-- Uvicorn
-
----
-
-## AI Layer
-
-- Google Gemini 2.5 Flash
-
-Gemini is invoked only from the **backend layer** to keep API keys secure.
-
----
-
-# 🧮 Deterministic Analysis Engines
-
-The backend contains modular engines responsible for analysis.
+## Engine Modules
 
 ```
-zodiac_engine.py
-mbti_engine.py
-compatibility_engine.py
-emotional_engine.py
-romantic_engine.py
-sextrology_engine.py
-love_style_engine.py
-love_language_engine.py
-color_engine.py
-numerology_engine.py
-decan_engine.py
-relationship_intelligence_engine.py
+backend/engines/
+  zodiac_engine.py                  Sun sign, element, modality, traits
+  mbti_engine.py                    Cognitive function stacks, type profiles
+  decan_engine.py                   Decan sub-ruler, keywords, rich description
+  compatibility_engine.py           Vector similarity, element/modality matrices
+  emotional_engine.py               Attachment responsiveness scoring
+  romantic_engine.py                Passion intensity, polarity balance
+  sextrology_engine.py              Sexual archetype compatibility
+  love_style_engine.py              Eros/Storge/Ludus/Mania/Pragma/Agape matrix
+  love_language_engine.py           Love language preference compatibility
+  color_engine.py                   Zodiac color mapping, HSL harmony computation
+  numerology_engine.py              Pythagorean life path + expression numbers
+  relationship_intelligence_engine.py  Full synastry weighted synthesis
 ```
-
-Each engine computes structured personality or compatibility data used by the AI layer.
 
 ---
 
-# 🔌 API Example
+## API Endpoints
 
-Example compatibility request:
+```
+POST /analyze/zodiac              Single zodiac + MBTI hybrid profile
+POST /analyze/emotional           Emotional compatibility (pair)
+POST /analyze/romantic            Romantic compatibility (pair)
+POST /analyze/sextrology          Intimacy/sexual compatibility (pair)
+POST /analyze/love-style          Love style alignment (single or pair)
+POST /analyze/love-language       Love language alignment (single or pair)
+POST /analyze/color               Aura color (single or pair)
+POST /analyze/numerology          Numerology (single or pair)
+POST /dashboard                   Full synastry across all dimensions
+POST /chat                        Zodicognac conversational AI
+POST /compatibility               Behavioral compatibility score
+```
+
+**Example — Romantic Compatibility:**
 
 ```bash
-curl -X POST http://localhost:8000/analyze/compatibility \
--H "Content-Type: application/json" \
--d '{
-  "person_a": {
-    "name": "Alice",
-    "zodiac": "Leo",
-    "mbti": "ENFJ"
-  },
-  "person_b": {
-    "name": "Bob",
-    "zodiac": "Scorpio",
-    "mbti": "INTJ"
-  }
-}'
+curl -X POST https://zodicogai.com/analyze/romantic \
+  -H "Content-Type: application/json" \
+  -d '{
+    "person_a_name": "Alice",
+    "person_a_day": 14,
+    "person_a_month": 8,
+    "person_a_mbti": "ENFJ",
+    "person_b_name": "Bob",
+    "person_b_day": 3,
+    "person_b_month": 11,
+    "person_b_mbti": "INTJ"
+  }'
 ```
 
-Example response:
+**Example — Zodicognac Chat:**
 
-```json
-{
-  "overall_score": 82,
-  "emotional_score": 76,
-  "romantic_score": 85,
-  "analysis": "Leo and Scorpio often create an intense attraction dynamic with strong emotional polarity."
-}
-```
-
----
-
-# 🔧 Extending the Engine System
-
-ZodicogAI is designed to be modular and extensible.
-
-New behavioral engines can be added to expand the system.
-
-### Example Engine
-
-```python
-def analyze_example(person_a, person_b):
-    score = compute_score(person_a, person_b)
-
-    return {
-        "score": score,
-        "interpretation": "Example compatibility insight"
-    }
+```bash
+curl -X POST https://zodicogai.com/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "Does he actually like me or is he just keeping me around?",
+    "person_a": { "name": "Alice", "day": 14, "month": 8, "mbti": "ENFJ", "gender": "F" },
+    "person_b": { "name": "Bob", "day": 3, "month": 11, "mbti": "INTJ", "gender": "M" },
+    "history": []
+  }'
 ```
 
 ---
 
-### Register the Engine
+## Local Development
 
-Engines are registered inside the engine registry:
-
-```
-_ENGINE_REGISTRY = {
-    "zodiac": zodiac_engine.analyze,
-    "mbti": mbti_engine.analyze,
-    "example": example_engine.analyze
-}
-```
-
----
-
-### Extend Pipelines
-
-Pipelines define how engines combine into a full analysis.
-
-```
-_PIPELINE_REGISTRY = {
-    "COMPATIBILITY_ANALYSIS": [
-        "zodiac",
-        "emotional",
-        "romantic",
-        "example"
-    ]
-}
-```
-
----
-
-# 🚀 Local Development
-
-## Prerequisites
-
+### Prerequisites
 - Python 3.10+
 - Node.js 18+
-- Gemini API key from Google AI Studio
+- Gemini API key from [Google AI Studio](https://aistudio.google.com)
 
----
+### Backend
 
-## Backend Setup
-
-```
+```bash
 cd backend
 python -m venv venv
-source venv/bin/activate
+source venv/bin/activate          # Windows: venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload
+
+# Create .env
+echo "GEMINI_API_KEY=your_key_here" > .env
+
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Backend runs at:
+Backend: `http://localhost:8000`
 
-```
-http://localhost:8000
-```
+### Frontend
 
----
-
-## Frontend Setup
-
-```
+```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-Frontend runs at:
+Frontend: `http://localhost:3000`
+
+---
+
+## Production Deployment
 
 ```
-http://localhost:3000
+Internet → Nginx (SSL) → Next.js (port 3000) → FastAPI (port 8000) → Gemini API
+```
+
+**Recommended stack:**
+- Ubuntu Linux VPS
+- Nginx + Let's Encrypt SSL
+- PM2 for Next.js process management
+- Uvicorn (no `--reload`) for FastAPI
+
+**Backend start (production):**
+```bash
+cd backend && venv/Scripts/uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+**Backend restart (Windows, clears stale processes):**
+```bash
+python3 -c "import subprocess; subprocess.run(['taskkill', '/IM', 'python.exe', '/F'])"
+find backend -name '__pycache__' -type d -exec rm -rf {} +
+cd backend && venv/Scripts/uvicorn.exe main:app --host 0.0.0.0 --port 8000
 ```
 
 ---
 
-# 🧪 Testing
+## Extending the Engine System
 
-Run backend tests:
+Engines are registered in `backend/agent_controller.py`:
 
+```python
+_ENGINE_REGISTRY = {
+    "zodiac": zodiac_engine.analyze,
+    "mbti": mbti_engine.analyze,
+    "my_new_engine": my_engine.analyze,
+}
+
+_PIPELINE_REGISTRY = {
+    "MY_NEW_ANALYSIS": ["zodiac", "mbti", "my_new_engine"],
+}
 ```
-cd backend
-pytest tests/ -v
-```
+
+Add a matching prompt template in `backend/chat/prompt_templates.py` and register it in `_TEMPLATES`.
 
 ---
 
-# 🚢 Deployment
-
-Typical production architecture:
-
-```
-Internet
- ↓
-zodicogai.com
- ↓
-Nginx
- ↓
-Next.js frontend
- ↓
-FastAPI backend
- ↓
-Gemini API
-```
-
-Recommended production components:
-
-- Ubuntu Linux
-- Nginx
-- Node.js
-- Python
-- Uvicorn
-- PM2
-- Let's Encrypt SSL
-
----
-
-# ⚠️ Limitations & Responsible Use
+## Limitations & Responsible Use
 
 ZodicogAI is designed as a **behavioral reflection tool**, not a predictive or diagnostic system.
 
-The platform incorporates symbolic personality frameworks including:
+The platform incorporates symbolic personality frameworks — astrology, MBTI, numerology, classical relationship theories — which are widely used for self-reflection but are **not scientifically validated psychological assessments**.
 
-- astrology archetypes
-- MBTI personality typology
-- numerology
-- classical relationship theories
+AI-generated interpretations may simplify complex interpersonal dynamics. Treat insights as **reflective guidance, not factual conclusions**.
 
-These systems are widely used for self-reflection but are **not scientifically validated psychological assessments**.
-
-AI-generated interpretations may simplify complex interpersonal dynamics.
-Users should treat insights as **reflective guidance rather than factual conclusions**.
-
-ZodicogAI does not provide:
-
-- psychological diagnosis
-- therapy
-- medical advice
-- professional counseling
-
-Users experiencing serious relationship or mental health challenges should consult qualified professionals.
+ZodicogAI does not provide psychological diagnosis, therapy, medical advice, or professional counseling. Users experiencing serious relationship or mental health challenges should consult qualified professionals.
 
 ---
 
-# 🤝 Contributing
+## License
 
-Contributions are welcome.
-
-Guidelines:
-
-- Use TypeScript on the frontend
-- Use Python type hints on the backend
-- Write tests for new engines
-- Update documentation when adding features
+MIT
 
 ---
 
-# 📝 License
+## Philosophy
 
-MIT License
-
----
-
-# 🔮 Philosophy
-
-ZodicogAI explores how archetypal personality systems can interact with modern AI reasoning to illuminate patterns in human relationships.
-
-By combining symbolic behavioral models with generative AI interpretation, the platform aims to provide tools for **self-reflection, relational awareness, and curiosity about interpersonal dynamics**.
-
-Built with modern AI and behavioral modeling.
+ZodicogAI explores how archetypal personality systems can interact with modern AI reasoning to illuminate patterns in human relationships. By combining symbolic behavioral models with generative AI interpretation, the platform aims to provide tools for self-reflection, relational awareness, and curiosity about interpersonal dynamics.
