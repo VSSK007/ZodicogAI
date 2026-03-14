@@ -51,7 +51,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
         <div className="flex gap-2">
           <MbtiSelect
             className="flex-1"
-            value={value.mbti}
+            value={value.mbti || ""}
             onChange={(v) => onChange({ ...value, mbti: v })}
           />
           <input
