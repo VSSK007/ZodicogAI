@@ -200,13 +200,6 @@ function HomeContent() {
             >
               <span>♥</span> Compatibility Analysis
             </Link>
-            <Link
-              href="/chat"
-              className="py-3.5 rounded-2xl text-sm font-semibold bg-amber-500/[0.12] text-amber-400 border border-amber-500/25 text-center flex items-center justify-center gap-2 min-h-[48px] tap-highlight-none"
-            >
-              <span>◈</span> Ask Zodicognac
-            </Link>
-
             {/* Analysis type chips */}
             <div className="flex flex-wrap justify-center gap-2 mt-2">
               {["Zodiac", "MBTI", "Emotional", "Romantic", "Sextrology", "Love Style", "Love Language", "Numerology", "Aura Colors"].map((f) => (

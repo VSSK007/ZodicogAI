@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ZodicognacMark from "./ZodicognacMark";
@@ -13,6 +13,7 @@ import MobileMenuSheet from "./MobileMenuSheet";
  */
 export default function MobileNavbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [showMenuSheet, setShowMenuSheet] = useState(false);
 
   // Inline SVG icons
@@ -73,18 +74,24 @@ export default function MobileNavbar() {
           {tabs.map((tab) => {
             if (tab.isFab) {
               return (
-                <Link
+                <button
                   key="zodicognac"
-                  href={tab.href}
-                  className="relative"
+                  className="relative tap-highlight-none"
+                  onClick={() => {
+                    if (pathname === "/") {
+                      router.push("/?zn=1");
+                    } else {
+                      router.push("/chat");
+                    }
+                  }}
                 >
                   <motion.div
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-0 w-14 h-14 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center tap-highlight-none transition-all hover:bg-amber-500/20"
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-0 w-14 h-14 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center justify-center transition-all hover:bg-amber-500/20"
                     style={{ animation: "pulse-amber 2s infinite" }}
                   >
                     <ZodicognacMark size={24} active />
                   </motion.div>
-                </Link>
+                </button>
               );
             }
 
