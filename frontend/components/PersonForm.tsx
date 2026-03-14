@@ -1,6 +1,7 @@
 "use client";
 
-import { PersonData, MBTI_TYPES } from "@/lib/api";
+import { PersonData } from "@/lib/api";
+import MbtiSelect from "./MbtiSelect";
 
 interface Props {
   label: string;
@@ -9,46 +10,67 @@ interface Props {
   compact?: boolean;
 }
 
-const INPUT = "w-full rounded-lg bg-zinc-900 border border-white/10 px-3 py-2 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors";
+const INPUT = "rounded-lg bg-[#0d0d1a] border border-white/[0.08] px-3 py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-white/25 transition-colors";
 
 export default function PersonForm({ label, value, onChange, compact = false }: Props) {
   const set =
     (key: keyof PersonData) =>
-    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) =>
       onChange({ ...value, [key]: e.target.value });
 
   return (
-    <div className={`rounded-xl border border-white/10 p-4 ${compact ? "bg-zinc-900/60" : "bg-white/5"}`}>
+    <div className={`rounded-xl border border-white/[0.07] p-4 ${compact ? "bg-[#13131f]" : "bg-[#16162a]"}`}>
       <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">{label}</p>
-      <div className="grid grid-cols-2 gap-2">
-        <input
-          className={INPUT}
-          placeholder="Name"
-          value={value.name}
-          onChange={set("name")}
-        />
-        <select className={INPUT} value={value.mbti} onChange={set("mbti")}>
-          <option value="">MBTI type</option>
-          {MBTI_TYPES.map((t) => (
-            <option key={t} value={t}>{t}</option>
-          ))}
-        </select>
-        <input
-          className={INPUT}
-          placeholder="Day (1–31)"
-          type="number"
-          min={1} max={31}
-          value={value.day}
-          onChange={set("day")}
-        />
-        <input
-          className={INPUT}
-          placeholder="Month (1–12)"
-          type="number"
-          min={1} max={12}
-          value={value.month}
-          onChange={set("month")}
-        />
+      <div className="flex flex-col gap-2">
+        {/* Row 1: Name + Gender */}
+        <div className="flex gap-2">
+          <input
+            className={`${INPUT} flex-1 min-w-0`}
+            placeholder="Name"
+            value={value.name}
+            onChange={set("name")}
+          />
+          <div className="flex rounded-lg overflow-hidden border border-white/[0.08] text-sm font-medium w-16 shrink-0">
+            {(["M", "F"] as const).map((g) => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => onChange({ ...value, gender: g })}
+                className={`flex-1 py-2 transition-colors ${
+                  value.gender === g
+                    ? "bg-amber-500 text-black"
+                    : "bg-[#0d0d1a] text-zinc-500 hover:text-white"
+                }`}
+              >
+                {g === "M" ? "♂" : "♀"}
+              </button>
+            ))}
+          </div>
+        </div>
+        {/* Row 2: MBTI + Day + Month */}
+        <div className="flex gap-2">
+          <MbtiSelect
+            className="flex-1"
+            value={value.mbti}
+            onChange={(v) => onChange({ ...value, mbti: v })}
+          />
+          <input
+            className={`${INPUT} w-16 shrink-0`}
+            placeholder="Day"
+            type="number"
+            min={1} max={31}
+            value={value.day}
+            onChange={set("day")}
+          />
+          <input
+            className={`${INPUT} w-16 shrink-0`}
+            placeholder="Mo"
+            type="number"
+            min={1} max={12}
+            value={value.month}
+            onChange={set("month")}
+          />
+        </div>
       </div>
     </div>
   );

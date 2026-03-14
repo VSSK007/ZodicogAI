@@ -20,13 +20,6 @@ interface Props {
   bTraits?: Traits;
 }
 
-const QUADRANT_LABELS = [
-  { x: 1.5, y: 8.5, label: "Empathic" },
-  { x: 7,   y: 8.5, label: "Dominant" },
-  { x: 1.5, y: 1.5, label: "Reserved" },
-  { x: 7,   y: 1.5, label: "Assertive" },
-];
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const CustomDot = ({ cx, cy, payload }: any) => (
   <g>
@@ -46,7 +39,7 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
   ];
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
+    <div className="rounded-2xl border border-white/[0.07] bg-[#16162a] p-5">
       <h3 className="text-sm font-semibold text-zinc-300 mb-0.5">Behavioral Map</h3>
       <p className="text-xs text-zinc-500 mb-4">Dominance × Expressiveness</p>
       <ResponsiveContainer width="100%" height={260}>
@@ -66,21 +59,13 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
           />
           <ReferenceLine x={5} stroke="rgba(255,255,255,0.07)" strokeDasharray="4 4" />
           <ReferenceLine y={5} stroke="rgba(255,255,255,0.07)" strokeDasharray="4 4" />
-          {QUADRANT_LABELS.map((q) => (
-            <ReferenceLine
-              key={q.label}
-              x={q.x} y={q.y}
-              stroke="transparent"
-              label={{ value: q.label, fill: "rgba(255,255,255,0.12)", fontSize: 10 }}
-            />
-          ))}
           <Tooltip
             cursor={false}
             content={({ payload }) => {
               if (!payload?.length) return null;
               const d = payload[0].payload;
               return (
-                <div className="bg-zinc-900 border border-white/10 rounded-lg px-3 py-2 text-xs text-white">
+                <div className="bg-[#1e1e35] border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-white">
                   <p className="font-semibold mb-1">{d.label}</p>
                   <p>Dominance: {d.x} / 10</p>
                   <p>Expressiveness: {d.y} / 10</p>
@@ -91,6 +76,26 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
           <Scatter data={points} shape={<CustomDot />} />
         </ScatterChart>
       </ResponsiveContainer>
+
+      {/* Quadrant labels as a 2×2 grid below the chart */}
+      <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 px-2">
+        <div className="text-left">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-widest">↑ Low Dom · High Exp</span>
+          <span className="ml-2 text-[10px] font-medium text-white/20">Empathic</span>
+        </div>
+        <div className="text-right">
+          <span className="text-[10px] font-medium text-white/20">Dominant</span>
+          <span className="ml-2 text-[10px] text-zinc-600 uppercase tracking-widest">High Dom · High Exp ↑</span>
+        </div>
+        <div className="text-left">
+          <span className="text-[10px] text-zinc-600 uppercase tracking-widest">↓ Low Dom · Low Exp</span>
+          <span className="ml-2 text-[10px] font-medium text-white/20">Reserved</span>
+        </div>
+        <div className="text-right">
+          <span className="text-[10px] font-medium text-white/20">Assertive</span>
+          <span className="ml-2 text-[10px] text-zinc-600 uppercase tracking-widest">High Dom · Low Exp ↓</span>
+        </div>
+      </div>
     </div>
   );
 }

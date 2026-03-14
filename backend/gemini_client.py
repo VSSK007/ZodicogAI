@@ -1,0 +1,754 @@
+"""
+Gemini API client.
+
+Public interface
+---------------
+  call_gemini(prompt, schema)        — send a prompt, return a validated schema instance.
+  build_prompt(analysis_type, ctx)   — select the right template and fill it with engine data.
+
+Execution path for call_gemini
+-------------------------------
+  1. _api_call()  — sends prompt to Gemini with response_schema set,
+                    retries up to _MAX_RETRIES times per model,
+                    falls back across _MODELS on repeated failure.
+  2. call_gemini() validates the raw JSON text with Pydantic.
+  3. On ValidationError or bad JSON:
+       retry once using _correction_prompt() which embeds the schema
+       definition and the original bad response so the model self-corrects.
+  4. If the correction attempt also fails: return schema() (safe defaults).
+"""
+
+import json
+import os
+import time
+
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+from pydantic import BaseModel, ValidationError
+
+load_dotenv()
+
+_api_key = os.getenv("GEMINI_API_KEY")
+if not _api_key:
+    raise EnvironmentError("GEMINI_API_KEY is not set in .env")
+
+_client = genai.Client(api_key=_api_key)
+
+_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash-lite"]
+_MAX_RETRIES = 3
+
+
+# ---------------------------------------------------------------------------
+# Internal helpers
+# ---------------------------------------------------------------------------
+
+def _api_call(prompt: str, schema: type[BaseModel]) -> str:
+    """
+    Send prompt to Gemini with response_schema set.
+    Retries _MAX_RETRIES times per model with exponential back-off,
+    then moves to the next model. Returns the raw response text.
+    Raises RuntimeError if every option is exhausted.
+    """
+    last_error: Exception = RuntimeError("No models tried")
+
+    for model_name in _MODELS:
+        for attempt in range(_MAX_RETRIES):
+            try:
+                response = _client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=schema,
+                        max_output_tokens=16384,
+                    ),
+                )
+                return response.text
+            except Exception as exc:
+                last_error = exc
+                if attempt < _MAX_RETRIES - 1:
+                    time.sleep(2 ** attempt)  # 1 s, 2 s
+
+    raise RuntimeError(
+        f"Gemini API failed on all models after {_MAX_RETRIES} retries. "
+        f"Last error: {last_error}"
+    )
+
+
+def _correction_prompt(original_prompt: str, bad_response: str, error: str,
+                        schema: type[BaseModel]) -> str:
+    """
+    Build a self-correction prompt that includes:
+      - what went wrong (the validation error)
+      - what the model actually returned (so it can see its mistake)
+      - the exact JSON schema it must conform to
+      - the original request repeated at the end
+    """
+    schema_json = json.dumps(schema.model_json_schema(), indent=2)
+    return (
+        f"Your previous response failed schema validation.\n"
+        f"Validation error: {error}\n\n"
+        f"Your invalid response was:\n{bad_response[:600]}\n\n"
+        f"The required JSON schema is:\n{schema_json}\n\n"
+        f"Fix the response and try again. Original request:\n{original_prompt}"
+    )
+
+
+def _parse_and_validate(raw: str, schema: type[BaseModel]) -> BaseModel:
+    """Parse raw JSON text and validate it against schema. Raises on failure."""
+    try:
+        return schema.model_validate_json(raw)
+    except ValidationError:
+        # model_validate_json failed — try manual parse in case the text has
+        # leading/trailing whitespace or a BOM that trips the fast path
+        data = json.loads(raw)
+        return schema.model_validate(data)
+
+
+# ---------------------------------------------------------------------------
+# Public interface
+# ---------------------------------------------------------------------------
+
+def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
+    """
+    Call Gemini and return a validated schema instance.
+
+    Args:
+        prompt: the full instruction prompt for the LLM.
+        schema: a Pydantic BaseModel subclass that defines the expected shape.
+                Passed to Gemini as response_schema so the model is
+                constrained to produce conforming JSON.
+
+    Returns:
+        A validated instance of schema.
+        On total failure returns schema() — all fields at their defaults.
+    """
+    # --- Attempt 1: original prompt ---
+    raw: str | None = None
+    try:
+        raw = _api_call(prompt, schema)
+        return _parse_and_validate(raw, schema)
+    except (ValidationError, ValueError, json.JSONDecodeError) as parse_err:
+        # API succeeded but output was malformed — retry with correction prompt
+        correction = _correction_prompt(prompt, raw or "", str(parse_err), schema)
+    except Exception:
+        # API itself failed — return safe default immediately
+        return schema()
+
+    # --- Attempt 2: one correction retry ---
+    try:
+        raw = _api_call(correction, schema)
+        return _parse_and_validate(raw, schema)
+    except Exception:
+        return schema()
+
+
+# ---------------------------------------------------------------------------
+# Prompt template system
+# ---------------------------------------------------------------------------
+# Analysis-type string constants (mirrored from agent_controller to avoid
+# circular imports — agent_controller imports call_gemini from here).
+# ---------------------------------------------------------------------------
+
+_HYBRID_ANALYSIS               = "hybrid_analysis"
+_COMPATIBILITY_ANALYSIS        = "compatibility_analysis"
+_EMOTIONAL_COMPATIBILITY       = "emotional_compatibility"
+_ROMANTIC_COMPATIBILITY        = "romantic_compatibility"
+_SEXTROLOGY_ANALYSIS           = "sextrology_analysis"
+_SEXTROLOGY_SOLO_ANALYSIS      = "sextrology_solo_analysis"
+_LOVE_STYLE_ANALYSIS           = "love_style_analysis"
+_LOVE_LANGUAGE_ANALYSIS        = "love_language_analysis"
+_FULL_RELATIONSHIP_INTELLIGENCE = "full_relationship_intelligence"
+_ZODIAC_ARTICLE                = "zodiac_article"
+_COLOR_ANALYSIS                = "color_analysis"
+_COLOR_PAIR_ANALYSIS           = "color_pair_analysis"
+_NUMEROLOGY_ANALYSIS           = "numerology_analysis"
+_NUMEROLOGY_PAIR_ANALYSIS      = "numerology_pair_analysis"
+
+
+# --- Shared helpers --------------------------------------------------------
+
+def _names(ctx: dict) -> tuple[str, str]:
+    return ctx["a"].get("name", "Person A"), ctx["b"].get("name", "Person B")
+
+
+def _decan_block(z: dict, name: str) -> str:
+    """Return a formatted decan context string for one person."""
+    d = z.get("decan", {})
+    if not d:
+        return ""
+    return (
+        f"  {name} Decan: {z.get('sign')} Decan {d.get('decan_number')} "
+        f"— sub-ruled by {d.get('sub_ruler')} / {d.get('sub_sign')}\n"
+        f"  Keywords : {', '.join(d.get('keywords', []))}\n"
+        f"  Profile  : {d.get('description_rich', d.get('description_short', ''))}"
+    )
+
+
+def _pair_header(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    a_z = ctx["a_zodiac"]
+    b_z = ctx["b_zodiac"]
+    a_m = ctx["a_mbti"]
+    b_m = ctx["b_mbti"]
+    header = (
+        f"{na} — Zodiac: {a_z.get('sign', str(a_z))}  |  MBTI: {a_m.get('type', str(a_m))}\n"
+        f"{nb} — Zodiac: {b_z.get('sign', str(b_z))}  |  MBTI: {b_m.get('type', str(b_m))}"
+    )
+    decan_a = _decan_block(a_z, na)
+    decan_b = _decan_block(b_z, nb)
+    if decan_a or decan_b:
+        header += "\n\nDecan context:\n" + decan_a
+        if decan_b:
+            header += "\n" + decan_b
+    return header
+
+
+def _compat_scores_block(ctx: dict) -> str:
+    return (
+        f"  Vector similarity : {ctx['vector_score']}%\n"
+        f"  Element compat.   : {ctx['element_score']}\n"
+        f"  Modality          : {ctx['modality_score']}"
+    )
+
+
+def _compat_json_schema() -> str:
+    return (
+        '{\n'
+        '  "relationship_dynamic":  "<2-3 sentences>",\n'
+        '  "communication_pattern": "<2-3 sentences>",\n'
+        '  "conflict_risk":         "<2-3 sentences>",\n'
+        '  "long_term_viability":   "<2-3 sentences>"\n'
+        '}'
+    )
+
+
+# --- Per-type prompt builders ---------------------------------------------
+
+def _prompt_hybrid(ctx: dict) -> str:
+    name = ctx["a"].get("name", "This person")
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Analyze the following personality combination for {name} and respond with a single valid JSON object.
+Refer to the person by their name ({name}) throughout your analysis. Do not say "this person" or "they" — use their name.
+Do not include any explanation, markdown, or text outside the JSON.
+
+Zodiac Profile: {ctx["zodiac"]}
+MBTI Profile:   {ctx["mbti"]}
+
+Required JSON structure:
+{{
+  "behavioral_core":       "<2-3 sentences on core behavioral drivers>",
+  "emotional_pattern":     "<2-3 sentences on emotional tendencies>",
+  "decision_making_style": "<2-3 sentences on how they make decisions>",
+  "social_dynamic":        "<2-3 sentences on social behavior and needs>",
+  "conflict_style":        "<2-3 sentences on how they handle conflict>",
+  "leadership_tendency":   "<2-3 sentences on leadership style>",
+  "strengths":    ["<strength 1>", "<strength 2>", "<strength 3>", "<strength 4>"],
+  "growth_edges": ["<growth edge 1>", "<growth edge 2>", "<growth edge 3>", "<growth edge 4>"]
+}}"""
+
+
+def _prompt_compatibility(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Analyze compatibility between {na} and {nb} and respond with a single valid JSON object.
+Refer to both people by their names. Do not use "Person A" or "Person B".
+Do not include any explanation, markdown, or text outside the JSON.
+
+{_pair_header(ctx)}
+
+Compatibility Metrics:
+{_compat_scores_block(ctx)}
+
+Required JSON structure:
+{_compat_json_schema()}"""
+
+
+def _prompt_emotional(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    e = ctx["emotional"]
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Analyze the emotional compatibility between {na} and {nb}. Use their names throughout.
+Do not include any explanation, markdown, or text outside the JSON.
+
+{_pair_header(ctx)}
+
+Emotional Metrics:
+  Expression similarity  : {e['emotional_expression_similarity']}%
+  Intensity alignment    : {e['emotional_intensity_alignment']}%
+  Stability compatibility: {e['emotional_stability_compatibility']}%
+  Emotional score        : {e['emotional_compatibility_score']}%
+
+Required JSON structure:
+{_compat_json_schema()}"""
+
+
+def _prompt_romantic(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    r = ctx["romantic"]
+    e = ctx["emotional"]
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Analyze the romantic compatibility between {na} and {nb}. Use their names throughout.
+Do not include any explanation, markdown, or text outside the JSON.
+
+{_pair_header(ctx)}
+
+Romantic Metrics:
+  Attachment pacing similarity  : {r['attachment_pacing_similarity']}%
+  Affection expression alignment: {r['affection_expression_similarity']}%
+  Romantic polarity score       : {r['romantic_polarity_score']}%
+  Emotional compatibility       : {e['emotional_compatibility_score']}%
+  Romantic score                : {r['romantic_compatibility_score']}%
+
+Required JSON structure:
+{_compat_json_schema()}"""
+
+
+def _prompt_sextrology(ctx: dict) -> str:
+    from sextrology_data import SEX_SIGN_PROFILES
+    na, nb = _names(ctx)
+    s   = ctx["sextrology"]
+    a_z = ctx["a_zodiac"]
+    b_z = ctx["b_zodiac"]
+    a_m = ctx["a_mbti"]
+    b_m = ctx["b_mbti"]
+    a_sign = a_z.get("sign", "")
+    b_sign = b_z.get("sign", "")
+    a_sx = SEX_SIGN_PROFILES.get(a_sign, {})
+    b_sx = SEX_SIGN_PROFILES.get(b_sign, {})
+
+    def _sx(name: str, sign: str, mbti: str, sx: dict) -> str:
+        if not sx:
+            return f"{name} ({sign} / {mbti})"
+        return (
+            f"{name} ({sign} / {mbti})\n"
+            f"  Libido rank     : #{sx['rank']} of 12\n"
+            f"  Sexual identity : {sx['character']}\n"
+            f"  Signature move  : {sx['position']}\n"
+            f"  Foreplay style  : {sx.get('foreplay', '—')}\n"
+            f"  Turn-ons        : {sx['turn_ons']}\n"
+            f"  Turn-offs       : {sx['turn_offs']}\n"
+            f"  Best matches    : {', '.join(sx['compatible'])}"
+        )
+
+    return f"""You are a sextrology expert.
+
+Sextrology examines how zodiac signs and MBTI types shape sexuality, sensuality, and intimate dynamics.
+Use the specific sign intelligence below — not generic archetypes — to ground every field in real sign behaviour.
+
+{_sx(na, a_sign, a_m.get('type', ''), a_sx)}
+
+{_sx(nb, b_sign, b_m.get('type', ''), b_sx)}
+
+Write a detailed sextrology reading for {na} and {nb}.
+Be bold, explicit, and direct — this is sextrology, not a relationship summary.
+Do not include any explanation, markdown, or text outside the JSON.
+
+Calculated Metrics:
+  Intensity alignment              : {s['intimacy_intensity_alignment']}%
+  Pacing alignment                 : {s['intimacy_pacing_alignment']}%
+  Dominance-receptiveness polarity : {s['dominance_receptiveness_polarity']}%
+  Emotional-physical balance       : {s['emotional_physical_balance_similarity']}%
+  Sexual compatibility score       : {s['sexual_compatibility_score']}%
+
+Fields — ground every sentence in the sign data above, no generic statements:
+  sexual_character       → each person's core erotic identity and how it plays against the other's
+  foreplay               → how their foreplay styles interact — zones, techniques, pace, and warm-up rituals that work for this specific pairing
+  erogenous_zones        → sign-specific zones and triggers for each person — where, how, and why
+  fantasies              → the fantasy themes and scenarios each sign gravitates toward
+  positions_and_dynamics → who leads, who surrenders, which positions suit this pairing's polarity
+  emotional_needs        → what each needs emotionally before they can fully open up sexually
+  long_term_fire         → does this chemistry deepen over time or burn fast and fade
+
+Required JSON structure:
+{{
+  "sexual_character":       "<2-3 sentences>",
+  "foreplay":               "<2-3 sentences>",
+  "erogenous_zones":        "<2-3 sentences>",
+  "fantasies":              "<2-3 sentences>",
+  "positions_and_dynamics": "<2-3 sentences>",
+  "emotional_needs":        "<2-3 sentences>",
+  "long_term_fire":         "<2-3 sentences>"
+}}"""
+
+
+def _prompt_sextrology_solo(ctx: dict) -> str:
+    from sextrology_data import SEX_SIGN_PROFILES
+    na    = ctx["a"].get("name", "this person")
+    z     = ctx["zodiac"]
+    m     = ctx["mbti"]
+    sign  = z.get("sign", "")
+    mbti  = m.get("type", "")
+    sx    = SEX_SIGN_PROFILES.get(sign, {})
+
+    sx_block = ""
+    if sx:
+        sx_block = (
+            f"  Libido rank     : #{sx['rank']} of 12\n"
+            f"  Sexual identity : {sx['character']}\n"
+            f"  Signature move  : {sx['position']}\n"
+            f"  Foreplay style  : {sx.get('foreplay', '—')}\n"
+            f"  Turn-ons        : {sx['turn_ons']}\n"
+            f"  Turn-offs       : {sx['turn_offs']}\n"
+            f"  Best matches    : {', '.join(sx['compatible'])}"
+        )
+
+    tv = z.get("trait_vector", {})
+
+    return f"""You are a sextrology expert writing a personal intimacy profile.
+
+Sextrology examines how a zodiac sign and MBTI type shape a person's sexuality, sensuality, kinks, and intimate desires.
+Ground every field in the sign-specific data below — not generic archetypes.
+
+{na} — {sign} / {mbti}
+{sx_block}
+
+Trait vector (0–10 scale):
+  Intensity      : {tv.get('intensity', '—')}
+  Expressiveness : {tv.get('expressiveness', '—')}
+  Dominance      : {tv.get('dominance', '—')}
+  Adaptability   : {tv.get('adaptability', '—')}
+  Stability      : {tv.get('stability', '—')}
+
+Write a detailed solo sextrology reading for {na}.
+Be bold, explicit, and specific — name real kinks, positions, fantasies, and zones tied to this sign's known behaviour.
+Do not include any explanation, markdown, or text outside the JSON.
+
+Fields:
+  sexual_character    → core erotic identity and overall sexual persona
+  foreplay            → their specific foreplay style — which zones, techniques, pace, and warm-up rituals work for this sign
+  turn_ons            → specific triggers, contexts, and behaviours that arouse them deeply
+  turn_offs           → what kills their desire — specific dealbreakers for this sign/type
+  erogenous_zones     → sign-specific body zones and how they like them stimulated
+  fantasies           → recurring fantasy themes, scenarios, or power dynamics this sign craves
+  kink_profile        → kinks, fetishes, and edge interests this sign/type tends toward — be explicit
+  signature_positions → 2-3 specific positions or physical dynamics that suit their drive and anatomy
+  seduction_style     → how they seduce others and how they most want to be seduced
+
+Required JSON:
+{{
+  "sexual_character":    "<2-3 sentences>",
+  "foreplay":            "<2-3 sentences>",
+  "turn_ons":            "<2-3 sentences>",
+  "turn_offs":           "<2-3 sentences>",
+  "erogenous_zones":     "<2-3 sentences>",
+  "fantasies":           "<2-3 sentences>",
+  "kink_profile":        "<2-3 sentences>",
+  "signature_positions": "<2-3 sentences>",
+  "seduction_style":     "<2-3 sentences>"
+}}"""
+
+
+def _prompt_love_style(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    ls = ctx["love_style"]
+    a_s = ls["a_love_style"]
+    b_s = ls["b_love_style"]
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Analyze how {na} and {nb} approach love and relationships based on their love style profiles.
+Use their names throughout. Do not include any explanation, markdown, or text outside the JSON.
+
+{_pair_header(ctx)}
+
+{na}'s Love Style: {a_s}
+{nb}'s Love Style: {b_s}
+Love Style Compatibility: {ls['love_style_compatibility_score']}%
+
+Required JSON structure:
+{_compat_json_schema()}"""
+
+
+def _prompt_love_language(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    ll = ctx["love_language"]
+    a_l = ll["a_love_language"]
+    b_l = ll["b_love_language"]
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Analyze how {na} and {nb} give and receive love based on their love language profiles.
+Use their names throughout. Do not include any explanation, markdown, or text outside the JSON.
+
+{_pair_header(ctx)}
+
+{na}'s Love Language: {a_l}
+{nb}'s Love Language: {b_l}
+Love Language Compatibility: {ll['love_language_compatibility_score']}%
+
+Required JSON structure:
+{_compat_json_schema()}"""
+
+
+def _prompt_full(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    e = ctx["emotional"]
+    r = ctx["romantic"]
+    s = ctx["sextrology"]
+    ls = ctx["love_style"]
+    ll = ctx["love_language"]
+    ri = ctx["relationship_intelligence"]
+    return f"""You are ZodicogAI, a behavioral intelligence engine.
+
+Produce a comprehensive relationship intelligence report for {na} and {nb}.
+Use their names throughout. Do not use "Person A" or "Person B".
+Do not include any explanation, markdown, or text outside the JSON.
+
+{_pair_header(ctx)}
+
+Overall Relationship Intelligence:
+  Overall score          : {ri['overall_score']}%
+  Stability prediction   : {ri['stability_prediction']}
+  Conflict probability   : {ri['conflict_probability']}%
+  Top strengths          : {', '.join(ri['strengths'])}
+  Risk areas             : {', '.join(ri['risks'])}
+
+Dimension Scores:
+  Behavioral similarity  : {ctx['vector_score']}%
+  Emotional score        : {e['emotional_compatibility_score']}%
+  Romantic score         : {r['romantic_compatibility_score']}%
+  Intimacy score         : {s['sexual_compatibility_score']}%
+  Love style compat.     : {ls['love_style_compatibility_score']}%
+  Love language compat.  : {ll['love_language_compatibility_score']}%
+  Element compat.        : {ctx['element_score']}
+  Modality               : {ctx['modality_score']}
+
+{na}'s dominant love style   : {ls['a_love_style']['dominant_style']}
+{nb}'s dominant love style   : {ls['b_love_style']['dominant_style']}
+{na}'s primary love language : {ll['a_love_language']['primary_language']}
+{nb}'s primary love language : {ll['b_love_language']['primary_language']}
+
+Required JSON structure:
+{_compat_json_schema()}"""
+
+
+def _prompt_zodiac_article(ctx: dict) -> str:
+    z = ctx["zodiac"]
+    name = ctx["a"].get("name", "")
+    sign = z["sign"]
+    element = z["element"]
+    modality = z["modality"]
+    traits = z["trait_vector"]
+
+    # Ruling planet and archetype per sign
+    ruling_planets = {
+        "Aries": "Mars", "Taurus": "Venus", "Gemini": "Mercury",
+        "Cancer": "Moon", "Leo": "Sun", "Virgo": "Mercury",
+        "Libra": "Venus", "Scorpio": "Pluto/Mars", "Sagittarius": "Jupiter",
+        "Capricorn": "Saturn", "Aquarius": "Uranus/Saturn", "Pisces": "Neptune/Jupiter",
+    }
+    archetypes = {
+        "Aries": "The Pioneer", "Taurus": "The Sensualist", "Gemini": "The Messenger",
+        "Cancer": "The Nurturer", "Leo": "The Sovereign", "Virgo": "The Analyst",
+        "Libra": "The Diplomat", "Scorpio": "The Alchemist", "Sagittarius": "The Philosopher",
+        "Capricorn": "The Architect", "Aquarius": "The Visionary", "Pisces": "The Dreamer",
+    }
+    ruling = ruling_planets.get(sign, "unknown")
+    archetype = archetypes.get(sign, sign)
+
+    name_clause = f"The article is personalised for {name}, a {sign}. Use {name}'s name where natural." if name else f"Write about {sign} in general."
+
+    decan_str = _decan_block(z, name or sign)
+
+    return f"""You are ZodicogAI, a behavioral and astrological intelligence engine. Write a rich, immersive, magazine-quality astrological profile for the zodiac sign {sign} — "{archetype}".
+
+{name_clause}
+
+Sign data:
+  Sign       : {sign}  ({archetype})
+  Element    : {element}
+  Modality   : {modality}
+  Ruling body: {ruling}
+  Trait scores: Intensity {traits['intensity']:.2f}, Stability {traits['stability']:.2f}, Expressiveness {traits['expressiveness']:.2f}, Dominance {traits['dominance']:.2f}, Adaptability {traits['adaptability']:.2f}
+
+{decan_str}
+
+Instructions:
+- Write in an engaging, insightful, and direct style — like the best astrology journalism. Conversational but intelligent.
+- Be specific to {sign}. Do not write generic personality text. Every sentence should feel unmistakably like {sign}.
+- Use metaphors and vivid language to bring the sign to life.
+- Do not mention any other zodiac signs negatively. When listing best_matches, name exactly 4 signs.
+- For famous_people list exactly 6 well-known real people who are {sign} (include their birth dates in parentheses if known).
+- Each string field should be 3–5 rich, detailed sentences.
+- strengths: exactly 6 single-phrase traits (e.g. "Magnetic leadership")
+- weaknesses: exactly 5 single-phrase traits (e.g. "Struggles with vulnerability")
+- highest_expression: {sign} at their absolute best — when they are fully evolved, conscious, and integrated
+- shadow_expression: {sign} at their worst — the unconscious patterns, fears, and destructive tendencies that emerge when they are unaware
+
+Required JSON structure:
+{{
+  "overview":              "<3-5 sentences — the essence of {sign}: mythology, symbol, what drives them at the core>",
+  "the_symbol":            "<3-5 sentences — the symbol's meaning, the mythology behind the sign, ruling planet's influence>",
+  "personality":           "<4-6 sentences — full personality breakdown: how they think, feel, act, what they need, their contradictions>",
+  "highest_expression":    "<2-3 sentences — {sign} fully evolved: their gifts at peak, the consciousness level they can reach>",
+  "shadow_expression":     "<2-3 sentences — {sign} in shadow: the unconscious, the destructive pattern, the fear that drives it>",
+  "strengths":             ["<trait 1>", "<trait 2>", "<trait 3>", "<trait 4>", "<trait 5>", "<trait 6>"],
+  "weaknesses":            ["<trait 1>", "<trait 2>", "<trait 3>", "<trait 4>", "<trait 5>"],
+  "in_love":               "<3-5 sentences — how {sign} loves, what they need in a partner, their romantic style, how they behave in relationships>",
+  "as_a_friend":           "<3-4 sentences — {sign} as a friend: loyalty, social style, what they offer, what they expect>",
+  "career_and_ambition":   "<3-4 sentences — work ethic, natural career paths, how they lead or collaborate, relationship with success>",
+  "tips_for_relating":     "<3-4 sentences — practical, specific advice for anyone relating to a {sign}: what works, what doesn't, what they secretly need>",
+  "best_matches":          ["<sign 1>", "<sign 2>", "<sign 3>", "<sign 4>"],
+  "famous_people":         ["<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>"]
+}}"""
+
+
+def _prompt_color_single(ctx: dict) -> str:
+    name  = ctx["a"].get("name", "this person")
+    sign  = ctx["zodiac"]["sign"]
+    color = ctx["color"]
+    kw    = ", ".join(color["keywords"])
+    return f"""You are ZodicogAI, a color-energy intelligence engine.
+
+{name}'s zodiac sign is {sign}.
+
+Their SPIRITUAL AURA COLOR is {color['name']} ({color['hex']}) — the energy field they radiate: {kw}.
+Their CLASSIC POWER COLOR is {color['power_name']} ({color['power_hex']}) — the archetype color that amplifies their nature.
+Their 2026 COSMIC COLOR is {color['power_2026']} — this year's aligned shade for their sign.
+
+Write a rich, insightful color-energy reading for {name} weaving all three color layers.
+Reference the aura color as their core energy. Mention the classic power color's amplifying effect.
+Include a brief 2026 cosmic alignment note — how the year's color calls them to act now.
+
+Do not include any explanation, markdown, or text outside the JSON.
+
+Required JSON structure:
+{{
+  "color_meaning": "<2-3 sentences on what {name}'s aura color reveals about their soul, energy, and essence>",
+  "love_energy":   "<2-3 sentences on how their color energy shows up in {name}'s romantic life>",
+  "color_advice":  "<2-3 sentences on how {name} should harness all three colors: wear them, decorate with them, meditate on them — include the 2026 shade>",
+  "power_colors":  ["<complementary color 1 that amplifies {name}'s energy>", "<color 2>", "<color 3>"]
+}}"""
+
+
+def _prompt_color_pair(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    ch = ctx["color_harmony"]
+    ac, bc = ch["a_color"], ch["b_color"]
+    mg, cp = ch["middle_ground"], ch["compatible_color"]
+    return f"""You are ZodicogAI, a color-energy intelligence engine.
+
+{na}'s color: {ac['name']} ({ac['hex']}) — energy: {', '.join(ac['keywords'])}
+{nb}'s color: {bc['name']} ({bc['hex']}) — energy: {', '.join(bc['keywords'])}
+
+Their blended middle-ground color: {mg['name']} ({mg['hex']})
+Their harmonic compatible color (color-wheel complement of the blend): {cp['name']} ({cp['hex']})
+
+Write a rich color-energy compatibility reading for {na} and {nb}.
+Use their names throughout. Be specific to the interplay of their colors' energies.
+Do not include any explanation, markdown, or text outside the JSON.
+
+Required JSON structure:
+{{
+  "color_harmony":              "<2-3 sentences on how their colors interact — clash, complement, or create creative tension>",
+  "compatible_color_meaning":   "<2-3 sentences on what the harmonic bridge color {cp['hex']} represents for this pair>",
+  "middle_ground_meaning":      "<2-3 sentences on what their blended {mg['name']} color represents for the relationship>",
+  "pair_advice":                "<2-3 sentences on how {na} and {nb} can use these colors together in their shared life>"
+}}"""
+
+
+def _prompt_numerology_single(ctx: dict) -> str:
+    name = ctx["a"].get("name", "this person")
+    n    = ctx["numerology"]
+    return f"""You are ZodicogAI, a numerology intelligence engine.
+
+{name}'s numerological profile:
+  Life Path Number  : {n['life_path_number']} — {n['number_title']}
+  Expression Number : {n['expression_number']}
+  Lucky Number      : {n['lucky_number']}
+  Core theme        : {n['number_core']}
+  Love note         : {n['love_note']}
+  Strengths         : {', '.join(n['strengths'])}
+  Challenges        : {', '.join(n['challenges'])}
+
+Write a rich, immersive numerological reading for {name}.
+Ground every insight in their Life Path {n['life_path_number']} and its archetype "{n['number_title']}".
+Use {name}'s name throughout. Be specific, bold, and insightful.
+Do not include any explanation, markdown, or text outside the JSON.
+
+Required JSON structure:
+{{
+  "life_path_reading":      "<3-4 sentences on what Life Path {n['life_path_number']} means for {name}'s destiny and soul purpose>",
+  "love_and_relationships": "<2-3 sentences on {name}'s numerological approach to love, attraction, and partnership>",
+  "career_and_purpose":     "<2-3 sentences on career calling and life mission encoded in {name}'s numbers>",
+  "spiritual_theme":        "<2-3 sentences on karmic lessons, spiritual growth, and what the universe is teaching {name}>",
+  "shadow_challenge":       "<2-3 sentences on the shadow side: what {name} must overcome to fully embody their number>"
+}}"""
+
+
+def _prompt_numerology_pair(ctx: dict) -> str:
+    na, nb = _names(ctx)
+    an, bn = ctx["a_numerology"], ctx["b_numerology"]
+    compat = ctx["numerology_compat"]
+    signal = compat["pursue_signal"].upper()
+    return f"""You are ZodicogAI, a numerology intelligence engine.
+
+{na}: Life Path {an['life_path_number']} ({an['number_title']}), Expression {an['expression_number']}, Lucky {an['lucky_number']}
+{nb}: Life Path {bn['life_path_number']} ({bn['number_title']}), Expression {bn['expression_number']}, Lucky {bn['lucky_number']}
+
+Numerology Compatibility:
+  Overall score     : {compat['compatibility_score']}%
+  Life-path match   : {compat['life_path_score']}%
+  Expression match  : {compat['expression_score']}%
+  Cross-pair score  : {compat['cross_score']}%
+  Signal            : {signal}
+
+Write a full numerological compatibility reading for {na} and {nb}, including a SWOT analysis.
+Use their names throughout. Be bold, direct, and specific to their numbers.
+Do not include any explanation, markdown, or text outside the JSON.
+
+Required JSON structure:
+{{
+  "compatibility_reading": "<2-3 sentences on the core numerological dynamic between {na} and {nb}>",
+  "swot_strengths":        ["<shared strength 1>", "<shared strength 2>", "<shared strength 3>"],
+  "swot_weaknesses":       ["<shared weakness 1>", "<shared weakness 2>"],
+  "swot_opportunities":    ["<opportunity 1>", "<opportunity 2>", "<opportunity 3>"],
+  "swot_threats":          ["<threat 1>", "<threat 2>"],
+  "pursue_or_avoid":       "<clear recommendation based on the {compat['compatibility_score']}% score: pursue, proceed with caution, or avoid — 2 sentences explaining why>",
+  "pair_advice":           "<2-3 sentences of actionable advice for this numerological pairing>"
+}}"""
+
+
+# --- Public entry point ---------------------------------------------------
+
+_PROMPT_TEMPLATES: dict[str, callable] = {
+    _HYBRID_ANALYSIS:               _prompt_hybrid,
+    _COMPATIBILITY_ANALYSIS:        _prompt_compatibility,
+    _EMOTIONAL_COMPATIBILITY:       _prompt_emotional,
+    _ROMANTIC_COMPATIBILITY:        _prompt_romantic,
+    _SEXTROLOGY_ANALYSIS:           _prompt_sextrology,
+    _SEXTROLOGY_SOLO_ANALYSIS:      _prompt_sextrology_solo,
+    _LOVE_STYLE_ANALYSIS:           _prompt_love_style,
+    _LOVE_LANGUAGE_ANALYSIS:        _prompt_love_language,
+    _FULL_RELATIONSHIP_INTELLIGENCE: _prompt_full,
+    _ZODIAC_ARTICLE:                _prompt_zodiac_article,
+    _COLOR_ANALYSIS:                _prompt_color_single,
+    _COLOR_PAIR_ANALYSIS:           _prompt_color_pair,
+    _NUMEROLOGY_ANALYSIS:           _prompt_numerology_single,
+    _NUMEROLOGY_PAIR_ANALYSIS:      _prompt_numerology_pair,
+}
+
+
+def build_prompt(analysis_type: str, engine_results: dict) -> str:
+    """
+    Select the prompt template for analysis_type and fill it with engine_results.
+
+    Args:
+        analysis_type  : one of the analysis-type string constants.
+        engine_results : the shared context dict produced by agent_controller
+                         (contains keys like a_zodiac, b_zodiac, emotional, …).
+
+    Returns:
+        A fully rendered prompt string ready to pass to call_gemini().
+
+    Raises:
+        ValueError: if analysis_type has no registered template.
+    """
+    builder = _PROMPT_TEMPLATES.get(analysis_type)
+    if builder is None:
+        raise ValueError(f"No prompt template for analysis type: '{analysis_type}'")
+    return builder(engine_results)

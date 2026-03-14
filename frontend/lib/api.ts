@@ -5,6 +5,7 @@ export interface PersonData {
   day: string;
   month: string;
   mbti: string;
+  gender: "M" | "F";
 }
 
 export const MBTI_TYPES = [
@@ -15,7 +16,7 @@ export const MBTI_TYPES = [
 ];
 
 export function emptyPerson(): PersonData {
-  return { name: "", day: "", month: "", mbti: "" };
+  return { name: "", day: "", month: "", mbti: "", gender: "M" };
 }
 
 export function validatePerson(p: PersonData, label = "Person"): string | null {
@@ -28,7 +29,7 @@ export function validatePerson(p: PersonData, label = "Person"): string | null {
 }
 
 export function toPerson(p: PersonData) {
-  return { name: p.name.trim(), day: Number(p.day), month: Number(p.month), mbti: p.mbti };
+  return { name: p.name.trim(), day: Number(p.day), month: Number(p.month), mbti: p.mbti, gender: p.gender };
 }
 
 export function pairBody(a: PersonData, b: PersonData) {

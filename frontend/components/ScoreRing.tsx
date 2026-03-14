@@ -52,8 +52,8 @@ export default function ScoreRing({
           textAnchor="middle"
           fill="white"
           fontSize={size * 0.18}
-          fontWeight="700"
-          fontFamily="inherit"
+          fontWeight="800"
+          fontFamily="var(--font-manrope), inherit"
         >
           {clamped.toFixed(1)}
         </text>
@@ -62,7 +62,7 @@ export default function ScoreRing({
           textAnchor="middle"
           fill="rgba(255,255,255,0.35)"
           fontSize={size * 0.09}
-          fontFamily="inherit"
+          fontFamily="var(--font-manrope), inherit"
         >
           / 100
         </text>

@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
-} from "recharts";
+import { EASE } from "@/lib/motion";
 import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
@@ -28,10 +26,56 @@ interface LoveStyleResult {
 }
 
 const STYLES_LIST = ["eros", "storge", "ludus", "mania", "pragma", "agape"] as const;
-const STYLE_DESCRIPTIONS: Record<string, string> = {
-  eros: "Passionate", storge: "Friendship", ludus: "Playful",
-  mania: "Obsessive",  pragma: "Practical",  agape: "Selfless",
+const STYLE_LABELS: Record<string, string> = {
+  eros: "Eros — Passionate", storge: "Storge — Friendship", ludus: "Ludus — Playful",
+  mania: "Mania — Obsessive", pragma: "Pragma — Practical", agape: "Agape — Selfless",
 };
+
+const CARD = "bg-[#16162a] border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-1.5 mb-2">
+      <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
+      <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
+    </div>
+  );
+}
+
+function DualBar({ label, aVal, bVal, i }: { label: string; aVal: number; bVal: number; i: number }) {
+  return (
+    <motion.div
+      className="py-2.5 border-b border-white/[0.04] last:border-0 rounded-lg px-2 -mx-2"
+      whileHover={{ x: 4, backgroundColor: "rgba(255,255,255,0.02)" }}
+      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+    >
+      <div className="flex items-center justify-between text-xs mb-2">
+        <span className="text-zinc-300">{label}</span>
+        <span className="text-zinc-500 tabular-nums">{aVal.toFixed(0)} / {bVal.toFixed(0)}</span>
+      </div>
+      <div className="space-y-1">
+        <div className="relative h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full"
+            style={{ background: "#a78bfa" }}
+            initial={{ width: 0 }}
+            animate={{ width: `${aVal}%` }}
+            transition={{ duration: 0.7, delay: i * 0.06, ease: "easeOut" }}
+          />
+        </div>
+        <div className="relative h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+          <motion.div
+            className="absolute inset-y-0 left-0 rounded-full"
+            style={{ background: "#fb7185" }}
+            initial={{ width: 0 }}
+            animate={{ width: `${bVal}%` }}
+            transition={{ duration: 0.7, delay: i * 0.06 + 0.05, ease: "easeOut" }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
 
 export default function LoveStylePage() {
   const [a, setA] = useState<PersonData>(emptyPerson());
@@ -54,18 +98,11 @@ export default function LoveStylePage() {
 
   const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
 
-  const chartData = result
-    ? STYLES_LIST.map((s) => ({
-        style: STYLE_DESCRIPTIONS[s],
-        [names.a]: result.a_love_style[s],
-        [names.b]: result.b_love_style[s],
-      }))
-    : [];
-
   return (
     <main className="min-h-screen px-6 py-16 max-w-4xl mx-auto">
       <div className="mb-10">
-        <h1 className="text-3xl font-semibold tracking-tight">Love Style</h1>
+        <Eyebrow>Analysis</Eyebrow>
+        <h1 className="text-3xl font-bold tracking-tight">Love Style</h1>
         <p className="text-zinc-500 mt-1 text-sm">Eros, Storge, Ludus, Mania, Pragma, Agape profiles</p>
       </div>
 
@@ -83,50 +120,94 @@ export default function LoveStylePage() {
 
       <AnimatePresence>
         {result && (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="space-y-8">
-            {/* Score + dominant styles */}
-            <div className="rounded-2xl border border-orange-500/20 bg-orange-500/5 p-8 flex flex-col md:flex-row items-center gap-8">
-              <ScoreRing score={result.love_style_compatibility_score} size={160} label="Style Compatibility" color="#f97316" />
-              <div className="grid grid-cols-2 gap-3 flex-1">
-                <MetricCard label={`${names.a} Style`} value={result.a_love_style.dominant_style} unit="" accent="orange" />
-                <MetricCard label={`${names.b} Style`} value={result.b_love_style.dominant_style} unit="" accent="orange" />
-              </div>
-            </div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-5">
 
-            {/* Grouped bar chart */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <h2 className="text-sm font-semibold text-zinc-300 mb-4">Love Style Distribution</h2>
-              <ResponsiveContainer width="100%" height={260}>
-                <BarChart data={chartData} layout="vertical" margin={{ left: 10, right: 20 }}>
-                  <XAxis type="number" domain={[0, 100]} tick={{ fill: "#52525b", fontSize: 11 }} />
-                  <YAxis type="category" dataKey="style" tick={{ fill: "#a1a1aa", fontSize: 12 }} width={76} />
-                  <Tooltip
-                    formatter={(v: number | undefined) => `${(v ?? 0).toFixed(1)}`}
-                    contentStyle={{ background: "#111", border: "1px solid #333", borderRadius: 8, color: "#fff" }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                  <Bar dataKey={names.a} fill="rgba(255,255,255,0.65)" radius={[0, 4, 4, 0]} barSize={10} />
-                  <Bar dataKey={names.b} fill="#3b82f6"               radius={[0, 4, 4, 0]} barSize={10} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            {/* Score + dominant styles */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, ease: EASE }}
+              className={CARD}
+            >
+              <div className="h-0.5 bg-gradient-to-r from-[#fb923c]/60 via-[#fb923c]/20 to-transparent" />
+              <div className="p-8 flex flex-col md:flex-row items-center gap-8">
+                <ScoreRing score={result.love_style_compatibility_score} size={160} label="Style Compatibility" color="#fb923c" />
+                <div className="grid grid-cols-2 gap-3 flex-1">
+                  <MetricCard label={`${names.a} Style`} value={result.a_love_style.dominant_style} unit="" accent="orange" />
+                  <MetricCard label={`${names.b} Style`} value={result.b_love_style.dominant_style} unit="" accent="orange" />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Distribution */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
+              className={CARD}
+            >
+              <div className="h-0.5 bg-gradient-to-r from-[#4285f4]/50 via-[#34a853]/30 to-transparent" />
+              <div className="p-6">
+                <h2 className="text-sm font-semibold text-zinc-300 mb-1">Love Style Distribution</h2>
+                <div className="flex gap-4 mb-4 text-xs text-zinc-400">
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#a78bfa] inline-block" />{names.a}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#fb7185] inline-block" />{names.b}
+                  </span>
+                </div>
+                <div>
+                  {STYLES_LIST.map((s, i) => (
+                    <DualBar
+                      key={s}
+                      label={STYLE_LABELS[s]}
+                      aVal={result.a_love_style[s]}
+                      bVal={result.b_love_style[s]}
+                      i={i}
+                    />
+                  ))}
+                </div>
+              </div>
+            </motion.div>
 
             {/* Radar */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
-              <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
+              className={CARD}
+            >
+              <div className="h-0.5 bg-gradient-to-r from-[#4285f4]/50 via-[#34a853]/30 to-transparent" />
+              <div className="p-6">
+                <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
+                <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
+              </div>
+            </motion.div>
 
-            {/* Narrative */}
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
-              <h2 className="text-sm font-semibold text-zinc-300">AI Interpretation</h2>
-              {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
-                <div key={key} className="border-l-2 border-orange-500/30 pl-4">
-                  <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
-                  <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+            {/* AI Interpretation */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
+              className={CARD}
+            >
+              <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
+                <div className="relative w-2 h-2 shrink-0">
+                  <div className="absolute inset-0 rounded-full bg-[#4285f4] animate-ping opacity-60" />
+                  <div className="w-2 h-2 rounded-full bg-[#4285f4]" />
                 </div>
-              ))}
-            </div>
+                <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
+                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-[#4285f4]/10 text-[#4285f4]/80 border border-[#4285f4]/20">
+                  Gemini 2.5 Flash
+                </span>
+              </div>
+              <div className="p-6 space-y-5">
+                {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
+                  <div key={key} className="border-l-2 border-orange-500/40 pl-4">
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
           </motion.div>
         )}
       </AnimatePresence>

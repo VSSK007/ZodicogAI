@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/* ── Smooth scrolling ───────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Reduced motion — disable ALL CSS animations for accessibility ──────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
+    scroll-behavior:           auto   !important;
+  }
+}
+
+/* ── Design tokens ─────────────────────────────────────────────────────────── */
+:root {
+  --g-blue:   #4285f4;
+  --g-green:  #34a853;
+  --g-yellow: #fbbc04;
+  --g-red:    #ea4335;
+}
+
+/* ── Omnidirectional doodle drift keyframes ─────────────────────────────────
+   6 directions — outer wrapper holds rotation, inner div plays one of these.
+   All breathe in/out with opacity; mid-point is the apex of the drift.       */
+
+@keyframes drift0 {
+  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
+  15%, 85% { opacity: 0.06; }
+  50%      { opacity: 0.04; transform: translate(-18px, -24px); }
+}
+@keyframes drift1 {
+  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
+  15%, 85% { opacity: 0.06; }
+  50%      { opacity: 0.04; transform: translate(24px, -18px); }
+}
+@keyframes drift2 {
+  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
+  15%, 85% { opacity: 0.06; }
+  50%      { opacity: 0.04; transform: translate(20px,  22px); }
+}
+@keyframes drift3 {
+  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
+  15%, 85% { opacity: 0.06; }
+  50%      { opacity: 0.04; transform: translate(-22px, 20px); }
+}
+@keyframes drift4 {
+  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
+  15%, 85% { opacity: 0.06; }
+  50%      { opacity: 0.04; transform: translate(12px, -30px); }
+}
+@keyframes drift5 {
+  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
+  15%, 85% { opacity: 0.06; }
+  50%      { opacity: 0.04; transform: translate(-28px, 14px); }
+}
+
+/* ── Dashboard streak background ───────────────────────────────────────────── */
+@keyframes streak-rise {
+  from { top: 110%; }
+  to   { top: -20%; }
+}
+
+/* ── Subtle star twinkle ────────────────────────────────────────────────────── */
+@keyframes twinkle {
+  0%, 100% { opacity: var(--star-opacity, 0.15); }
+  50%      { opacity: calc(var(--star-opacity, 0.15) * 0.3); }
+}
+
+@layer base {
+  input, select, textarea, button {
+    font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif !important;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-manrope), var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  }
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  select option {
+    background-color: #18181b;
+    color: #ffffff;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
