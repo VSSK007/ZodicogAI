@@ -289,7 +289,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh)] md:h-[calc(100vh-48px)] overflow-hidden bg-[#0a0a0a]">
+    <div className="flex h-[calc(100dvh-64px)] md:h-[calc(100vh-48px)] overflow-hidden bg-[#0a0a0a]">
 
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden md:block">

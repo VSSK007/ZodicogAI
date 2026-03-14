@@ -58,16 +58,18 @@ export default function MobileNavbar() {
 
   return (
     <>
-      {/* Mobile footer — email visible above bottom nav */}
-      <div className="block md:hidden fixed bottom-16 left-0 right-0 z-40 px-4 py-2 bg-gradient-to-t from-[#07071a]/80 to-transparent pointer-events-none">
-        <a
-          href="mailto:kar1mr@zodicogai.com"
-          className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors block text-center pointer-events-auto"
-          title="Contact ZodicogAI"
-        >
-          kar1mr@zodicogai.com
-        </a>
-      </div>
+      {/* Mobile footer — email above bottom nav, hidden on homepage (Zodicognac transition lives there) */}
+      {pathname !== "/" && (
+        <div className="block md:hidden fixed bottom-16 left-0 right-0 z-40 px-4 py-2 bg-gradient-to-t from-[#07071a]/80 to-transparent pointer-events-none">
+          <a
+            href="mailto:kar1mr@zodicogai.com"
+            className="text-[10px] text-zinc-600 hover:text-zinc-400 transition-colors block text-center pointer-events-auto"
+            title="Contact ZodicogAI"
+          >
+            kar1mr@zodicogai.com
+          </a>
+        </div>
+      )}
 
       <nav className="block md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 bg-[#07071a]/95 backdrop-blur-xl border-t border-white/[0.08]">
         <div className="flex justify-around items-end px-2 pb-3 h-full">
