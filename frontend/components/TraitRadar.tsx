@@ -29,12 +29,19 @@ type Props = {
 const COLOR_A = "#a78bfa"; // violet
 const COLOR_B = "#fb7185"; // rose
 
-function CustomTooltip({ active, payload }: any) {
+interface TooltipItem {
+  name: string;
+  value: number;
+  color: string;
+  payload?: { trait: string };
+}
+
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipItem[] }) {
   if (!active || !payload?.length) return null;
   return (
     <div className="bg-[#1e1e35] border border-white/[0.08] rounded-xl px-3 py-2 text-xs shadow-lg">
       <p className="text-zinc-400 font-medium mb-1">{payload[0]?.payload?.trait}</p>
-      {payload.map((p: any) => (
+      {payload.map((p) => (
         <p key={p.name} style={{ color: p.color }} className="font-semibold">
           {p.name}: {Number(p.value).toFixed(1)} / 10
         </p>

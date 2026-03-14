@@ -228,6 +228,18 @@ export default function CompatibilityForm() {
   );
 }
 
+interface ProfileCardProps {
+  name: string;
+  setName: (v: string) => void;
+  day: string;
+  setDay: (v: string) => void;
+  month: string;
+  setMonth: (v: string) => void;
+  mbti: string;
+  setMbti: (v: string) => void;
+  placeholder: string;
+}
+
 function ProfileCard({
   name,
   setName,
@@ -238,7 +250,7 @@ function ProfileCard({
   mbti,
   setMbti,
   placeholder,
-}: any) {
+}: ProfileCardProps) {
   return (
     <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-white/10 space-y-3">
       <input
@@ -278,7 +290,7 @@ function ProfileCard({
   );
 }
 
-function Insight({ title, text }: any) {
+function Insight({ title, text }: { title: string; text: string }) {
   return (
     <div className="bg-white/[0.03] p-6 rounded-2xl ring-1 ring-white/10">
       <h3 className="mb-2">{title}</h3>

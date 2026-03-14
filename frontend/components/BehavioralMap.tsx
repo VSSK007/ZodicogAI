@@ -21,15 +21,23 @@ interface Props {
   bTraits?: Traits;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const CustomDot = ({ cx, cy, payload }: any) => (
-  <g>
-    <circle cx={cx} cy={cy} r={9} fill={payload.fill} fillOpacity={0.85} />
-    <text x={cx + 13} y={cy + 4} fill="rgba(255,255,255,0.65)" fontSize={11}>
-      {payload.label}
-    </text>
-  </g>
-);
+interface DotProps {
+  cx?: number;
+  cy?: number;
+  payload?: { x: number; y: number; fill: string; label: string };
+}
+
+const CustomDot = ({ cx, cy, payload }: DotProps) => {
+  if (cx === undefined || cy === undefined || !payload) return null;
+  return (
+    <g>
+      <circle cx={cx} cy={cy} r={9} fill={payload.fill} fillOpacity={0.85} />
+      <text x={cx + 13} y={cy + 4} fill="rgba(255,255,255,0.65)" fontSize={11}>
+        {payload.label}
+      </text>
+    </g>
+  );
+};
 
 export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", aTraits, bTraits }: Props) {
   if (!aTraits && !bTraits) return null;
