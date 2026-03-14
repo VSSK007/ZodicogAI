@@ -15,8 +15,10 @@ const INPUT = "rounded-lg bg-[#0d0d1a] border border-white/[0.08] px-3 py-3 md:p
 export default function PersonForm({ label, value, onChange, compact = false }: Props) {
   const set =
     (key: keyof PersonData) =>
-    (e: React.ChangeEvent<HTMLInputElement>) =>
-      onChange({ ...value, [key]: e.target.value });
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const v = e.target.value;
+      onChange({ ...value, [key]: key === "day" || key === "month" ? (v ? Number(v) : 0) : v });
+    };
 
   return (
     <div className={`rounded-xl border border-white/[0.07] p-4 ${compact ? "bg-[#13131f]" : "bg-[#16162a]"}`}>
@@ -59,7 +61,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             placeholder="Day"
             type="number"
             min={1} max={31}
-            value={value.day}
+            value={value.day || ""}
             onChange={set("day")}
           />
           <input
@@ -67,7 +69,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             placeholder="Mo"
             type="number"
             min={1} max={12}
-            value={value.month}
+            value={value.month || ""}
             onChange={set("month")}
           />
         </div>

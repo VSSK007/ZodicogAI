@@ -2,8 +2,8 @@ export const API = "http://127.0.0.1:8000";
 
 export interface PersonData {
   name: string;
-  day: string;
-  month: string;
+  day: number;
+  month: number;
   mbti: string;
   gender: "M" | "F";
 }
@@ -16,7 +16,7 @@ export const MBTI_TYPES = [
 ];
 
 export function emptyPerson(): PersonData {
-  return { name: "", day: "", month: "", mbti: "", gender: "M" };
+  return { name: "", day: 0, month: 0, mbti: "", gender: "M" };
 }
 
 export function validatePerson(p: PersonData, label = "Person"): string | null {
