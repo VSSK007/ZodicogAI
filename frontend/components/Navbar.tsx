@@ -96,13 +96,16 @@ export default function Navbar() {
             </svg>
           </a>
 
-          {/* Email — hides at smaller desktop widths to keep GitHub visible */}
+          {/* Email icon */}
           <a
             href="mailto:kar1mr@zodicogai.com"
-            className="hidden xl:block text-[11px] text-zinc-600 hover:text-zinc-400 transition-colors shrink-0 whitespace-nowrap"
-            title="Contact ZodicogAI"
+            className="text-zinc-500 hover:text-zinc-300 transition-colors shrink-0"
+            title="kar1mr@zodicogai.com"
           >
-            kar1mr@zodicogai.com
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
           </a>
         </div>
       </div>

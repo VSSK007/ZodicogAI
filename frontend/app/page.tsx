@@ -43,9 +43,13 @@ function HomeContent() {
           <div className="md:hidden absolute top-3 left-0 right-0 flex items-center justify-center gap-3">
             <a
               href="mailto:kar1mr@zodicogai.com"
-              className="text-[10px] text-zinc-700 hover:text-zinc-500 transition-colors"
+              className="text-zinc-600 hover:text-zinc-400 transition-colors"
+              title="kar1mr@zodicogai.com"
             >
-              kar1mr@zodicogai.com
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
             </a>
             <span className="text-zinc-700 text-[10px]">·</span>
             <a
