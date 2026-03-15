@@ -99,7 +99,7 @@ export default function Navbar() {
           {/* Email — hides at smaller desktop widths to keep GitHub visible */}
           <a
             href="mailto:kar1mr@zodicogai.com"
-            className="hidden xl:block text-[11px] text-zinc-600 hover:text-zinc-400 transition-colors"
+            className="hidden xl:block text-[11px] text-zinc-600 hover:text-zinc-400 transition-colors shrink-0 whitespace-nowrap"
             title="Contact ZodicogAI"
           >
             kar1mr@zodicogai.com
