@@ -335,33 +335,18 @@ function HomeContent() {
             </AnimatePresence>
           </div>
 
-          {/* Subtitle — min-h keeps position stable while content swaps */}
-          <div className="min-h-[2rem] flex items-center justify-center mt-6">
-            <AnimatePresence mode="wait">
-              {znMode ? (
-                <motion.p
-                  key="desk-zn-sub"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
-                  transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
-                  className="text-amber-500/70 text-lg italic tracking-wide"
-                >
-                  Entering private session…
-                </motion.p>
-              ) : (
-                <motion.p
-                  key="desk-zo-sub"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, transition: { duration: 0.12 } }}
-                  transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
-                  className="text-zinc-400 text-lg"
-                >
-                  Hybrid Behavioral Intelligence Agent
-                </motion.p>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Subtitle — only shown during znMode */}
+          {znMode && (
+            <motion.p
+              key="desk-zn-sub"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
+              transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
+              className="text-amber-500/70 mt-6 text-lg italic tracking-wide"
+            >
+              Entering private session…
+            </motion.p>
+          )}
         </div>
 
         {/* Desktop forms */}
