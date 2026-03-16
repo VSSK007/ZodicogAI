@@ -276,7 +276,7 @@ export default function HybridForm() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 px-1 md:px-0">
       {/* ── INPUT CARD ── */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 md:p-8 space-y-4 md:space-y-5">
+      <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-5 md:p-8 space-y-4 md:space-y-5">
         <h2 className="text-xl font-semibold">Self Analysis</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -352,7 +352,7 @@ export default function HybridForm() {
 
             {/* ── Zodiac deep-dive ── */}
             {zodiac && zodMeta && (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
+              <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6 space-y-5">
                 <div className="flex items-start justify-between flex-wrap gap-4">
                   <div>
                     <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">Sun Sign</p>
@@ -408,7 +408,7 @@ export default function HybridForm() {
 
             {/* ── MBTI deep-dive ── */}
             {mbtiProf && (
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4">
+              <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6 space-y-4">
                 <div className="flex items-center justify-between flex-wrap gap-3">
                   <div>
                     <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">MBTI Type</p>
@@ -442,7 +442,7 @@ export default function HybridForm() {
                     ["Leadership",         analysis.leadership_tendency],
                   ] as [string, string][]
                 ).map(([title, text]) => (
-                  <div key={title} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <div key={title} className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-5">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">{title}</p>
                     <p className="text-sm text-zinc-300 leading-relaxed">{text ?? "Unavailable"}</p>
                   </div>
