@@ -98,6 +98,17 @@ html {
     width: 100%;
   }
 
+  /* Hide the Zodicognac FAB while "Explore All" grid is open */
+  body.explore-open .mobile-fab {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.75);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .mobile-fab {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
   input, select, textarea, button {
     font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif !important;
   }

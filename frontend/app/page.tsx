@@ -41,6 +41,15 @@ function HomeContent() {
     }
   }, [searchParams, router]);
 
+  useEffect(() => {
+    if (showMore) {
+      document.body.classList.add("explore-open");
+    } else {
+      document.body.classList.remove("explore-open");
+    }
+    return () => document.body.classList.remove("explore-open");
+  }, [showMore]);
+
   return (
     <main>
 

@@ -14,7 +14,7 @@ export default function MobileNavbar() {
 
   return (
     <nav
-      className="block md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 flex items-center justify-center"
+      className="mobile-fab block md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 flex items-center justify-center"
       style={{ background: "transparent" }}
     >
       <button
