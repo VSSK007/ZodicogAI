@@ -299,78 +299,69 @@ function HomeContent() {
             </AnimatePresence>
           </div>
 
-          {/* Title */}
-          <AnimatePresence mode="wait">
-            {znMode ? (
-              <motion.h1
-                key="desk-zn-title"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
-                className="text-7xl font-extrabold tracking-tight text-amber-400"
-                style={{ fontFamily: "var(--font-manrope)" }}
-              >
-                Zodicognac
-              </motion.h1>
-            ) : (
-              <motion.h1
-                key="desk-zo-title"
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, y: -12 }}
-                variants={
-                  reduced
-                    ? undefined
-                    : { visible: { transition: { staggerChildren: 0.04 } } }
-                }
-                className="text-7xl font-extrabold tracking-tight select-none leading-tight"
-                style={{ fontFamily: "var(--font-manrope)" }}
-              >
-                {reduced
-                  ? "ZodicogAI"
-                  : TITLE_CHARS.map((char, i) => (
-                      <motion.span key={i} className="inline-block" variants={charReveal}>
-                        {char}
-                      </motion.span>
-                    ))}
-              </motion.h1>
-            )}
-          </AnimatePresence>
+          {/* Title — min-h prevents subtitle shift when title unmounts */}
+          <div className="min-h-[5.5rem] flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {znMode ? (
+                <motion.h1
+                  key="desk-zn-title"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
+                  className="text-7xl font-extrabold tracking-tight text-amber-400"
+                  style={{ fontFamily: "var(--font-manrope)" }}
+                >
+                  Zodicognac
+                </motion.h1>
+              ) : (
+                <motion.h1
+                  key="desk-zo-title"
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                  variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
+                  className="text-7xl font-extrabold tracking-tight select-none leading-tight"
+                  style={{ fontFamily: "var(--font-manrope)" }}
+                >
+                  {reduced
+                    ? "ZodicogAI"
+                    : TITLE_CHARS.map((char, i) => (
+                        <motion.span key={i} className="inline-block" variants={charReveal}>
+                          {char}
+                        </motion.span>
+                      ))}
+                </motion.h1>
+              )}
+            </AnimatePresence>
+          </div>
 
-          {/* Subtitle */}
-          <AnimatePresence mode="wait">
-            {znMode ? (
-              <motion.p
-                key="desk-zn-sub"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
-                transition={{
-                  duration: 4.5,
-                  delay: 0.7,
-                  times: [0, 0.15, 0.35, 0.6, 0.8, 1],
-                  ease: "easeInOut",
-                }}
-                className="text-amber-500/70 mt-6 text-lg italic tracking-wide"
-              >
-                Entering private session…
-              </motion.p>
-            ) : (
-              <motion.p
-                key="desk-zo-sub"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{
-                  duration: 0.55,
-                  delay: reduced ? 0 : 0.52,
-                  ease: EASE,
-                }}
-                className="text-zinc-400 mt-6 text-lg"
-              >
-                Hybrid Behavioral Intelligence Agent
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {/* Subtitle — min-h keeps position stable while content swaps */}
+          <div className="min-h-[2rem] flex items-center justify-center mt-6">
+            <AnimatePresence mode="wait">
+              {znMode ? (
+                <motion.p
+                  key="desk-zn-sub"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
+                  transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
+                  className="text-amber-500/70 text-lg italic tracking-wide"
+                >
+                  Entering private session…
+                </motion.p>
+              ) : (
+                <motion.p
+                  key="desk-zo-sub"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, transition: { duration: 0.12 } }}
+                  transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
+                  className="text-zinc-400 text-lg"
+                >
+                  Hybrid Behavioral Intelligence Agent
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Desktop forms */}
