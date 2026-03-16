@@ -208,15 +208,6 @@ function HomeContent() {
               Zodicognac
             </motion.h1>
 
-            {/* Entering subtitle */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
-              transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
-              className="text-amber-500/70 mt-3 text-base italic tracking-wide"
-            >
-              Entering private session…
-            </motion.p>
           </div>
 
           {/* Progress bar — above mobile nav */}
@@ -335,18 +326,6 @@ function HomeContent() {
             </AnimatePresence>
           </div>
 
-          {/* Subtitle — only shown during znMode */}
-          {znMode && (
-            <motion.p
-              key="desk-zn-sub"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
-              transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
-              className="text-amber-500/70 mt-6 text-lg italic tracking-wide"
-            >
-              Entering private session…
-            </motion.p>
-          )}
         </div>
 
         {/* Desktop forms */}
