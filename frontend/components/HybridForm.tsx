@@ -332,7 +332,7 @@ export default function HybridForm() {
         <button
           onClick={runAnalysis}
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition"
+          className="w-full py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition"
         >
           {loading ? "Analyzing…" : "Analyze My Personality"}
         </button>

@@ -208,7 +208,7 @@ function ZodiacPageInner() {
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <button
             onClick={handleSubmit} disabled={loading}
-            className="w-full py-3.5 md:py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition min-h-[48px]"
+            className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px]"
           >
             {loading ? "Reading the stars…" : "Generate Zodiac Profile"}
           </button>

@@ -70,7 +70,7 @@ export default function RomanticPage() {
       {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
       <button
         onClick={handleSubmit} disabled={loading}
-        className="w-full py-3.5 md:py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-200 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
+        className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
       >
         {loading ? "Analyzing…" : "Analyze Romantic Compatibility"}
       </button>
