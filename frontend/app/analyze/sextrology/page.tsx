@@ -84,7 +84,7 @@ function pairSexBody(a: PersonData, b: PersonData) {
 
 // ── Page ──────────────────────────────────────────────────────────────────────
 
-const CARD = "bg-[#16162a] border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
+const CARD = "bg-white/[0.03] ring-1 ring-white/10 rounded-2xl overflow-hidden";
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (

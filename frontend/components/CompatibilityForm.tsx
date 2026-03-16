@@ -167,7 +167,7 @@ export default function CompatibilityForm() {
       <button
         onClick={runCompatibility}
         disabled={loading}
-        className="w-full md:w-auto bg-white text-black px-6 py-3 md:py-2 rounded-full disabled:opacity-50 font-semibold min-h-[48px] tap-highlight-none"
+        className="w-full bg-white text-black px-8 py-3.5 rounded-full disabled:opacity-50 font-semibold min-h-[48px] tap-highlight-none hover:opacity-90 transition"
       >
         Compute Compatibility
       </button>

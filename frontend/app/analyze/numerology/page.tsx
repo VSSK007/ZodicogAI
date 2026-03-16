@@ -322,7 +322,7 @@ export default function NumerologyPage() {
                 </div>
 
                 {/* Compatibility scores + signal */}
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-5">
+                <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6 space-y-5">
                   <div className="flex items-center justify-between flex-wrap gap-3">
                     <h2 className="text-sm font-semibold text-zinc-300">Numerology Compatibility</h2>
                     <span
@@ -349,7 +349,7 @@ export default function NumerologyPage() {
                 </div>
 
                 {/* SWOT */}
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-4">
+                <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6 space-y-4">
                   <h2 className="text-sm font-semibold text-zinc-300">SWOT Analysis</h2>
                   <SwotGrid
                     strengths={result.analysis.swot_strengths}
@@ -360,7 +360,7 @@ export default function NumerologyPage() {
                 </div>
 
                 {/* Narratives */}
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-5">
+                <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6 space-y-5">
                   <h2 className="text-sm font-semibold text-zinc-300">AI Numerology Reading</h2>
                   <NarrativeSection title="Compatibility Reading" text={result.analysis.compatibility_reading} />
                   <NarrativeSection title="Pursue or Avoid" text={result.analysis.pursue_or_avoid} />
@@ -370,7 +370,7 @@ export default function NumerologyPage() {
             ) : (
               <>
                 {/* Single: number display + narratives */}
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6">
                   <h2 className="text-sm font-semibold text-zinc-300 mb-4">{result.name}&apos;s Numerology Profile</h2>
                   <div className="flex items-start gap-6 flex-wrap">
                     <div className="flex gap-4">
@@ -405,7 +405,7 @@ export default function NumerologyPage() {
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 space-y-5">
+                <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-6 space-y-5">
                   <h2 className="text-sm font-semibold text-zinc-300">AI Numerology Reading</h2>
                   <NarrativeSection title="Life Path Reading" text={result.analysis.life_path_reading} />
                   <NarrativeSection title="Love & Relationships" text={result.analysis.love_and_relationships} />

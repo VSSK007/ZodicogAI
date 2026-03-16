@@ -113,7 +113,7 @@ function MbtiQuiz({ onResult, onClose }: QuizProps) {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
-      className="rounded-xl border border-white/10 bg-zinc-950 p-5 space-y-5"
+      className="rounded-2xl bg-white/[0.03] ring-1 ring-white/10 p-5 space-y-5"
     >
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold text-zinc-200">Quick MBTI Finder</p>
