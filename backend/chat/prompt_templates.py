@@ -373,31 +373,47 @@ User's question: "{message}"
 
 FORMAT RULES — read the question and decide:
 
-A) If the question asks about a SPECIFIC kink, act, position, fantasy, body part, or sexual term (e.g. "gokkun", "titfuck", "pearl necklace", "doggy style", "erogenous zones"):
-   — Answer ONLY that specific topic.
-   — Use EXACTLY this markdown structure — headers are mandatory, no prose walls:
+A) SPECIFIC question (a kink, act, position, fantasy, body part, or sexual term):
+   Answer ONLY that topic. Use THIS EXACT structure — no prose, no deviations:
 
-[One punchy sentence that NAMES the act and states the raw vibe for this pair.]
+[One punchy opener: name the act + state the raw vibe for this pair. One sentence only.]
 
 ### {na}
-[1-2 SHORT sentences. Use "{a_sub}/{a_pos}" only — never repeat the name. Assert — no hedging.]
+- **[{na}'s dominant trait]** — [one sentence on how {a_sub} experiences/drives this act]
+- **[{a_pos} energy/role]** — [one sharp sentence on what {a_sub} brings or gets]
 
 ### {nb}
-[1-2 SHORT sentences. Use "{b_sub}/{b_pos}" only — never repeat the name. Assert — no hedging.]
+- **[{nb}'s dominant trait]** — [one sentence on how {b_sub} experiences/drives this act]
+- **[{b_pos} energy/role]** — [one sharp sentence on what {b_sub} brings or gets]
 
 ### Together
-[1-2 SHORT sentences. Use names to distinguish. State who drives it and why. Assert — no hedging.]
+- **[The power dynamic]** — [one sentence on who leads and why]
+- **[The result]** — [one sentence on the specific experience they create]
 
-   — SHORT means SHORT: no semicolons, no stacked adjectives, no purple prose.
+   CRITICAL RULES:
+   — The ### headings MUST use the real names: ### {na}, ### {nb}, ### Together. Do not write "### Person A" or "### Person B".
+   — Every item under a ### heading MUST be a bullet: - **Bold label** — description.
+   — NO prose paragraphs under any heading. Bullets only.
+   — One sentence per bullet. No semicolons, no stacked adjectives.
    — Banned words: "might", "could", "perhaps", "potentially", "possibly".
    — If only one profile present: opener + one ### section. No ### Together.
 
-B) If the question is BROAD (e.g. "what's our sexual chemistry?", "full read", "what positions work for us?"):
-   — Use this exact structure:
-     1. One concise intro paragraph (no heading) on their core chemistry and dynamic.
-     2. ### Best Positions — 4-5 bullets: **Position Name** — 2-3 sentences on why it fits their energy.
-     3. ### Kinks & Fetishes — 3-4 bullets: **Kink Name** — 2-3 sentences on why it fits and how to explore.
-     4. ### Fantasies & Scenarios — 2-3 bullets: **bold title** — 3-4 vivid sentences grounded in their signs.
+B) BROAD question (chemistry, full read, what works for us):
+   Use this exact structure — every item under each ### MUST be a bullet:
+
+[One concise intro paragraph on their core chemistry and dynamic.]
+
+### Best Positions
+- **[Position Name]** — [why it fits their energy, 1-2 sentences]
+(4-5 bullets)
+
+### Kinks & Fetishes
+- **[Kink Name]** — [why it works and how to explore, 1-2 sentences]
+(3-4 bullets)
+
+### Fantasies & Scenarios
+- **[Fantasy Title]** — [vivid 2-3 sentence description grounded in their signs]
+(2-3 bullets)
 
 Ground every answer in the sign data above. Be frank and explicit — this is sextrology."""
 

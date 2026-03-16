@@ -101,41 +101,34 @@ function renderInline(text: string): React.ReactNode[] {
   });
 }
 
-function SectionHeading({ text, first }: { text: string; first: boolean }) {
-  return (
-    <div className={`${first ? "mt-1" : "mt-5"} mb-3`}>
-      {!first && <div className="w-full h-px bg-white/[0.07] mb-4" />}
-      <span className="inline-block text-[10px] font-semibold tracking-widest uppercase px-2.5 py-1 rounded-full bg-amber-500/[0.08] text-amber-400/80 border border-amber-500/[0.15]">
-        {text}
-      </span>
-    </div>
-  );
-}
-
-function BulletItem({ raw }: { raw: string }) {
-  // Detect "**Title** — description" or "**Title**: description" pattern
-  const titleMatch = raw.match(/^\*\*([^*]+)\*\*\s*[-—–:]\s*([\s\S]*)/);
-  if (titleMatch) {
-    return (
-      <div className="rounded-xl bg-white/[0.03] border border-white/[0.06] px-4 py-3 space-y-1.5">
-        <p className="text-white font-semibold text-sm">{titleMatch[1]}</p>
-        <p className="text-zinc-400 text-sm leading-relaxed">{renderInline(titleMatch[2])}</p>
-      </div>
-    );
-  }
-  return (
-    <div className="flex gap-3 items-start">
-      <span className="shrink-0 mt-[5px] w-1.5 h-1.5 rounded-full bg-white/20" />
-      <span className="text-zinc-300 text-sm leading-relaxed">{renderInline(raw)}</span>
-    </div>
-  );
-}
-
 function isHeading(line: string) {
   return /^#{2,4}\s/.test(line.trim());
 }
 function headingText(line: string) {
   return line.trim().replace(/^#{2,4}\s+/, "");
+}
+
+function BulletItem({ raw }: { raw: string }) {
+  // "**Title** — description" or "**Title**: description" → title card
+  const titleMatch = raw.match(/^\*\*([^*]+)\*\*\s*[-—–:]\s*([\s\S]*)/);
+  if (titleMatch) {
+    return (
+      <div className="flex gap-3 items-start py-1">
+        <span className="shrink-0 mt-1 w-1 h-1 rounded-full bg-amber-400/40" />
+        <div className="min-w-0">
+          <span className="text-white font-semibold text-sm">{titleMatch[1]}</span>
+          <span className="text-zinc-500 text-sm"> — </span>
+          <span className="text-zinc-400 text-sm leading-relaxed">{renderInline(titleMatch[2])}</span>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="flex gap-3 items-start py-0.5">
+      <span className="shrink-0 mt-[7px] w-1 h-1 rounded-full bg-white/20" />
+      <span className="text-zinc-300 text-sm leading-relaxed">{renderInline(raw)}</span>
+    </div>
+  );
 }
 
 function renderLines(lines: string[]) {
@@ -146,65 +139,71 @@ function renderLines(lines: string[]) {
       return <BulletItem key={j} raw={t.replace(/^[-*•]\s+/, "")} />;
     if (/^\d+\.\s/.test(t))
       return (
-        <div key={j} className="flex gap-3 items-start">
-          <span className="shrink-0 text-amber-400/50 text-xs font-semibold mt-0.5 tabular-nums min-w-[1.25rem]">
+        <div key={j} className="flex gap-3 items-start py-0.5">
+          <span className="shrink-0 text-amber-400/50 text-xs font-semibold mt-0.5 tabular-nums min-w-[1rem]">
             {t.match(/^(\d+)\./)?.[1]}.
           </span>
-          <span className="text-zinc-300 leading-relaxed">{renderInline(t.replace(/^\d+\.\s+/, ""))}</span>
+          <span className="text-zinc-300 text-sm leading-relaxed">{renderInline(t.replace(/^\d+\.\s+/, ""))}</span>
         </div>
       );
-    return <p key={j} className="text-zinc-300 leading-[1.8]">{renderInline(t)}</p>;
+    return <p key={j} className="text-zinc-300 text-sm leading-[1.8]">{renderInline(t)}</p>;
   });
 }
 
 function MarkdownText({ text }: { text: string }) {
-  // Ensure headings always have a blank line before AND after them
   const normalised = text
-    .replace(/\n(#{2,4}\s)/g, "\n\n$1")           // blank line before heading
-    .replace(/(#{2,4}\s[^\n]+)\n(?!\n)/g, "$1\n\n"); // blank line after heading
+    .replace(/\n(#{2,4}\s)/g, "\n\n$1")
+    .replace(/(#{2,4}\s[^\n]+)\n(?!\n)/g, "$1\n\n");
   const blocks = normalised.split(/\n\n+/);
-  let sectionCount = 0;
 
   const rendered = blocks.map((block, i) => {
     const lines = block.split("\n").filter((l) => l.trim());
     if (lines.length === 0) return null;
 
-    // Heading-only block (## / ### / ####)
-    if (lines.length === 1 && isHeading(lines[0])) {
-      const heading = <SectionHeading key={i} text={headingText(lines[0])} first={sectionCount === 0} />;
-      sectionCount++;
-      return heading;
-    }
-
-    // Block that starts with a heading then has content below
+    // Section card: heading + content below it
     if (isHeading(lines[0])) {
       const ht = headingText(lines[0]);
       const rest = lines.slice(1);
-      const isFirst = sectionCount === 0;
-      sectionCount++;
+      if (rest.length === 0) {
+        // Heading only — standalone label
+        return (
+          <div key={i} className="flex items-center gap-2 mt-2">
+            <div className="h-px flex-1 bg-white/[0.06]" />
+            <span className="text-[10px] font-semibold tracking-widest uppercase text-amber-400/60 px-2">
+              {ht}
+            </span>
+            <div className="h-px flex-1 bg-white/[0.06]" />
+          </div>
+        );
+      }
       return (
-        <div key={i}>
-          <SectionHeading text={ht} first={isFirst} />
-          <div className="space-y-3">{renderLines(rest)}</div>
+        <div key={i} className="rounded-xl border border-white/[0.08] overflow-hidden">
+          <div className="px-4 py-2 bg-white/[0.03] border-b border-white/[0.05] flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400/50 shrink-0" />
+            <span className="text-[10px] font-semibold tracking-widest uppercase text-amber-300/70">
+              {ht}
+            </span>
+          </div>
+          <div className="px-4 py-3 space-y-1.5">{renderLines(rest)}</div>
         </div>
       );
     }
 
-    // Pure bullet or numbered list
+    // Pure list
     const isList = lines.every((l) => /^[-*•]\s/.test(l.trim()) || /^\d+\.\s/.test(l.trim()));
     if (isList) {
-      return <div key={i} className="space-y-3">{renderLines(lines)}</div>;
+      return <div key={i} className="space-y-1.5 pl-1">{renderLines(lines)}</div>;
     }
 
-    // Plain text — render each line as its own paragraph so nothing clumps
+    // Plain paragraphs
     if (lines.length > 1) {
-      return <div key={i} className="space-y-3">{renderLines(lines)}</div>;
+      return <div key={i} className="space-y-2">{renderLines(lines)}</div>;
     }
 
-    return <p key={i} className="text-zinc-300 leading-[1.8]">{renderInline(lines[0])}</p>;
+    return <p key={i} className="text-zinc-300 text-sm leading-[1.8]">{renderInline(lines[0])}</p>;
   });
 
-  return <div className="space-y-4">{rendered}</div>;
+  return <div className="space-y-3">{rendered}</div>;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
