@@ -146,65 +146,69 @@ function HomeContent() {
             </AnimatePresence>
           </div>
 
-          {/* Title */}
-          <AnimatePresence mode="wait">
-            {znMode ? (
-              <motion.h1
-                key="mob-zn-title"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
-                className="text-5xl font-extrabold tracking-tight text-amber-400"
-                style={{ fontFamily: "var(--font-manrope)" }}
-              >
-                Zodicognac
-              </motion.h1>
-            ) : (
-              <motion.h1
-                key="mob-zo-title"
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, y: -12 }}
-                variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
-                className="text-5xl font-extrabold tracking-tight select-none leading-tight text-amber-50"
-                style={{ fontFamily: "var(--font-manrope)" }}
-              >
-                {reduced
-                  ? "ZodicogAI"
-                  : TITLE_CHARS.map((char, i) => (
-                      <motion.span key={i} className="inline-block" variants={charReveal}>
-                        {char}
-                      </motion.span>
-                    ))}
-              </motion.h1>
-            )}
-          </AnimatePresence>
+          {/* Title — fixed min-height so subtitle never jumps when title unmounts */}
+          <div className="min-h-[3.5rem] flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              {znMode ? (
+                <motion.h1
+                  key="mob-zn-title"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
+                  className="text-5xl font-extrabold tracking-tight text-amber-400"
+                  style={{ fontFamily: "var(--font-manrope)" }}
+                >
+                  Zodicognac
+                </motion.h1>
+              ) : (
+                <motion.h1
+                  key="mob-zo-title"
+                  initial="hidden"
+                  animate="visible"
+                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                  variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
+                  className="text-5xl font-extrabold tracking-tight select-none leading-tight text-amber-50"
+                  style={{ fontFamily: "var(--font-manrope)" }}
+                >
+                  {reduced
+                    ? "ZodicogAI"
+                    : TITLE_CHARS.map((char, i) => (
+                        <motion.span key={i} className="inline-block" variants={charReveal}>
+                          {char}
+                        </motion.span>
+                      ))}
+                </motion.h1>
+              )}
+            </AnimatePresence>
+          </div>
 
-          {/* Subtitle */}
-          <AnimatePresence mode="wait">
-            {znMode ? (
-              <motion.p
-                key="mob-zn-sub"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
-                transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
-                className="text-amber-500/70 mt-4 text-base italic tracking-wide"
-              >
-                Entering private session…
-              </motion.p>
-            ) : (
-              <motion.p
-                key="mob-zo-sub"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, transition: { duration: 0.12 } }}
-                transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
-                className="text-amber-200/35 mt-3 text-sm tracking-wide"
-              >
-                Behavioral Intelligence Agent
-              </motion.p>
-            )}
-          </AnimatePresence>
+          {/* Subtitle — fixed min-height prevents layout shift on unmount */}
+          <div className="min-h-[1.75rem] flex items-center justify-center mt-3">
+            <AnimatePresence mode="wait">
+              {znMode ? (
+                <motion.p
+                  key="mob-zn-sub"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: [0, 0.75, 0.5, 0.85, 0.6, 0.9] }}
+                  transition={{ duration: 4.5, delay: 0.7, times: [0, 0.15, 0.35, 0.6, 0.8, 1], ease: "easeInOut" }}
+                  className="text-amber-500/70 text-base italic tracking-wide"
+                >
+                  Entering private session…
+                </motion.p>
+              ) : (
+                <motion.p
+                  key="mob-zo-sub"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                  transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
+                  className="text-amber-200/35 text-sm tracking-wide"
+                >
+                  Behavioral Intelligence Agent
+                </motion.p>
+              )}
+            </AnimatePresence>
+          </div>
 
           {/* CTA buttons — only in normal mode */}
           {!znMode && (

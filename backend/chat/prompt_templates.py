@@ -122,7 +122,8 @@ Profile: {_profile_line(person_a, name)}{zodiac_block}{mbti_block}{analysis_bloc
 User message: "{message}"
 
 Answer the user's specific question about {name}'s personality, traits, or behavior.
-Be specific and ground every claim in the profile data above."""
+Ground every claim in the profile data above.
+Structure: 1 opening sentence on their core type, then bullet points for specific traits or insights."""
 
 
 # ---------------------------------------------------------------------------
@@ -159,8 +160,8 @@ def _prompt_compatibility_question(
 
 User message: "{message}"
 
-Answer their compatibility question directly and specifically using the data above.
-Name what makes them compatible and where real tension may arise."""
+Answer their compatibility question directly using the data above.
+Structure: 1–2 sentences on overall dynamic, then ### What Works and ### Where It Gets Hard — each with 2–3 bullet points.
 
 
 # ---------------------------------------------------------------------------
@@ -204,7 +205,7 @@ Relationship Intelligence:
 User's question: "{message}"
 
 Give warm, specific, actionable advice grounded in {na} and {nb}'s actual personality dynamics.
-Address their specific question directly. Reference both people by name."""
+Structure: 1–2 sentences on the core issue, then 3–4 bullet points of specific actions they can take. Reference both people by name in the bullets.
 
 
 # ---------------------------------------------------------------------------
@@ -253,9 +254,8 @@ Profiles:
 
 User's question: "{message}"
 
-Give {na} concrete, personality-specific flirting and connection strategies tailored to {nb}'s
-love style, emotional needs, and communication preferences.
-Every suggestion must connect directly to {nb}'s specific traits — no generic tips."""
+Give {na} concrete, personality-specific flirting and connection strategies tailored to {nb}'s love style and communication preferences.
+Structure: 1 sentence on {nb}'s attraction style, then 3–4 bullet points of specific moves {na} can make — each tied directly to {nb}'s traits. No generic tips.
 
 
 # ---------------------------------------------------------------------------
@@ -295,9 +295,8 @@ Communication Dynamics:
 
 User's question: "{message}"
 
-Highlight the key communication style differences between {na} and {nb}.
-Give concrete, actionable strategies specific to their MBTI and zodiac profiles.
-Focus on practical techniques {na} can use immediately."""
+Highlight the core communication gap between {na} and {nb}.
+Structure: 1–2 sentences naming the exact clash in their styles, then 3–4 bullet points of specific techniques {na} can use immediately — each grounded in their actual MBTI/zodiac data.
 
 
 # ---------------------------------------------------------------------------
@@ -425,8 +424,8 @@ def _prompt_general_question(
 
 User message: "{message}"
 
-Answer the user's question in the context of personality, relationships, and compatibility.
-Be helpful, warm, and grounded in psychological insight."""
+Answer the user's question grounded in personality, relationships, and compatibility.
+If you make 3+ points, use bullet points. If the answer covers two people, use ### [Name] sections.
 
 
 # ---------------------------------------------------------------------------
@@ -854,12 +853,14 @@ Coach {na} on progressing to commitment with {nb}:
 
 _UNIVERSAL_FORMAT = """
 
-MANDATORY FORMAT REMINDER:
-- Every paragraph = max 3 sentences. Blank line between every paragraph.
-- 3+ items = bullet list, not a paragraph.
-- Word count: 80-150 words max unless this is a multi-section deep-dive.
-- ### headings only for 3+ distinct sections.
-- Start with the answer — no preamble, no question recap."""
+MANDATORY FORMAT RULES — every response must follow these exactly:
+- Separate every paragraph with a blank line (\\n\\n). Never run paragraphs together.
+- ANY list of traits, advice steps, tips, or insights = bullet points (- ). Not prose.
+- When discussing two people separately, use ### [Name] as a heading for each person.
+- Bold (**text**) the single most important word or phrase per section — not everything.
+- Start with the substance. No preamble, no restating the question.
+- Word count: 80–150 words for simple answers, 150–250 for multi-topic ones.
+- Minimum structure: if you give 3+ pieces of advice or name 3+ traits, they MUST be bullets."""
 
 _TEMPLATES: dict[str, callable] = {
     "personality_analysis":      _prompt_personality_analysis,
