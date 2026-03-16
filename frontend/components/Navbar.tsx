@@ -7,7 +7,6 @@ import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
 
 const LINKS = [
-  { href: "/", label: "Home" },
   { href: "/analyze/zodiac", label: "Zodiac" },
   { href: "/analyze/emotional", label: "Emotional" },
   { href: "/analyze/romantic", label: "Romantic" },
@@ -27,17 +26,19 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a12]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 h-12 flex items-stretch overflow-x-auto scrollbar-none">
-        {/* Brand insignia + wordmark — hover dims slightly */}
-        <motion.div
-          className="flex items-center gap-2.5 mr-5 shrink-0"
-          whileHover={{ opacity: 0.75 }}
-          transition={{ duration: 0.15 }}
-        >
-          <ZodicogMark size={18} />
-          <span className="text-sm font-semibold text-white tracking-tight">
-            ZodicogAI
-          </span>
-        </motion.div>
+        {/* Brand insignia + wordmark — clicks to home */}
+        <Link href="/" className="flex items-center mr-5 shrink-0">
+          <motion.div
+            className="flex items-center gap-2.5"
+            whileHover={{ opacity: 0.75 }}
+            transition={{ duration: 0.15 }}
+          >
+            <ZodicogMark size={18} />
+            <span className={`text-sm font-semibold tracking-tight ${path === "/" ? "text-white" : "text-zinc-400 hover:text-white transition-colors"}`}>
+              ZodicogAI
+            </span>
+          </motion.div>
+        </Link>
 
         {/* Nav links */}
         {LINKS.map(({ href, label }) => {

@@ -109,8 +109,11 @@ function HomeContent() {
           </div>
         )}
 
-        {/* Content — pinned at pt-[22vh] so mark position is identical in znMode */}
-        <div className="pt-[22vh] flex flex-col items-center text-center px-6">
+        {/* Fixed spacer — pins mark at 22vh regardless of content height changes */}
+        <div className="h-[22vh] shrink-0" />
+
+        {/* Content — starts exactly at 22vh, no reflow when buttons mount/unmount */}
+        <div className="flex flex-col items-center text-center px-6">
 
           {/* Brand mark — 3D flips to Zodicognac */}
           <div className="flex justify-center mb-4" style={{ perspective: "600px" }}>
@@ -194,7 +197,7 @@ function HomeContent() {
                 key="mob-zo-sub"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
+                exit={{ opacity: 0, transition: { duration: 0.12 } }}
                 transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
                 className="text-amber-200/35 mt-3 text-sm tracking-wide"
               >
