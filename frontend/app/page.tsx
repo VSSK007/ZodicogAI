@@ -115,8 +115,8 @@ function HomeContent() {
         {/* Content — starts exactly at 22vh, no reflow when buttons mount/unmount */}
         <div className="flex flex-col items-center text-center px-6">
 
-          {/* Brand mark — 3D flips to Zodicognac */}
-          <div className="flex justify-center mb-4" style={{ perspective: "600px" }}>
+          {/* Brand mark — fixed height prevents layout shift when mark unmounts between exit→enter */}
+          <div className="flex justify-center mb-4 h-14" style={{ perspective: "600px" }}>
             <AnimatePresence mode="wait">
               {znMode ? (
                 <motion.div
@@ -307,8 +307,8 @@ function HomeContent() {
             />
           )}
 
-          {/* Brand mark */}
-          <div className="flex justify-center mb-8" style={{ perspective: "600px" }}>
+          {/* Brand mark — fixed height prevents subtitle jump on mark unmount */}
+          <div className="flex justify-center mb-8 h-14" style={{ perspective: "600px" }}>
             <AnimatePresence mode="wait">
               {znMode ? (
                 <motion.div
