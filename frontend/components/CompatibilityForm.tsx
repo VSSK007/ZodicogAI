@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import TraitRadar from "./TraitRadar";
+import { API } from "@/lib/api";
 
 export default function CompatibilityForm() {
   const [aName, setAName] = useState("");
@@ -58,7 +59,7 @@ export default function CompatibilityForm() {
     setShowCongrats(false);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/compatibility", {
+      const res = await axios.post(`${API}/compatibility`, {
         person_a_name: aName.trim(),
         person_a_day: Number(aDay),
         person_a_month: Number(aMonth),

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import TraitRadar from "./TraitRadar";
 import MbtiSelect from "./MbtiSelect";
+import { API } from "@/lib/api";
 
 // ---------------------------------------------------------------------------
 // Shared input/select class — identical font treatment across all inputs
@@ -254,7 +255,7 @@ export default function HybridForm() {
     if (err) { setError(err); return; }
     setLoading(true); setError(""); setResult(null);
     try {
-      const res = await axios.post("http://127.0.0.1:8000/hybrid-analysis", {
+      const res = await axios.post(`${API}/hybrid-analysis`, {
         name: name.trim(), day: Number(day), month: Number(month), mbti,
       });
       setResult(res.data);
