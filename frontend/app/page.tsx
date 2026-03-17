@@ -11,7 +11,7 @@ import ZodicognacMark from "../components/ZodicognacMark";
 import { EASE, EASE_SPRING, charReveal } from "@/lib/motion";
 
 const TITLE_CHARS = "ZodicogAI".split("");
-const ZN_DURATION_MS = 5200;
+const ZN_DURATION_MS = 2900;
 
 const MORE_OPTIONS = [
   { label: "Zodiac",        href: "/analyze/zodiac",                   sym: "♈" },
@@ -335,7 +335,7 @@ function HomeContent() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, delay: reduced ? 0 : 0.7, ease: EASE }}
+              transition={{ duration: 0.25, delay: 0, ease: EASE }}
             >
               <div className="flex justify-center mb-24">
                 <div className="flex border-b border-white/[0.08]">
