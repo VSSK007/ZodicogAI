@@ -206,6 +206,7 @@ User's question: "{message}"
 
 Give warm, specific, actionable advice grounded in {na} and {nb}'s actual personality dynamics.
 Structure: 1–2 sentences on the core issue, then 3–4 bullet points of specific actions they can take. Reference both people by name in the bullets.
+""")
 
 
 # ---------------------------------------------------------------------------
