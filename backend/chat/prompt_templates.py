@@ -24,7 +24,6 @@ from agent_controller import (
 )
 
 from models.schemas import IntentClassification, ChatReply
-from chat.prompt_templates import build_chat_prompt
 
 
 # -----------------------------
