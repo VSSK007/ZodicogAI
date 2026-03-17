@@ -23,7 +23,7 @@
 
 ZodicogAI is not an astrology app. It is a **behavioral intelligence platform** that treats personality frameworks — zodiac archetypes, MBTI typology, Pythagorean numerology, love style theory — as structured data sources, runs them through deterministic compatibility engines, and synthesizes the output through a large language model grounded in real psychological profiles.
 
-The result is **Zodicognac**: an AI coaching agent with genuine opinions, zero disclaimers, and the ability to answer questions about attraction, intimacy, compatibility, and interpersonal dynamics with specificity that generic AI assistants cannot achieve.
+The result is **Zodicognac**: an AI coaching agent with genuine opinions, zero disclaimers, and the ability to answer questions about attraction, intimacy, compatibility, and interpersonal dynamics with a specificity that generic AI assistants cannot achieve.
 
 ---
 
@@ -47,20 +47,20 @@ User Input
 │                   FastAPI Backend                        │
 │                                                          │
 │  ┌──────────────┐    ┌──────────────┐                   │
-│  │  Deterministic│    │  Intent      │                   │
-│  │  Engine Layer │    │  Classifier  │                   │
-│  │               │    │  (15 intents)│                   │
-│  │  · Zodiac     │    └──────┬───────┘                   │
-│  │  · MBTI       │           │                           │
-│  │  · Emotional  │    ┌──────▼───────┐                   │
-│  │  · Romantic   │    │  Prompt      │                   │
-│  │  · Sextrology │───▶│  Template    │                   │
-│  │  · Love Style │    │  Engine      │                   │
-│  │  · Love Lang  │    └──────┬───────┘                   │
-│  │  · Numerology │           │                           │
-│  │  · Color      │    ┌──────▼───────┐                   │
-│  │  · Decan      │    │  Gemini 2.5  │                   │
-│  └──────────────┘    │  Flash       │                   │
+│  │ Deterministic│    │   Intent     │                   │
+│  │ Engine Layer │    │  Classifier  │                   │
+│  │              │    │ (15 intents) │                   │
+│  │  · Zodiac    │    └──────┬───────┘                   │
+│  │  · MBTI      │           │                           │
+│  │  · Emotional │    ┌──────▼───────┐                   │
+│  │  · Romantic  │    │   Prompt     │                   │
+│  │  · Sextrology│───▶│   Template   │                   │
+│  │  · Love Style│    │   Engine     │                   │
+│  │  · Love Lang │    └──────┬───────┘                   │
+│  │  · Numerology│           │                           │
+│  │  · Color     │    ┌──────▼───────┐                   │
+│  │  · Decan     │    │ Gemini 2.5   │                   │
+│  └──────────────┘    │ Flash        │                   │
 │                       └──────┬───────┘                   │
 └──────────────────────────────┼──────────────────────────┘
                                 │
@@ -80,6 +80,7 @@ Zodicognac is the conversational interface. It is not a chatbot wrapped around a
 
 - **15 classified coaching intents** — every question is routed to a purpose-built prompt template with the relevant engine data pre-loaded
 - **Profile grounding** — responses are anchored to real zodiac + MBTI + decan data, not general personality descriptions
+- **Structured markdown output** — every response uses section cards, bullet points, and bold labels for legibility; no prose walls
 - **Zero hedging policy** — no "might," "could," or "perhaps." Direct answers. Genuine opinions.
 - **Dual-model fallback** — Gemini 2.5 Flash (primary) → Gemini 2.0 Flash Lite (fallback) with exponential backoff
 
@@ -131,13 +132,16 @@ ZodicogAI ships two intentionally distinct experiences from a single codebase �
 | | Desktop | Mobile |
 |---|---|---|
 | **Identity** | Analytical intelligence platform | Personal AI relationship companion |
-| **Navigation** | Horizontal scrollable navbar | Bottom tab bar + raised Zodicognac FAB |
-| **Homepage** | Inline analysis forms | Full-screen hero + CTA navigation |
+| **Aesthetic** | Cool blue-violet, data-dense | Warm amber-gold, immersive |
+| **Navigation** | Horizontal scrollable navbar | Single centered Zodicognac FAB |
+| **Homepage** | Inline hybrid + compatibility forms | Full-screen hero with CTA grid |
+| **Explore** | Tab-switched forms | Expandable 3×3 analysis grid |
 | **Chat profiles** | Persistent sidebar panel | Slide-up bottom sheet |
-| **Zodicognac entry** | Pill button (top-right) | Amber pulsing FAB (center tab) |
-| **Zodicognac transition** | 5.2s slow-burn on homepage | Same — FAB triggers `/?zn=1` |
+| **Zodicognac entry** | Navbar pill (triggers 5.2s transition on homepage) | Amber FAB (same transition) |
+| **Zodicognac transition** | Mark flips, title cross-fades, amber slow-burn | Fixed overlay — zero layout shift |
+| **In-chat back nav** | Navbar ZodicogAI link | FAB switches to ZodicogMark → home |
 
-The mobile experience treats Zodicognac as the primary entry point. The desktop experience treats the analytical engines as primary.
+The mobile experience is a companion app. The desktop experience is an intelligence platform. Both are the same codebase, the same backend, the same AI.
 
 ---
 
@@ -147,7 +151,7 @@ The mobile experience treats Zodicognac as the primary entry point. The desktop 
 - **Next.js 16** (App Router, Turbopack)
 - **React 19** with TypeScript
 - **Tailwind CSS v4** — utility-first, custom mobile design tokens
-- **Framer Motion** — page transitions, progressive reveals, bottom sheet animations
+- **Framer Motion** — page transitions, overlay animations, expandable grids
 - **Recharts 3** — trait radar charts, behavioral scatter maps
 
 ### Backend
@@ -174,6 +178,10 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 ```bash
 cd frontend
 npm install
+
+# Point the frontend at your backend
+echo "NEXT_PUBLIC_API_URL=http://127.0.0.1:8000" > .env.local
+
 npm run dev
 # Open localhost:3000
 # Mobile layout: DevTools → device toolbar → 375px
@@ -184,17 +192,18 @@ npm run dev
 ## API
 
 ```
-POST /analyze/zodiac          Individual zodiac + MBTI hybrid profile
-POST /analyze/emotional        Emotional compatibility
-POST /analyze/romantic         Romantic compatibility
-POST /analyze/sextrology       Intimacy compatibility
-POST /analyze/love-style       Love style alignment (single or pair)
-POST /analyze/love-language    Love language alignment (single or pair)
-POST /analyze/color            Aura color analysis (single or pair)
-POST /analyze/numerology       Numerology (single or pair)
-POST /dashboard                Full synastry — all dimensions
-POST /chat                     Zodicognac conversational agent
-POST /compatibility            Behavioral compatibility score
+POST /analyze/zodiac               Individual zodiac + MBTI hybrid profile
+POST /analyze/emotional            Emotional compatibility
+POST /analyze/romantic             Romantic compatibility
+POST /analyze/sextrology           Intimacy compatibility
+POST /analyze/love-style           Love style alignment (single or pair)
+POST /analyze/love-language        Love language alignment (single or pair)
+POST /analyze/color                Aura color analysis (single or pair)
+POST /analyze/numerology           Numerology (single or pair)
+POST /dashboard                    Full synastry — all 10 dimensions
+POST /chat                         Zodicognac conversational agent
+POST /compatibility                Behavioral compatibility score
+POST /hybrid-analysis              Self analysis — zodiac + MBTI profile
 ```
 
 **Chat request:**
@@ -209,19 +218,37 @@ POST /compatibility            Behavioral compatibility score
 
 ---
 
-## Production
+## Production Deployment
 
 ```
-Internet → Nginx (SSL/TLS) → Next.js :3000 → FastAPI :8000 → Gemini API
+Internet → Nginx (SSL/TLS) → Next.js :3000
+                           → FastAPI :8000 → Gemini API
 ```
 
 ```bash
-# Deploy
-cd /root/ZodicogAI && git pull
+cd /root/ZodicogAI
+
+# Pull latest
+git pull
+
+# Set backend URL (bakes into Next.js at build time)
+echo "NEXT_PUBLIC_API_URL=http://YOUR_SERVER_IP:8000" > frontend/.env.local
+
+# Rebuild frontend
 rm -rf frontend/.next
 cd frontend && npm run build
+
+# Restart
 pm2 restart all
 ```
+
+> **Note:** `NEXT_PUBLIC_API_URL` must be set before `npm run build`. Next.js bakes public env vars into the client bundle at build time — changing the `.env.local` after building has no effect until the next build.
+
+---
+
+## Repository
+
+**GitHub:** [github.com/VSSK007/ZodicogAI](https://github.com/VSSK007/ZodicogAI)
 
 ---
 
@@ -237,7 +264,7 @@ Zodicognac is not a therapist. She is the most perceptive person in the room —
 
 ## Contact
 
-**kar1mr@zodicogai.com** · **https://zodicogai.com**
+**kar1mr@zodicogai.com** · **[zodicogai.com](https://zodicogai.com)**
 
 ---
 
