@@ -22,6 +22,9 @@ const dmSans = DM_Sans({
 export const metadata = {
   title: "ZodicogAI",
   description: "Behavioral Intelligence Engine",
+  icons: {
+    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+  },
 };
 
 export const viewport = {
