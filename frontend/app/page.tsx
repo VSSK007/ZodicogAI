@@ -22,7 +22,7 @@ const MORE_OPTIONS = [
   { label: "Sextrology",    href: "/analyze/sextrology",               sym: "◉" },
   { label: "Aura Colors",   href: "/analyze/color",                    sym: "○" },
   { label: "Numerology",    href: "/analyze/numerology",               sym: "∞" },
-  { label: "Full Intel",    href: "/analyze/relationship-intelligence",sym: "⚡" },
+  { label: "Full Intel",    href: "/dashboard",                        sym: "⚡" },
 ];
 
 function HomeContent() {
