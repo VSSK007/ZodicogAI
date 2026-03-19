@@ -11,7 +11,7 @@ import ZodicognacMark from "../components/ZodicognacMark";
 import { EASE, EASE_SPRING, charReveal } from "@/lib/motion";
 
 const TITLE_CHARS = "ZodicogAI".split("");
-const ZN_DURATION_MS = 2900;
+const ZN_DURATION_MS = 2000;
 
 const MORE_OPTIONS = [
   { label: "Zodiac",        href: "/analyze/zodiac",                   sym: "♈" },

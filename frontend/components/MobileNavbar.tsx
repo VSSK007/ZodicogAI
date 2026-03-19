@@ -41,10 +41,12 @@ export default function MobileNavbar() {
       className="mobile-fab block md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 flex items-center justify-center"
       style={{ background: "transparent" }}
     >
-      <div className="flex items-center gap-5">
-        {/* Back button — hidden on home, shown everywhere else */}
+      <div className="relative flex items-center justify-center">
+        {/* Back button — floats left of FAB without shifting it */}
         {!isHome && !inChat && (
-          <BackButton onClick={() => router.push("/")} />
+          <div className="absolute right-full mr-5">
+            <BackButton onClick={() => router.push("/")} />
+          </div>
         )}
 
         {inChat ? (
