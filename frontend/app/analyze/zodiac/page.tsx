@@ -176,7 +176,7 @@ function ZodiacPageInner() {
       {showForm && (
         <div className="mb-10">
           <div className="flex items-center gap-1.5 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 md:bg-[#4285f4]" />
             <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Analysis</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight">Zodiac Profile</h1>

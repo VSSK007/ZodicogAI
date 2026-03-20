@@ -26,7 +26,7 @@ const CARD = "bg-white/[0.03] ring-1 ring-white/10 rounded-2xl overflow-hidden";
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
+      <div className="w-1.5 h-1.5 rounded-full bg-amber-500 md:bg-[#4285f4]" />
       <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
     </div>
   );
@@ -106,7 +106,7 @@ export default function EmotionalPage() {
               transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
               className={CARD}
             >
-              <div className="h-0.5 bg-gradient-to-r from-[#4285f4]/50 via-[#34a853]/30 to-transparent" />
+              <div className="h-0.5 bg-gradient-to-r from-amber-500/50 md:from-[#4285f4]/50 via-amber-500/20 md:via-[#34a853]/30 to-transparent" />
               <div className="p-4 md:p-6">
                 <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
                 <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
@@ -121,11 +121,11 @@ export default function EmotionalPage() {
             >
               <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
                 <div className="relative w-2 h-2 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-[#4285f4] animate-ping opacity-60" />
-                  <div className="w-2 h-2 rounded-full bg-[#4285f4]" />
+                  <div className="absolute inset-0 rounded-full bg-amber-500 md:bg-[#4285f4] animate-ping opacity-60" />
+                  <div className="w-2 h-2 rounded-full bg-amber-500 md:bg-[#4285f4]" />
                 </div>
                 <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-[#4285f4]/10 text-[#4285f4]/80 border border-[#4285f4]/20">
+                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-amber-500 md:bg-amber-500/10 md:bg-[#4285f4]/10 text-amber-400/80 md:text-[#4285f4]/80 border border-amber-500/20 md:border-[#4285f4]/20">
                   Gemini 2.5 Flash
                 </span>
               </div>

@@ -228,7 +228,7 @@ export default function ColorPage() {
       <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-4xl mx-auto">
         <div className="mb-10">
           <div className="flex items-center gap-1.5 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 md:bg-[#4285f4]" />
             <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Analysis</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight">Aura Colors</h1>
@@ -317,8 +317,8 @@ export default function ColorPage() {
                   <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
                     <div className="flex items-center gap-2">
                       <div className="relative w-2 h-2">
-                        <div className="absolute inset-0 rounded-full bg-[#4285f4] animate-ping opacity-60" />
-                        <div className="relative rounded-full bg-[#4285f4] w-2 h-2" />
+                        <div className="absolute inset-0 rounded-full bg-amber-500 md:bg-[#4285f4] animate-ping opacity-60" />
+                        <div className="relative rounded-full bg-amber-500 md:bg-[#4285f4] w-2 h-2" />
                       </div>
                       <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">AI Color Reading</p>
                     </div>
@@ -370,8 +370,8 @@ export default function ColorPage() {
                   <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-5">
                     <div className="flex items-center gap-2">
                       <div className="relative w-2 h-2">
-                        <div className="absolute inset-0 rounded-full bg-[#4285f4] animate-ping opacity-60" />
-                        <div className="relative rounded-full bg-[#4285f4] w-2 h-2" />
+                        <div className="absolute inset-0 rounded-full bg-amber-500 md:bg-[#4285f4] animate-ping opacity-60" />
+                        <div className="relative rounded-full bg-amber-500 md:bg-[#4285f4] w-2 h-2" />
                       </div>
                       <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">AI Color Reading</p>
                     </div>
