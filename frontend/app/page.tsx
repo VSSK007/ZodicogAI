@@ -56,7 +56,7 @@ function HomeContent() {
       {/* ══════════════════════════════════════════════════════════
           MOBILE HERO — normal state (never touches znMode)
       ══════════════════════════════════════════════════════════ */}
-      <div className="md:hidden min-h-[calc(100dvh-64px)] flex flex-col relative bg-[#070509]">
+      <div className="md:hidden min-h-[calc(100dvh-64px)] flex flex-col relative">
 
         {/* Ambient amber glow */}
         {!reduced && (
@@ -165,7 +165,7 @@ function HomeContent() {
           so the mark lands at the exact same spot on screen.
       ══════════════════════════════════════════════════════════ */}
       {znMode && (
-        <div className="md:hidden fixed inset-0 z-30 bg-[#070509] flex flex-col">
+        <div className="md:hidden fixed inset-0 z-30 bg-[#060504] flex flex-col">
           {/* Amber burn glow */}
           {!reduced && (
             <motion.div
