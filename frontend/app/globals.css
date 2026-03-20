@@ -32,6 +32,31 @@ html {
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* ── Desktop Aurora Background ────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .desktop-aurora-bg {
+    position: fixed;
+    inset: 0;
+    background-image: url('/aurora-bg.heic');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  @supports not (background-image: url('/aurora-bg.heic')) {
+    .desktop-aurora-bg {
+      background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 50%, #16122b 100%);
+    }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+  }
+}
+
 /* ── Omnidirectional doodle drift keyframes ─────────────────────────────────
    6 directions — outer wrapper holds rotation, inner div plays one of these.
    All breathe in/out with opacity; mid-point is the apex of the drift.       */

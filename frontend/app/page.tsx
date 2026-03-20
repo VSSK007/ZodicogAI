@@ -51,7 +51,9 @@ function HomeContent() {
   }, [showMore]);
 
   return (
-    <main>
+    <main className="md:relative">
+      {/* Desktop Aurora Background — fixed layer behind all content */}
+      <div className="hidden md:block desktop-aurora-bg" />
 
       {/* ══════════════════════════════════════════════════════════
           MOBILE HERO — normal state (never touches znMode)
