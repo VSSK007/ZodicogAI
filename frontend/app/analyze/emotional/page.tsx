@@ -131,7 +131,7 @@ export default function EmotionalPage() {
               </div>
               <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
-                  <div key={key} className="border-l-2 border-purple-500/40 pl-4">
+                  <div key={key} className="border-l-2 border-amber-500/40 md:border-purple-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
                     <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
                   </div>

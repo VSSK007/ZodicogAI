@@ -239,7 +239,7 @@ export default function SextrologyPage() {
                   <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                     <h2 className="text-sm font-semibold text-zinc-300">Sextrology Reading</h2>
                     {PAIR_FIELDS.map(({ key, label, icon }) => (
-                      <div key={key} className="border-l-2 border-indigo-500/40 pl-4">
+                      <div key={key} className="border-l-2 border-amber-500/40 md:border-indigo-500/40 pl-4">
                         <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
                           <span className="mr-1.5">{icon}</span>{label}
                         </p>
@@ -257,14 +257,14 @@ export default function SextrologyPage() {
                   transition={{ duration: 0.55, ease: EASE }}
                   className={`${CARD} p-6 flex items-center gap-5`}
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-indigo-500/15 border border-indigo-500/25 flex items-center justify-center shrink-0">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-500/15 md:bg-indigo-500/15 border border-amber-500/25 md:border-indigo-500/25 flex items-center justify-center shrink-0">
                     <span className="text-2xl">♦</span>
                   </div>
                   <div>
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-0.5">Solo Profile</p>
                     <p className="text-lg font-semibold text-white">{result.name}</p>
                     <div className="flex gap-2 mt-1">
-                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 border border-indigo-500/25">{result.sign}</span>
+                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 md:bg-indigo-500/15 text-amber-300 md:text-indigo-300 border border-amber-500/25 md:border-indigo-500/25">{result.sign}</span>
                       <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08]">{result.mbti_type}</span>
                     </div>
                   </div>
@@ -281,7 +281,7 @@ export default function SextrologyPage() {
                     <h2 className="text-sm font-semibold text-zinc-300 mb-5">Sextrology Profile</h2>
                     <div className="grid md:grid-cols-2 gap-5">
                       {SOLO_FIELDS.map(({ key, label, icon }) => (
-                        <div key={key} className="border-l-2 border-indigo-500/40 pl-4">
+                        <div key={key} className="border-l-2 border-amber-500/40 md:border-indigo-500/40 pl-4">
                           <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
                             <span className="mr-1.5">{icon}</span>{label}
                           </p>
