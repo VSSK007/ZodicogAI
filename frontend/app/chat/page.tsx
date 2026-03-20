@@ -152,8 +152,9 @@ function renderLines(lines: string[]) {
 
 function MarkdownText({ text }: { text: string }) {
   const normalised = text
-    .replace(/\n(#{2,4}\s)/g, "\n\n$1")
-    .replace(/(#{2,4}\s[^\n]+)\n(?!\n)/g, "$1\n\n");
+    .replace(/([^\n])(#{2,4}\s)/g, "$1\n\n$2")   // heading inline after text → break before
+    .replace(/\n(#{2,4}\s)/g, "\n\n$1")           // single newline before heading → double
+    .replace(/(#{2,4}\s[^\n]+)\n(?!\n)/g, "$1\n\n"); // single newline after heading → double
   const blocks = normalised.split(/\n\n+/);
 
   const rendered = blocks.map((block, i) => {
