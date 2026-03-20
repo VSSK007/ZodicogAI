@@ -73,35 +73,6 @@ const CARD = "bg-[#16162a] border border-white/[0.07] rounded-2xl shadow-[0_1px_
 
 const SLIDE_LABELS = ["Overview", "Dimensions", "Love Intel", "Vectors", "Risk", "AI Reading"];
 
-// ── Streak background (dashboard-only) ────────────────────────────────────────
-
-const STREAKS = Array.from({ length: 12 }, (_, i) => ({
-  left: 2 + i * 8.2,
-  height: 100 + (i % 5) * 60,
-  dur: 7 + (i % 4) * 2.5,
-  delay: -(i * 1.6),
-}));
-
-function StreaksBg() {
-  return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{ zIndex: -5 }}>
-      {STREAKS.map((s, i) => (
-        <div
-          key={i}
-          style={{
-            position: "absolute",
-            left: `${s.left}%`,
-            top: "110%",
-            width: 1,
-            height: s.height,
-            background: "linear-gradient(to bottom, transparent, rgba(100,80,255,0.08) 50%, transparent)",
-            animation: `streak-rise ${s.dur}s linear ${s.delay}s infinite`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 // ── Small UI helpers ──────────────────────────────────────────────────────────
 
@@ -539,8 +510,6 @@ export default function DashboardPage() {
 
   return (
     <>
-      <StreaksBg />
-
       {/* Fixed floating sub-nav — appears when results are visible */}
       <AnimatePresence>
         {result && (

@@ -68,11 +68,6 @@ html {
   50%      { opacity: 0.04; transform: translate(-28px, 14px); }
 }
 
-/* ── Dashboard streak background ───────────────────────────────────────────── */
-@keyframes streak-rise {
-  from { top: 110%; }
-  to   { top: -20%; }
-}
 
 /* ── Subtle star twinkle ────────────────────────────────────────────────────── */
 @keyframes twinkle {
