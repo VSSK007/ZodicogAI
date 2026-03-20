@@ -82,7 +82,7 @@ general_question
 Message: "{message}"
 
 Respond ONLY as JSON:
-{"intent": "<intent>"}
+{{"intent": "<intent>"}}
 """
 
 
