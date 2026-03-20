@@ -136,29 +136,39 @@ const DOODLES: {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${GeistSans.className} ${manrope.variable} ${dmSans.variable}`}>
-      <body className="bg-[#04040d] text-white antialiased">
+      <body className="bg-[#04040d] md:bg-[#04040d] bg-[#060504] text-white antialiased">
 
-        {/* ── Interstellar nebula layers ──────────────────────────────────────
-            Multiple overlapping ellipses create depth — like JWST imagery.
-            Colors: deep violet, electric indigo, rose nebula, teal cloud.    */}
+        {/* ── Desktop nebula (violet/indigo — hidden on mobile) ─────────────── */}
         <div
-          className="fixed inset-0 -z-20 pointer-events-none"
+          className="hidden md:block fixed inset-0 -z-20 pointer-events-none"
           style={{
             background: [
-              /* Upper-left — deep violet nebula */
               "radial-gradient(ellipse 140% 75% at 5% 18%,  rgba(91,  28,182,0.22) 0%, transparent 60%)",
-              /* Upper-right — electric indigo */
               "radial-gradient(ellipse 100% 80% at 92% 12%, rgba(49,  46,230,0.18) 0%, transparent 58%)",
-              /* Center-left — rose/magenta cloud */
               "radial-gradient(ellipse 70%  55% at 20% 55%, rgba(162, 28,110,0.13) 0%, transparent 55%)",
-              /* Lower-right — teal aurora */
               "radial-gradient(ellipse 90%  60% at 88% 80%, rgba(14, 116,144,0.14) 0%, transparent 55%)",
-              /* Far upper-center — amethyst */
               "radial-gradient(ellipse 60%  45% at 55% -5%, rgba(124, 58,237,0.16) 0%, transparent 52%)",
-              /* Lower-center — deep indigo base glow */
               "radial-gradient(ellipse 110% 50% at 50% 110%,rgba(55,  48,163,0.22) 0%, transparent 55%)",
-              /* Scattered warm amber — faint distant star cluster */
               "radial-gradient(ellipse 40%  30% at 70% 35%,  rgba(180,100, 20,0.07) 0%, transparent 50%)",
+            ].join(", "),
+          }}
+        />
+
+        {/* ── Mobile amber/golden glow (hidden on desktop) ──────────────────── */}
+        <div
+          className="block md:hidden fixed inset-0 -z-20 pointer-events-none"
+          style={{
+            background: [
+              /* Top crown — warm amber halo */
+              "radial-gradient(ellipse 130% 50% at 50% -5%,  rgba(245,158, 11,0.15) 0%, transparent 60%)",
+              /* Upper-right — gold accent */
+              "radial-gradient(ellipse  80% 55% at 85% 15%,  rgba(251,191, 36,0.09) 0%, transparent 55%)",
+              /* Center warm glow */
+              "radial-gradient(ellipse  90% 60% at 50% 45%,  rgba(217,119,  6,0.07) 0%, transparent 60%)",
+              /* Lower-left — ember */
+              "radial-gradient(ellipse  70% 45% at 10% 75%,  rgba(234,179,  8,0.06) 0%, transparent 55%)",
+              /* Bottom base warmth */
+              "radial-gradient(ellipse 110% 40% at 50% 110%, rgba(245,158, 11,0.10) 0%, transparent 55%)",
             ].join(", "),
           }}
         />
