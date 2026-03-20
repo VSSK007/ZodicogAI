@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { PersonData } from "@/lib/api";
 import MbtiSelect from "./MbtiSelect";
+import MbtiQuiz from "./MbtiQuiz";
 
 interface Props {
   label: string;
@@ -13,6 +16,8 @@ interface Props {
 const INPUT = "rounded-lg bg-[#0d0d1a] border border-white/[0.08] px-3 py-3 md:py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-white/25 transition-colors";
 
 export default function PersonForm({ label, value, onChange, compact = false }: Props) {
+  const [showQuiz, setShowQuiz] = useState(false);
+
   const set =
     (key: keyof PersonData) =>
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +78,22 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             onChange={set("month")}
           />
         </div>
+        {/* MBTI quiz toggle */}
+        <button
+          type="button"
+          onClick={() => setShowQuiz((v) => !v)}
+          className="text-[11px] text-zinc-500 hover:text-zinc-300 transition text-left pl-1 tap-highlight-none"
+        >
+          {showQuiz ? "▲ Hide quiz" : "▾ Don't know your MBTI? Take a quick quiz"}
+        </button>
+        <AnimatePresence>
+          {showQuiz && (
+            <MbtiQuiz
+              onResult={(type) => { onChange({ ...value, mbti: type }); }}
+              onClose={() => setShowQuiz(false)}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
