@@ -95,7 +95,9 @@ html {
   }
 
   /* Hide the Zodicognac FAB while "Explore All" grid is open */
-  body.explore-open .mobile-fab {
+  body.explore-open .mobile-fab,
+  /* Hide FAB + back button while MBTI quiz is expanded */
+  body.quiz-open .mobile-fab {
     opacity: 0;
     pointer-events: none;
     transform: scale(0.75);

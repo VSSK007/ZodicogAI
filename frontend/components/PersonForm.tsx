@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { PersonData } from "@/lib/api";
 import MbtiSelect from "./MbtiSelect";
@@ -17,6 +17,11 @@ const INPUT = "rounded-lg bg-[#0d0d1a] border border-white/[0.08] px-3 py-3 md:p
 
 export default function PersonForm({ label, value, onChange, compact = false }: Props) {
   const [showQuiz, setShowQuiz] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("quiz-open", showQuiz);
+    return () => { document.body.classList.remove("quiz-open"); };
+  }, [showQuiz]);
 
   const set =
     (key: keyof PersonData) =>
