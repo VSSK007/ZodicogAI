@@ -7,7 +7,9 @@ import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
-import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
+import { PersonData, emptyPerson, validatePerson } from "@/lib/api";
+
+const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
 
@@ -140,19 +142,73 @@ export default function SextrologyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function handleSubmit() {
+  const [streaming, setStreaming] = useState(false);
+  const [streamedText, setStreamedText] = useState("");
+  const [streamScores, setStreamScores] = useState<SextrologyResult | null>(null);
+
+  async function handleStream() {
     const errA = validatePerson(a, "Person A");
     if (errA) return setError(errA);
     if (showB) {
       const errB = validatePerson(b, "Person B");
       if (errB) return setError(errB);
     }
-    setLoading(true); setError("");
+    setLoading(true);
+    setError("");
+    setStreaming(true);
+    setStreamedText("");
+    setStreamScores(null);
+    setResult(null);
+
     try {
       const body = showB ? pairSexBody(a, b) : soloBody(a);
-      setResult(await apiFetch<SextrologyResult>("/analyze/sextrology", body));
-    } catch (e: unknown) { setError((e as Error).message); }
-    finally { setLoading(false); }
+      const response = await fetch(`${API}/analyze/sextrology/stream`, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server error ${response.status}`);
+      }
+
+      const reader = response.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const raw = line.slice(6).trim();
+          if (!raw) continue;
+          try {
+            const parsed = JSON.parse(raw);
+            if ("chunk" in parsed) {
+              setStreamedText((prev) => prev + parsed.chunk);
+            }
+            if (parsed.done === true) {
+              const scores: SextrologyResult = parsed;
+              setStreamScores(scores);
+              setResult(scores);
+              setStreaming(false);
+            }
+          } catch {
+            // ignore malformed SSE lines
+          }
+        }
+      }
+    } catch (e: unknown) {
+      setError((e as Error).message);
+      setStreaming(false);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
@@ -171,7 +227,7 @@ export default function SextrologyPage() {
       </div>
 
       <button
-        onClick={() => { setShowB((v) => !v); setResult(null); }}
+        onClick={() => { setShowB((v) => !v); setResult(null); setStreamedText(""); setStreamScores(null); }}
         className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
       >
         {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for compatibility"}
@@ -180,11 +236,45 @@ export default function SextrologyPage() {
       {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
       <button
-        onClick={handleSubmit} disabled={loading}
+        onClick={handleStream} disabled={loading}
         className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
       >
         {loading ? "Analyzing…" : showB ? "Analyze Intimacy Compatibility" : "Reveal Your Sextrology Profile"}
       </button>
+
+      {/* Streaming section */}
+      <AnimatePresence>
+        {streamedText && (
+          <motion.div
+            key="stream-card"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35 }}
+            className={`${CARD} mb-4 md:mb-6`}
+          >
+            <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
+              <div className="relative w-2 h-2 shrink-0">
+                {streaming && (
+                  <div className="absolute inset-0 rounded-full bg-amber-500 animate-ping opacity-60" />
+                )}
+                <div className={`w-2 h-2 rounded-full ${streaming ? "bg-amber-500" : "bg-amber-500/50"}`} />
+              </div>
+              <span className="text-xs font-semibold text-zinc-300 tracking-wide">
+                {streaming ? "Streaming Analysis…" : "Analysis Complete"}
+              </span>
+              {!streaming && streamScores && (
+                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">
+                  Done
+                </span>
+              )}
+            </div>
+            <div className="p-4 md:p-6">
+              <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{streamedText}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <AnimatePresence>
         {result && (

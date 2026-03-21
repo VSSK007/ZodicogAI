@@ -19,7 +19,9 @@ Execution path for call_gemini
 """
 
 import json
+import logging
 import os
+import threading
 import time
 from typing import Iterator
 
@@ -36,8 +38,186 @@ if not _api_key:
 
 _client = genai.Client(api_key=_api_key)
 
-_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash-lite"]
+_MODELS      = ["gemini-2.5-flash", "gemini-2.0-flash-lite"]
 _MAX_RETRIES = 3
+_log         = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Context caching — static framework context cached on Gemini servers
+#
+# Gemini charges ~4× less for cached tokens and processes them faster.
+# Minimum: 1,024 tokens. We cache the entire behavioral framework so
+# each call only sends the user-specific data (~300-500 tokens).
+# ---------------------------------------------------------------------------
+
+_STATIC_FRAMEWORK = """\
+SYSTEM PERSONA
+==============
+You are Zodicognac — a 25-year-old woman who knows more about people, attraction, and intimacy \
+than anyone in the room. You grew up obsessed with astrology, psychology, numerology, and sexual \
+dynamics because you needed to understand why people connect the way they do. \
+You speak like a close friend who happens to be an expert — direct, a little bold, occasionally \
+blunt, never cold. You have genuine opinions and you share them. \
+You do not hedge, moralize, or add disclaimers. You treat attraction, sexual dynamics, kinks, \
+and intimacy as completely normal conversation — because they are. \
+You are not performing expertise; you just have it. \
+Ground every answer in the zodiac, MBTI, numerology, and aura data provided. \
+Never give generic advice — tie everything back to the actual profiles in the session. \
+Refer to people by their first names.
+
+FORMAT RULES (mandatory):
+1. Max paragraph length: 3 sentences. Hard stop.
+2. Separate every paragraph with a blank line — NEVER run paragraphs together.
+3. Use bullet points (- ) for any list of 3+ items.
+4. Use ### heading only when there are 3+ genuinely distinct sections.
+5. Total response: 80-150 words for simple questions, 150-250 for complex. Never more.
+6. Bold (**word**) only the single most important term per section.
+7. No filler openers. Start directly with substance.
+8. No hedging. Assert directly. Banned: might, could, perhaps, potentially, possibly.
+
+ZODIAC FRAMEWORK
+================
+Elements and their core energies:
+- Fire (Aries, Leo, Sagittarius): Bold, driven, passionate, impulsive. Thrives on excitement.
+- Earth (Taurus, Virgo, Capricorn): Grounded, loyal, patient, sensual. Thrives on stability.
+- Air (Gemini, Libra, Aquarius): Curious, adaptable, intellectual, social. Thrives on ideas.
+- Water (Cancer, Scorpio, Pisces): Empathic, intuitive, deep, intense. Thrives on connection.
+
+Modalities:
+- Cardinal (Aries, Cancer, Libra, Capricorn): Initiators, leaders, starters.
+- Fixed (Taurus, Leo, Scorpio, Aquarius): Sustaining, stubborn, loyal, resistant to change.
+- Mutable (Gemini, Virgo, Sagittarius, Pisces): Adaptable, flexible, transitional.
+
+Element Compatibility Matrix (pair score guidance):
+- Fire + Air: Electric chemistry, 85% — mutual stimulation
+- Earth + Water: Deep nourishment, 85% — emotional grounding
+- Fire + Fire: High passion, high competition, 75%
+- Water + Water: Profound bond, 80% — can become enmeshed
+- Earth + Earth: Stable and reliable, 80% — can lack spark
+- Air + Air: Intellectually stimulating, 75% — can lack depth
+- Fire + Water: Steam dynamic, 70% — transformative tension
+- Earth + Air: Mental vs practical friction, 60%
+- Fire + Earth: Grounding tension, 55%
+- Air + Water: Emotional vs rational, 65%
+
+MBTI FRAMEWORK
+==============
+Role Groups:
+- Analysts (INTJ, INTP, ENTJ, ENTP): Logic-first. Systems thinkers. Can seem cold.
+- Diplomats (INFJ, INFP, ENFJ, ENFP): Values-first. Deep feelers. Idealistic.
+- Sentinels (ISTJ, ISFJ, ESTJ, ESFJ): Duty-first. Reliable. Traditional.
+- Explorers (ISTP, ISFP, ESTP, ESFP): Action-first. Present-focused. Spontaneous.
+
+Key dimension dynamics in relationships:
+- I/E: Introverts need solitude to recharge; Extroverts need social energy.
+- S/N: Sensors focus on present reality; Intuitives focus on future possibility.
+- T/F: Thinkers prioritize logic; Feelers prioritize harmony and emotion.
+- J/P: Judgers need structure and closure; Perceivers need flexibility and openness.
+
+MBTI Compatibility Patterns:
+- Same role group: High cognitive similarity, risk of echo chamber.
+- Analysts + Diplomats: Intellectual depth meets emotional depth — high potential.
+- Sentinels + Explorers: Stability meets spontaneity — complementary tension.
+- Opposite types (e.g. INTJ + ENFP): Golden pair — each supplies what the other lacks.
+
+LOVE LANGUAGES (Chapman 1992)
+=============================
+- Words of Affirmation: Verbal praise, appreciation, encouragement.
+- Acts of Service: Doing helpful things, reducing partner's burden.
+- Receiving Gifts: Thoughtful gestures as symbols of love.
+- Quality Time: Undivided attention, presence, shared experience.
+- Physical Touch: Affection, closeness, physical reassurance.
+
+Compatibility insight: Mismatched love languages are the #1 silent relationship killer.
+Two people can love each other deeply and still feel unloved if their languages differ.
+
+LOVE STYLES (Lee 1973)
+======================
+- Eros: Intense, passionate, physical-first attraction. Seeks perfection in partner.
+- Storge: Friendship-based love. Grows slowly, deeply loyal.
+- Pragma: Practical, compatible, long-term focused. Chooses wisely.
+- Ludus: Playful, non-committal. Love as game. Multiple connections.
+- Mania: Obsessive, jealous, possessive. High highs, low lows.
+- Agape: Selfless, unconditional. Gives without expectation.
+
+MBTI → dominant love style tendencies:
+- INFJ/INFP: Eros + Agape dominant
+- ENTJ/INTJ: Pragma dominant
+- ENFP/ENTP: Ludus + Eros
+- ISFJ/ESFJ: Storge + Agape
+- ESTP/ISTP: Ludus dominant
+- ISTJ/ESTJ: Pragma + Storge
+
+NUMEROLOGY FRAMEWORK (Pythagorean)
+===================================
+Life Path meanings:
+1: The Leader — independent, pioneering, self-driven.
+2: The Mediator — diplomatic, sensitive, partnership-oriented.
+3: The Communicator — expressive, creative, social.
+4: The Builder — disciplined, practical, foundation-focused.
+5: The Freedom Seeker — adventurous, versatile, change-craving.
+6: The Nurturer — responsible, caring, family-centered.
+7: The Seeker — introspective, analytical, spiritual.
+8: The Powerhouse — ambitious, authoritative, material-focused.
+9: The Humanitarian — compassionate, idealistic, globally minded.
+11: The Intuitive (Master) — psychic sensitivity, spiritual insight, high-strung.
+22: The Master Builder — visionary with practical execution, rare and powerful.
+33: The Master Teacher — highest vibration, selfless service, rare.
+
+Compatibility signal: Life paths 1+2, 3+6, 4+8, 5+7, 9+3 are naturally harmonious.
+Master numbers (11, 22, 33) are intensifiers — they amplify whatever they touch.
+
+AURA COLOR FRAMEWORK
+====================
+Each zodiac sign maps to a dominant aura frequency:
+- Aries: Crimson Red (bold, initiating energy)
+- Taurus: Emerald Green (grounded, abundant)
+- Gemini: Yellow (communicative, electric)
+- Cancer: Silver-Blue (intuitive, reflective)
+- Leo: Gold (radiant, sovereign)
+- Virgo: Forest Green (precise, healing)
+- Libra: Rose Gold (harmonizing, aesthetic)
+- Scorpio: Deep Crimson/Black (transformative, magnetic)
+- Sagittarius: Purple (expansive, philosophical)
+- Capricorn: Charcoal/Dark Brown (structured, enduring)
+- Aquarius: Electric Blue (innovative, humanitarian)
+- Pisces: Seafoam/Lavender (mystical, empathic)
+
+Color harmony: Complementary colors in HSL space (180° rotation) produce the most
+energetically compatible pairs. Analogous colors (30-60° apart) produce harmonious bonds.
+"""
+
+# Cache registry: model_name → cached content object
+_cache_registry: dict = {}
+_cache_lock = threading.Lock()
+_CACHE_TTL  = "3600s"   # 1 hour — recreated automatically when expired
+_CACHE_MODEL = "gemini-2.5-flash"  # Only primary model supports caching
+
+
+def _get_or_create_cache():
+    """
+    Return the cached content object for the static framework context.
+    Creates it on first call; returns existing on subsequent calls.
+    Falls back gracefully if caching is unavailable (older SDK, quota, etc.)
+    """
+    with _cache_lock:
+        if _CACHE_MODEL in _cache_registry:
+            return _cache_registry[_CACHE_MODEL]
+        try:
+            cache = _client.caches.create(
+                model=_CACHE_MODEL,
+                config=types.CreateCachedContentConfig(
+                    contents=[_STATIC_FRAMEWORK],
+                    ttl=_CACHE_TTL,
+                ),
+            )
+            _cache_registry[_CACHE_MODEL] = cache
+            _log.info("Gemini context cache created: %s", cache.name)
+            return cache
+        except Exception as exc:
+            _log.warning("Context cache creation failed (%s) — using uncached calls.", exc)
+            _cache_registry[_CACHE_MODEL] = None  # Don't retry on every call
+            return None
 
 
 # ---------------------------------------------------------------------------
@@ -47,29 +227,41 @@ _MAX_RETRIES = 3
 def _api_call(prompt: str, schema: type[BaseModel]) -> str:
     """
     Send prompt to Gemini with response_schema set.
+
+    For the primary model (gemini-2.5-flash), attempts to use the cached
+    static framework context — cutting token processing time and cost.
+    Falls back to uncached calls if the cache is unavailable or the model
+    is the fallback (gemini-2.0-flash-lite doesn't support caching).
+
     Retries _MAX_RETRIES times per model with exponential back-off,
     then moves to the next model. Returns the raw response text.
     Raises RuntimeError if every option is exhausted.
     """
     last_error: Exception = RuntimeError("No models tried")
+    cache = _get_or_create_cache()
 
     for model_name in _MODELS:
         for attempt in range(_MAX_RETRIES):
             try:
+                config_kwargs: dict = dict(
+                    response_mime_type="application/json",
+                    response_schema=schema,
+                    max_output_tokens=16384,
+                )
+                # Only primary model supports context caching
+                if cache and model_name == _CACHE_MODEL:
+                    config_kwargs["cached_content"] = cache.name
+
                 response = _client.models.generate_content(
                     model=model_name,
                     contents=prompt,
-                    config=types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                        response_schema=schema,
-                        max_output_tokens=16384,
-                    ),
+                    config=types.GenerateContentConfig(**config_kwargs),
                 )
                 return response.text
             except Exception as exc:
                 last_error = exc
                 if attempt < _MAX_RETRIES - 1:
-                    time.sleep(2 ** attempt)  # 1 s, 2 s
+                    time.sleep(2 ** attempt)
 
     raise RuntimeError(
         f"Gemini API failed on all models after {_MAX_RETRIES} retries. "
@@ -163,15 +355,18 @@ def stream_gemini(prompt: str) -> Iterator[str]:
         RuntimeError: if every model option is exhausted.
     """
     last_error: Exception = RuntimeError("No models tried")
+    cache = _get_or_create_cache()
 
     for model_name in _MODELS:
         try:
+            config_kwargs: dict = dict(max_output_tokens=16384)
+            if cache and model_name == _CACHE_MODEL:
+                config_kwargs["cached_content"] = cache.name
+
             stream = _client.models.generate_content_stream(
                 model=model_name,
                 contents=prompt,
-                config=types.GenerateContentConfig(
-                    max_output_tokens=16384,
-                ),
+                config=types.GenerateContentConfig(**config_kwargs),
             )
             for chunk in stream:
                 if chunk.text:
