@@ -20,7 +20,7 @@
 
 ## Abstract
 
-This work presents ZodicogAI, a production system that addresses the fundamental limitation of generic LLMs when reasoning about complex interpersonal dynamics: **the absence of grounded structural knowledge**. We demonstrate that integrating deterministic engines spanning multiple personality frameworks (zodiac archetypes, MBTI typology, Pythagorean numerology, love style theory) with structured LLM prompting produces more specific, reproducible, and psychologically coherent outputs than conventional retrieval-augmented or in-context learning approaches.
+This work presents ZodicogAI, a production system that addresses the fundamental limitation of generic LLMs when reasoning about complex interpersonal dynamics: **the absence of grounded structural knowledge**. I demonstrate that integrating deterministic engines spanning multiple personality frameworks (zodiac archetypes, MBTI typology, Pythagorean numerology, love style theory) with structured LLM prompting produces more specific, reproducible, and psychologically coherent outputs than conventional retrieval-augmented or in-context learning approaches.
 
 The system computes personality vectors across 10 independent behavioral dimensions, executes deterministic multi-dimensional compatibility matrices, and synthesizes results through purpose-built prompt templates that reduce hallucination through explicit context framing. Unlike black-box personality prediction systems, every numerical output is auditable, every compatibility score is replicable, and the LLM's role is **interpretation of structured data**, not generation from scratch.
 
@@ -197,7 +197,7 @@ Each user profile is encoded into a structured behavioral vector spanning 10 ind
 
 ### 2. Multi-Dimensional Compatibility Computation
 
-For pair analysis, we compute **10 independent compatibility matrices** and produce a weighted synthesis:
+For pair analysis, I compute **10 independent compatibility matrices** and produce a weighted synthesis:
 
 ```python
 # Pseudocode for full compatibility synthesis
