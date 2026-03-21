@@ -259,7 +259,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileNavbar />
 
         <PageTransition>
-          <div className="pt-0 md:pt-12 pb-nav md:pb-0">{children}</div>
+          <div className="pt-0 md:pt-12 pb-24 md:pb-0">{children}</div>
         </PageTransition>
       </body>
       <GoogleAnalytics gaId="G-HY2R286L2X" />
