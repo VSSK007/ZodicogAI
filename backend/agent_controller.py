@@ -30,6 +30,15 @@ from engines.compatibility_engine import (
 from engines.emotional_engine import compute_emotional_compatibility
 from engines.romantic_engine import compute_romantic_compatibility
 from engines.sextrology_engine import compute_sextrology
+
+# v2 modular engines
+from core.engines import (
+    EmotionalCompatibilityEngine,  EmotionalInput,
+    RomanticCompatibilityEngine,   RomanticInput,
+    SextrologyCompatibilityEngine, SextrologyInput,
+)
+from core.score_bundle import ScoreBundleBuilder
+from core.explainer import ExplanationContext, GeminiExplainer
 from engines.love_style_engine import compute_love_style_compatibility
 from engines.love_language_engine import compute_love_language_compatibility
 from engines.relationship_intelligence import compute_relationship_intelligence
@@ -115,24 +124,44 @@ def _run_compatibility(ctx: dict) -> None:
     )
 
 
+_emotional_engine  = EmotionalCompatibilityEngine()
+_romantic_engine   = RomanticCompatibilityEngine()
+_sextrology_engine = SextrologyCompatibilityEngine()
+
+
 def _run_emotional(ctx: dict) -> None:
-    ctx["emotional"] = compute_emotional_compatibility(
-        ctx["a_zodiac"], ctx["b_zodiac"]
-    )
+    result = _emotional_engine.run(EmotionalInput(
+        profile_a=ctx["a_zodiac"],
+        profile_b=ctx["b_zodiac"],
+        name_a=ctx["a"].get("name", "Person A"),
+        name_b=ctx["b"].get("name", "Person B"),
+    ))
+    ctx["emotional"]        = result.raw.raw_result   # backward-compat dict
+    ctx["_score_emotional"] = result                  # ScoreResult for bundle
 
 
 def _run_romantic(ctx: dict) -> None:
-    # Requires compatibility_engine and emotional_engine to have run first.
-    ctx["romantic"] = compute_romantic_compatibility(
-        ctx["a_zodiac"],
-        ctx["b_zodiac"],
-        ctx["emotional"],
-        ctx["vector_score"],
-    )
+    result = _romantic_engine.run(RomanticInput(
+        profile_a=ctx["a_zodiac"],
+        profile_b=ctx["b_zodiac"],
+        emotional_result=ctx["emotional"],
+        vector_similarity=ctx.get("vector_score", 50.0),
+        name_a=ctx["a"].get("name", "Person A"),
+        name_b=ctx["b"].get("name", "Person B"),
+    ))
+    ctx["romantic"]        = result.raw.raw_result
+    ctx["_score_romantic"] = result
 
 
 def _run_sextrology(ctx: dict) -> None:
-    ctx["sextrology"] = compute_sextrology(ctx["a_zodiac"], ctx["b_zodiac"])
+    result = _sextrology_engine.run(SextrologyInput(
+        profile_a=ctx["a_zodiac"],
+        profile_b=ctx["b_zodiac"],
+        name_a=ctx["a"].get("name", "Person A"),
+        name_b=ctx["b"].get("name", "Person B"),
+    ))
+    ctx["sextrology"]        = result.raw.raw_result
+    ctx["_score_sextrology"] = result
 
 
 def _run_love_style(ctx: dict) -> None:
@@ -301,6 +330,12 @@ def run_analysis(
     for engine_name in _PIPELINE_REGISTRY[analysis_type]:
         _ENGINE_REGISTRY[engine_name](ctx)
 
+    # For emotional / romantic / sextrology — use ScoreBundle + ExplanationContext
+    _BUNDLE_TYPES = {EMOTIONAL_COMPATIBILITY, ROMANTIC_COMPATIBILITY, SEXTROLOGY_ANALYSIS}
+    if analysis_type in _BUNDLE_TYPES:
+        bundle = _build_score_bundle(analysis_type, ctx)
+        ctx["_score_bundle"] = bundle
+
     # Build a prompt and call Gemini.
     schema = _SCHEMA_REGISTRY[analysis_type]
     prompt = build_prompt(analysis_type, ctx)
@@ -354,6 +389,24 @@ def run(request_type: str, params: dict) -> dict:
 # Result builders — assemble the final API response from ctx + LLM analysis
 # ---------------------------------------------------------------------------
 
+def _build_score_bundle(analysis_type: str, ctx: dict):
+    """Build an immutable ScoreBundle from whichever ScoreResults are in ctx."""
+    builder = ScoreBundleBuilder(metadata={
+        "person_a": {"name": ctx["a"].get("name"), "sign": ctx.get("a_zodiac", {}).get("sign"), "mbti": ctx["a"].get("mbti")},
+        "person_b": {"name": ctx["b"].get("name"), "sign": ctx.get("b_zodiac", {}).get("sign"), "mbti": ctx["b"].get("mbti")},
+        "analysis_type": analysis_type,
+    })
+    score_keys = {
+        "_score_emotional":  ("emotional_compatibility",  _emotional_engine.weight),
+        "_score_romantic":   ("romantic_compatibility",   _romantic_engine.weight),
+        "_score_sextrology": ("sextrology_compatibility", _sextrology_engine.weight),
+    }
+    for ctx_key, (dim, weight) in score_keys.items():
+        if ctx_key in ctx:
+            builder.add(dim, ctx[ctx_key], weight)
+    return builder.build()
+
+
 def _build_result(analysis_type: str, ctx: dict, analysis) -> dict:
     builders = {
         HYBRID_ANALYSIS:               _result_hybrid,
@@ -395,30 +448,42 @@ def _result_compatibility(ctx: dict, analysis) -> dict:
 
 
 def _result_emotional(ctx: dict, analysis) -> dict:
+    bundle = ctx.get("_score_bundle")
     return {
         **ctx["emotional"],
         "a_traits": ctx["a_zodiac"]["trait_vector"],
         "b_traits": ctx["b_zodiac"]["trait_vector"],
         "analysis": analysis.model_dump(),
+        "scores":   bundle.score_map  if bundle else {},
+        "labels":   bundle.label_map  if bundle else {},
+        "overall":  round(bundle.overall_score, 1) if bundle else None,
     }
 
 
 def _result_romantic(ctx: dict, analysis) -> dict:
+    bundle = ctx.get("_score_bundle")
     return {
         **ctx["romantic"],
         **ctx["emotional"],
         "a_traits": ctx["a_zodiac"]["trait_vector"],
         "b_traits": ctx["b_zodiac"]["trait_vector"],
         "analysis": analysis.model_dump(),
+        "scores":   bundle.score_map  if bundle else {},
+        "labels":   bundle.label_map  if bundle else {},
+        "overall":  round(bundle.overall_score, 1) if bundle else None,
     }
 
 
 def _result_sextrology(ctx: dict, analysis) -> dict:
+    bundle = ctx.get("_score_bundle")
     return {
         **ctx["sextrology"],
         "a_traits": ctx["a_zodiac"]["trait_vector"],
         "b_traits": ctx["b_zodiac"]["trait_vector"],
         "analysis": analysis.model_dump(),
+        "scores":   bundle.score_map  if bundle else {},
+        "labels":   bundle.label_map  if bundle else {},
+        "overall":  round(bundle.overall_score, 1) if bundle else None,
     }
 
 

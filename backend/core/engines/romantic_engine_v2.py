@@ -17,10 +17,12 @@ from engines.romantic_engine import compute_romantic_compatibility
 # ── Input / Output models ─────────────────────────────────────────────────────
 
 class RomanticInput(BaseModel):
-    profile_a:  dict
-    profile_b:  dict
-    name_a:     str = "Person A"
-    name_b:     str = "Person B"
+    profile_a:        dict
+    profile_b:        dict
+    emotional_result: dict = {}      # from EmotionalCompatibilityEngine
+    vector_similarity: float = 50.0  # from compatibility_engine
+    name_a:           str = "Person A"
+    name_b:           str = "Person B"
 
 class RomanticOutput(BaseModel):
     score:                      float
@@ -48,6 +50,8 @@ class RomanticCompatibilityEngine(PairEngine[RomanticInput, RomanticOutput]):
         result = compute_romantic_compatibility(
             input.profile_a,
             input.profile_b,
+            input.emotional_result,
+            input.vector_similarity,
         )
         return RomanticOutput(
             score=result.get("score", 0),
