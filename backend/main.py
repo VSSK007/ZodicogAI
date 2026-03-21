@@ -267,12 +267,21 @@ def _sse_stream(analysis_type: str, person_a: dict, person_b: dict):
     for chunk_text in stream_gemini(prompt):
         yield f"data: {json.dumps({'chunk': chunk_text})}\n\n"
 
-    # 4. Send scores/labels/overall as the final SSE event.
+    # 4. Send the full deterministic result as the final SSE event so the
+    #    frontend can render ScoreRing, MetricCard, TraitRadar, etc.
     bundle = ctx.get("_score_bundle")
-    scores  = bundle.score_map           if bundle else {}
-    labels  = bundle.label_map           if bundle else {}
-    overall = round(bundle.overall_score, 1) if bundle else None
-    yield f"data: {json.dumps({'scores': scores, 'labels': labels, 'overall': overall, 'done': True})}\n\n"
+    done_payload = {
+        "done":    True,
+        "scores":  bundle.score_map                if bundle else {},
+        "labels":  bundle.label_map                if bundle else {},
+        "overall": round(bundle.overall_score, 1)  if bundle else None,
+        # Sub-scores and trait vectors for ScoreRing / MetricCard
+        **ctx.get("romantic",  {}),
+        **ctx.get("emotional", {}),
+        "a_traits": ctx.get("a_zodiac", {}).get("trait_vector", {}),
+        "b_traits": ctx.get("b_zodiac", {}).get("trait_vector", {}),
+    }
+    yield f"data: {json.dumps(done_payload)}\n\n"
 
 
 @app.post("/analyze/emotional/stream")
