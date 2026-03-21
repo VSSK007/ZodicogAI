@@ -15,6 +15,9 @@ results of earlier ones without any explicit argument threading.
 main.py only calls run() or run_analysis() — it never touches engines directly.
 """
 
+import concurrent.futures
+import threading
+
 # ---------------------------------------------------------------------------
 # Imports — engines
 # ---------------------------------------------------------------------------
@@ -291,6 +294,110 @@ _SCHEMA_REGISTRY: dict[str, type] = {
 }
 
 # ---------------------------------------------------------------------------
+# Parallel pipeline execution
+# ---------------------------------------------------------------------------
+
+# Dependency phases: engines in the same phase run concurrently.
+# Phase N+1 starts only after Phase N completes.
+_PHASE_ORDER = [
+    # Phase 1 — independent, no deps
+    {"zodiac_engine", "mbti_engine", "numerology_engine"},
+    # Phase 2 — needs zodiac + mbti
+    {"compatibility_engine", "emotional_engine", "sextrology_engine",
+     "love_style_engine", "love_language_engine", "color_engine"},
+    # Phase 3 — needs emotional (from phase 2)
+    {"romantic_engine"},
+    # Phase 4 — needs everything
+    {"relationship_intelligence_engine"},
+]
+
+_ctx_lock = threading.Lock()
+
+
+def _run_pipeline_parallel(analysis_type: str, ctx: dict) -> None:
+    """
+    Run the engine pipeline for analysis_type using phased parallel execution.
+
+    Engines within the same phase execute concurrently via ThreadPoolExecutor.
+    Each phase waits for the previous phase to complete before starting.
+    Engine adapters write to the shared ctx dict; writes are protected by _ctx_lock.
+    """
+    needed: set[str] = set(_PIPELINE_REGISTRY[analysis_type])
+
+    def _safe_run(engine_name: str) -> None:
+        # Run the engine, then write results under the lock.
+        # Since engine adapters mutate ctx in-place and ctx is a dict (not a
+        # primitive), we hold the lock for the entire adapter call so that
+        # reads of ctx by the adapter and writes back to ctx are atomic
+        # relative to other threads in the same phase.
+        with _ctx_lock:
+            _ENGINE_REGISTRY[engine_name](ctx)
+
+    for phase in _PHASE_ORDER:
+        engines_this_phase = needed & phase
+        if not engines_this_phase:
+            continue
+
+        if len(engines_this_phase) == 1:
+            # No parallelism needed for a single engine — avoid thread overhead.
+            _ENGINE_REGISTRY[next(iter(engines_this_phase))](ctx)
+        else:
+            with concurrent.futures.ThreadPoolExecutor(
+                max_workers=len(engines_this_phase)
+            ) as executor:
+                futures = {
+                    executor.submit(_safe_run, name): name
+                    for name in engines_this_phase
+                }
+                for future in concurrent.futures.as_completed(futures):
+                    exc = future.exception()
+                    if exc is not None:
+                        raise exc
+
+
+# ---------------------------------------------------------------------------
+# Engines-only helper (used by streaming endpoints)
+# ---------------------------------------------------------------------------
+
+def _run_engines_only(
+    analysis_type: str,
+    person_a_data: dict,
+    person_b_data: dict | None = None,
+) -> dict:
+    """
+    Build ctx, run the full parallel engine pipeline, and return ctx.
+    Does NOT call Gemini. Used by streaming endpoints that call Gemini
+    themselves after receiving the ctx.
+
+    Args:
+        analysis_type : one of the ANALYSIS_TYPE constants.
+        person_a_data : dict with keys: name, day, month, mbti.
+        person_b_data : same shape; None for single-person analyses.
+
+    Returns:
+        Populated ctx dict.
+    """
+    if analysis_type not in _PIPELINE_REGISTRY:
+        raise ValueError(f"Unknown analysis type: '{analysis_type}'")
+
+    is_pair = person_b_data is not None
+    ctx: dict = {
+        "analysis_type": analysis_type,
+        "is_pair": is_pair,
+        "a": person_a_data,
+        "b": person_b_data or {},
+    }
+
+    _run_pipeline_parallel(analysis_type, ctx)
+
+    _BUNDLE_TYPES = {EMOTIONAL_COMPATIBILITY, ROMANTIC_COMPATIBILITY, SEXTROLOGY_ANALYSIS}
+    if analysis_type in _BUNDLE_TYPES:
+        ctx["_score_bundle"] = _build_score_bundle(analysis_type, ctx)
+
+    return ctx
+
+
+# ---------------------------------------------------------------------------
 # Public entry point — new primary API
 # ---------------------------------------------------------------------------
 
@@ -313,28 +420,7 @@ def run_analysis(
     Raises:
         ValueError: unknown analysis_type or invalid engine input.
     """
-    if analysis_type not in _PIPELINE_REGISTRY:
-        raise ValueError(f"Unknown analysis type: '{analysis_type}'")
-
-    is_pair = person_b_data is not None
-
-    # Initialise the shared context with raw inputs.
-    ctx: dict = {
-        "analysis_type": analysis_type,
-        "is_pair": is_pair,
-        "a": person_a_data,
-        "b": person_b_data or {},
-    }
-
-    # Run each engine in the prescribed order.
-    for engine_name in _PIPELINE_REGISTRY[analysis_type]:
-        _ENGINE_REGISTRY[engine_name](ctx)
-
-    # For emotional / romantic / sextrology — use ScoreBundle + ExplanationContext
-    _BUNDLE_TYPES = {EMOTIONAL_COMPATIBILITY, ROMANTIC_COMPATIBILITY, SEXTROLOGY_ANALYSIS}
-    if analysis_type in _BUNDLE_TYPES:
-        bundle = _build_score_bundle(analysis_type, ctx)
-        ctx["_score_bundle"] = bundle
+    ctx = _run_engines_only(analysis_type, person_a_data, person_b_data)
 
     # Build a prompt and call Gemini.
     schema = _SCHEMA_REGISTRY[analysis_type]

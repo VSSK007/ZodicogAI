@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 ZODIAC_RANGES = [
     ("Capricorn", (12, 22), (1, 19)),
     ("Aquarius", (1, 20), (2, 18)),
@@ -61,6 +63,7 @@ def get_sun_sign(day: int, month: int) -> str:
     raise ValueError("Invalid date")
 
 
+@lru_cache(maxsize=366)
 def get_zodiac_profile(day: int, month: int) -> dict:
     import datetime
     from decans_data import get_decan_modifier

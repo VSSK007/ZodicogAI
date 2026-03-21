@@ -21,6 +21,7 @@ Execution path for call_gemini
 import json
 import os
 import time
+from typing import Iterator
 
 from dotenv import load_dotenv
 from google import genai
@@ -142,6 +143,47 @@ def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
         return _parse_and_validate(raw, schema)
     except Exception:
         return schema()
+
+
+def stream_gemini(prompt: str) -> Iterator[str]:
+    """
+    Stream a Gemini response as text chunks.
+
+    Uses generate_content_stream so that text is yielded incrementally
+    as each chunk arrives. Falls back to gemini-2.0-flash-lite if the
+    primary model (gemini-2.5-flash) fails.
+
+    Args:
+        prompt: The full instruction prompt.
+
+    Yields:
+        str chunks of the model's text response.
+
+    Raises:
+        RuntimeError: if every model option is exhausted.
+    """
+    last_error: Exception = RuntimeError("No models tried")
+
+    for model_name in _MODELS:
+        try:
+            stream = _client.models.generate_content_stream(
+                model=model_name,
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    max_output_tokens=16384,
+                ),
+            )
+            for chunk in stream:
+                if chunk.text:
+                    yield chunk.text
+            return  # success — stop trying models
+        except Exception as exc:
+            last_error = exc
+            # Try next model
+
+    raise RuntimeError(
+        f"stream_gemini failed on all models. Last error: {last_error}"
+    )
 
 
 # ---------------------------------------------------------------------------

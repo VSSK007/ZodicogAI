@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 MBTI_TYPES = {
     "INTJ": {
         "name": "Architect",
@@ -82,6 +84,7 @@ MBTI_TYPES = {
 }
 
 
+@lru_cache(maxsize=16)
 def get_mbti_profile(mbti_type: str) -> dict:
     mbti_type = mbti_type.upper()
 

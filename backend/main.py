@@ -1,5 +1,8 @@
+import json
+
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 from datetime import datetime
 
 from models.schemas import (
@@ -17,6 +20,8 @@ from chat.chat_handler import handle_chat
 from agent_controller import (
     run,
     run_analysis,
+    _run_engines_only,
+    _build_result,
     HYBRID_ANALYSIS,
     COMPATIBILITY_ANALYSIS,
     EMOTIONAL_COMPATIBILITY,
@@ -32,6 +37,7 @@ from agent_controller import (
     NUMEROLOGY_ANALYSIS,
     NUMEROLOGY_PAIR_ANALYSIS,
 )
+from gemini_client import stream_gemini, build_prompt
 
 app = FastAPI()
 
@@ -236,6 +242,79 @@ def analyze_numerology(data: NumerologyInput):
             return run_analysis(NUMEROLOGY_PAIR_ANALYSIS, a, b)
         return run_analysis(NUMEROLOGY_ANALYSIS, a)
     return _wrap(_run)
+
+
+# ---------------------------------------------------------------------------
+# Streaming endpoints — SSE responses for emotional, romantic, sextrology
+# ---------------------------------------------------------------------------
+
+def _sse_stream(analysis_type: str, person_a: dict, person_b: dict):
+    """
+    Shared SSE generator for streaming analyses.
+
+    Protocol:
+      - Each Gemini text chunk:  data: {"chunk": "..."}\n\n
+      - After streaming done:    data: {"scores": {...}, "labels": {...},
+                                        "overall": 78.5, "done": true}\n\n
+    """
+    # 1. Run deterministic engines only (no Gemini call yet).
+    ctx = _run_engines_only(analysis_type, person_a, person_b)
+
+    # 2. Build the prompt from the populated ctx.
+    prompt = build_prompt(analysis_type, ctx)
+
+    # 3. Stream Gemini text chunks as SSE.
+    for chunk_text in stream_gemini(prompt):
+        yield f"data: {json.dumps({'chunk': chunk_text})}\n\n"
+
+    # 4. Send scores/labels/overall as the final SSE event.
+    bundle = ctx.get("_score_bundle")
+    scores  = bundle.score_map           if bundle else {}
+    labels  = bundle.label_map           if bundle else {}
+    overall = round(bundle.overall_score, 1) if bundle else None
+    yield f"data: {json.dumps({'scores': scores, 'labels': labels, 'overall': overall, 'done': True})}\n\n"
+
+
+@app.post("/analyze/emotional/stream")
+async def stream_emotional(req: CompatibilityInput):
+    """Stream emotional compatibility analysis as SSE."""
+    a, b = _from_pair(req)
+
+    def _gen():
+        try:
+            yield from _sse_stream(EMOTIONAL_COMPATIBILITY, a, b)
+        except Exception as exc:
+            yield f"data: {json.dumps({'error': str(exc)})}\n\n"
+
+    return StreamingResponse(_gen(), media_type="text/event-stream")
+
+
+@app.post("/analyze/romantic/stream")
+async def stream_romantic(req: CompatibilityInput):
+    """Stream romantic compatibility analysis as SSE."""
+    a, b = _from_pair(req)
+
+    def _gen():
+        try:
+            yield from _sse_stream(ROMANTIC_COMPATIBILITY, a, b)
+        except Exception as exc:
+            yield f"data: {json.dumps({'error': str(exc)})}\n\n"
+
+    return StreamingResponse(_gen(), media_type="text/event-stream")
+
+
+@app.post("/analyze/sextrology/stream")
+async def stream_sextrology(req: CompatibilityInput):
+    """Stream sextrology compatibility analysis as SSE."""
+    a, b = _from_pair(req)
+
+    def _gen():
+        try:
+            yield from _sse_stream(SEXTROLOGY_ANALYSIS, a, b)
+        except Exception as exc:
+            yield f"data: {json.dumps({'error': str(exc)})}\n\n"
+
+    return StreamingResponse(_gen(), media_type="text/event-stream")
 
 
 # ---------------------------------------------------------------------------

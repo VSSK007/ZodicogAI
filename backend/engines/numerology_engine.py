@@ -13,6 +13,8 @@ Public interface:
     compute_numerology_compatibility(profile_a, profile_b) -> dict  (pair)
 """
 
+from functools import lru_cache
+
 # ---------------------------------------------------------------------------
 # Pythagorean letter-to-number mapping
 # ---------------------------------------------------------------------------
@@ -186,6 +188,7 @@ def _compat_score(n1: int, n2: int) -> float:
 # Public interface
 # ---------------------------------------------------------------------------
 
+@lru_cache(maxsize=1024)
 def get_numerology_profile(name: str, day: int, month: int) -> dict:
     """
     Compute the full numerology profile for a single person.
