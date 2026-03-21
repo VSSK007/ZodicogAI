@@ -357,27 +357,37 @@ frontend/
 │   ├── page.tsx                     # Home (dual-identity: desktop + mobile)
 │   ├── chat/page.tsx                # Zodicognac conversational interface
 │   ├── dashboard/page.tsx           # Full synastry results
-│   └── analyze/
-│       ├── hybrid/page.tsx          # Self-analysis
-│       ├── emotional/page.tsx       # Emotional compatibility
-│       ├── romantic/page.tsx        # Romantic compatibility
-│       ├── sextrology/page.tsx      # Sexual compatibility
-│       ├── love-style/page.tsx      # Love style alignment
-│       ├── love-language/page.tsx   # Love language alignment
-│       ├── color/page.tsx           # Aura color analysis
-│       ├── numerology/page.tsx      # Numerology
-│       └── zodiac/page.tsx          # Zodiac article
+│   ├── about/page.tsx               # Brand origin story & Zodicog explanation
+│   ├── analyze/                     # 10 single + pair analysis pages
+│   │   ├── hybrid/page.tsx          # Self-analysis (zodiac + MBTI + traits)
+│   │   ├── emotional/page.tsx       # Emotional compatibility (attachment + empathy)
+│   │   ├── romantic/page.tsx        # Romantic compatibility (polarity + affection)
+│   │   ├── sextrology/page.tsx      # Sexual compatibility (erogenous + positions)
+│   │   ├── love-style/page.tsx      # Love style alignment (Lee's 6 styles)
+│   │   ├── love-language/page.tsx   # Love language alignment (Chapman's 5)
+│   │   ├── color/page.tsx           # Aura color analysis (HSL harmony)
+│   │   ├── numerology/page.tsx      # Numerology (life path + compatibility)
+│   │   ├── zodiac/page.tsx          # Zodiac article (13-field deep dive)
+│   │   └── relationship-intelligence/page.tsx  # Full 10-dimensional synastry
+│   └── blog/                        # 29+ SEO-optimized articles
+│       ├── page.tsx                 # Blog index (all articles + guides)
+│       ├── zodiac/[sign]/page.tsx   # 12 zodiac articles (ISR, Gemini-powered)
+│       ├── mbti/[type]/page.tsx     # 16 MBTI type profiles (static data)
+│       └── faq/page.tsx             # FAQ with JSON-LD rich snippets
 ├── components/
-│   ├── HybridForm.tsx               # Profile input (desktop + mobile)
-│   ├── MobileChatSheet.tsx          # Mobile chat interface (bottom sheet)
-│   ├── MobileNavbar.tsx             # Mobile FAB (single centered button)
-│   ├── MarkdownText.tsx             # Structured markdown rendering
+│   ├── HybridForm.tsx               # Dual-input form with MBTI quiz
+│   ├── PersonForm.tsx               # Reusable person input (name, date, MBTI, gender)
+│   ├── MbtiSelect.tsx               # MBTI dropdown with quiz
+│   ├── MobileNavbar.tsx             # Mobile FAB + back button (scroll-triggered on blog)
+│   ├── MarkdownText.tsx             # Structured markdown rendering (sections + bullets)
 │   ├── ScoreRing.tsx                # Circular % visualization
 │   ├── TraitRadar.tsx               # 5-axis radar chart (Recharts)
 │   └── BehavioralMap.tsx            # 2D MBTI function scatter
 └── lib/
     ├── api.ts                       # API client (apiFetch wrapper)
-    └── hooks/useIsMobile.ts         # Mobile detection hook
+    ├── mbti-data.ts                 # Static MBTI type definitions (16 types)
+    ├── colors.ts                    # Zodiac color palette
+    └── motion.ts                    # Framer Motion easing presets
 ```
 
 **Dual-identity pattern:**
@@ -437,6 +447,53 @@ export function MarkdownText({ content }: { content: string }) {
   );
 }
 ```
+
+---
+
+## SEO & Content Strategy
+
+### Blog System: 29+ Organic Traffic Engines
+
+ZodicogAI includes a comprehensive blog system designed for search discoverability and long-tail keyword ranking:
+
+#### 12 Zodiac Articles (`/blog/zodiac/[sign]`)
+- **Rendering:** Server-side with Incremental Static Regeneration (ISR, 24h revalidate)
+- **Content:** Fetches from Gemini-powered `/analyze/zodiac` endpoint at first visit, caches result
+- **Each page:** 13-field zodiac article (overview, personality, strengths, weaknesses, love, career, famous people, best matches)
+- **SEO:** Unique title/description per sign + OpenGraph tags for social sharing
+- **Target keywords:** "Aries personality", "Scorpio in love", "Leo career", etc.
+
+#### 16 MBTI Type Profiles (`/blog/mbti/[type]`)
+- **Rendering:** Static, pre-generated at build time (no API calls)
+- **Content:** Hardcoded MBTI type definitions in `/lib/mbti-data.ts` (type description, strengths, weaknesses, love style, career fit, famous examples)
+- **SEO:** Unique title/description per type + color-coded role group badges
+- **Target keywords:** "INTJ personality", "ENFP relationships", "MBTI career guide", etc.
+
+#### FAQ with Rich Snippets (`/blog/faq`)
+- **Content:** 13 curated Q&As covering zodiac, MBTI, numerology, love languages, sextrology
+- **SEO:** JSON-LD `FAQPage` schema markup → appears in Google "People also ask" section
+- **Links:** Each answer links to relevant analyzer (e.g., "Try Sextrology" → `/analyze/sextrology`)
+
+#### Blog Index Page (`/blog`)
+- **Grid layout:** All 12 zodiac signs, all 16 MBTI types, FAQ link
+- **SEO:** Internal linking hub, breadcrumb navigation, canonical URLs
+
+### SEO Infrastructure
+
+**Sitemap & Robots:**
+- `sitemap.xml` auto-generated with all 40+ pages (home + analyzes + blog articles + about)
+- `robots.txt` generated with sitemap reference
+- All metadata: title, description, keywords, OpenGraph, Twitter cards
+
+**Google Search Console:**
+- HTML tag verification in layout metadata
+- Sitemap submitted → Google crawls all 40+ indexed pages
+- Monitors ranking keywords, CTR, search impressions
+
+**Google Analytics 4:**
+- Tracks pageviews, user sessions, bounce rate, conversion funnels
+- Identifies high-traffic pages, user behavior patterns
+- Monitors analyze page conversions
 
 ---
 
@@ -563,18 +620,23 @@ Every computation is **auditable** — trace the code path to see exactly how ea
 
 **Citation:**
 ```bibtex
-@software{zodicogai2025,
+@software{zodicogai2026,
   title={ZodicogAI: Grounding Large Language Models in Structured Behavioral Data},
   author={Zodiacog Contributors},
   url={https://github.com/VSSK007/ZodicogAI},
-  year={2025}
+  year={2026}
 }
 ```
 
 **Contact:** kar1mr@zodicogai.com | [zodicogai.com](https://zodicogai.com)
 
-**GitHub:** [github.com/VSSK007/ZodicogAI](https://github.com/VSSK007/ZodicogAI)
+**Links:**
+- **Live App:** [zodicogai.com](https://zodicogai.com)
+- **Blog:** [zodicogai.com/blog](https://zodicogai.com/blog) — 12 zodiac + 16 MBTI + FAQ articles
+- **About:** [zodicogai.com/about](https://zodicogai.com/about) — Origin story & Zodicog meaning
+- **Sitemap:** [zodicogai.com/sitemap.xml](https://zodicogai.com/sitemap.xml)
+- **GitHub:** [github.com/VSSK007/ZodicogAI](https://github.com/VSSK007/ZodicogAI)
 
 ---
 
-**MIT License** | Built with Next.js, FastAPI, and Gemini API
+**MIT License** | Built with Next.js 16, FastAPI, Pydantic v2, Gemini 2.5 Flash, and Tailwind CSS v4
