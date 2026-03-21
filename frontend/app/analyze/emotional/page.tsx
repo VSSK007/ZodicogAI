@@ -179,7 +179,8 @@ export default function EmotionalPage() {
               </div>
             </motion.div>
 
-            {/* AI Interpretation */}
+            {/* AI Interpretation — hidden when ConstellationStream is showing */}
+            {!streamedText && result.analysis && (
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
@@ -199,11 +200,12 @@ export default function EmotionalPage() {
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
                   <div key={key} className="border-l-2 border-amber-500/40 md:border-purple-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis?.[key]}</p>
                   </div>
                 ))}
               </div>
             </motion.div>
+            )}
 
           </motion.div>
         )}

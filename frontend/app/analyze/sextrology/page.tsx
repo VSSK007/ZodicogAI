@@ -309,7 +309,7 @@ export default function SextrologyPage() {
                         <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
                           <span className="mr-1.5">{icon}</span>{label}
                         </p>
-                        <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+                        <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis?.[key]}</p>
                       </div>
                     ))}
                   </div>
@@ -351,7 +351,7 @@ export default function SextrologyPage() {
                           <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
                             <span className="mr-1.5">{icon}</span>{label}
                           </p>
-                          <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+                          <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis?.[key]}</p>
                         </div>
                       ))}
                     </div>
