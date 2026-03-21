@@ -989,3 +989,83 @@ def build_prompt(analysis_type: str, engine_results: dict) -> str:
     if builder is None:
         raise ValueError(f"No prompt template for analysis type: '{analysis_type}'")
     return builder(engine_results)
+
+
+def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
+    """
+    Build a prose narrative prompt for streaming endpoints.
+
+    Unlike build_prompt(), this does NOT ask for JSON output.
+    It asks Zodicognac to narrate the analysis as flowing text —
+    this is what gets streamed live to the user via ConstellationStream.
+    The structured data (scores, sub-scores, traits) is sent separately
+    in the SSE done event.
+    """
+    na, nb = _names(ctx)
+
+    if analysis_type == "romantic_compatibility":
+        r = ctx.get("romantic", {})
+        e = ctx.get("emotional", {})
+        return (
+            f"{_STATIC_FRAMEWORK}\n\n"
+            f"---\n"
+            f"{_pair_header(ctx)}\n\n"
+            f"Romantic Metrics:\n"
+            f"  Romantic score: {r.get('romantic_compatibility_score', '?')}%\n"
+            f"  Romantic polarity: {r.get('romantic_polarity_score', '?')}%\n"
+            f"  Attachment pacing similarity: {r.get('attachment_pacing_similarity', '?')}%\n"
+            f"  Affection expression alignment: {r.get('affection_expression_similarity', '?')}%\n"
+            f"  Emotional compatibility: {e.get('emotional_compatibility_score', '?')}%\n\n"
+            f"Write a flowing, personal romantic compatibility reading for {na} and {nb}. "
+            f"Speak directly to them. Cover: the romantic dynamic between them, how they "
+            f"express and receive love, the tension or harmony in their polarity, and one "
+            f"concrete thing they can do to deepen their connection. "
+            f"Do NOT output JSON. Write in prose. 150-250 words."
+        )
+
+    if analysis_type == "emotional_compatibility":
+        e = ctx.get("emotional", {})
+        return (
+            f"{_STATIC_FRAMEWORK}\n\n"
+            f"---\n"
+            f"{_pair_header(ctx)}\n\n"
+            f"Emotional Metrics:\n"
+            f"  Emotional compatibility score: {e.get('emotional_compatibility_score', '?')}%\n"
+            f"  Bond depth: {e.get('bond_depth_score', '?')}%\n"
+            f"  Conflict resolution: {e.get('conflict_resolution_score', '?')}%\n"
+            f"  Empathy resonance: {e.get('empathy_resonance_score', '?')}%\n"
+            f"  Attachment pacing: {e.get('attachment_pacing_similarity', '?')}%\n\n"
+            f"Write a flowing, personal emotional compatibility reading for {na} and {nb}. "
+            f"Speak directly to them. Cover: how safe they feel with each other emotionally, "
+            f"how they handle conflict, their empathy dynamic, and one thing that will "
+            f"deepen their emotional bond. "
+            f"Do NOT output JSON. Write in prose. 150-250 words."
+        )
+
+    if analysis_type == "sextrology_analysis":
+        s = ctx.get("sextrology", {})
+        return (
+            f"{_STATIC_FRAMEWORK}\n\n"
+            f"---\n"
+            f"{_pair_header(ctx)}\n\n"
+            f"Sextrology Metrics:\n"
+            f"  Sextrology score: {s.get('score', '?')}%\n"
+            f"  {na} archetype: {s.get('archetype_a', '?')}\n"
+            f"  {nb} archetype: {s.get('archetype_b', '?')}\n"
+            f"  Dynamic: {s.get('dynamic', '?')}\n\n"
+            f"Write a flowing, direct sextrology reading for {na} and {nb}. "
+            f"Speak directly to them. Cover each person's intimate character and archetype, "
+            f"how they interact in intimacy, the core dynamic between them, and their "
+            f"long-term fire potential. Be direct and explicit — no hedging. "
+            f"Do NOT output JSON. Write in prose. 150-250 words."
+        )
+
+    # Fallback — generic prose prompt
+    return (
+        f"{_STATIC_FRAMEWORK}\n\n"
+        f"---\n"
+        f"{_pair_header(ctx)}\n\n"
+        f"Write a personal behavioral compatibility reading for {na} and {nb}. "
+        f"Be direct, specific to their profiles, and speak to them personally. "
+        f"Do NOT output JSON. Write in prose. 150-250 words."
+    )

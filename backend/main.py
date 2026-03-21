@@ -37,7 +37,7 @@ from agent_controller import (
     NUMEROLOGY_ANALYSIS,
     NUMEROLOGY_PAIR_ANALYSIS,
 )
-from gemini_client import stream_gemini, build_prompt
+from gemini_client import stream_gemini, build_prompt, build_stream_prompt
 
 app = FastAPI()
 
@@ -260,8 +260,8 @@ def _sse_stream(analysis_type: str, person_a: dict, person_b: dict):
     # 1. Run deterministic engines only (no Gemini call yet).
     ctx = _run_engines_only(analysis_type, person_a, person_b)
 
-    # 2. Build the prompt from the populated ctx.
-    prompt = build_prompt(analysis_type, ctx)
+    # 2. Build a prose narrative prompt (not JSON) for streaming.
+    prompt = build_stream_prompt(analysis_type, ctx)
 
     # 3. Stream Gemini text chunks as SSE.
     for chunk_text in stream_gemini(prompt):
