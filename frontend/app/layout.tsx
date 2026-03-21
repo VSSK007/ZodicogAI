@@ -1,6 +1,7 @@
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import { Manrope, DM_Sans } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import PageTransition from "@/components/PageTransition";
@@ -245,6 +246,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="pt-0 md:pt-12 pb-nav md:pb-0">{children}</div>
         </PageTransition>
       </body>
+      <GoogleAnalytics gaId="G-HY2R286L2X" />
     </html>
   );
 }
