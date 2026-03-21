@@ -146,6 +146,7 @@ export default function SextrologyPage() {
   const [streaming, setStreaming] = useState(false);
   const [streamedText, setStreamedText] = useState("");
   const [streamScores, setStreamScores] = useState<SextrologyResult | null>(null);
+  const [submittedAsPair, setSubmittedAsPair] = useState(false);
 
   async function handleStream() {
     const errA = validatePerson(a, "Person A");
@@ -160,6 +161,7 @@ export default function SextrologyPage() {
     setStreamedText("");
     setStreamScores(null);
     setResult(null);
+    setSubmittedAsPair(showB);
 
     try {
       const body = showB ? pairSexBody(a, b) : soloBody(a);
@@ -257,7 +259,7 @@ export default function SextrologyPage() {
         {result && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-6">
 
-            {isPair(result) ? (
+            {(submittedAsPair || isPair(result)) ? (
               <>
                 {/* Pair — score ring */}
                 <motion.div
