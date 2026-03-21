@@ -117,9 +117,8 @@ export default function ConstellationStream({
     if (text.length > prevLen.current) {
       const newPart = text.slice(prevLen.current);
       prevLen.current = text.length;
-      // Split new text into word-sized chunks for smoother glow effect
-      const words = newPart.match(/\S+\s*/g) || [newPart];
-      setChunks(prev => [...prev, ...words]);
+      // Keep each SSE chunk as one animated unit — avoids split-word artefacts
+      setChunks(prev => [...prev, newPart]);
     }
   }, [text]);
 

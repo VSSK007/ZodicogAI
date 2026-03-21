@@ -1007,8 +1007,6 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
         r = ctx.get("romantic", {})
         e = ctx.get("emotional", {})
         return (
-            f"{_STATIC_FRAMEWORK}\n\n"
-            f"---\n"
             f"{_pair_header(ctx)}\n\n"
             f"Romantic Metrics:\n"
             f"  Romantic score: {r.get('romantic_compatibility_score', '?')}%\n"
@@ -1026,8 +1024,6 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
     if analysis_type == "emotional_compatibility":
         e = ctx.get("emotional", {})
         return (
-            f"{_STATIC_FRAMEWORK}\n\n"
-            f"---\n"
             f"{_pair_header(ctx)}\n\n"
             f"Emotional Metrics:\n"
             f"  Emotional compatibility score: {e.get('emotional_compatibility_score', '?')}%\n"
@@ -1045,8 +1041,6 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
     if analysis_type == "sextrology_analysis":
         s = ctx.get("sextrology", {})
         return (
-            f"{_STATIC_FRAMEWORK}\n\n"
-            f"---\n"
             f"{_pair_header(ctx)}\n\n"
             f"Sextrology Metrics:\n"
             f"  Sextrology score: {s.get('score', '?')}%\n"
@@ -1062,8 +1056,6 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
 
     # Fallback — generic prose prompt
     return (
-        f"{_STATIC_FRAMEWORK}\n\n"
-        f"---\n"
         f"{_pair_header(ctx)}\n\n"
         f"Write a personal behavioral compatibility reading for {na} and {nb}. "
         f"Be direct, specific to their profiles, and speak to them personally. "
