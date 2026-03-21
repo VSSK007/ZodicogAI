@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
@@ -37,7 +38,20 @@ export default function MobileNavbar() {
   const inBlog = pathname.startsWith("/blog");
   const isHome = pathname === "/";
 
-  if (inBlog) return null;
+  // On blog pages: only show when scrolled near the bottom
+  const [blogVisible, setBlogVisible] = useState(false);
+  useEffect(() => {
+    if (!inBlog) return;
+    setBlogVisible(false);
+    const onScroll = () => {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 200;
+      setBlogVisible(nearBottom);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [inBlog, pathname]);
+
+  if (inBlog && !blogVisible) return null;
 
   return (
     <nav
@@ -46,7 +60,7 @@ export default function MobileNavbar() {
     >
       <div className="relative flex items-center justify-center">
         {/* Back button — floats left of FAB without shifting it */}
-        {!isHome && !inChat && !inBlog && (
+        {!isHome && !inChat && (
           <div className="absolute right-full mr-5">
             <BackButton onClick={() => router.push("/")} />
           </div>
