@@ -79,13 +79,13 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Section 4: Our Philosophy */}
+        {/* Section 4: My Philosophy */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">Our Philosophy</h2>
+          <h2 className="text-lg font-semibold mb-3 text-amber-300">My Philosophy</h2>
           <div className="space-y-3">
             <div className="border-l-2 border-amber-500/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Respect Complexity</p>
-              <p className="text-sm text-zinc-300">Human personality is multidimensional. A person is simultaneously their zodiac archetype, their MBTI function stack, their love language, their attachment style, and their life numerology. We don't reduce — we integrate.</p>
+              <p className="text-sm text-zinc-300">Human personality is multidimensional. A person is simultaneously their zodiac archetype, their MBTI function stack, their love language, their attachment style, and their life numerology. I don't reduce — I integrate.</p>
             </div>
             <div className="border-l-2 border-amber-500/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Determinism + Generosity</p>
@@ -93,23 +93,23 @@ export default function AboutPage() {
             </div>
             <div className="border-l-2 border-amber-500/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Transparency</p>
-              <p className="text-sm text-zinc-300">Every score is reproducible. Enter the same birth date and MBTI type, get the same deterministic result. No hidden black boxes. You own your data; we own our methodology.</p>
+              <p className="text-sm text-zinc-300">Every score is reproducible. Enter the same birth date and MBTI type, get the same deterministic result. No hidden black boxes. You own your data; I own my methodology.</p>
             </div>
             <div className="border-l-2 border-amber-500/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">Connection Over Prediction</p>
-              <p className="text-sm text-zinc-300">We don't claim to predict the future. We illuminate the present: your behavioral patterns, your partner's psychological landscape, the resonance (or friction) between you. Real relationship work happens in the space between insight and action.</p>
+              <p className="text-sm text-zinc-300">I don't claim to predict the future. I illuminate the present: your behavioral patterns, your partner's psychological landscape, the resonance (or friction) between you. Real relationship work happens in the space between insight and action.</p>
             </div>
           </div>
         </section>
 
         {/* Section 5: The Mission */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">Our Mission</h2>
+          <h2 className="text-lg font-semibold mb-3 text-amber-300">My Mission</h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
             To democratize behavioral intelligence. To give every person — whether they're a relationship skeptic or a devoted astrology enthusiast — access to deep, personalized, multi-dimensional insights into themselves and their connections.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            In a world of surface-level dating apps and generic relationship advice, ZodicogAI asks: What if we could go deeper? What if we honored both the mystery of the stars and the precision of psychology?
+            In a world of surface-level dating apps and generic relationship advice, I built ZodicogAI to answer: What if we could go deeper? What if we honored both the mystery of the stars and the precision of psychology?
           </p>
         </section>
 
