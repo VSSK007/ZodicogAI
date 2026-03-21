@@ -21,8 +21,21 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
-  title: "ZodicogAI",
-  description: "Behavioral Intelligence Engine",
+  title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
+  description: "AI-powered behavioral analysis combining zodiac signs and MBTI personality types for deep compatibility insights, love language matching, and relationship intelligence.",
+  keywords: "zodiac compatibility, MBTI relationships, astrology AI, relationship analysis, love compatibility, aura reading, numerology, sextrology",
+  openGraph: {
+    title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
+    description: "AI-powered behavioral analysis combining zodiac signs and MBTI for deep relationship compatibility insights.",
+    url: "https://zodicogai.com",
+    siteName: "ZodicogAI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
+    description: "AI-powered behavioral analysis combining zodiac signs and MBTI for deep relationship compatibility insights.",
+  },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
