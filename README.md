@@ -450,6 +450,14 @@ export function MarkdownText({ content }: { content: string }) {
 
 ---
 
+## What is Zodicog?
+
+**Zodicog** = **Zodiac** + **Cognition**
+
+A portmanteau capturing the core philosophy: the intersection of ancient astrological archetypes (zodiac) with modern cognitive science (how minds actually work). ZodicogAI bridges mythology and neuroscience, deterministic personality frameworks with AI synthesis.
+
+---
+
 ## SEO & Content Strategy
 
 ### Blog System: 29+ Organic Traffic Engines

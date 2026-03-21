@@ -62,7 +62,7 @@ export default function AboutPage() {
         <section>
           <h2 className="text-lg font-semibold mb-3 text-amber-300">What Does "Zodicog" Mean?</h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-4">
-            <span className="text-amber-300 font-semibold">Zodicog</span> is a portmanteau of three foundational elements:
+            <span className="text-amber-300 font-semibold">Zodicog</span> is a portmanteau of two foundational elements:
           </p>
           <div className="space-y-3 mb-4">
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4">
@@ -71,15 +71,11 @@ export default function AboutPage() {
             </div>
             <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4">
               <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">Cognition</p>
-              <p className="text-sm text-zinc-300">The psychological and neurological basis of how humans think, feel, perceive, and decide. The scientific layer.</p>
-            </div>
-            <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4">
-              <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">-og (Suffix)</p>
-              <p className="text-sm text-zinc-300">From "logos" — the guiding principle, the underlying logic. The philosophical layer that unifies zodiac + cognition.</p>
+              <p className="text-sm text-zinc-300">The psychological and neurological basis of how humans think, feel, perceive, and decide. The scientific layer. How minds work.</p>
             </div>
           </div>
-          <p className="text-zinc-300 text-sm leading-relaxed text-italic">
-            <span className="text-amber-300">Zodicog</span> = the logic that bridges ancient stars with modern minds.
+          <p className="text-zinc-300 text-sm leading-relaxed">
+            <span className="text-amber-300">Zodicog</span> = the intersection of ancient stars and modern psychology. Where mythology meets neuroscience.
           </p>
         </section>
 
