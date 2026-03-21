@@ -48,7 +48,7 @@ export default function AboutPage() {
         <section>
           <h2 className="text-lg font-semibold mb-3 text-amber-300">The Insight</h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            What if we could harness the symbolic power of zodiac, the empirical structure of MBTI, the neurological basis of attachment styles, and the generative ability of modern LLMs to create a comprehensive behavioral intelligence system?
+            What if I could harness the symbolic power of zodiac, the empirical structure of MBTI, the neurological basis of attachment styles, and the generative ability of modern LLMs to create a comprehensive behavioral intelligence system?
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
             ZodicogAI was born from this collision: a hybrid engine combining deterministic behavioral matrices (zodiac profiles, MBTI types, numerology, love languages) with AI synthesis to generate deeply personalized relationship insights.
@@ -109,7 +109,7 @@ export default function AboutPage() {
             To democratize behavioral intelligence. To give every person — whether they're a relationship skeptic or a devoted astrology enthusiast — access to deep, personalized, multi-dimensional insights into themselves and their connections.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            In a world of surface-level dating apps and generic relationship advice, I built ZodicogAI to answer: What if we could go deeper? What if we honored both the mystery of the stars and the precision of psychology?
+            In a world of surface-level dating apps and generic relationship advice, I built ZodicogAI to answer: What if I could go deeper? What if I honored both the mystery of the stars and the precision of psychology?
           </p>
         </section>
 
