@@ -1,5 +1,8 @@
 import { MetadataRoute } from "next";
 
+const SIGNS = ["aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+const MBTI_TYPES = ["intj","intp","entj","entp","infj","infp","enfj","enfp","istj","isfj","estj","esfj","istp","isfp","estp","esfp"];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://zodicogai.com";
   const now = new Date();
@@ -17,5 +20,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/analyze/color`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/numerology`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/chat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/blog/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    ...SIGNS.map(s => ({ url: `${base}/blog/zodiac/${s}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 })),
+    ...MBTI_TYPES.map(t => ({ url: `${base}/blog/mbti/${t}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 })),
   ];
 }
