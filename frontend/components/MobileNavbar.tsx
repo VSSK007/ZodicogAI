@@ -34,7 +34,10 @@ export default function MobileNavbar() {
   const router = useRouter();
   const pathname = usePathname();
   const inChat = pathname.startsWith("/chat");
+  const inBlog = pathname.startsWith("/blog");
   const isHome = pathname === "/";
+
+  if (inBlog) return null;
 
   return (
     <nav
@@ -43,7 +46,7 @@ export default function MobileNavbar() {
     >
       <div className="relative flex items-center justify-center">
         {/* Back button — floats left of FAB without shifting it */}
-        {!isHome && !inChat && (
+        {!isHome && !inChat && !inBlog && (
           <div className="absolute right-full mr-5">
             <BackButton onClick={() => router.push("/")} />
           </div>
