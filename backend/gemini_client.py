@@ -1048,10 +1048,12 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
             f"  {nb} archetype: {s.get('archetype_b', '?')}\n"
             f"  Dynamic: {s.get('dynamic', '?')}\n\n"
             f"Write a flowing, direct sextrology reading for {na} and {nb}. "
-            f"Speak directly to them. Cover each person's intimate character and archetype, "
-            f"how they interact in intimacy, the core dynamic between them, and their "
-            f"long-term fire potential. Be direct and explicit — no hedging. "
-            f"Do NOT output JSON. Write in prose. 150-250 words."
+            f"Speak directly to them using their names. Cover each person's intimate character, "
+            f"how they interact together, the core dynamic, and long-term fire potential. "
+            f"Be direct and explicit — no hedging. "
+            f"Do NOT output JSON. Do NOT add a Solo Profile section. "
+            f"Do NOT add any section beyond the pair reading. Stop after long-term fire. "
+            f"150-250 words maximum."
         )
 
     # Fallback — generic prose prompt
