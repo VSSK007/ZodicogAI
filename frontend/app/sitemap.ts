@@ -22,6 +22,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/chat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${base}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/blog/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
+    { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     ...SIGNS.map(s => ({ url: `${base}/blog/zodiac/${s}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 })),
     ...MBTI_TYPES.map(t => ({ url: `${base}/blog/mbti/${t}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 })),
   ];

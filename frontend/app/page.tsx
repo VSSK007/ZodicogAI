@@ -24,6 +24,7 @@ const MORE_OPTIONS = [
   { label: "Numerology",    href: "/analyze/numerology",               sym: "∞" },
   { label: "Full Intel",    href: "/dashboard",                        sym: "⚡" },
   { label: "Blog",          href: "/blog",                             sym: "✍" },
+  { label: "About",         href: "/about",                            sym: "◆" },
 ];
 
 function HomeContent() {

@@ -17,6 +17,7 @@ const LINKS = [
   { href: "/analyze/numerology", label: "Numerology" },
   { href: "/dashboard", label: "Synastry" },
   { href: "/blog", label: "Blog" },
+  { href: "/about", label: "About" },
 ];
 
 export default function Navbar() {
