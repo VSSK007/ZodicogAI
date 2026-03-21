@@ -119,7 +119,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
             return (
               <Link key={t} href={`/blog/mbti/${t.toLowerCase()}`}
                 className={`text-center py-2 rounded-lg text-xs font-mono font-semibold transition-colors ${t === key ? "ring-1" : "opacity-60 hover:opacity-100"}`}
-                style={{ background: `${c}12`, color: c, border: `1px solid ${c}25`, ringColor: c }}>
+                style={{ background: `${c}12`, color: c, border: `1px solid ${c}25` }}>
                 {t}
               </Link>
             );
