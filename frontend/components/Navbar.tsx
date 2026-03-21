@@ -16,6 +16,7 @@ const LINKS = [
   { href: "/analyze/color", label: "Aura Colors" },
   { href: "/analyze/numerology", label: "Numerology" },
   { href: "/dashboard", label: "Synastry" },
+  { href: "/blog", label: "Blog" },
 ];
 
 export default function Navbar() {

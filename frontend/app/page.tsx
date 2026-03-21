@@ -23,6 +23,7 @@ const MORE_OPTIONS = [
   { label: "Aura Colors",   href: "/analyze/color",                    sym: "○" },
   { label: "Numerology",    href: "/analyze/numerology",               sym: "∞" },
   { label: "Full Intel",    href: "/dashboard",                        sym: "⚡" },
+  { label: "Blog",          href: "/blog",                             sym: "✍" },
 ];
 
 function HomeContent() {
