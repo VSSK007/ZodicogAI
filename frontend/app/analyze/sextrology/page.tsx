@@ -7,6 +7,7 @@ import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
+import ConstellationStream from "@/components/ConstellationStream";
 import { PersonData, emptyPerson, validatePerson } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
@@ -243,38 +244,13 @@ export default function SextrologyPage() {
       </button>
 
       {/* Streaming section */}
-      <AnimatePresence>
-        {streamedText && (
-          <motion.div
-            key="stream-card"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35 }}
-            className={`${CARD} mb-4 md:mb-6`}
-          >
-            <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
-              <div className="relative w-2 h-2 shrink-0">
-                {streaming && (
-                  <div className="absolute inset-0 rounded-full bg-amber-500 animate-ping opacity-60" />
-                )}
-                <div className={`w-2 h-2 rounded-full ${streaming ? "bg-amber-500" : "bg-amber-500/50"}`} />
-              </div>
-              <span className="text-xs font-semibold text-zinc-300 tracking-wide">
-                {streaming ? "Streaming Analysis…" : "Analysis Complete"}
-              </span>
-              {!streaming && streamScores && (
-                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400/80 border border-amber-500/20">
-                  Done
-                </span>
-              )}
-            </div>
-            <div className="p-4 md:p-6">
-              <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">{streamedText}</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="mb-4 md:mb-6">
+        <ConstellationStream
+          text={streamedText}
+          streaming={streaming}
+          visible={!!streamedText}
+        />
+      </div>
 
       <AnimatePresence>
         {result && (
