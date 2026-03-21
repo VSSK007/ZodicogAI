@@ -89,6 +89,7 @@ export default function RomanticPage() {
           try {
             const parsed = JSON.parse(raw);
             if ("chunk" in parsed) {
+              setLoading(false);  // reveal animation on first chunk
               setStreamedText((prev) => prev + parsed.chunk);
             }
             if (parsed.done === true) {
