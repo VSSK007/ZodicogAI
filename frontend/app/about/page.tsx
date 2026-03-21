@@ -37,7 +37,7 @@ export default function AboutPage() {
         <section>
           <h2 className="text-lg font-semibold mb-3 text-amber-300">The Problem</h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            In 2023, as AI became ubiquitous, a stark realization emerged: modern personality systems were scattered. Generic AI couldn't understand the nuance of how a Scorpio ENFP moves through relationships differently than a Gemini INFP. Zodiac astrology offered symbolic depth but lacked scientific rigor. MBTI provided framework but missed the mythological and elemental dimensions of human nature. Love languages existed in isolation from behavioral types.
+            In 2026, as AI became ubiquitous, a stark realization emerged: modern personality systems were scattered. Generic AI couldn't understand the nuance of how a Scorpio ENFP moves through relationships differently than a Gemini INFP. Zodiac astrology offered symbolic depth but lacked scientific rigor. MBTI provided framework but missed the mythological and elemental dimensions of human nature. Love languages existed in isolation from behavioral types.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
             No tool bridged ancient wisdom with modern psychology. No AI spoke the language of both the stars and the psyche.
