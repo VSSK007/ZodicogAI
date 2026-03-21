@@ -33,25 +33,28 @@ export default function AboutPage() {
       </div>
 
       <div className="space-y-8">
-        {/* Section 1: The Problem */}
+        {/* Section 1: My Journey */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">The Problem</h2>
+          <h2 className="text-lg font-semibold mb-3 text-amber-300">My Journey</h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            In 2026, as AI became ubiquitous, a stark realization emerged: modern personality systems were scattered. Generic AI couldn't understand the nuance of how a Scorpio ENFP moves through relationships differently than a Gemini INFP. Zodiac astrology offered symbolic depth but lacked scientific rigor. MBTI provided framework but missed the mythological and elemental dimensions of human nature. Love languages existed in isolation from behavioral types.
+            For years, I've been deeply invested in zodiac astrology, personality psychology, and relationship dynamics. I've studied the nuances of how a Scorpio ENFP moves through the world differently than a Gemini INFP — the layers of mythology, behavioral patterns, attachment styles, and sexual archetypes that make people truly unique.
+          </p>
+          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+            I searched endlessly for a tool that could synthesize all of this — one that honored both the ancient wisdom of the zodiac and the empirical rigor of modern psychology. Something that could layer MBTI, numerology, love languages, and attachment theory into a coherent whole. But every tool I found was fragmented: zodiac here, MBTI there, relationship advice somewhere else. No AI truly understood the intersection.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            No tool bridged ancient wisdom with modern psychology. No AI spoke the language of both the stars and the psyche.
+            So in 2026, I decided to build it myself. From scratch. Using years of research, experimentation, and accumulated knowledge across astrology, psychology, behavioral science, and AI. ZodicogAI is what emerged — not a generic relationship app, but a direct reflection of everything I've learned about how personality, mythology, and neuroscience collide in human connection.
           </p>
         </section>
 
-        {/* Section 2: The Insight */}
+        {/* Section 2: The Vision */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">The Insight</h2>
+          <h2 className="text-lg font-semibold mb-3 text-amber-300">The Vision</h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            What if I could harness the symbolic power of zodiac, the empirical structure of MBTI, the neurological basis of attachment styles, and the generative ability of modern LLMs to create a comprehensive behavioral intelligence system?
+            I realized that what was missing wasn't one tool — it was an entire framework. A system that could take everything I'd learned and make it reproducible, auditable, and accessible. So I built ZodicogAI: a hybrid engine that combines 10 independent behavioral dimensions (zodiac, MBTI, numerology, love styles, love languages, attachment theory, sexual archetypes, color harmony, emotional patterns, and communication styles) into a coherent whole.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            ZodicogAI was born from this collision: a hybrid engine combining deterministic behavioral matrices (zodiac profiles, MBTI types, numerology, love languages) with AI synthesis to generate deeply personalized relationship insights.
+            The architecture is straightforward: deterministic computation (zodiac profiles, MBTI types, compatibility matrices) grounded in years of research, plus AI synthesis to interpret and narrate those insights with warmth and specificity. The LLM isn't guessing — it's interpreting structured data I've carefully engineered.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
             The core principle: <span className="text-amber-300">human connection deserves depth, not generic advice</span>.

@@ -32,16 +32,24 @@ The system computes personality vectors across 10 independent behavioral dimensi
 
 ---
 
-## Problem Statement
+## My Story
 
-Large language models excel at general knowledge tasks but face documented challenges in **domain-specific reasoning with structural constraints**:
+For years, I've been deeply invested in zodiac astrology, personality psychology, and relationship dynamics. I studied how a Scorpio ENFP navigates the world differently than a Gemini INFP — the layers of mythology, behavioral science, attachment styles, sexual archetypes, and numerological resonance that make people unique.
 
-- **Hallucination in personality contexts:** Generic LLMs generate plausible but often contradictory personality descriptions when queried about compatibility, lacking grounding in consistent frameworks
-- **Lack of multi-dimensional reasoning:** Relationship dynamics involve multiple orthogonal axes (emotional attachment, sexual polarity, communication style, numerological resonance). Generic models conflate these dimensions rather than computing them independently
-- **Non-reproducibility:** Without external structure, identical queries may return different compatibility assessments due to sampling variability — unacceptable for analytical tools
-- **Insufficient specificity:** When asked "Does an INTJ Scorpio and ENFP Sagittarius work?", generic models return generic personality overviews rather than specific compatibility vectors
+I searched everywhere for a tool that could synthesize this knowledge. Something that honored both ancient zodiac wisdom and modern psychology. Something that integrated MBTI, numerology, love languages, and attachment theory into a coherent system. But everything I found was fragmented. No AI truly understood the intersection.
 
-**Hypothesis:** Decomposing the problem into (1) deterministic symbolic computation and (2) guided LLM synthesis reduces hallucination, increases specificity, and maintains auditability while still leveraging LLM reasoning for open-ended interpersonal questions.
+So in 2026, I decided to build it myself. From scratch.
+
+**The Challenge:**
+
+Large language models excel at general knowledge but fail in **domain-specific reasoning with structural constraints**:
+
+- **Hallucination in personality contexts:** Generic LLMs generate plausible but contradictory personality descriptions when asked about compatibility — they lack grounding in consistent frameworks
+- **Lack of multi-dimensional reasoning:** Relationship dynamics involve 10+ independent axes (emotional attachment, sexual polarity, communication style, numerological resonance, love languages, etc.). Generic models conflate these rather than computing them separately
+- **Non-reproducibility:** Without external structure, identical queries return different results due to sampling variability — unacceptable for a research-backed analytical tool
+- **Insufficient specificity:** When asked "Does an INTJ Scorpio and ENFP Sagittarius work?", generic models return generic overviews rather than specific compatibility vectors grounded in actual data
+
+**My Solution:** I decomposed the problem into (1) **deterministic symbolic computation** grounded in years of research and (2) **guided LLM synthesis** that interprets structured outputs. The LLM doesn't generate facts — it interprets them. This reduces hallucination, increases specificity, maintains auditability, and leverages AI reasoning where it actually works.
 
 ---
 
