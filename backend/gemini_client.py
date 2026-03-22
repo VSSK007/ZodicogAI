@@ -582,18 +582,14 @@ def _prompt_sextrology(ctx: dict) -> str:
             f"  Best matches    : {', '.join(sx['compatible'])}"
         )
 
-    return f"""You are a sextrology expert.
+    return f"""You are a sextrology expert writing a Cosmic Sex Almanac reading.
 
-Sextrology examines how zodiac signs and MBTI types shape sexuality, sensuality, and intimate dynamics.
-Use the specific sign intelligence below — not generic archetypes — to ground every field in real sign behaviour.
+Use the sign intelligence below as raw material — synthesize it into vivid, specific prose about {na} and {nb}.
+DO NOT copy or paraphrase the source data verbatim. Transform it: name them by name, describe what happens between these two specific people, use explicit language, and write as if you know their bedroom completely.
 
 {_sx(na, a_sign, a_m.get('type', ''), a_sx)}
 
 {_sx(nb, b_sign, b_m.get('type', ''), b_sx)}
-
-Write a detailed sextrology reading for {na} and {nb}.
-Be bold, explicit, and direct — this is sextrology, not a relationship summary.
-Do not include any explanation, markdown, or text outside the JSON.
 
 Calculated Metrics:
   Intensity alignment              : {s['intimacy_intensity_alignment']}%
@@ -602,14 +598,20 @@ Calculated Metrics:
   Emotional-physical balance       : {s['emotional_physical_balance_similarity']}%
   Sexual compatibility score       : {s['sexual_compatibility_score']}%
 
-Fields — ground every sentence in the sign data above, no generic statements:
-  sexual_character       → each person's core erotic identity and how it plays against the other's
-  foreplay               → how their foreplay styles interact — zones, techniques, pace, and warm-up rituals that work for this specific pairing
-  erogenous_zones        → sign-specific zones and triggers for each person — where, how, and why
-  fantasies              → the fantasy themes and scenarios each sign gravitates toward
-  positions_and_dynamics → who leads, who surrenders, which positions suit this pairing's polarity
-  emotional_needs        → what each needs emotionally before they can fully open up sexually
-  long_term_fire         → does this chemistry deepen over time or burn fast and fade
+Rules:
+- Name both people by name in every field. Never write "this sign" or "this person".
+- Be explicit. Name positions, zones, kinks, and dynamics by their specific names.
+- Every sentence must reveal something true about THIS pairing — not generic zodiac content.
+- Do not include any explanation, markdown, or text outside the JSON.
+
+Fields:
+  sexual_character       → how {na}'s erotic identity collides with {nb}'s — specific and named
+  foreplay               → whose zones ignite first, what techniques work between them, the exact warm-up
+  erogenous_zones        → name each person's zones and describe exactly how the other should work them
+  fantasies              → the specific scenarios, roles, and power dynamics this pairing gravitates toward
+  positions_and_dynamics → name 2-3 specific positions for this pair and explain the power dynamic
+  emotional_needs        → what {na} needs before opening up, what {nb} needs — and whether they can give it
+  long_term_fire         → does this chemistry compound or combust over time, and why
 
 Required JSON structure:
 {{
@@ -658,10 +660,13 @@ def _prompt_sextrology_solo(ctx: dict) -> str:
 
     tv = z.get("trait_vector", {})
 
-    return f"""You are a sextrology expert writing a personal intimacy profile.
+    return f"""You are a sextrology expert writing a Cosmic Sex Almanac profile for {na}.
 
-Sextrology examines how a zodiac sign and MBTI type shape a person's sexuality, sensuality, kinks, and intimate desires.
-Ground every field in the sign-specific data below — not generic archetypes.
+Use the sign data below as raw material — synthesize it into a vivid, explicit, personal reading written specifically about {na}.
+DO NOT copy or paraphrase the source data verbatim. Write as if you know {na} intimately.
+Name real positions, kinks, zones, and scenarios by their specific names.
+Use {pronoun}/{possessive} throughout (gender: {"male" if gender == "M" else "female"}).
+Do not include any explanation, markdown, or text outside the JSON.
 
 {na} — {sign} / {mbti}
 {sx_block}
@@ -673,21 +678,21 @@ Trait vector (0–10 scale):
   Adaptability   : {tv.get('adaptability', '—')}
   Stability      : {tv.get('stability', '—')}
 
-Use pronouns: {pronoun}/{possessive} throughout (gender: {"male" if gender == "M" else "female"}).
-Write a detailed solo sextrology reading for {na}.
-Be bold, explicit, and specific — name real kinks, positions, fantasies, and zones tied to this sign's known behaviour.
-Do not include any explanation, markdown, or text outside the JSON.
+Rules:
+- Use {na}'s name throughout — never "this {sign}" or "this person".
+- Every sentence must be specific to {sign}/{mbti} — no generic statements.
+- Be explicit and direct. Name the acts, the zones, the positions, the kinks.
 
 Fields:
-  sexual_character    → core erotic identity and overall sexual persona
-  foreplay            → their specific foreplay style — which zones, techniques, pace, and warm-up rituals work for this sign
-  turn_ons            → specific triggers, contexts, and behaviours that arouse them deeply
-  turn_offs           → what kills their desire — specific dealbreakers for this sign/type
-  erogenous_zones     → sign-specific body zones and how they like them stimulated
-  fantasies           → recurring fantasy themes, scenarios, or power dynamics this sign craves
-  kink_profile        → kinks, fetishes, and edge interests this sign/type tends toward — be explicit
-  signature_positions → 2-3 specific positions or physical dynamics that suit their drive and anatomy
-  seduction_style     → how they seduce others and how they most want to be seduced
+  sexual_character    → {na}'s core erotic identity — what drives them in bed and how they come across to partners
+  foreplay            → the exact warm-up that works for {na} — specific zones, techniques, and pace
+  turn_ons            → specific triggers, contexts, and behaviours that arouse {na} most deeply
+  turn_offs           → what kills {possessive} desire instantly — specific dealbreakers
+  erogenous_zones     → {na}'s sign-ruled zones and exactly how they want them stimulated
+  fantasies           → the recurring scenarios, roles, and power dynamics {na} privately craves
+  kink_profile        → {na}'s kinks, fetishes, and edge interests — name them explicitly
+  signature_positions → 2-3 named positions that suit {na}'s specific drive and energy — explain each briefly
+  seduction_style     → how {na} seduces others and precisely how {pronoun} most wants to be seduced
 
 Required JSON:
 {{

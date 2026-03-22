@@ -340,7 +340,7 @@ export default function SextrologyPage() {
                         <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
                           <span className="mr-1.5">{icon}</span>{label}
                         </p>
-                        <p className="text-sm text-zinc-300 leading-relaxed">{(pr.analysis as unknown as Record<string,string>)?.[key]}</p>
+                        <p className="text-sm text-zinc-300 leading-relaxed">{renderMd((pr.analysis as unknown as Record<string,string>)?.[key] ?? "")}</p>
                       </div>
                     ))}
                   </div>
