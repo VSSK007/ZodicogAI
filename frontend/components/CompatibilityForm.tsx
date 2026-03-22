@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import TraitRadar from "./TraitRadar";
+import MbtiSelect from "./MbtiSelect";
 import { API } from "@/lib/api";
 
 export default function CompatibilityForm() {
@@ -279,12 +280,11 @@ function ProfileCard({
           min={1}
           max={12}
         />
-        <input
-          placeholder="MBTI"
+        <MbtiSelect
           value={mbti}
-          onChange={(e) => setMbti(e.target.value)}
-          className="w-28 md:w-24 bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none uppercase"
-          maxLength={4}
+          onChange={setMbti}
+          placeholder="MBTI"
+          className="flex-1"
         />
       </div>
     </div>
