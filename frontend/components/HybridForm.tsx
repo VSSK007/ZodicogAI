@@ -12,7 +12,7 @@ import { API } from "@/lib/api";
 // Shared input/select class — identical font treatment across all inputs
 // ---------------------------------------------------------------------------
 const INPUT_SMALL =
-  "bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none font-[inherit]";
+  "bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/30 transition-colors font-[inherit]";
 
 const MBTI_TYPES = [
   "INTJ","INTP","ENTJ","ENTP",
@@ -129,9 +129,9 @@ export default function HybridForm() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 px-1 md:px-0">
       {/* ── INPUT CARD ── */}
-      <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-white/10 space-y-3">
+      <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 space-y-3">
         <input
-          className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-white/10 pb-2.5"
+          className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-amber-500/20 md:border-white/10 pb-2.5"
           placeholder="Your name"
           value={name}
           onChange={(e) => setName(e.target.value)}

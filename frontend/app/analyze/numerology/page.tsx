@@ -94,7 +94,7 @@ const SIGNAL_LABELS: Record<string, string> = {
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-const INPUT_SMALL = "bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center";
+const INPUT_SMALL = "bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/30 transition-colors text-center";
 
 function SimpleForm({
   label,
@@ -111,9 +111,9 @@ function SimpleForm({
       onChange({ ...value, [key]: e.target.value });
 
   return (
-    <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-white/10 space-y-3">
+    <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 space-y-3">
       <input
-        className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-white/10 pb-2.5"
+        className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-amber-500/20 md:border-white/10 pb-2.5"
         placeholder={label}
         value={value.name}
         onChange={set("name")}
