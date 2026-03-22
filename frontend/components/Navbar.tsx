@@ -28,7 +28,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a12]/90 backdrop-blur-md">
-      <div className="max-w-7xl mx-auto px-6 h-12 flex items-stretch overflow-x-auto scrollbar-none">
+      <div className="max-w-7xl mx-auto px-6 h-12 flex items-stretch">
         {/* Brand insignia + wordmark — clicks to home */}
         <Link href="/" className="flex items-center mr-5 shrink-0">
           <motion.div
@@ -43,26 +43,28 @@ export default function Navbar() {
           </motion.div>
         </Link>
 
-        {/* Nav links */}
-        {LINKS.map(({ href, label }) => {
-          const active = href === "/" ? path === "/" : path.startsWith(href);
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`shrink-0 flex items-center px-3 text-sm border-b-2 transition-all duration-200 ${
-                active
-                  ? "text-white font-medium border-[#4285f4]"
-                  : "text-zinc-500 hover:text-zinc-200 border-transparent"
-              }`}
-            >
-              {label}
-            </Link>
-          );
-        })}
+        {/* Nav links — scrollable middle section */}
+        <div className="flex items-stretch flex-1 overflow-x-auto scrollbar-none">
+          {LINKS.map(({ href, label }) => {
+            const active = href === "/" ? path === "/" : path.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`shrink-0 flex items-center px-3 text-sm border-b-2 transition-all duration-200 ${
+                  active
+                    ? "text-white font-medium border-[#4285f4]"
+                    : "text-zinc-500 hover:text-zinc-200 border-transparent"
+                }`}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </div>
 
-        {/* Right section — Zodicognac pill + GitHub + email */}
-        <div className="ml-auto flex items-center gap-3 pl-4 shrink-0">
+        {/* Right section — fixed to viewport right */}
+        <div className="flex items-center gap-3 pl-4 shrink-0">
           <motion.div
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
