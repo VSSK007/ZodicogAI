@@ -319,13 +319,16 @@ async def stream_romantic(req: CompatibilityInput):
 
 
 @app.post("/analyze/sextrology/stream")
-async def stream_sextrology(req: CompatibilityInput):
-    """Stream sextrology compatibility analysis as SSE."""
-    a, b = _from_pair(req)
+async def stream_sextrology(req: SextrologyInput):
+    """Stream sextrology analysis as SSE — supports solo and pair mode."""
+    a = _person(req.person_a_name, req.person_a_day, req.person_a_month, req.person_a_mbti)
+    is_pair = req.person_b_name is not None
+    b = _person(req.person_b_name, req.person_b_day or 1, req.person_b_month or 1, req.person_b_mbti or "") if is_pair else None
+    analysis_type = SEXTROLOGY_ANALYSIS if is_pair else SEXTROLOGY_SOLO_ANALYSIS
 
     def _gen():
         try:
-            yield from _sse_stream(SEXTROLOGY_ANALYSIS, a, b)
+            yield from _sse_stream(analysis_type, a, b)
         except Exception as exc:
             yield f"data: {json.dumps({'error': str(exc)})}\n\n"
 
