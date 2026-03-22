@@ -1056,10 +1056,23 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
             f"150-250 words maximum."
         )
 
+    if analysis_type == "sextrology_solo_analysis":
+        zodiac  = ctx.get("zodiac",  {})
+        mbti    = ctx.get("mbti",    {})
+        sign    = zodiac.get("sign",    "Unknown")
+        element = zodiac.get("element", "Unknown")
+        mtype   = mbti.get("type",      "Unknown")
+        return (
+            f"{na} — {sign} ({element}) · {mtype}\n\n"
+            f"Write a direct, personal sextrology profile for {na}. "
+            f"Cover their intimate character, sexual archetype, what turns them on, "
+            f"their erogenous zones, dominant fantasy style, and how they show up in intimacy. "
+            f"Speak directly to {na}. Be explicit and confident — no hedging. "
+            f"Do NOT output JSON. Write in prose. 150-200 words."
+        )
+
     # Fallback — generic prose prompt
     return (
-        f"{_pair_header(ctx)}\n\n"
-        f"Write a personal behavioral compatibility reading for {na} and {nb}. "
-        f"Be direct, specific to their profiles, and speak to them personally. "
-        f"Do NOT output JSON. Write in prose. 150-250 words."
+        f"Write a behavioral profile for {na}. "
+        f"Be direct and specific. Do NOT output JSON. Write in prose. 100-150 words."
     )

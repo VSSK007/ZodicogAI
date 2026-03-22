@@ -90,6 +90,7 @@ export default function EmotionalPage() {
               setLoading(false);  // reveal animation on first chunk
               setStreamedText((prev) => prev + parsed.chunk);
             }
+            if (parsed.error) { setError(parsed.error); setStreaming(false); setLoading(false); }
             if (parsed.done === true) {
               const scores: EmotionalResult = parsed;
               setStreamScores(scores);

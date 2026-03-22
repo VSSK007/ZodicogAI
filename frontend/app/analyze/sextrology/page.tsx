@@ -196,6 +196,7 @@ export default function SextrologyPage() {
               setLoading(false);  // reveal animation on first chunk
               setStreamedText((prev) => prev + parsed.chunk);
             }
+            if (parsed.error) { setError(parsed.error); setStreaming(false); setLoading(false); }
             if (parsed.done === true) {
               const scores: SextrologyResult = parsed;
               setStreamScores(scores);
