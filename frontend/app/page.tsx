@@ -183,19 +183,14 @@ function HomeContent() {
           <div className="h-[22vh] shrink-0" />
 
           <div className="flex flex-col items-center text-center px-6">
-            {/* ZodicognacMark — flips in from where ZodicogMark was */}
-            <div className="flex justify-center mb-4" style={{ perspective: "600px" }}>
+            {/* ZodicognacMark — same entrance as ZodicogMark on first visit */}
+            <div className="flex justify-center mb-4">
               <motion.div
-                initial={{ rotateY: 90, opacity: 0 }}
-                animate={{ rotateY: 0, opacity: 1 }}
-                transition={{ duration: 0.45, ease: EASE_SPRING }}
+                initial={reduced ? false : { opacity: 0, scale: 0.82 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.55, ease: EASE_SPRING }}
               >
-                <motion.div
-                  animate={reduced ? {} : { scale: [1, 1.07, 1, 1.05, 1] }}
-                  transition={{ duration: 4, delay: 0.5, ease: "easeInOut" }}
-                >
-                  <ZodicognacMark size={56} active />
-                </motion.div>
+                <ZodicognacMark size={56} active />
               </motion.div>
             </div>
 
@@ -262,21 +257,16 @@ function HomeContent() {
           )}
 
           {/* Brand mark — fixed height prevents subtitle jump on mark unmount */}
-          <div className="flex justify-center mb-8 h-14" style={{ perspective: "600px" }}>
+          <div className="flex justify-center mb-8 h-14">
             <AnimatePresence mode="wait">
               {znMode ? (
                 <motion.div
                   key="desk-znmark"
-                  initial={{ rotateY: 90, opacity: 0 }}
-                  animate={{ rotateY: 0, opacity: 1 }}
-                  transition={{ duration: 0.45, ease: EASE_SPRING }}
+                  initial={reduced ? false : { opacity: 0, scale: 0.82 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.55, ease: EASE_SPRING }}
                 >
-                  <motion.div
-                    animate={reduced ? {} : { scale: [1, 1.07, 1, 1.05, 1] }}
-                    transition={{ duration: 4, delay: 0.5, ease: "easeInOut" }}
-                  >
-                    <ZodicognacMark size={56} active />
-                  </motion.div>
+                  <ZodicognacMark size={56} active />
                 </motion.div>
               ) : (
                 <motion.div
