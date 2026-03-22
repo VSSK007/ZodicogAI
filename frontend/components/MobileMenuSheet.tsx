@@ -46,7 +46,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[75vh] rounded-t-3xl bg-[#0d0d1f] border-t border-white/[0.09] overflow-y-auto scrollbar-none"
+            className="fixed inset-x-0 bottom-20 z-50 max-h-[75vh] rounded-t-3xl bg-[#0d0d1f] border-t border-white/[0.09] overflow-y-auto scrollbar-none"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
