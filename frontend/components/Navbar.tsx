@@ -67,55 +67,55 @@ export default function Navbar() {
               </Link>
             );
           })}
+        </div>
 
-          {/* Love dropdown */}
-          <div
-            className="relative shrink-0 flex items-stretch"
-            onMouseEnter={() => setLoveOpen(true)}
-            onMouseLeave={() => setLoveOpen(false)}
+        {/* Love dropdown — outside overflow container so the panel isn't clipped */}
+        <div
+          className="relative shrink-0 flex items-stretch"
+          onMouseEnter={() => setLoveOpen(true)}
+          onMouseLeave={() => setLoveOpen(false)}
+        >
+          <button
+            className={`flex items-center gap-1 px-3 text-sm border-b-2 transition-all duration-200 ${
+              loveActive
+                ? "text-white font-medium border-[#4285f4]"
+                : "text-zinc-500 hover:text-zinc-200 border-transparent"
+            }`}
           >
-            <button
-              className={`flex items-center gap-1 px-3 text-sm border-b-2 transition-all duration-200 ${
-                loveActive
-                  ? "text-white font-medium border-[#4285f4]"
-                  : "text-zinc-500 hover:text-zinc-200 border-transparent"
-              }`}
+            Love
+            <svg
+              width="10" height="10" viewBox="0 0 10 10" fill="none"
+              className={`transition-transform duration-150 ${loveOpen ? "rotate-180" : ""}`}
             >
-              Love
-              <svg
-                width="10" height="10" viewBox="0 0 10 10" fill="none"
-                className={`transition-transform duration-150 ${loveOpen ? "rotate-180" : ""}`}
-              >
-                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+              <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
 
-            <AnimatePresence>
-              {loveOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.12 }}
-                  className="absolute top-full left-0 mt-0 w-36 rounded-b-xl bg-[#0a0a12]/95 backdrop-blur-md border border-white/[0.08] border-t-0 overflow-hidden shadow-xl"
-                >
-                  {LOVE_LINKS.map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      className={`block px-4 py-2.5 text-sm transition-colors ${
-                        path.startsWith(href)
-                          ? "text-white bg-white/[0.06]"
-                          : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      {label}
-                    </Link>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          <AnimatePresence>
+            {loveOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -4 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.12 }}
+                className="absolute top-full right-0 w-36 rounded-b-xl bg-[#0a0a12]/95 backdrop-blur-md border border-white/[0.08] border-t-0 overflow-hidden shadow-xl"
+              >
+                {LOVE_LINKS.map(({ href, label }) => (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`block px-4 py-2.5 text-sm transition-colors ${
+                      path.startsWith(href)
+                        ? "text-white bg-white/[0.06]"
+                        : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                    }`}
+                  >
+                    {label}
+                  </Link>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Right section — fixed to viewport right */}
