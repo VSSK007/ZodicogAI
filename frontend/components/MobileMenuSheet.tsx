@@ -12,6 +12,13 @@ interface MobileMenuSheetProps {
  * Displays all analysis page links in a 3-column grid.
  */
 export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProps) {
+  const discoverLinks = [
+    { label: "✦ Love Archetype", href: "/discover/archetype" },
+    { label: "✦ Pattern",        href: "/discover/pattern" },
+    { label: "✦ Attraction",     href: "/discover/attraction" },
+    { label: "✦ Taste Profile",  href: "/discover/recommendations" },
+  ];
+
   const analyzeLinks = [
     { label: "Emotional", href: "/analyze/emotional" },
     { label: "Romantic", href: "/analyze/romantic" },
@@ -50,8 +57,28 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
               <div className="w-10 h-1 rounded-full bg-white/[0.12]" />
             </div>
 
-            {/* Links grid */}
-            <div className="grid grid-cols-3 gap-3 p-5 pb-12">
+            {/* Discover section */}
+            <div className="px-5 pb-1">
+              <p className="text-[10px] font-semibold text-amber-500/60 uppercase tracking-widest mb-2">Discover</p>
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                {discoverLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={onClose}
+                    className="rounded-xl bg-amber-500/[0.07] border border-amber-500/20 p-3 text-center text-xs font-medium text-amber-300/80 hover:bg-amber-500/[0.12] hover:text-amber-300 transition-all tap-highlight-none"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Analyze section */}
+            <div className="px-5 pb-1">
+              <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">Analyze</p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 px-5 pb-12">
               {analyzeLinks.map((link) => (
                 <Link
                   key={link.href}

@@ -7,6 +7,7 @@ import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
 
 const LINKS = [
+  { href: "/discover", label: "✦ Discover" },
   { href: "/analyze/zodiac", label: "Zodiac" },
   { href: "/analyze/emotional", label: "Emotional" },
   { href: "/analyze/romantic", label: "Romantic" },

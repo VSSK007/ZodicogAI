@@ -302,3 +302,49 @@ class NumerologyPairAnalysis(BaseModel):
     swot_threats: list[str] = []
     pursue_or_avoid: str = "—"
     pair_advice: str = "—"
+
+
+# ---------------------------------------------------------------------------
+# /discover LLM response schemas
+# ---------------------------------------------------------------------------
+
+class ArchetypeAnalysis(BaseModel):
+    archetype_prose: str = "—"
+    shadow_deep_dive: str = "—"
+    in_love_prose: str = "—"
+    compatibility_prose: str = "—"
+    growth_invitation: str = "—"
+
+
+class PatternAnalysis(BaseModel):
+    pattern_prose: str = "—"
+    shadow_deep_dive: str = "—"
+    root_cause_prose: str = "—"
+    break_the_cycle_prose: str = "—"
+    reframe: str = "—"
+
+
+class AttractionAnalysis(BaseModel):
+    attraction_prose: str = "—"
+    pull_deep_dive: str = "—"
+    avoidance_deep_dive: str = "—"
+    pattern_warning: str = "—"
+    growth_invitation: str = "—"
+
+
+class RecommendationAnalysis(BaseModel):
+    gaming_prose: str = "—"
+    movie_prose: str = "—"
+    sneaker_prose: str = "—"
+    taste_profile: str = "—"
+
+
+# ---------------------------------------------------------------------------
+# /discover request schema
+# ---------------------------------------------------------------------------
+
+class DiscoverInput(BaseModel):
+    name: str
+    day: int
+    month: int
+    mbti: str

@@ -15,6 +15,7 @@ from models.schemas import (
     ZodiacInput,
     ColorInput,
     NumerologyInput,
+    DiscoverInput,
 )
 from chat.chat_handler import handle_chat
 from agent_controller import (
@@ -36,6 +37,10 @@ from agent_controller import (
     COLOR_PAIR_ANALYSIS,
     NUMEROLOGY_ANALYSIS,
     NUMEROLOGY_PAIR_ANALYSIS,
+    ARCHETYPE_ANALYSIS,
+    PATTERN_ANALYSIS,
+    ATTRACTION_ANALYSIS,
+    RECOMMENDATION_ANALYSIS,
 )
 from gemini_client import stream_gemini, build_prompt, build_stream_prompt
 
@@ -84,7 +89,7 @@ async def ai_budget_guard(request: Request, call_next):
         usage_counter["count"] = 0
 
     # Only guard AI-intensive endpoints
-    if request.url.path.startswith("/chat") or request.url.path.startswith("/analyze"):
+    if request.url.path.startswith("/chat") or request.url.path.startswith("/analyze") or request.url.path.startswith("/discover"):
         # If limit reached, block request
         if usage_counter["count"] >= MAX_DAILY_AI_CALLS:
             raise HTTPException(
@@ -342,6 +347,34 @@ async def stream_sextrology(req: SextrologyInput):
             yield f"data: {json.dumps({'error': str(exc)})}\n\n"
 
     return StreamingResponse(_gen(), media_type="text/event-stream")
+
+
+# ---------------------------------------------------------------------------
+# /discover endpoints — viral identity features
+# ---------------------------------------------------------------------------
+
+def _discover_person(data: DiscoverInput) -> dict:
+    return {"name": data.name, "day": data.day, "month": data.month, "mbti": data.mbti}
+
+
+@app.post("/discover/archetype")
+def discover_archetype(data: DiscoverInput):
+    return _wrap(lambda: run_analysis(ARCHETYPE_ANALYSIS, _discover_person(data)))
+
+
+@app.post("/discover/pattern")
+def discover_pattern(data: DiscoverInput):
+    return _wrap(lambda: run_analysis(PATTERN_ANALYSIS, _discover_person(data)))
+
+
+@app.post("/discover/attraction")
+def discover_attraction(data: DiscoverInput):
+    return _wrap(lambda: run_analysis(ATTRACTION_ANALYSIS, _discover_person(data)))
+
+
+@app.post("/discover/recommendations")
+def discover_recommendations(data: DiscoverInput):
+    return _wrap(lambda: run_analysis(RECOMMENDATION_ANALYSIS, _discover_person(data)))
 
 
 # ---------------------------------------------------------------------------

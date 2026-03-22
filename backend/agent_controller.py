@@ -47,6 +47,11 @@ from engines.love_language_engine import compute_love_language_compatibility
 from engines.relationship_intelligence import compute_relationship_intelligence
 from engines.color_engine import get_color_profile, compute_color_harmony
 from engines.numerology_engine import get_numerology_profile, compute_numerology_compatibility
+from engines.archetype_engine import compute_archetype
+from engines.pattern_engine import compute_pattern
+from engines.attraction_engine import compute_attraction
+from engines.recommendation_engine import compute_recommendations
+from insight_engine import generate_hook
 
 # ---------------------------------------------------------------------------
 # Imports — LLM + schemas
@@ -58,6 +63,7 @@ from models.schemas import (
     RelationshipIntelligenceResult, ZodiacArticle,
     ColorSingleAnalysis, ColorPairAnalysis,
     NumerologySingleAnalysis, NumerologyPairAnalysis,
+    ArchetypeAnalysis, PatternAnalysis, AttractionAnalysis, RecommendationAnalysis,
 )
 
 # ---------------------------------------------------------------------------
@@ -78,6 +84,10 @@ COLOR_ANALYSIS                = "color_analysis"
 COLOR_PAIR_ANALYSIS           = "color_pair_analysis"
 NUMEROLOGY_ANALYSIS           = "numerology_analysis"
 NUMEROLOGY_PAIR_ANALYSIS      = "numerology_pair_analysis"
+ARCHETYPE_ANALYSIS            = "archetype_analysis"
+PATTERN_ANALYSIS              = "pattern_analysis"
+ATTRACTION_ANALYSIS           = "attraction_analysis"
+RECOMMENDATION_ANALYSIS       = "recommendation_analysis"
 
 # ---------------------------------------------------------------------------
 # Engine adapter functions
@@ -205,6 +215,34 @@ def _run_numerology(ctx: dict) -> None:
         )
 
 
+def _run_archetype(ctx: dict) -> None:
+    z = ctx.get("zodiac") or ctx.get("a_zodiac", {})
+    m = ctx.get("mbti")   or ctx.get("a_mbti",   {})
+    ctx["archetype_data"] = compute_archetype(z, m)
+    ctx["insight_hook"]   = generate_hook(z.get("trait_vector", {}), "archetype")
+
+
+def _run_pattern(ctx: dict) -> None:
+    z = ctx.get("zodiac") or ctx.get("a_zodiac", {})
+    m = ctx.get("mbti")   or ctx.get("a_mbti",   {})
+    ctx["pattern_data"]   = compute_pattern(z, m)
+    ctx["insight_hook"]   = generate_hook(z.get("trait_vector", {}), "pattern")
+
+
+def _run_attraction(ctx: dict) -> None:
+    z = ctx.get("zodiac") or ctx.get("a_zodiac", {})
+    m = ctx.get("mbti")   or ctx.get("a_mbti",   {})
+    ctx["attraction_data"] = compute_attraction(z, m)
+    ctx["insight_hook"]    = generate_hook(z.get("trait_vector", {}), "attraction")
+
+
+def _run_recommendation(ctx: dict) -> None:
+    z = ctx.get("zodiac") or ctx.get("a_zodiac", {})
+    m = ctx.get("mbti")   or ctx.get("a_mbti",   {})
+    ctx["recommendation_data"] = compute_recommendations(z, m)
+    ctx["insight_hook"]        = generate_hook(z.get("trait_vector", {}), "recommendation")
+
+
 def _run_relationship_intelligence(ctx: dict) -> None:
     # Requires compatibility, emotional, romantic, sextrology,
     # love_style, and love_language engines to have run first.
@@ -235,6 +273,10 @@ _ENGINE_REGISTRY: dict[str, callable] = {
     "relationship_intelligence_engine": _run_relationship_intelligence,
     "color_engine":                   _run_color,
     "numerology_engine":              _run_numerology,
+    "archetype_engine":               _run_archetype,
+    "pattern_engine":                 _run_pattern,
+    "attraction_engine":              _run_attraction,
+    "recommendation_engine":          _run_recommendation,
 }
 
 _ALL_PAIR_ENGINES = [
@@ -270,6 +312,10 @@ _PIPELINE_REGISTRY: dict[str, list[str]] = {
     COLOR_PAIR_ANALYSIS:           ["zodiac_engine", "color_engine"],
     NUMEROLOGY_ANALYSIS:           ["numerology_engine"],
     NUMEROLOGY_PAIR_ANALYSIS:      ["numerology_engine"],
+    ARCHETYPE_ANALYSIS:            ["zodiac_engine", "mbti_engine", "archetype_engine"],
+    PATTERN_ANALYSIS:              ["zodiac_engine", "mbti_engine", "pattern_engine"],
+    ATTRACTION_ANALYSIS:           ["zodiac_engine", "mbti_engine", "attraction_engine"],
+    RECOMMENDATION_ANALYSIS:       ["zodiac_engine", "mbti_engine", "recommendation_engine"],
 }
 
 # ---------------------------------------------------------------------------
@@ -291,6 +337,10 @@ _SCHEMA_REGISTRY: dict[str, type] = {
     COLOR_PAIR_ANALYSIS:           ColorPairAnalysis,
     NUMEROLOGY_ANALYSIS:           NumerologySingleAnalysis,
     NUMEROLOGY_PAIR_ANALYSIS:      NumerologyPairAnalysis,
+    ARCHETYPE_ANALYSIS:            ArchetypeAnalysis,
+    PATTERN_ANALYSIS:              PatternAnalysis,
+    ATTRACTION_ANALYSIS:           AttractionAnalysis,
+    RECOMMENDATION_ANALYSIS:       RecommendationAnalysis,
 }
 
 # ---------------------------------------------------------------------------
@@ -304,7 +354,8 @@ _PHASE_ORDER = [
     {"zodiac_engine", "mbti_engine", "numerology_engine"},
     # Phase 2 — needs zodiac + mbti
     {"compatibility_engine", "emotional_engine", "sextrology_engine",
-     "love_style_engine", "love_language_engine", "color_engine"},
+     "love_style_engine", "love_language_engine", "color_engine",
+     "archetype_engine", "pattern_engine", "attraction_engine", "recommendation_engine"},
     # Phase 3 — needs emotional (from phase 2)
     {"romantic_engine"},
     # Phase 4 — needs everything
@@ -509,6 +560,10 @@ def _build_result(analysis_type: str, ctx: dict, analysis) -> dict:
         COLOR_PAIR_ANALYSIS:           _result_color_pair,
         NUMEROLOGY_ANALYSIS:           _result_numerology_single,
         NUMEROLOGY_PAIR_ANALYSIS:      _result_numerology_pair,
+        ARCHETYPE_ANALYSIS:            _result_archetype,
+        PATTERN_ANALYSIS:              _result_pattern,
+        ATTRACTION_ANALYSIS:           _result_attraction,
+        RECOMMENDATION_ANALYSIS:       _result_recommendation,
     }
     return builders[analysis_type](ctx, analysis)
 
@@ -662,4 +717,48 @@ def _result_numerology_pair(ctx: dict, analysis) -> dict:
         "b_numerology":  ctx["b_numerology"],
         "compatibility": ctx["numerology_compat"],
         "analysis":      analysis.model_dump(),
+    }
+
+
+def _result_archetype(ctx: dict, analysis) -> dict:
+    return {
+        "name":           ctx["a"]["name"],
+        "sign":           ctx["zodiac"]["sign"],
+        "mbti_type":      ctx["mbti"]["type"],
+        "archetype_data": ctx["archetype_data"],
+        "insight_hook":   ctx.get("insight_hook", {}),
+        "analysis":       analysis.model_dump(),
+    }
+
+
+def _result_pattern(ctx: dict, analysis) -> dict:
+    return {
+        "name":         ctx["a"]["name"],
+        "sign":         ctx["zodiac"]["sign"],
+        "mbti_type":    ctx["mbti"]["type"],
+        "pattern_data": ctx["pattern_data"],
+        "insight_hook": ctx.get("insight_hook", {}),
+        "analysis":     analysis.model_dump(),
+    }
+
+
+def _result_attraction(ctx: dict, analysis) -> dict:
+    return {
+        "name":            ctx["a"]["name"],
+        "sign":            ctx["zodiac"]["sign"],
+        "mbti_type":       ctx["mbti"]["type"],
+        "attraction_data": ctx["attraction_data"],
+        "insight_hook":    ctx.get("insight_hook", {}),
+        "analysis":        analysis.model_dump(),
+    }
+
+
+def _result_recommendation(ctx: dict, analysis) -> dict:
+    return {
+        "name":                ctx["a"]["name"],
+        "sign":                ctx["zodiac"]["sign"],
+        "mbti_type":           ctx["mbti"]["type"],
+        "recommendation_data": ctx["recommendation_data"],
+        "insight_hook":        ctx.get("insight_hook", {}),
+        "analysis":            analysis.model_dump(),
     }

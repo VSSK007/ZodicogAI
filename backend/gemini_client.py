@@ -402,6 +402,10 @@ _COLOR_ANALYSIS                = "color_analysis"
 _COLOR_PAIR_ANALYSIS           = "color_pair_analysis"
 _NUMEROLOGY_ANALYSIS           = "numerology_analysis"
 _NUMEROLOGY_PAIR_ANALYSIS      = "numerology_pair_analysis"
+_ARCHETYPE_ANALYSIS            = "archetype_analysis"
+_PATTERN_ANALYSIS              = "pattern_analysis"
+_ATTRACTION_ANALYSIS           = "attraction_analysis"
+_RECOMMENDATION_ANALYSIS       = "recommendation_analysis"
 
 
 # --- Shared helpers --------------------------------------------------------
@@ -977,6 +981,152 @@ Required JSON structure:
 }}"""
 
 
+# --- /discover prompt builders --------------------------------------------
+
+def _prompt_archetype(ctx: dict) -> str:
+    name = ctx["a"].get("name", "this person")
+    sign = ctx["zodiac"]["sign"]
+    mbti = ctx["mbti"]["type"]
+    ad   = ctx["archetype_data"]
+    hook = ctx.get("insight_hook", {})
+    tv   = ad.get("trait_vector", {})
+    return f"""You are ZodicogAI, writing a /discover identity reading for {name}.
+
+You are NOT writing analysis. You are writing a vivid, direct, personal revelation.
+Rules:
+- Name {name} by name in every field. Never "this person" or "they".
+- Be bold and direct. No hedging. Assert as fact.
+- Every sentence must feel earned — specific to {name}'s archetype, not generic.
+- Use the deterministic data below as anchors. Gemini writes the prose around it.
+
+Identity data for {name}:
+  Sign     : {sign}
+  MBTI     : {mbti}
+  Archetype: {ad['archetype']} — "{ad['archetype_tagline']}"
+  Shadow   : {ad['shadow']}
+  In love  : {ad['in_love']}
+  Compat.  : {ad['compatibility_note']}
+  Trait vector — Intensity {tv.get('intensity',5)}, Stability {tv.get('stability',5)}, Expressiveness {tv.get('expressiveness',5)}, Dominance {tv.get('dominance',5)}, Adaptability {tv.get('adaptability',5)}
+  Viral hook: "{hook.get('hook', '')}"
+
+Required JSON structure:
+{{
+  "archetype_prose":    "<3-4 sentences: who {name} IS as {ad['archetype']}. Personal, bold, specific to this archetype>",
+  "shadow_deep_dive":   "<2-3 sentences: the shadow of {ad['archetype']} — what {name} does when unaware, and why>",
+  "in_love_prose":      "<2-3 sentences: how {name} shows up in love as {ad['archetype']}. Specific dynamics, not generic>",
+  "compatibility_prose":"<2-3 sentences: what {name} needs in a partner. What they attract, what drains them>",
+  "growth_invitation":  "<2 sentences: the one invitation for {name} to evolve beyond their archetype's ceiling>"
+}}"""
+
+
+def _prompt_pattern(ctx: dict) -> str:
+    name = ctx["a"].get("name", "this person")
+    sign = ctx["zodiac"]["sign"]
+    mbti = ctx["mbti"]["type"]
+    pd   = ctx["pattern_data"]
+    hook = ctx.get("insight_hook", {})
+    tv   = pd.get("trait_vector", {})
+    return f"""You are ZodicogAI, writing a /discover relationship pattern reading for {name}.
+
+This is a personal revelation — not analysis. Direct, specific, earned.
+Rules:
+- Name {name} by name throughout. No "they" or "this person".
+- Speak in second person where natural ("you do this") for added impact.
+- Build on the deterministic data — Gemini writes vivid prose around it, not instead of it.
+
+Pattern data for {name}:
+  Sign            : {sign}
+  MBTI            : {mbti}
+  Pattern         : {pd['pattern_display']} ({pd['pattern_label']})
+  Confidence      : {pd['pattern_score']}%
+  Shadow behaviour: {pd['shadow_behaviour']}
+  Root cause      : {pd['root_cause']}
+  Break the cycle : {pd['break_the_cycle']}
+  Trait vector — Intensity {tv.get('intensity',5)}, Stability {tv.get('stability',5)}, Expressiveness {tv.get('expressiveness',5)}, Dominance {tv.get('dominance',5)}, Adaptability {tv.get('adaptability',5)}
+  Viral hook: "{hook.get('hook', '')}"
+
+Required JSON structure:
+{{
+  "pattern_prose":         "<3-4 sentences: what {name}'s pattern looks like in real life. Specific scenes, not abstract>",
+  "shadow_deep_dive":      "<2-3 sentences: the shadow behaviour — what it looks like when it's at its worst for {name}>",
+  "root_cause_prose":      "<2-3 sentences: why {name} does this — the emotional logic underneath the pattern>",
+  "break_the_cycle_prose": "<2-3 sentences: the specific, actionable way {name} can interrupt this pattern>",
+  "reframe":               "<1-2 sentences: a compassionate but honest reframe — not toxic positivity, just truth>"
+}}"""
+
+
+def _prompt_attraction(ctx: dict) -> str:
+    name = ctx["a"].get("name", "this person")
+    sign = ctx["zodiac"]["sign"]
+    mbti = ctx["mbti"]["type"]
+    ad   = ctx["attraction_data"]
+    hook = ctx.get("insight_hook", {})
+    tv   = ad.get("trait_vector", {})
+    return f"""You are ZodicogAI, writing a /discover attraction archetype reading for {name}.
+
+This is identity content — vivid, personal, shareable. Not clinical analysis.
+Rules:
+- Name {name} by name in every field.
+- Be specific: name what {name} falls for, why, and what it costs them.
+- Pull prose from the insight and traits below — not from nowhere.
+
+Attraction data for {name}:
+  Sign                : {sign}
+  MBTI                : {mbti}
+  Attraction archetype: {ad['attraction_archetype']}
+  Pull traits         : {', '.join(ad['pull_traits'])}
+  Avoidance traits    : {', '.join(ad['avoidance_traits'])}
+  Core insight        : {ad['insight']}
+  Confidence          : {ad['pattern_score']}%
+  Trait vector — Intensity {tv.get('intensity',5)}, Stability {tv.get('stability',5)}, Expressiveness {tv.get('expressiveness',5)}, Dominance {tv.get('dominance',5)}, Adaptability {tv.get('adaptability',5)}
+  Viral hook: "{hook.get('hook', '')}"
+
+Required JSON structure:
+{{
+  "attraction_prose":    "<3-4 sentences: what {name} is drawn to and why. Name the feeling, the pattern, the pull>",
+  "pull_deep_dive":      "<2-3 sentences: what specifically {name} finds irresistible — and the unconscious logic behind it>",
+  "avoidance_deep_dive": "<2-3 sentences: what {name} avoids — and whether that avoidance is protecting them or limiting them>",
+  "pattern_warning":     "<2 sentences: the pattern risk — what happens when {name}'s attraction profile goes unexamined>",
+  "growth_invitation":   "<2 sentences: the evolution — what changes when {name} becomes conscious of this archetype>"
+}}"""
+
+
+def _prompt_recommendation(ctx: dict) -> str:
+    name = ctx["a"].get("name", "this person")
+    sign = ctx["zodiac"]["sign"]
+    mbti = ctx["mbti"]["type"]
+    rd   = ctx["recommendation_data"]
+    hook = ctx.get("insight_hook", {})
+    tv   = rd.get("trait_vector", {})
+    return f"""You are ZodicogAI, writing a /discover taste profile reading for {name}.
+
+This is identity content — show how {name}'s choices reveal their character.
+Rules:
+- Name {name} by name throughout.
+- Make this feel like a personality reveal through taste — not a recommendation list.
+- The prose should explain WHY these fit {name}, not just what they are.
+
+Recommendation data for {name}:
+  Sign              : {sign}
+  MBTI              : {mbti}
+  Gaming profile    : {rd['gaming_profile']} — genres: {', '.join(rd['gaming_genres'])} — titles: {', '.join(rd['gaming_titles'])}
+  Gaming reasoning  : {rd['gaming_reasoning']}
+  Movie profile     : {rd['movie_profile']} — genres: {', '.join(rd['movie_genres'])} — titles: {', '.join(rd['movie_titles'])}
+  Movie reasoning   : {rd['movie_reasoning']}
+  Sneaker profile   : {rd['sneaker_profile']} — brands: {', '.join(rd['sneaker_brands'])}
+  Sneaker reasoning : {rd['sneaker_reasoning']}
+  Trait vector — Intensity {tv.get('intensity',5)}, Stability {tv.get('stability',5)}, Expressiveness {tv.get('expressiveness',5)}, Dominance {tv.get('dominance',5)}, Adaptability {tv.get('adaptability',5)}
+  Viral hook: "{hook.get('hook', '')}"
+
+Required JSON structure:
+{{
+  "gaming_prose":  "<2-3 sentences: why these games fit {name}'s psychology specifically. What the genre reveals about them>",
+  "movie_prose":   "<2-3 sentences: what {name}'s movie taste says about how they process emotion and story>",
+  "sneaker_prose": "<2-3 sentences: what {name}'s footwear instincts reveal about their identity and self-expression>",
+  "taste_profile": "<2-3 sentences: the through-line — what {name}'s taste in all three categories says about who they really are>"
+}}"""
+
+
 # --- Public entry point ---------------------------------------------------
 
 _PROMPT_TEMPLATES: dict[str, callable] = {
@@ -994,6 +1144,10 @@ _PROMPT_TEMPLATES: dict[str, callable] = {
     _COLOR_PAIR_ANALYSIS:           _prompt_color_pair,
     _NUMEROLOGY_ANALYSIS:           _prompt_numerology_single,
     _NUMEROLOGY_PAIR_ANALYSIS:      _prompt_numerology_pair,
+    _ARCHETYPE_ANALYSIS:            _prompt_archetype,
+    _PATTERN_ANALYSIS:              _prompt_pattern,
+    _ATTRACTION_ANALYSIS:           _prompt_attraction,
+    _RECOMMENDATION_ANALYSIS:       _prompt_recommendation,
 }
 
 
