@@ -8,6 +8,7 @@ import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
 import BehavioralMap from "@/components/BehavioralMap";
 import PersonForm from "@/components/PersonForm";
+import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
 
 interface Traits {
@@ -185,7 +186,7 @@ export default function RelationshipIntelligencePage() {
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">
                       {key.replace(/_/g, " ")}
                     </p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
                   </div>
                 ))}
               </div>

@@ -37,12 +37,14 @@ export default function MobileNavbar() {
   const inChat = pathname.startsWith("/chat");
   const inBlog = pathname.startsWith("/blog");
   const inAbout = pathname === "/about";
+  const inAnalyze = pathname.startsWith("/analyze");
   const isHome = pathname === "/";
 
-  // On blog/about pages: only show when scrolled near the bottom
+  // On blog/about/analyze pages: only show when scrolled near the bottom
+  const scrollControlled = inBlog || inAbout || inAnalyze;
   const [scrollVisible, setScrollVisible] = useState(false);
   useEffect(() => {
-    if (!inBlog && !inAbout) return;
+    if (!scrollControlled) return;
     setScrollVisible(false);
     const onScroll = () => {
       const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 200;
@@ -50,9 +52,9 @@ export default function MobileNavbar() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, [inBlog, inAbout, pathname]);
+  }, [scrollControlled, pathname]);
 
-  if ((inBlog || inAbout) && !scrollVisible) return null;
+  if (scrollControlled && !scrollVisible) return null;
 
   return (
     <nav

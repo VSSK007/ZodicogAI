@@ -7,6 +7,7 @@ import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
+import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
@@ -212,7 +213,7 @@ export default function LoveLanguagePage() {
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
                   <div key={key} className="border-l-2 border-amber-500/40 md:border-teal-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
                   </div>
                 ))}
               </div>

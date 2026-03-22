@@ -9,6 +9,7 @@ import TraitRadar from "@/components/TraitRadar";
 import BehavioralMap from "@/components/BehavioralMap";
 import PersonForm from "@/components/PersonForm";
 import ConstellationStream from "@/components/ConstellationStream";
+import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
@@ -212,7 +213,7 @@ export default function RomanticPage() {
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
                   <div key={key} className="border-l-2 border-amber-500/40 md:border-rose-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis?.[key]}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis?.[key])}</p>
                   </div>
                 ))}
               </div>

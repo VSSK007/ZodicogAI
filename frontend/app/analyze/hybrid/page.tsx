@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/lib/motion";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
+import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 
 interface HybridResult {
@@ -189,7 +190,7 @@ export default function HybridPage() {
                 ).map(([key, label]) => (
                   <div key={key} className="border-l-2 border-amber-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{analysis[key] as string}</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(analysis[key] as string)}</p>
                   </div>
                 ))}
               </div>
@@ -208,7 +209,7 @@ export default function HybridPage() {
                   <ul className="space-y-1.5">
                     {(analysis.strengths ?? []).map((s, i) => (
                       <li key={i} className="text-sm text-zinc-300 flex gap-2">
-                        <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>{s}
+                        <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>{renderMd(s)}
                       </li>
                     ))}
                   </ul>
@@ -218,7 +219,7 @@ export default function HybridPage() {
                   <ul className="space-y-1.5">
                     {(analysis.growth_edges ?? []).map((s, i) => (
                       <li key={i} className="text-sm text-zinc-300 flex gap-2">
-                        <span className="text-amber-500 mt-0.5 shrink-0">→</span>{s}
+                        <span className="text-amber-500 mt-0.5 shrink-0">→</span>{renderMd(s)}
                       </li>
                     ))}
                   </ul>

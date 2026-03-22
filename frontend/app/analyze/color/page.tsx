@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
+import { renderMd } from "@/lib/renderMd";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -156,7 +157,7 @@ function NarrativeSection({ title, text }: { title: string; text: string }) {
   return (
     <div className="border-l-2 border-white/20 pl-4">
       <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{title}</p>
-      <p className="text-sm text-zinc-300 leading-relaxed">{text}</p>
+      <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(text)}</p>
     </div>
   );
 }

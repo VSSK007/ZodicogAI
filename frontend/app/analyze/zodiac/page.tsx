@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
+import { renderMd } from "@/lib/renderMd";
 import TraitRadar from "@/components/TraitRadar";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { ZODIAC_COLORS } from "@/lib/colors";
@@ -312,11 +313,11 @@ function ZodiacPageInner() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                     <div className="rounded-lg bg-white/[0.02] border border-white/8 p-3">
                       <p className="text-[9px] uppercase tracking-widest text-zinc-600 mb-1">Overview</p>
-                      <p className="text-xs text-zinc-300 leading-relaxed">{z.decan.description_short}</p>
+                      <p className="text-xs text-zinc-300 leading-relaxed">{renderMd(z.decan.description_short)}</p>
                     </div>
                     <div className="rounded-lg bg-white/[0.02] border border-white/8 p-3">
                       <p className="text-[9px] uppercase tracking-widest text-zinc-600 mb-1">In Depth</p>
-                      <p className="text-xs text-zinc-300 leading-relaxed">{z.decan.description_rich}</p>
+                      <p className="text-xs text-zinc-300 leading-relaxed">{renderMd(z.decan.description_rich)}</p>
                     </div>
                   </div>
                 </div>
@@ -324,7 +325,7 @@ function ZodiacPageInner() {
 
               {/* Overview */}
               <div className="px-8 py-6">
-                <p className="text-zinc-300 leading-relaxed text-sm">{art.overview}</p>
+                <p className="text-zinc-300 leading-relaxed text-sm">{renderMd(art.overview)}</p>
               </div>
             </div>
             </RevealOnScroll>
@@ -332,14 +333,14 @@ function ZodiacPageInner() {
             {/* ── The Symbol & Mythology ── */}
             <RevealOnScroll>
               <Section title="The Symbol & Mythology" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{art.the_symbol}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.the_symbol)}</p>
               </Section>
             </RevealOnScroll>
 
             {/* ── Personality ── */}
             <RevealOnScroll>
               <Section title="Personality" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{art.personality}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.personality)}</p>
                 <div className="pt-2">
                   <TraitRadar a={z.trait_vector} nameA={result.name || z.sign} />
                 </div>
@@ -351,11 +352,11 @@ function ZodiacPageInner() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className={`rounded-2xl border ${theme.border} ${theme.bg} p-5`}>
                   <p className={`text-xs uppercase tracking-widest mb-2 font-semibold ${theme.text}`}>✦ Highest Expression</p>
-                  <p className="text-sm text-zinc-300 leading-relaxed">{art.highest_expression}</p>
+                  <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(art.highest_expression)}</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
                   <p className="text-xs uppercase tracking-widest mb-2 font-semibold text-zinc-500">☽ Shadow Expression</p>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{art.shadow_expression}</p>
+                  <p className="text-sm text-zinc-400 leading-relaxed">{renderMd(art.shadow_expression)}</p>
                 </div>
               </div>
             </RevealOnScroll>
@@ -368,7 +369,7 @@ function ZodiacPageInner() {
                   <ul className="space-y-2">
                     {art.strengths.map((s) => (
                       <li key={s} className="flex items-center gap-2 text-sm text-zinc-300">
-                        <span style={{ color: theme.accent }}>✓</span>{s}
+                        <span style={{ color: theme.accent }}>✓</span>{renderMd(s)}
                       </li>
                     ))}
                   </ul>
@@ -378,7 +379,7 @@ function ZodiacPageInner() {
                   <ul className="space-y-2">
                     {art.weaknesses.map((w) => (
                       <li key={w} className="flex items-center gap-2 text-sm text-zinc-400">
-                        <span className="text-zinc-600">→</span>{w}
+                        <span className="text-zinc-600">→</span>{renderMd(w)}
                       </li>
                     ))}
                   </ul>
@@ -389,21 +390,21 @@ function ZodiacPageInner() {
             {/* ── In Love ── */}
             <RevealOnScroll>
               <Section title="In Love & Relationships" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{art.in_love}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.in_love)}</p>
               </Section>
             </RevealOnScroll>
 
             {/* ── As a Friend ── */}
             <RevealOnScroll>
               <Section title="As a Friend" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{art.as_a_friend}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.as_a_friend)}</p>
               </Section>
             </RevealOnScroll>
 
             {/* ── Career ── */}
             <RevealOnScroll>
               <Section title="Career & Ambition" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{art.career_and_ambition}</p>
+                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.career_and_ambition)}</p>
               </Section>
             </RevealOnScroll>
 
@@ -411,7 +412,7 @@ function ZodiacPageInner() {
             <RevealOnScroll>
               <Section title={`How to Relate to a ${z.sign}`} accent={theme.accent}>
                 <div className={`rounded-xl border ${theme.border} ${theme.bg} p-4`}>
-                  <p className="text-zinc-300 text-sm leading-relaxed">{art.tips_for_relating}</p>
+                  <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.tips_for_relating)}</p>
                 </div>
               </Section>
             </RevealOnScroll>
