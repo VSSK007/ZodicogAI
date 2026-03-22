@@ -8,7 +8,7 @@ import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
 import ConstellationStream from "@/components/ConstellationStream";
-import { PersonData, emptyPerson, validatePerson } from "@/lib/api";
+import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
@@ -157,14 +157,28 @@ export default function SextrologyPage() {
     }
     setLoading(true);
     setError("");
-    setStreaming(true);
     setStreamedText("");
     setStreamScores(null);
     setResult(null);
     setSubmittedAsPair(showB);
 
+    // Solo mode: use regular endpoint to get all 9 structured fields
+    if (!showB) {
+      try {
+        const data = await apiFetch<SextrologyResult>("/analyze/sextrology", soloBody(a));
+        setResult(data);
+      } catch (e: unknown) {
+        setError((e as Error).message);
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+
+    // Pair mode: use streaming for ConstellationStream animation
+    setStreaming(true);
     try {
-      const body = showB ? pairSexBody(a, b) : soloBody(a);
+      const body = pairSexBody(a, b);
       const response = await fetch(`${API}/analyze/sextrology/stream`, {
         method: "POST",
         body: JSON.stringify(body),
@@ -343,8 +357,7 @@ export default function SextrologyPage() {
                   </div>
                 </motion.div>
 
-                {/* Solo — all fields (hidden when ConstellationStream is active) */}
-                {!streamedText && result.analysis && (
+                {/* Solo — all fields */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
@@ -365,7 +378,6 @@ export default function SextrologyPage() {
                     </div>
                   </div>
                 </motion.div>
-                )}
               </>
             )}
 
