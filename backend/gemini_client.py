@@ -616,7 +616,10 @@ Required JSON structure:
 
 def _prompt_sextrology_solo(ctx: dict) -> str:
     from sextrology_data import SEX_SIGN_PROFILES
-    na    = ctx["a"].get("name", "this person")
+    na     = ctx["a"].get("name", "this person")
+    gender = ctx["a"].get("gender", "M")
+    pronoun   = "he" if gender == "M" else "she"
+    possessive = "his" if gender == "M" else "her"
     z     = ctx["zodiac"]
     m     = ctx["mbti"]
     sign  = z.get("sign", "")
@@ -652,6 +655,7 @@ Trait vector (0–10 scale):
   Adaptability   : {tv.get('adaptability', '—')}
   Stability      : {tv.get('stability', '—')}
 
+Use pronouns: {pronoun}/{possessive} throughout (gender: {"male" if gender == "M" else "female"}).
 Write a detailed solo sextrology reading for {na}.
 Be bold, explicit, and specific — name real kinks, positions, fantasies, and zones tied to this sign's known behaviour.
 Do not include any explanation, markdown, or text outside the JSON.

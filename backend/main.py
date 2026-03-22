@@ -176,6 +176,7 @@ def analyze_romantic(data: CompatibilityInput):
 def analyze_sextrology(data: SextrologyInput):
     def _run():
         a = _person(data.person_a_name, data.person_a_day, data.person_a_month, data.person_a_mbti)
+        a["gender"] = data.person_a_gender or "M"
         if data.person_b_name:
             b = _person(data.person_b_name, data.person_b_day, data.person_b_month, data.person_b_mbti)
             return run_analysis(SEXTROLOGY_ANALYSIS, a, b)

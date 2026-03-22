@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/lib/motion";
 import ScoreRing from "@/components/ScoreRing";
@@ -72,6 +72,7 @@ function soloBody(a: PersonData) {
     person_a_day: Number(a.day),
     person_a_month: Number(a.month),
     person_a_mbti: a.mbti,
+    person_a_gender: a.gender,
   };
 }
 
@@ -88,6 +89,16 @@ function pairSexBody(a: PersonData, b: PersonData) {
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 const CARD = "bg-white/[0.03] ring-1 ring-white/10 rounded-2xl overflow-hidden";
+
+function renderMd(text: string): React.ReactNode[] {
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**"))
+      return <strong key={i} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
+    if (part.startsWith("*") && part.endsWith("*"))
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    return part;
+  });
+}
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -360,7 +371,7 @@ export default function SextrologyPage() {
                           <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
                             <span className="mr-1.5">{icon}</span>{label}
                           </p>
-                          <p className="text-sm text-zinc-300 leading-relaxed">{sr.analysis?.[key]}</p>
+                          <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(sr.analysis?.[key] ?? "")}</p>
                         </div>
                       ))}
                     </div>

@@ -211,6 +211,7 @@ class SextrologyInput(BaseModel):
     person_a_day: int
     person_a_month: int
     person_a_mbti: str
+    person_a_gender: Optional[str] = "M"
     person_b_name: Optional[str] = None
     person_b_day: Optional[int] = None
     person_b_month: Optional[int] = None
