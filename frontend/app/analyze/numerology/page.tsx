@@ -67,10 +67,11 @@ interface SimplePersonState {
   name: string;
   day: string;
   month: string;
+  gender: "M" | "F";
 }
 
 function emptySimple(): SimplePersonState {
-  return { name: "", day: "", month: "" };
+  return { name: "", day: "", month: "", gender: "M" };
 }
 
 function validateSimple(p: SimplePersonState, label: string): string | null {
@@ -113,12 +114,30 @@ function SimpleForm({
 
   return (
     <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 space-y-3">
-      <input
-        className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-amber-500/20 md:border-white/10 pb-2.5"
-        placeholder={label}
-        value={value.name}
-        onChange={set("name")}
-      />
+      <div className="flex gap-2 items-center border-b border-amber-500/20 md:border-white/10 pb-2.5">
+        <input
+          className="flex-1 bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none"
+          placeholder={label}
+          value={value.name}
+          onChange={set("name")}
+        />
+        <div className="flex rounded-lg overflow-hidden border border-amber-500/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
+          {(["M", "F"] as const).map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => onChange({ ...value, gender: g })}
+              className={`flex-1 py-1.5 transition-colors tap-highlight-none ${
+                value.gender === g
+                  ? "bg-amber-500 text-black"
+                  : "bg-white/[0.04] md:bg-zinc-900 text-zinc-500 hover:text-white"
+              }`}
+            >
+              {g === "M" ? "♂" : "♀"}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex gap-2">
         <input className={`w-20 md:w-16 ${INPUT_SMALL}`} placeholder="Day" type="number" min={1} max={31} value={value.day} onChange={set("day")} />
         <input className={`w-20 md:w-16 ${INPUT_SMALL}`} placeholder="Mo" type="number" min={1} max={12} value={value.month} onChange={set("month")} />
