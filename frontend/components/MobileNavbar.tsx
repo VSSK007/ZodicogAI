@@ -85,8 +85,8 @@ export default function MobileNavbar() {
           </div>
         )}
 
-        {/* Discover button — floats right of FAB */}
-        {!inChat && (
+        {/* Menu button — floats right of FAB, only on non-home pages (left side is back button there) */}
+        {!inChat && !isHome && (
           <div className="absolute left-full ml-5">
             <button
               onClick={() => setMenuOpen(true)}
