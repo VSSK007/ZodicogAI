@@ -12,11 +12,13 @@ export default function CompatibilityForm() {
   const [aDay, setADay] = useState("");
   const [aMonth, setAMonth] = useState("");
   const [aMbti, setAMbti] = useState("");
+  const [aGender, setAGender] = useState<"M" | "F">("M");
 
   const [bName, setBName] = useState("");
   const [bDay, setBDay] = useState("");
   const [bMonth, setBMonth] = useState("");
   const [bMbti, setBMbti] = useState("");
+  const [bGender, setBGender] = useState<"M" | "F">("M");
 
   const [result, setResult] = useState<any>(null);
   const [names, setNames] = useState({ a: "", b: "" });
@@ -65,10 +67,12 @@ export default function CompatibilityForm() {
         person_a_day: Number(aDay),
         person_a_month: Number(aMonth),
         person_a_mbti: aMbti.toUpperCase(),
+        person_a_gender: aGender,
         person_b_name: bName.trim(),
         person_b_day: Number(bDay),
         person_b_month: Number(bMonth),
         person_b_mbti: bMbti.toUpperCase(),
+        person_b_gender: bGender,
       });
 
       const data = res.data;
@@ -150,6 +154,8 @@ export default function CompatibilityForm() {
           setMonth={setAMonth}
           mbti={aMbti}
           setMbti={setAMbti}
+          gender={aGender}
+          setGender={setAGender}
           placeholder="First person's name"
         />
 
@@ -162,6 +168,8 @@ export default function CompatibilityForm() {
           setMonth={setBMonth}
           mbti={bMbti}
           setMbti={setBMbti}
+          gender={bGender}
+          setGender={setBGender}
           placeholder="Second person's name"
         />
       </div>
@@ -239,6 +247,8 @@ interface ProfileCardProps {
   setMonth: (v: string) => void;
   mbti: string;
   setMbti: (v: string) => void;
+  gender: "M" | "F";
+  setGender: (v: "M" | "F") => void;
   placeholder: string;
 }
 
@@ -251,22 +261,42 @@ function ProfileCard({
   setMonth,
   mbti,
   setMbti,
+  gender,
+  setGender,
   placeholder,
 }: ProfileCardProps) {
   return (
-    <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-white/10 space-y-3">
-      <input
-        placeholder={placeholder}
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-white/10 pb-2.5"
-      />
+    <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 space-y-3">
+      <div className="flex gap-2 items-center border-b border-amber-500/20 md:border-white/10 pb-2.5">
+        <input
+          placeholder={placeholder}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="flex-1 bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none"
+        />
+        <div className="flex rounded-lg overflow-hidden border border-amber-500/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
+          {(["M", "F"] as const).map((g) => (
+            <button
+              key={g}
+              type="button"
+              onClick={() => setGender(g)}
+              className={`flex-1 py-1.5 transition-colors tap-highlight-none ${
+                gender === g
+                  ? "bg-amber-500 text-black"
+                  : "bg-white/[0.04] md:bg-zinc-900 text-zinc-500 hover:text-white"
+              }`}
+            >
+              {g === "M" ? "♂" : "♀"}
+            </button>
+          ))}
+        </div>
+      </div>
       <div className="flex gap-2">
         <input
           placeholder="Day"
           value={day}
           onChange={(e) => setDay(e.target.value)}
-          className="w-20 md:w-16 bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center"
+          className="w-20 md:w-16 bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center"
           type="number"
           min={1}
           max={31}
@@ -275,7 +305,7 @@ function ProfileCard({
           placeholder="Mo"
           value={month}
           onChange={(e) => setMonth(e.target.value)}
-          className="w-20 md:w-16 bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center"
+          className="w-20 md:w-16 bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none text-center"
           type="number"
           min={1}
           max={12}

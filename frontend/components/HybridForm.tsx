@@ -82,10 +82,11 @@ const MBTI_LETTERS: Record<string, [string, string][]> = {
 // Main component
 // ---------------------------------------------------------------------------
 export default function HybridForm() {
-  const [name, setName]   = useState("");
-  const [day, setDay]     = useState("");
-  const [month, setMonth] = useState("");
-  const [mbti, setMbti]   = useState("");
+  const [name, setName]     = useState("");
+  const [day, setDay]       = useState("");
+  const [month, setMonth]   = useState("");
+  const [mbti, setMbti]     = useState("");
+  const [gender, setGender] = useState<"M" | "F">("M");
   const [showQuiz, setShowQuiz] = useState(false);
 
   const [result, setResult]           = useState<any>(null);
@@ -108,7 +109,7 @@ export default function HybridForm() {
     setLoading(true); setError(""); setResult(null);
     try {
       const res = await axios.post(`${API}/hybrid-analysis`, {
-        name: name.trim(), day: Number(day), month: Number(month), mbti,
+        name: name.trim(), day: Number(day), month: Number(month), mbti, gender,
       });
       setResult(res.data);
       setSubmittedName(name.trim());
@@ -130,12 +131,30 @@ export default function HybridForm() {
     <div className="max-w-5xl mx-auto space-y-8 px-1 md:px-0">
       {/* ── INPUT CARD ── */}
       <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 space-y-3">
-        <input
-          className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-amber-500/20 md:border-white/10 pb-2.5"
-          placeholder="Your name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div className="flex gap-2 items-center border-b border-amber-500/20 md:border-white/10 pb-2.5">
+          <input
+            className="flex-1 bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <div className="flex rounded-lg overflow-hidden border border-amber-500/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
+            {(["M", "F"] as const).map((g) => (
+              <button
+                key={g}
+                type="button"
+                onClick={() => setGender(g)}
+                className={`flex-1 py-1.5 transition-colors tap-highlight-none ${
+                  gender === g
+                    ? "bg-amber-500 text-black"
+                    : "bg-white/[0.04] md:bg-zinc-900 text-zinc-500 hover:text-white"
+                }`}
+              >
+                {g === "M" ? "♂" : "♀"}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="flex gap-2 flex-wrap">
           <div className="flex-1 min-w-[160px] space-y-1.5">
