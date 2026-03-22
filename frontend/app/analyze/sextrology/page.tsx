@@ -343,7 +343,8 @@ export default function SextrologyPage() {
                   </div>
                 </motion.div>
 
-                {/* Solo — all fields */}
+                {/* Solo — all fields (hidden when ConstellationStream is active) */}
+                {!streamedText && result.analysis && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
@@ -364,6 +365,7 @@ export default function SextrologyPage() {
                     </div>
                   </div>
                 </motion.div>
+                )}
               </>
             )}
 

@@ -287,6 +287,14 @@ def _sse_stream(analysis_type: str, person_a: dict, person_b: dict):
         base.update(ctx.get("emotional", {}))
     elif analysis_type == SEXTROLOGY_ANALYSIS:
         base.update(ctx.get("sextrology", {}))
+    elif analysis_type == SEXTROLOGY_SOLO_ANALYSIS:
+        zodiac = ctx.get("zodiac", {})
+        mbti   = ctx.get("mbti",   {})
+        base.update({
+            "name":      ctx.get("a", {}).get("name", ""),
+            "sign":      zodiac.get("sign",    ""),
+            "mbti_type": mbti.get("type",      ""),
+        })
     yield f"data: {json.dumps(base)}\n\n"
 
 
