@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
 
@@ -12,24 +13,29 @@ const LINKS = [
   { href: "/analyze/emotional", label: "Emotional" },
   { href: "/analyze/romantic", label: "Romantic" },
   { href: "/analyze/sextrology", label: "Sextrology" },
-  { href: "/analyze/love-style", label: "Love Style" },
-  { href: "/analyze/love-language", label: "Language" },
-  { href: "/analyze/color", label: "Aura" },
+  { href: "/analyze/color", label: "Aura Colors" },
   { href: "/analyze/numerology", label: "Numerology" },
   { href: "/dashboard", label: "Synastry" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
 ];
 
+const LOVE_LINKS = [
+  { href: "/analyze/love-style", label: "Love Style" },
+  { href: "/analyze/love-language", label: "Love Language" },
+];
+
 export default function Navbar() {
   const path = usePathname();
   const router = useRouter();
   const chatActive = path.startsWith("/chat");
+  const loveActive = path.startsWith("/analyze/love-style") || path.startsWith("/analyze/love-language");
+  const [loveOpen, setLoveOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0a12]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-6 h-12 flex items-stretch">
-        {/* Brand insignia + wordmark — clicks to home */}
+        {/* Brand */}
         <Link href="/" className="flex items-center mr-5 shrink-0">
           <motion.div
             className="flex items-center gap-2.5"
@@ -61,6 +67,55 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          {/* Love dropdown */}
+          <div
+            className="relative shrink-0 flex items-stretch"
+            onMouseEnter={() => setLoveOpen(true)}
+            onMouseLeave={() => setLoveOpen(false)}
+          >
+            <button
+              className={`flex items-center gap-1 px-3 text-sm border-b-2 transition-all duration-200 ${
+                loveActive
+                  ? "text-white font-medium border-[#4285f4]"
+                  : "text-zinc-500 hover:text-zinc-200 border-transparent"
+              }`}
+            >
+              Love
+              <svg
+                width="10" height="10" viewBox="0 0 10 10" fill="none"
+                className={`transition-transform duration-150 ${loveOpen ? "rotate-180" : ""}`}
+              >
+                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+
+            <AnimatePresence>
+              {loveOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.12 }}
+                  className="absolute top-full left-0 mt-0 w-36 rounded-b-xl bg-[#0a0a12]/95 backdrop-blur-md border border-white/[0.08] border-t-0 overflow-hidden shadow-xl"
+                >
+                  {LOVE_LINKS.map(({ href, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      className={`block px-4 py-2.5 text-sm transition-colors ${
+                        path.startsWith(href)
+                          ? "text-white bg-white/[0.06]"
+                          : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* Right section — fixed to viewport right */}
@@ -89,7 +144,6 @@ export default function Navbar() {
             </Link>
           </motion.div>
 
-          {/* GitHub — always visible, before email */}
           <a
             href="https://github.com/VSSK007/ZodicogAI"
             target="_blank"
@@ -102,7 +156,6 @@ export default function Navbar() {
             </svg>
           </a>
 
-          {/* Email icon */}
           <a
             href="mailto:kar1mr@zodicogai.com"
             className="text-zinc-500 hover:text-zinc-300 transition-colors shrink-0"
