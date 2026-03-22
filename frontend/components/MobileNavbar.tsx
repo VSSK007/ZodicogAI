@@ -66,27 +66,15 @@ export default function MobileNavbar() {
       style={{ background: "transparent" }}
     >
       <div className="relative flex items-center justify-center">
-        {/* Menu button — floats left of FAB */}
-        {!inChat && (
+        {/* Back button — floats left of FAB on non-home pages */}
+        {!inChat && !isHome && (
           <div className="absolute right-full mr-5">
-            {isHome ? (
-              <button
-                onClick={() => setMenuOpen(true)}
-                aria-label="Open menu"
-                className="w-12 h-12 rounded-full flex items-center justify-center tap-highlight-none active:scale-90 transition-transform bg-white/[0.05] border border-white/[0.12]"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2" strokeLinecap="round">
-                  <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
-                </svg>
-              </button>
-            ) : (
-              <BackButton onClick={() => router.push("/")} />
-            )}
+            <BackButton onClick={() => router.push("/")} />
           </div>
         )}
 
-        {/* Menu button — floats right of FAB, only on non-home pages (left side is back button there) */}
-        {!inChat && !isHome && (
+        {/* Hamburger — always right of FAB */}
+        {!inChat && (
           <div className="absolute left-full ml-5">
             <button
               onClick={() => setMenuOpen(true)}
