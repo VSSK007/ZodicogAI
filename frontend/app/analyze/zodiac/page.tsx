@@ -199,20 +199,23 @@ function ZodiacPageInner() {
 
       {/* Input card */}
       {showForm && (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4 mb-8">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4 mb-4">
           <div className="grid grid-cols-3 gap-3">
             <input className={`${INPUT} col-span-3 md:col-span-1`} placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
             <input className={INPUT} placeholder="Day (1–31)" type="number" min={1} max={31} value={day} onChange={(e) => setDay(e.target.value)} />
             <input className={INPUT} placeholder="Month (1–12)" type="number" min={1} max={12} value={month} onChange={(e) => setMonth(e.target.value)} />
           </div>
           {error && <p className="text-red-400 text-sm">{error}</p>}
-          <button
-            onClick={handleSubmit} disabled={loading}
-            className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px]"
-          >
-            {loading ? "Reading the stars…" : "Generate Zodiac Profile"}
-          </button>
         </div>
+      )}
+
+      {showForm && (
+        <button
+          onClick={handleSubmit} disabled={loading}
+          className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px] mb-8"
+        >
+          {loading ? "Reading the stars…" : "Generate Zodiac Profile"}
+        </button>
       )}
 
       {/* Loading state when form is hidden */}

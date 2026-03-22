@@ -181,15 +181,15 @@ export default function HybridForm() {
         </AnimatePresence>
 
         {error && <p className="text-red-400 text-sm">{error}</p>}
-
-        <button
-          onClick={runAnalysis}
-          disabled={loading}
-          className="w-full py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition"
-        >
-          {loading ? "Analyzing…" : "Analyze My Personality"}
-        </button>
       </div>
+
+      <button
+        onClick={runAnalysis}
+        disabled={loading}
+        className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px]"
+      >
+        {loading ? "Analyzing…" : "Analyze My Personality"}
+      </button>
 
       {/* ── RESULTS ── */}
       <AnimatePresence>
