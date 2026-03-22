@@ -339,34 +339,21 @@ export default function SextrologyPage() {
             ); })()) : (
               (() => { const sr = result as SoloResult; return (
               <>
-                {/* Solo — identity header */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, ease: EASE }}
-                  className={`${CARD} p-6 flex items-center gap-5`}
-                >
-                  <div className="w-14 h-14 rounded-2xl bg-amber-500/15 md:bg-indigo-500/15 border border-amber-500/25 md:border-indigo-500/25 flex items-center justify-center shrink-0">
-                    <span className="text-2xl">♦</span>
-                  </div>
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-0.5">Solo Profile</p>
-                    <p className="text-lg font-semibold text-white">{sr.name}</p>
-                    <div className="flex gap-2 mt-1">
-                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/15 md:bg-indigo-500/15 text-amber-300 md:text-indigo-300 border border-amber-500/25 md:border-indigo-500/25">{sr.sign}</span>
-                      <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-300 border border-white/[0.08]">{sr.mbti_type}</span>
-                    </div>
-                  </div>
-                </motion.div>
-
                 {/* Solo — all fields */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
+                  transition={{ duration: 0.55, ease: EASE }}
                   className={CARD}
                 >
                   <AIHeader />
                   <div className="p-4 md:p-6">
-                    <h2 className="text-sm font-semibold text-zinc-300 mb-5">Sextrology Profile</h2>
+                    <div className="flex items-center justify-between mb-5">
+                      <h2 className="text-sm font-semibold text-zinc-300">Sextrology Profile</h2>
+                      <div className="flex gap-1.5">
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-amber-500/10 md:bg-indigo-500/10 text-amber-300 md:text-indigo-300 border border-amber-500/20 md:border-indigo-500/20">{sr.sign}</span>
+                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 border border-white/[0.07]">{sr.mbti_type}</span>
+                      </div>
+                    </div>
                     <div className="grid md:grid-cols-2 gap-5">
                       {SOLO_FIELDS.map(({ key, label, icon }) => (
                         <div key={key} className="border-l-2 border-amber-500/40 md:border-indigo-500/40 pl-4">
