@@ -54,6 +54,20 @@ function ConstellationIndicator({ active }: { active: boolean }) {
   );
 }
 
+// ── Inline markdown renderer — bold, italic, line breaks ─────────────────────
+function renderMarkdown(text: string): React.ReactNode[] {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\n)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**"))
+      return <strong key={i} className="text-amber-300 font-semibold">{part.slice(2, -2)}</strong>;
+    if (part.startsWith("*") && part.endsWith("*"))
+      return <em key={i} className="text-amber-200/80 italic">{part.slice(1, -1)}</em>;
+    if (part === "\n")
+      return <br key={i} />;
+    return <span key={i}>{part}</span>;
+  });
+}
+
 // ── Chunk — a single streamed text segment with glow reveal ───────────────────
 function GlowChunk({ text, index }: { text: string; index: number }) {
   return (
@@ -70,7 +84,7 @@ function GlowChunk({ text, index }: { text: string; index: number }) {
       transition={{ duration: 1.2, ease: "easeOut" }}
       style={{ display: "inline" }}
     >
-      {text}
+      {renderMarkdown(text)}
     </motion.span>
   );
 }
@@ -215,7 +229,7 @@ export default function ConstellationStream({
           <div className="relative px-5 pt-4 pb-5">
             <p
               className="text-sm leading-relaxed text-zinc-200"
-              style={{ whiteSpace: "pre-wrap", fontFamily: "inherit" }}
+              style={{ fontFamily: "inherit" }}
             >
               {chunks.map((chunk, i) => (
                 <GlowChunk key={i} text={chunk} index={i} />
