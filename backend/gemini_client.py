@@ -562,11 +562,20 @@ def _prompt_sextrology(ctx: dict) -> str:
     def _sx(name: str, sign: str, mbti: str, sx: dict) -> str:
         if not sx:
             return f"{name} ({sign} / {mbti})"
+        positions_txt = "; ".join(
+            f"{p['name']} ({p['why']})" for p in sx.get("positions", [])
+        ) or sx.get("position", "—")
+        erogenous_txt = "; ".join(sx.get("erogenous_zones", [])) or "—"
+        kinks_txt     = ", ".join(sx.get("kinks", [])) or "—"
+        style_txt     = " | ".join(sx.get("sex_style", [])) or "—"
         return (
             f"{name} ({sign} / {mbti})\n"
             f"  Libido rank     : #{sx['rank']} of 12\n"
             f"  Sexual identity : {sx['character']}\n"
-            f"  Signature move  : {sx['position']}\n"
+            f"  Sexual style    : {style_txt}\n"
+            f"  Positions       : {positions_txt}\n"
+            f"  Erogenous zones : {erogenous_txt}\n"
+            f"  Kinks           : {kinks_txt}\n"
             f"  Foreplay style  : {sx.get('foreplay', '—')}\n"
             f"  Turn-ons        : {sx['turn_ons']}\n"
             f"  Turn-offs       : {sx['turn_offs']}\n"
@@ -628,10 +637,19 @@ def _prompt_sextrology_solo(ctx: dict) -> str:
 
     sx_block = ""
     if sx:
+        positions_txt = "; ".join(
+            f"{p['name']} ({p['why']})" for p in sx.get("positions", [])
+        ) or sx.get("position", "—")
+        erogenous_txt = "; ".join(sx.get("erogenous_zones", [])) or "—"
+        kinks_txt     = ", ".join(sx.get("kinks", [])) or "—"
+        style_txt     = " | ".join(sx.get("sex_style", [])) or "—"
         sx_block = (
             f"  Libido rank     : #{sx['rank']} of 12\n"
             f"  Sexual identity : {sx['character']}\n"
-            f"  Signature move  : {sx['position']}\n"
+            f"  Sexual style    : {style_txt}\n"
+            f"  Positions       : {positions_txt}\n"
+            f"  Erogenous zones : {erogenous_txt}\n"
+            f"  Kinks           : {kinks_txt}\n"
             f"  Foreplay style  : {sx.get('foreplay', '—')}\n"
             f"  Turn-ons        : {sx['turn_ons']}\n"
             f"  Turn-offs       : {sx['turn_offs']}\n"

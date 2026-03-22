@@ -340,12 +340,20 @@ def _prompt_sextrology(
         sx = SEX_SIGN_PROFILES.get(sign, {})
         if not sx:
             return ""
+        positions_txt = "; ".join(
+            f"{pos['name']} ({pos['why']})" for pos in sx.get("positions", [])
+        ) or sx.get("position", "—")
+        erogenous_txt = "; ".join(sx.get("erogenous_zones", [])) or "—"
+        kinks_txt     = ", ".join(sx.get("kinks", [])) or "—"
         return (
             f"{name} ({sign}) — libido rank #{sx['rank']}/12\n"
-            f"  Identity  : {sx['character']}\n"
-            f"  Position  : {sx['position']}\n"
-            f"  Turn-ons  : {sx['turn_ons']}\n"
-            f"  Turn-offs : {sx['turn_offs']}"
+            f"  Identity       : {sx['character']}\n"
+            f"  Positions      : {positions_txt}\n"
+            f"  Erogenous zones: {erogenous_txt}\n"
+            f"  Kinks          : {kinks_txt}\n"
+            f"  Foreplay       : {sx.get('foreplay', '—')}\n"
+            f"  Turn-ons       : {sx['turn_ons']}\n"
+            f"  Turn-offs      : {sx['turn_offs']}"
         )
 
     sx_a = _sx_block(na, person_a)
