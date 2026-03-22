@@ -13,9 +13,9 @@ interface Props {
   compact?: boolean;
 }
 
-const INPUT = "rounded-lg bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/30 transition-colors";
+const INPUT_SMALL = "bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/30 transition-colors rounded-lg";
 
-export default function PersonForm({ label, value, onChange, compact = false }: Props) {
+export default function PersonForm({ label, value, onChange }: Props) {
   const [showQuiz, setShowQuiz] = useState(false);
 
   useEffect(() => {
@@ -31,24 +31,24 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
     };
 
   return (
-    <div className="rounded-2xl ring-1 ring-amber-500/25 md:ring-white/10 p-4 bg-amber-500/[0.04] md:bg-white/[0.03]">
+    <div className="rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 p-5 bg-white/[0.03]">
       <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">{label}</p>
       <div className="flex flex-col gap-2">
-        {/* Row 1: Name + Gender */}
-        <div className="flex gap-2">
+        {/* Row 1: Name + Gender — transparent underline style */}
+        <div className="flex gap-2 items-center border-b border-amber-500/20 md:border-white/10 pb-2.5">
           <input
-            className={`${INPUT} flex-1 min-w-0`}
+            className="flex-1 min-w-0 bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none text-white"
             placeholder="Name"
             value={value.name}
             onChange={set("name")}
           />
-          <div className="flex rounded-lg overflow-hidden border border-amber-500/25 md:border-white/[0.08] text-sm font-medium w-20 md:w-16 shrink-0">
+          <div className="flex rounded-lg overflow-hidden border border-amber-500/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
             {(["M", "F"] as const).map((g) => (
               <button
                 key={g}
                 type="button"
                 onClick={() => onChange({ ...value, gender: g })}
-                className={`flex-1 py-3 md:py-2 transition-colors tap-highlight-none ${
+                className={`flex-1 py-1.5 transition-colors tap-highlight-none ${
                   value.gender === g
                     ? "bg-amber-500 text-black"
                     : "bg-white/[0.04] md:bg-zinc-900 text-zinc-500 hover:text-white"
@@ -67,7 +67,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             onChange={(v) => onChange({ ...value, mbti: v })}
           />
           <input
-            className={`${INPUT} w-20 md:w-16 shrink-0 text-center`}
+            className={`${INPUT_SMALL} w-20 md:w-16 shrink-0 text-center`}
             placeholder="Day"
             type="number"
             min={1} max={31}
@@ -75,7 +75,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
             onChange={set("day")}
           />
           <input
-            className={`${INPUT} w-20 md:w-16 shrink-0 text-center`}
+            className={`${INPUT_SMALL} w-20 md:w-16 shrink-0 text-center`}
             placeholder="Mo"
             type="number"
             min={1} max={12}
