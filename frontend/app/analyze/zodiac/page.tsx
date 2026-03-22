@@ -99,7 +99,7 @@ const ALL_SIGN_SYMBOLS: Record<string, string> = {
   Libra:"♎", Scorpio:"♏", Sagittarius:"♐", Capricorn:"♑", Aquarius:"♒", Pisces:"♓",
 };
 
-const INPUT = "rounded-lg bg-zinc-900 border border-white/10 px-3 py-2.5 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors font-[inherit]";
+const INPUT_SMALL = "bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none font-[inherit]";
 
 // ---------------------------------------------------------------------------
 // Section component
@@ -199,11 +199,16 @@ function ZodiacPageInner() {
 
       {/* Input card */}
       {showForm && (
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 space-y-4 mb-4">
-          <div className="grid grid-cols-3 gap-3">
-            <input className={`${INPUT} col-span-3 md:col-span-1`} placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input className={INPUT} placeholder="Day (1–31)" type="number" min={1} max={31} value={day} onChange={(e) => setDay(e.target.value)} />
-            <input className={INPUT} placeholder="Month (1–12)" type="number" min={1} max={12} value={month} onChange={(e) => setMonth(e.target.value)} />
+        <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-white/10 space-y-3 mb-4">
+          <input
+            className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-white/10 pb-2.5"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <div className="flex gap-2">
+            <input className={`w-20 md:w-16 ${INPUT_SMALL} text-center`} placeholder="Day" type="number" min={1} max={31} value={day} onChange={(e) => setDay(e.target.value)} />
+            <input className={`w-20 md:w-16 ${INPUT_SMALL} text-center`} placeholder="Mo" type="number" min={1} max={12} value={month} onChange={(e) => setMonth(e.target.value)} />
           </div>
           {error && <p className="text-red-400 text-sm">{error}</p>}
         </div>

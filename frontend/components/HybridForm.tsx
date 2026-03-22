@@ -11,8 +11,8 @@ import { API } from "@/lib/api";
 // ---------------------------------------------------------------------------
 // Shared input/select class — identical font treatment across all inputs
 // ---------------------------------------------------------------------------
-const INPUT =
-  "w-full rounded-lg bg-zinc-900 border border-white/10 px-3 py-3 md:py-2.5 text-white text-sm placeholder-zinc-500 focus:outline-none focus:border-white/30 transition-colors font-[inherit]";
+const INPUT_SMALL =
+  "bg-zinc-900 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 outline-none font-[inherit]";
 
 const MBTI_TYPES = [
   "INTJ","INTP","ENTJ","ENTP",
@@ -129,18 +129,16 @@ export default function HybridForm() {
   return (
     <div className="max-w-5xl mx-auto space-y-8 px-1 md:px-0">
       {/* ── INPUT CARD ── */}
-      <div className="rounded-2xl ring-1 ring-white/10 bg-white/[0.03] p-5 md:p-8 space-y-4 md:space-y-5">
-        <h2 className="text-xl font-semibold">Self Analysis</h2>
+      <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-white/10 space-y-3">
+        <input
+          className="w-full bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none border-b border-white/10 pb-2.5"
+          placeholder="Your name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <input
-            className={INPUT}
-            placeholder="Your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-
-          <div className="space-y-1.5">
+        <div className="flex gap-2 flex-wrap">
+          <div className="flex-1 min-w-[160px] space-y-1.5">
             <MbtiSelect
               value={mbti}
               onChange={setMbti}
@@ -154,17 +152,16 @@ export default function HybridForm() {
               {showQuiz ? "▲ Hide quiz" : "▾ Don't know your type? Take a quick quiz"}
             </button>
           </div>
-
           <input
-            className={INPUT}
-            placeholder="Birth day (1–31)"
+            className={`w-20 md:w-16 ${INPUT_SMALL} text-center`}
+            placeholder="Day"
             type="number" min={1} max={31}
             value={day}
             onChange={(e) => setDay(e.target.value)}
           />
           <input
-            className={INPUT}
-            placeholder="Birth month (1–12)"
+            className={`w-20 md:w-16 ${INPUT_SMALL} text-center`}
+            placeholder="Mo"
             type="number" min={1} max={12}
             value={month}
             onChange={(e) => setMonth(e.target.value)}
