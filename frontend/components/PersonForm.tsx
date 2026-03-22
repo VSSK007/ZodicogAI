@@ -13,7 +13,7 @@ interface Props {
   compact?: boolean;
 }
 
-const INPUT = "rounded-lg bg-white/[0.04] md:bg-[#0d0d1a] border border-amber-500/20 md:border-white/[0.08] px-3 py-3 md:py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/25 transition-colors";
+const INPUT = "rounded-lg bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/30 transition-colors";
 
 export default function PersonForm({ label, value, onChange, compact = false }: Props) {
   const [showQuiz, setShowQuiz] = useState(false);
@@ -31,7 +31,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
     };
 
   return (
-    <div className={`rounded-xl border border-amber-500/25 md:border-white/[0.07] p-4 ${compact ? "bg-amber-500/[0.04] md:bg-[#13131f]" : "bg-amber-500/[0.04] md:bg-[#16162a]"}`}>
+    <div className="rounded-2xl ring-1 ring-amber-500/25 md:ring-white/10 p-4 bg-amber-500/[0.04] md:bg-white/[0.03]">
       <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">{label}</p>
       <div className="flex flex-col gap-2">
         {/* Row 1: Name + Gender */}
@@ -51,7 +51,7 @@ export default function PersonForm({ label, value, onChange, compact = false }: 
                 className={`flex-1 py-3 md:py-2 transition-colors tap-highlight-none ${
                   value.gender === g
                     ? "bg-amber-500 text-black"
-                    : "bg-[#0d0d1a] text-zinc-500 hover:text-white"
+                    : "bg-zinc-900 text-zinc-500 hover:text-white"
                 }`}
               >
                 {g === "M" ? "♂" : "♀"}
