@@ -196,9 +196,9 @@ function HomeContent() {
 
             {/* Zodicognac title */}
             <motion.h1
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
+              transition={{ duration: 0.55, ease: EASE_SPRING }}
               className="text-5xl font-extrabold tracking-tight text-amber-400"
               style={{ fontFamily: "var(--font-manrope)" }}
             >
@@ -273,8 +273,8 @@ function HomeContent() {
                   key="desk-zomark"
                   initial={reduced ? false : { opacity: 0, scale: 0.82 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ rotateY: -90, opacity: 0 }}
-                  transition={{ duration: 0.55, ease: EASE_SPRING }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.22, ease: EASE }}
                 >
                   <ZodicogMark size={56} />
                 </motion.div>
@@ -288,9 +288,9 @@ function HomeContent() {
               {znMode ? (
                 <motion.h1
                   key="desk-zn-title"
-                  initial={{ opacity: 0, y: 16 }}
+                  initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.9, delay: 0.2, ease: EASE_SPRING }}
+                  transition={{ duration: 0.55, ease: EASE_SPRING }}
                   className="text-7xl font-extrabold tracking-tight text-amber-400"
                   style={{ fontFamily: "var(--font-manrope)" }}
                 >
@@ -301,7 +301,7 @@ function HomeContent() {
                   key="desk-zo-title"
                   initial="hidden"
                   animate="visible"
-                  exit={{ opacity: 0, transition: { duration: 0.15 } }}
+                  exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.22 } }}
                   variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
                   className="text-7xl font-extrabold tracking-tight select-none leading-tight"
                   style={{ fontFamily: "var(--font-manrope)" }}
