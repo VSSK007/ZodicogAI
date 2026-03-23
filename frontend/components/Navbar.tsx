@@ -130,8 +130,8 @@ export default function Navbar() {
             </motion.div>
           </Link>
 
-          {/* Mobile pinned links — always visible (Discover + Celebrities) */}
-          <div className="md:hidden flex items-stretch">
+          {/* Mobile pinned links — always visible */}
+          <div className="md:hidden flex items-stretch flex-1 overflow-x-auto scrollbar-none">
             {LINKS.slice(0, 2).map(({ href, label }) => {
               const active = path.startsWith(href);
               return (
@@ -139,7 +139,7 @@ export default function Navbar() {
                   key={href}
                   href={href}
                   onClick={() => setMenuOpen(false)}
-                  className={`shrink-0 flex items-center px-2.5 text-xs border-b-2 transition-all duration-200 ${
+                  className={`shrink-0 flex items-center px-3 text-sm border-b-2 transition-all duration-200 ${
                     active
                       ? "text-white font-medium border-[#4285f4]"
                       : "text-zinc-500 hover:text-zinc-200 border-transparent"
@@ -152,7 +152,7 @@ export default function Navbar() {
           </div>
 
           {/* Desktop nav links */}
-          <div className="hidden md:flex items-stretch flex-1 overflow-x-auto scrollbar-none">
+          <div className="hidden md:flex items-stretch overflow-x-auto scrollbar-none">
             {LINKS.map(({ href, label }) => {
               const active = path.startsWith(href);
               return (
@@ -189,8 +189,11 @@ export default function Navbar() {
             onLeave={() => setMoreOpen(false)}
           />
 
+          {/* Spacer — pushes right section to far right on desktop */}
+          <div className="hidden md:flex flex-1" />
+
           {/* Right section */}
-          <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 ml-auto shrink-0">
+          <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 ml-auto md:ml-0 shrink-0">
             {/* Zodicognac */}
             <motion.div
               whileHover={{ scale: 1.04 }}
