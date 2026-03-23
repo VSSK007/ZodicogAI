@@ -81,7 +81,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, day: meta.day, month: meta.month }),
-      cache: "force-cache",
+      next: { revalidate: 2592000 },
     });
     if (res.ok) {
       const data = await res.json();

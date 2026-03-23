@@ -844,7 +844,7 @@ Instructions:
 - Be specific to {sign}. Do not write generic personality text. Every sentence should feel unmistakably like {sign}.
 - Use metaphors and vivid language to bring the sign to life.
 - Do not mention any other zodiac signs negatively. When listing best_matches, name exactly 4 signs.
-- For famous_people list exactly 6 well-known real people who are {sign} (include their birth dates in parentheses if known).
+- For famous_people list exactly 8 people who are {sign}: include a mix of (a) historically prominent and culturally influential figures (artists, leaders, scientists, icons — timeless names), and (b) currently trending or globally relevant celebrities as of today. Include birth dates in parentheses where known. Prioritize global recognisability and cultural diversity.
 - Each string field should be 3–5 rich, detailed sentences.
 - strengths: exactly 6 single-phrase traits (e.g. "Magnetic leadership")
 - weaknesses: exactly 5 single-phrase traits (e.g. "Struggles with vulnerability")
@@ -865,7 +865,7 @@ Required JSON structure:
   "career_and_ambition":   "<3-4 sentences — work ethic, natural career paths, how they lead or collaborate, relationship with success>",
   "tips_for_relating":     "<3-4 sentences — practical, specific advice for anyone relating to a {sign}: what works, what doesn't, what they secretly need>",
   "best_matches":          ["<sign 1>", "<sign 2>", "<sign 3>", "<sign 4>"],
-  "famous_people":         ["<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>"]
+  "famous_people":         ["<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>", "<name (birth date)>"]
 }}"""
 
 
