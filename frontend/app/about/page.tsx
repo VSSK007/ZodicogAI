@@ -262,8 +262,14 @@ export default function AboutPage() {
         </section>
       </div>
 
+      {/* Love note */}
+      <p className="mt-10 text-center text-xs text-zinc-600 leading-relaxed">
+        Built with love, late nights, and an unhealthy obsession with why people work the way they do.{" "}
+        <span className="text-rose-400/60">♡</span>
+      </p>
+
       {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+      <div className="mt-8 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
         <p className="text-zinc-300 mb-4">
           Ready to explore your behavioral intelligence?
         </p>
