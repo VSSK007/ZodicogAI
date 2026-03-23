@@ -95,7 +95,11 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
           <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous {key}s</h2>
           <div className="flex flex-wrap gap-2">
             {data.famous.map(p => (
-              <span key={p} className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{p}</span>
+              <a key={p} href={`https://en.wikipedia.org/wiki/${p.replace(/\s+/g, "_")}`}
+                target="_blank" rel="noopener noreferrer"
+                className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-amber-200 transition-colors">
+                {p}
+              </a>
             ))}
           </div>
         </div>
