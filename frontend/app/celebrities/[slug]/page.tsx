@@ -3,17 +3,13 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { renderMd } from "@/lib/renderMd"
 import {
-  CELEBRITIES, getCelebrityBySlug,
+  getCelebrityBySlug,
   SIGN_SYMBOL, SIGN_LABEL, SIGN_COLOR,
 } from "@/lib/celebrities"
 
-export const revalidate = false // cached forever at build time
-
-// ── Static params — all 360 slugs ────────────────────────────────────────────
-
-export async function generateStaticParams() {
-  return CELEBRITIES.map((c) => ({ slug: c.slug }))
-}
+// ISR: generate on first visit, cache for 24 hours, revalidate in background
+export const revalidate = 86400
+export const dynamicParams = true
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -94,7 +90,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
 
   try {
     const res = await fetch(`${API}/celebrities/${slug}?${qs}`, {
-      cache: "force-cache",
+      next: { revalidate: 86400 },
     })
     if (res.ok) {
       const data = await res.json()
