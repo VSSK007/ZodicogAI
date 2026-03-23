@@ -16,9 +16,12 @@ const LINKS = [
   { href: "/analyze/sextrology", label: "Sextrology" },
   { href: "/analyze/color",      label: "Aura Colors" },
   { href: "/analyze/numerology", label: "Numerology" },
-  { href: "/dashboard",          label: "Synastry" },
-  { href: "/blog",               label: "Blog" },
-  { href: "/about",              label: "About" },
+];
+
+const MORE_LINKS = [
+  { href: "/dashboard", label: "Synastry" },
+  { href: "/blog",      label: "Blog" },
+  { href: "/about",     label: "About" },
 ];
 
 const LOVE_LINKS = [
@@ -26,18 +29,87 @@ const LOVE_LINKS = [
   { href: "/analyze/love-language", label: "Love Language" },
 ];
 
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="10" height="10" viewBox="0 0 10 10" fill="none"
+      className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`}
+    >
+      <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
 export default function Navbar() {
   const path = usePathname();
   const router = useRouter();
-  const chatActive  = path.startsWith("/chat");
-  const loveActive  = path.startsWith("/analyze/love-style") || path.startsWith("/analyze/love-language");
-  const [loveOpen,   setLoveOpen]   = useState(false);
-  const [menuOpen,   setMenuOpen]   = useState(false);
 
-  const allMobileLinks = [
-    ...LINKS,
-    ...LOVE_LINKS,
-  ];
+  const chatActive = path.startsWith("/chat");
+  const loveActive = path.startsWith("/analyze/love-style") || path.startsWith("/analyze/love-language");
+  const moreActive = MORE_LINKS.some(l => path.startsWith(l.href));
+
+  const [loveOpen, setLoveOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const allMobileLinks = [...LINKS, ...MORE_LINKS, ...LOVE_LINKS];
+
+  function DesktopDropdown({
+    label, links, open, active,
+    onEnter, onLeave,
+  }: {
+    label: string
+    links: { href: string; label: string }[]
+    open: boolean
+    active: boolean
+    onEnter: () => void
+    onLeave: () => void
+  }) {
+    return (
+      <div
+        className="hidden md:flex relative shrink-0 items-stretch"
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
+      >
+        <button
+          className={`flex items-center gap-1 px-3 text-sm border-b-2 transition-all duration-200 ${
+            active
+              ? "text-white font-medium border-[#4285f4]"
+              : "text-zinc-500 hover:text-zinc-200 border-transparent"
+          }`}
+        >
+          {label}
+          <ChevronIcon open={open} />
+        </button>
+
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.12 }}
+              className="absolute top-full right-0 w-36 rounded-b-xl bg-[#0a0a12]/95 backdrop-blur-md border border-white/[0.08] border-t-0 overflow-hidden shadow-xl z-50"
+            >
+              {links.map(({ href, label: lbl }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`block px-4 py-2.5 text-sm transition-colors ${
+                    path.startsWith(href)
+                      ? "text-white bg-white/[0.06]"
+                      : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
+                  }`}
+                >
+                  {lbl}
+                </Link>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -58,10 +130,31 @@ export default function Navbar() {
             </motion.div>
           </Link>
 
-          {/* Desktop nav links — hidden on mobile */}
+          {/* Mobile pinned links — always visible (Discover + Celebrities) */}
+          <div className="md:hidden flex items-stretch">
+            {LINKS.slice(0, 2).map(({ href, label }) => {
+              const active = path.startsWith(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`shrink-0 flex items-center px-2.5 text-xs border-b-2 transition-all duration-200 ${
+                    active
+                      ? "text-white font-medium border-[#4285f4]"
+                      : "text-zinc-500 hover:text-zinc-200 border-transparent"
+                  }`}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Desktop nav links */}
           <div className="hidden md:flex items-stretch flex-1 overflow-x-auto scrollbar-none">
             {LINKS.map(({ href, label }) => {
-              const active = href === "/" ? path === "/" : path.startsWith(href);
+              const active = path.startsWith(href);
               return (
                 <Link
                   key={href}
@@ -78,58 +171,27 @@ export default function Navbar() {
             })}
           </div>
 
-          {/* Desktop Love dropdown */}
-          <div
-            className="hidden md:flex relative shrink-0 items-stretch"
-            onMouseEnter={() => setLoveOpen(true)}
-            onMouseLeave={() => setLoveOpen(false)}
-          >
-            <button
-              className={`flex items-center gap-1 px-3 text-sm border-b-2 transition-all duration-200 ${
-                loveActive
-                  ? "text-white font-medium border-[#4285f4]"
-                  : "text-zinc-500 hover:text-zinc-200 border-transparent"
-              }`}
-            >
-              Love
-              <svg
-                width="10" height="10" viewBox="0 0 10 10" fill="none"
-                className={`transition-transform duration-150 ${loveOpen ? "rotate-180" : ""}`}
-              >
-                <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
-
-            <AnimatePresence>
-              {loveOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.12 }}
-                  className="absolute top-full right-0 w-36 rounded-b-xl bg-[#0a0a12]/95 backdrop-blur-md border border-white/[0.08] border-t-0 overflow-hidden shadow-xl"
-                >
-                  {LOVE_LINKS.map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      className={`block px-4 py-2.5 text-sm transition-colors ${
-                        path.startsWith(href)
-                          ? "text-white bg-white/[0.06]"
-                          : "text-zinc-400 hover:text-white hover:bg-white/[0.04]"
-                      }`}
-                    >
-                      {label}
-                    </Link>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Desktop dropdowns: Love + More */}
+          <DesktopDropdown
+            label="Love"
+            links={LOVE_LINKS}
+            open={loveOpen}
+            active={loveActive}
+            onEnter={() => setLoveOpen(true)}
+            onLeave={() => setLoveOpen(false)}
+          />
+          <DesktopDropdown
+            label="More"
+            links={MORE_LINKS}
+            open={moreOpen}
+            active={moreActive}
+            onEnter={() => setMoreOpen(true)}
+            onLeave={() => setMoreOpen(false)}
+          />
 
           {/* Right section */}
           <div className="flex items-center gap-2 md:gap-3 pl-2 md:pl-4 ml-auto shrink-0">
-            {/* Zodicognac — always visible */}
+            {/* Zodicognac */}
             <motion.div
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
@@ -187,7 +249,7 @@ export default function Navbar() {
             >
               <motion.span
                 animate={{ rotate: menuOpen ? 45 : 0, y: menuOpen ? 6 : 0 }}
-                className="block h-px w-5 bg-zinc-400 origin-center transition-colors"
+                className="block h-px w-5 bg-zinc-400 origin-center"
               />
               <motion.span
                 animate={{ opacity: menuOpen ? 0 : 1 }}
@@ -195,7 +257,7 @@ export default function Navbar() {
               />
               <motion.span
                 animate={{ rotate: menuOpen ? -45 : 0, y: menuOpen ? -6 : 0 }}
-                className="block h-px w-5 bg-zinc-400 origin-center transition-colors"
+                className="block h-px w-5 bg-zinc-400 origin-center"
               />
             </button>
           </div>
@@ -233,7 +295,6 @@ export default function Navbar() {
                 })}
               </div>
 
-              {/* Mobile footer links */}
               <div className="px-4 pb-4 flex gap-4 border-t border-white/[0.05] pt-3 mt-1">
                 <a href="https://github.com/VSSK007/ZodicogAI" target="_blank" rel="noopener noreferrer"
                   className="text-zinc-500 hover:text-zinc-300 text-xs flex items-center gap-1.5 transition-colors">

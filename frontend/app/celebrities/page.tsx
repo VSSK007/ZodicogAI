@@ -34,9 +34,6 @@ export default function CelebritiesPage() {
     <main className="min-h-screen bg-[#080810] text-white pt-20 pb-24">
       {/* Header */}
       <div className="max-w-6xl mx-auto px-6 mb-14 text-center">
-        <p className="text-xs font-semibold tracking-[0.2em] text-amber-400/70 uppercase mb-3">
-          Feature 9
-        </p>
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
           Celebrity Zodiac Database
         </h1>
