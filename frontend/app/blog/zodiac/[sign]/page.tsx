@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { renderMd } from "@/lib/renderMd";
 
 export const revalidate = 2592000; // revalidate every 30 days
 
@@ -217,7 +218,7 @@ function Section({ title, text }: { title: string; text: string }) {
   return (
     <div className="border-l-2 border-amber-500/40 pl-4">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">{title}</h2>
-      <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+      <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
     </div>
   );
 }
@@ -230,7 +231,7 @@ function ListCard({ title, items, color }: { title: string; items: string[]; col
         {items.map(item => (
           <li key={item} className="flex items-start gap-2 text-sm text-zinc-300">
             <span style={{ color }} className="mt-0.5 shrink-0">✦</span>
-            {item}
+            {renderMd(item)}
           </li>
         ))}
       </ul>
