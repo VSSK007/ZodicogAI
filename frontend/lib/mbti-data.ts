@@ -135,7 +135,7 @@ export const MBTI_DATA: Record<string, MbtiTypeData> = {
     famous: ["Michelle Obama","Frank Sinatra","Sonia Sotomayor","Emma Watson"],
   },
   ESFJ: {
-    type: "ESFJ", nickname: "The Consul", role: "Sentinel",
+    type: "ESFJ", nickname: "The Consultant", role: "Sentinel",
     description: "ESFJs are warm, social, and deeply attuned to others' needs. They create harmony wherever they go and take genuine pride in caring for the people in their lives.",
     strengths: ["Warm and caring","Highly organized","Excellent social skills","Loyal and dependable","Strong community ties"],
     weaknesses: ["Needs approval","Inflexible about values","Too self-sacrificing","Sensitive to criticism","Struggles with change"],
