@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { renderMd } from "@/lib/renderMd";
 
 export const revalidate = false;
 
@@ -86,7 +87,7 @@ export default async function ZodiacCompatPage({ params }: { params: Promise<{ s
           ].map(([title, text]) => (
             <section key={title as string}>
               <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
             </section>
           ))}
 
@@ -122,7 +123,7 @@ export default async function ZodiacCompatPage({ params }: { params: Promise<{ s
               ].map(([label, text, ec]) => (
                 <div key={label as string} className="border-l-2 pl-4" style={{ borderColor: `${ec}60` }}>
                   <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: ec as string }}>{label}</p>
-                  <p className="text-sm text-zinc-300 leading-relaxed">{text}</p>
+                  <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(text as string)}</p>
                 </div>
               ))}
             </div>
@@ -134,7 +135,7 @@ export default async function ZodiacCompatPage({ params }: { params: Promise<{ s
           ].map(([title, text]) => (
             <section key={title as string}>
               <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
             </section>
           ))}
 

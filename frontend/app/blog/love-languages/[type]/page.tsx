@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { renderMd } from "@/lib/renderMd";
 
 export const revalidate = false;
 
@@ -110,7 +111,7 @@ function Section({ title, text, color }: { title: string; text: string; color: s
   return (
     <section>
       <h2 className="text-lg font-semibold mb-3" style={{ color }}>{title}</h2>
-      <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+      <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
     </section>
   );
 }

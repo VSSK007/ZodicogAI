@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { renderMd } from "@/lib/renderMd";
 
 export const revalidate = false;
 
@@ -50,17 +51,17 @@ export default async function SextrologyGuidePage() {
         <div className="space-y-8">
           <section>
             <h2 className="text-lg font-semibold mb-3 text-rose-400">What Is Sextrology?</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{article.what_is_sextrology}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.what_is_sextrology)}</p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold mb-3 text-rose-400">Zodiac &amp; Intimacy</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{article.zodiac_and_intimacy}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.zodiac_and_intimacy)}</p>
           </section>
 
           <section>
             <h2 className="text-lg font-semibold mb-3 text-rose-400">MBTI &amp; Intimacy</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{article.mbti_and_intimacy}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.mbti_and_intimacy)}</p>
           </section>
 
           {article.the_6_dimensions?.length > 0 && (
@@ -82,7 +83,7 @@ export default async function SextrologyGuidePage() {
 
           <section>
             <h2 className="text-lg font-semibold mb-3 text-rose-400">How to Use Sextrology</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{article.how_to_use}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.how_to_use)}</p>
           </section>
 
           {article.faq?.length > 0 && (

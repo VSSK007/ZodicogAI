@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { MBTI_DATA, ALL_TYPES, ROLE_COLOR } from "@/lib/mbti-data";
+import { renderMd } from "@/lib/renderMd";
 
 export const revalidate = false;
 
@@ -71,7 +72,7 @@ export default async function MbtiCompatPage({ params }: { params: Promise<{ typ
           {[["Overview", article.overview], ["Relationship Style", article.relationship_style]].map(([title, text]) => (
             <section key={title as string}>
               <h2 className="text-lg font-semibold mb-3" style={{ color }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
             </section>
           ))}
 
@@ -104,7 +105,7 @@ export default async function MbtiCompatPage({ params }: { params: Promise<{ typ
           ].map(([title, text]) => (
             <section key={title as string}>
               <h2 className="text-lg font-semibold mb-3" style={{ color }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
             </section>
           ))}
 

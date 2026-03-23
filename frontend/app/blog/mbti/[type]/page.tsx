@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { MBTI_DATA, ALL_TYPES, ROLE_COLOR } from "@/lib/mbti-data";
+import { renderMd } from "@/lib/renderMd";
 
 export async function generateStaticParams() {
   return ALL_TYPES.map((type) => ({ type: type.toLowerCase() }));
@@ -57,7 +58,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
             <p className="text-zinc-400 text-sm mt-0.5">{data.role} · {key}</p>
           </div>
         </div>
-        <p className="text-zinc-300 text-sm leading-relaxed">{data.description}</p>
+        <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(data.description)}</p>
       </div>
 
       <div className="space-y-8">
@@ -138,7 +139,7 @@ function Section({ title, text }: { title: string; text: string }) {
   return (
     <div className="border-l-2 border-amber-500/40 pl-4">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">{title}</h2>
-      <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+      <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
     </div>
   );
 }

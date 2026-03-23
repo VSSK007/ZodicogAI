@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { renderMd } from "@/lib/renderMd";
 
 export const revalidate = false;
 
@@ -73,7 +74,7 @@ export default async function LoveStyleArticlePage({ params }: { params: Promise
         <div className="space-y-8">
           <section>
             <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>Overview</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{article.overview}</p>
+            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.overview)}</p>
           </section>
 
           <div className="rounded-xl border bg-white/[0.02] p-5" style={{ borderColor: `${c}25` }}>
@@ -96,7 +97,7 @@ export default async function LoveStyleArticlePage({ params }: { params: Promise
           ].map(([title, text]) => (
             <section key={title as string}>
               <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{text}</p>
+              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
             </section>
           ))}
 
