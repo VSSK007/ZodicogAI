@@ -3,13 +3,18 @@ import Link from "next/link"
 import type { Metadata } from "next"
 import { renderMd } from "@/lib/renderMd"
 import {
-  getCelebrityBySlug,
+  CELEBRITIES, getCelebrityBySlug,
   SIGN_SYMBOL, SIGN_LABEL, SIGN_COLOR,
 } from "@/lib/celebrities"
+import CELEB_BIOS from "@/lib/celeb-bios.json"
 
-// ISR: generate on first visit, cache for 24 hours, revalidate in background
-export const revalidate = 86400
-export const dynamicParams = true
+export const revalidate = false  // fully static — data comes from celeb-bios.json
+
+// ── Static params — all 360 slugs ────────────────────────────────────────────
+
+export async function generateStaticParams() {
+  return CELEBRITIES.map((c) => ({ slug: c.slug }))
+}
 
 // ── Metadata ──────────────────────────────────────────────────────────────────
 
@@ -41,6 +46,11 @@ interface CelebrityArticle {
   fun_fact: string
 }
 
+interface BioEntry {
+  article: CelebrityArticle
+  life_path: number
+}
+
 // ── Aura color names per sign (from color engine data) ───────────────────────
 
 const AURA_NAME: Record<string, string> = {
@@ -68,36 +78,14 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
   const celeb = getCelebrityBySlug(slug)
   if (!celeb) notFound()
 
-  const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000"
-  const color = SIGN_COLOR[celeb.sign]
-  const symbol = SIGN_SYMBOL[celeb.sign]
+  const color     = SIGN_COLOR[celeb.sign]
+  const symbol    = SIGN_SYMBOL[celeb.sign]
   const signLabel = SIGN_LABEL[celeb.sign]
-  const auraName = AURA_NAME[celeb.sign] ?? "Aura"
+  const auraName  = AURA_NAME[celeb.sign] ?? "Aura"
 
-  // Build query string for the backend endpoint
-  const qs = new URLSearchParams({
-    name:        celeb.name,
-    sign:        signLabel,
-    born:        celeb.born,
-    nationality: celeb.nationality,
-    category:    celeb.category,
-    day:         String(celeb.birthDay),
-    month:       String(celeb.birthMonth),
-  }).toString()
-
-  let article: CelebrityArticle | null = null
-  let lifePathNum: number | null = null
-
-  try {
-    const res = await fetch(`${API}/celebrities/${slug}?${qs}`, {
-      next: { revalidate: 86400 },
-    })
-    if (res.ok) {
-      const data = await res.json()
-      article = data.article ?? null
-      lifePathNum = data.life_path ?? null
-    }
-  } catch { /* fallback to null */ }
+  const bioEntry = (CELEB_BIOS as Record<string, BioEntry>)[slug]
+  const article: CelebrityArticle | null = bioEntry?.article ?? null
+  const lifePathNum: number | null       = bioEntry?.life_path ?? null
 
   return (
     <main className="min-h-screen bg-[#080810] text-white pt-20 pb-24">
