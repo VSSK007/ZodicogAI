@@ -77,7 +77,7 @@ export default function MobileNavbar() {
         {!inChat && (
           <div className="absolute left-full ml-5">
             <button
-              onClick={() => setMenuOpen(true)}
+              onClick={() => setMenuOpen((v) => !v)}
               aria-label="Open menu"
               className="w-12 h-12 rounded-full flex items-center justify-center tap-highlight-none active:scale-90 transition-transform bg-amber-500/10 border border-amber-500/25"
             >
