@@ -324,16 +324,20 @@ def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
         return _parse_and_validate(raw, schema)
     except (ValidationError, ValueError, json.JSONDecodeError) as parse_err:
         # API succeeded but output was malformed — retry with correction prompt
+        _log.warning("call_gemini parse error for %s: %s | raw[:200]=%s",
+                     schema.__name__, parse_err, (raw or "")[:200])
         correction = _correction_prompt(prompt, raw or "", str(parse_err), schema)
-    except Exception:
+    except Exception as exc:
         # API itself failed — return safe default immediately
+        _log.error("call_gemini API failure for %s: %s", schema.__name__, exc)
         return schema()
 
     # --- Attempt 2: one correction retry ---
     try:
         raw = _api_call(correction, schema)
         return _parse_and_validate(raw, schema)
-    except Exception:
+    except Exception as exc:
+        _log.error("call_gemini correction retry failed for %s: %s", schema.__name__, exc)
         return schema()
 
 

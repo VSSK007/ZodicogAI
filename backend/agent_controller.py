@@ -720,45 +720,136 @@ def _result_numerology_pair(ctx: dict, analysis) -> dict:
     }
 
 
+def _fallback_archetype(name: str, ad: dict) -> ArchetypeAnalysis:
+    """Generate basic prose from deterministic archetype data when Gemini fails."""
+    return ArchetypeAnalysis(
+        archetype_prose=(
+            f"{name} embodies {ad['archetype']} — {ad['archetype_tagline']}. "
+            f"{ad['in_love']} "
+            f"This archetype runs deep, shaping how {name} connects, commits, and protects themselves."
+        ),
+        shadow_deep_dive=(
+            f"{name}'s shadow: {ad['shadow']} "
+            f"This is the unconscious pattern that emerges under pressure — not a flaw, but a signal."
+        ),
+        in_love_prose=ad["in_love"],
+        compatibility_prose=ad["compatibility_note"],
+        growth_invitation=(
+            f"The evolution for {name} lies in holding the archetype consciously — "
+            f"using its gifts without being ruled by its limits."
+        ),
+    )
+
+
+def _fallback_pattern(name: str, pd: dict) -> PatternAnalysis:
+    """Generate basic prose from deterministic pattern data when Gemini fails."""
+    return PatternAnalysis(
+        pattern_prose=(
+            f"{name} runs the {pd['pattern_display']} pattern. "
+            f"{pd['shadow_behaviour']} "
+            f"The confidence score of {pd['pattern_score']}% reflects how strongly this shows up."
+        ),
+        shadow_deep_dive=pd["shadow_behaviour"],
+        root_cause_prose=pd["root_cause"],
+        break_the_cycle_prose=pd["break_the_cycle"],
+        reframe=(
+            f"Seeing the pattern clearly is already half the work. "
+            f"{name} has the self-awareness — now it's about the choice."
+        ),
+    )
+
+
+def _fallback_attraction(name: str, ad: dict) -> AttractionAnalysis:
+    """Generate basic prose from deterministic attraction data when Gemini fails."""
+    pulls = ", ".join(ad.get("pull_traits", []))
+    avoids = ", ".join(ad.get("avoidance_traits", []))
+    return AttractionAnalysis(
+        attraction_prose=(
+            f"{name} is the {ad['attraction_archetype']}. "
+            f"{ad['insight']} "
+            f"This shapes every connection they enter."
+        ),
+        pull_deep_dive=f"{name} is pulled toward: {pulls}. These traits feel magnetic because they mirror or complete something {name} carries internally.",
+        avoidance_deep_dive=f"{name} instinctively avoids: {avoids}. Whether this protects or limits depends on the situation.",
+        pattern_warning=(
+            f"When {name}'s attraction pattern runs unconsciously, it becomes a loop. "
+            f"The same person, different face."
+        ),
+        growth_invitation=(
+            f"Awareness of the {ad['attraction_archetype']} archetype gives {name} a choice: "
+            f"react from pattern or respond from self."
+        ),
+    )
+
+
+def _fallback_recommendation(name: str, rd: dict) -> RecommendationAnalysis:
+    """Generate basic prose from deterministic recommendation data when Gemini fails."""
+    return RecommendationAnalysis(
+        gaming_prose=rd.get("gaming_reasoning", f"{name}'s gaming taste matches their personality profile."),
+        movie_prose=rd.get("movie_reasoning", f"{name}'s movie preferences reflect their emotional wiring."),
+        sneaker_prose=rd.get("sneaker_reasoning", f"{name}'s footwear instincts reveal their identity expression."),
+        taste_profile=(
+            f"{name}'s choices across gaming, movies, and style form a coherent identity signal. "
+            f"The through-line is {rd.get('gaming_profile', 'their trait vector')} — consistent across every medium."
+        ),
+    )
+
+
 def _result_archetype(ctx: dict, analysis) -> dict:
+    ad = ctx["archetype_data"]
+    name = ctx["a"]["name"]
+    if not analysis.archetype_prose or analysis.archetype_prose == "—":
+        analysis = _fallback_archetype(name, ad)
     return {
-        "name":           ctx["a"]["name"],
+        "name":           name,
         "sign":           ctx["zodiac"]["sign"],
         "mbti_type":      ctx["mbti"]["type"],
-        "archetype_data": ctx["archetype_data"],
+        "archetype_data": ad,
         "insight_hook":   ctx.get("insight_hook", {}),
         "analysis":       analysis.model_dump(),
     }
 
 
 def _result_pattern(ctx: dict, analysis) -> dict:
+    pd = ctx["pattern_data"]
+    name = ctx["a"]["name"]
+    if not analysis.pattern_prose or analysis.pattern_prose == "—":
+        analysis = _fallback_pattern(name, pd)
     return {
-        "name":         ctx["a"]["name"],
+        "name":         name,
         "sign":         ctx["zodiac"]["sign"],
         "mbti_type":    ctx["mbti"]["type"],
-        "pattern_data": ctx["pattern_data"],
+        "pattern_data": pd,
         "insight_hook": ctx.get("insight_hook", {}),
         "analysis":     analysis.model_dump(),
     }
 
 
 def _result_attraction(ctx: dict, analysis) -> dict:
+    ad = ctx["attraction_data"]
+    name = ctx["a"]["name"]
+    if not analysis.attraction_prose or analysis.attraction_prose == "—":
+        analysis = _fallback_attraction(name, ad)
     return {
-        "name":            ctx["a"]["name"],
+        "name":            name,
         "sign":            ctx["zodiac"]["sign"],
         "mbti_type":       ctx["mbti"]["type"],
-        "attraction_data": ctx["attraction_data"],
+        "attraction_data": ad,
         "insight_hook":    ctx.get("insight_hook", {}),
         "analysis":        analysis.model_dump(),
     }
 
 
 def _result_recommendation(ctx: dict, analysis) -> dict:
+    rd = ctx["recommendation_data"]
+    name = ctx["a"]["name"]
+    if not analysis.gaming_prose or analysis.gaming_prose == "—":
+        analysis = _fallback_recommendation(name, rd)
     return {
-        "name":                ctx["a"]["name"],
+        "name":                name,
         "sign":                ctx["zodiac"]["sign"],
         "mbti_type":           ctx["mbti"]["type"],
-        "recommendation_data": ctx["recommendation_data"],
+        "recommendation_data": rd,
         "insight_hook":        ctx.get("insight_hook", {}),
         "analysis":            analysis.model_dump(),
     }
