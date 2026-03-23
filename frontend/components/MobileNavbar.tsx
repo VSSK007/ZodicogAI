@@ -66,21 +66,10 @@ export default function MobileNavbar() {
       style={{ background: "transparent" }}
     >
       <div className="relative flex items-center justify-center">
-        {/* Left of FAB: Discover button on home, back button elsewhere */}
-        {!inChat && (
+        {/* Left of FAB: back button on non-home pages */}
+        {!inChat && !isHome && (
           <div className="absolute right-full mr-5">
-            {isHome ? (
-              <button
-                onClick={() => router.push("/discover")}
-                aria-label="Discover"
-                className="w-12 h-12 rounded-full flex flex-col items-center justify-center gap-0.5 tap-highlight-none active:scale-90 transition-transform bg-amber-500/10 border border-amber-500/25"
-              >
-                <span className="text-amber-400 text-[11px]">✦</span>
-                <span className="text-amber-400/70 text-[9px] font-medium leading-none">Discover</span>
-              </button>
-            ) : (
-              <BackButton onClick={() => router.push("/")} />
-            )}
+            <BackButton onClick={() => router.push("/")} />
           </div>
         )}
 
