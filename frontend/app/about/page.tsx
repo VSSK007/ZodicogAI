@@ -216,10 +216,9 @@ export default function AboutPage() {
 
         {/* Section 6: Built With */}
         <section>
-          <h2 className="text-lg font-semibold mb-1 text-amber-300">
-            Built with love, late nights, &amp; an unhealthy obsession with why people work the way they do <span className="text-rose-400/70">♡</span>
+          <h2 className="text-lg font-semibold mb-4 text-amber-300">
+            Built with love, late nights <span className="text-rose-400/70">♡</span> &amp;
           </h2>
-          <p className="text-xs text-zinc-600 mb-4">...and also these:</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
               <p className="text-xs font-semibold text-zinc-400">Backend</p>
