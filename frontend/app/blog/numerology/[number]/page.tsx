@@ -123,9 +123,16 @@ export default async function NumerologyLPPage({ params }: { params: Promise<{ n
             <div className="rounded-xl border border-white/8 bg-white/[0.02] p-5">
               <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous Life Path {number}s</h2>
               <div className="flex flex-wrap gap-2">
-                {article.famous_people.map(p => (
-                  <span key={p} className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{p}</span>
-                ))}
+                {article.famous_people.map(p => {
+                  const celebName = p.replace(/\s*\(.*?\)\s*/g, "").trim();
+                  return (
+                    <a key={p} href={`https://en.wikipedia.org/wiki/${celebName.replace(/\s+/g, "_")}`}
+                      target="_blank" rel="noopener noreferrer"
+                      className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-amber-200 transition-colors">
+                      {p}
+                    </a>
+                  );
+                })}
               </div>
             </div>
           )}
