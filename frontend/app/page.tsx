@@ -136,6 +136,9 @@ function HomeContent() {
             <Link href="/analyze/romantic" className="w-full py-4 rounded-2xl text-sm font-semibold bg-amber-500/[0.12] text-amber-200 border border-amber-500/25 text-center flex items-center justify-center gap-2 min-h-[52px] tap-highlight-none active:scale-[0.98] transition-transform">
               <span>♥</span> Compatibility
             </Link>
+            <Link href="/discover" className="w-full py-4 rounded-2xl text-sm font-semibold bg-white/[0.04] text-amber-300/70 border border-amber-500/15 text-center flex items-center justify-center gap-2 min-h-[52px] tap-highlight-none active:scale-[0.98] transition-transform">
+              <span>◈</span> Discover Who You Are
+            </Link>
             <button
               onClick={() => setShowMore((v) => !v)}
               className="w-full py-4 rounded-2xl text-sm font-medium bg-white/[0.03] text-amber-200/45 border border-white/[0.06] flex items-center justify-center gap-2 min-h-[52px] tap-highlight-none active:scale-[0.98] transition-transform"
@@ -329,7 +332,7 @@ function HomeContent() {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.25, delay: 0, ease: EASE }}
             >
-              <div className="flex justify-center mb-24">
+              <div className="flex justify-center items-center gap-8 mb-24">
                 <div className="flex border-b border-white/[0.08]">
                   {(["hybrid", "compatibility"] as const).map((m) => (
                     <button
@@ -345,6 +348,12 @@ function HomeContent() {
                     </button>
                   ))}
                 </div>
+                <Link
+                  href="/discover"
+                  className="pb-3 text-sm font-medium text-amber-500/60 hover:text-amber-400 transition-colors flex items-center gap-1.5 border-b-2 border-transparent"
+                >
+                  <span>✦</span> Discover
+                </Link>
               </div>
               <section className="max-w-4xl mx-auto">
                 <AnimatePresence mode="wait">

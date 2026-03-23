@@ -6,6 +6,7 @@ import { apiFetch } from "@/lib/api";
 import { renderMd } from "@/lib/renderMd";
 import InsightCard from "@/components/InsightCard";
 import DiscoverForm, { DiscoverFormData } from "@/components/DiscoverForm";
+import DiscoverSkeleton from "@/components/DiscoverSkeleton";
 import RevealOnScroll from "@/components/RevealOnScroll";
 
 // ---------------------------------------------------------------------------
@@ -88,6 +89,9 @@ export default function RecommendationsPage() {
 
         {/* Form */}
         <DiscoverForm onSubmit={handleSubmit} loading={loading} error={error} />
+
+        {/* Skeleton */}
+        {loading && <DiscoverSkeleton />}
 
         {/* Result */}
         <AnimatePresence>
