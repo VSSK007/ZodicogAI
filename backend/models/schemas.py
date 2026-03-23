@@ -412,3 +412,10 @@ class MbtiCompatArticle(BaseModel):
     communication_in_love: str = "—"
     dealbreakers: str = "—"
     growth_in_relationships: str = "—"
+
+class CelebrityArticle(BaseModel):
+    famous_for: str = "—"
+    personality_snapshot: str = "—"
+    love_style: str = "—"
+    compatibility_note: str = "—"
+    fun_fact: str = "—"

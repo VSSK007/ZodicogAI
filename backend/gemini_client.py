@@ -1454,6 +1454,7 @@ Required JSON:
 from models.schemas import (
     LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
     SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
+    CelebrityArticle,
 )
 
 
@@ -1491,3 +1492,39 @@ def generate_mbti_compat_article(mbti_type: str) -> dict:
     prompt = _prompt_mbti_compat_article(mbti_type)
     result = call_gemini(prompt, MbtiCompatArticle)
     return {"type": mbti_type, "article": result.model_dump()}
+
+
+# ---------------------------------------------------------------------------
+# Celebrity profile generator
+# ---------------------------------------------------------------------------
+
+def _prompt_celebrity_bio(name: str, sign: str, born: str, nationality: str, category: str, life_path: int) -> str:
+    return f"""You are a celebrity astrology writer. Write a short, engaging profile for {name}.
+
+Celebrity: {name}
+Born: {born}
+Nationality: {nationality}
+Field: {category}
+Zodiac Sign: {sign}
+Life Path Number: {life_path}
+
+Return ONLY valid JSON (no markdown, no code fences) with exactly these fields:
+{{
+  "famous_for": "<1-2 sentences: what they are best known for in their career — be specific and factual>",
+  "personality_snapshot": "<2-3 sentences: their {sign} personality expressed through their public life — weave in astrological traits naturally>",
+  "love_style": "<1-2 sentences: how a {sign} approaches love and intimacy — tie it to what is publicly known about them if possible>",
+  "compatibility_note": "<1 sentence: which zodiac signs they connect best with and why, given their {sign} nature>",
+  "fun_fact": "<1 surprising or little-known fact about {name}>"
+}}
+
+Rules:
+- Each field must be under 80 words
+- Use present tense for living people, past tense for historical figures
+- Be specific about their career achievements, not generic
+- Keep the tone warm, insightful, and accessible"""
+
+
+def generate_celebrity_bio(name: str, sign: str, born: str, nationality: str, category: str, life_path: int) -> dict:
+    prompt = _prompt_celebrity_bio(name, sign, born, nationality, category, life_path)
+    result = call_gemini(prompt, CelebrityArticle)
+    return {"article": result.model_dump()}
