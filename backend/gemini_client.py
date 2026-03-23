@@ -1261,3 +1261,233 @@ def build_stream_prompt(analysis_type: str, ctx: dict) -> str:
         f"Write a behavioral profile for {na}. "
         f"Be direct and specific. Do NOT output JSON. Write in prose. 100-150 words."
     )
+
+
+# ---------------------------------------------------------------------------
+# Blog article prompt builders
+# ---------------------------------------------------------------------------
+
+LOVE_LANG_LABELS = {
+    "words-of-affirmation": "Words of Affirmation",
+    "acts-of-service": "Acts of Service",
+    "receiving-gifts": "Receiving Gifts",
+    "quality-time": "Quality Time",
+    "physical-touch": "Physical Touch",
+}
+
+LOVE_STYLE_LABELS = {
+    "eros": "Eros (Passionate Love)",
+    "storge": "Storge (Friendship Love)",
+    "pragma": "Pragma (Practical Love)",
+    "ludus": "Ludus (Playful Love)",
+    "mania": "Mania (Obsessive Love)",
+    "agape": "Agape (Selfless Love)",
+}
+
+LOVE_STYLE_DESCRIPTIONS = {
+    "eros": "intense, romantic, passion-driven love based on physical and emotional attraction",
+    "storge": "love that grows from deep friendship, familiarity, and shared history",
+    "pragma": "mature, rational love that prioritises compatibility, shared values, and long-term stability",
+    "ludus": "playful, non-committal love that values fun, flirting, and freedom",
+    "mania": "obsessive, jealous love driven by fear of loss and emotional dependency",
+    "agape": "unconditional, selfless love that gives without expectation of return",
+}
+
+
+def _prompt_love_lang_article(slug: str) -> str:
+    label = LOVE_LANG_LABELS.get(slug, slug)
+    return f"""You are ZodicogAI, a behavioral intelligence engine. Write a rich, magazine-quality educational article about the love language: **{label}**.
+
+This article is for people who want to deeply understand this love language — how it works, why people need it, and how to use it in relationships.
+
+Instructions:
+- Write in an engaging, warm, and insightful tone — like the best relationship journalism.
+- Be specific and practical. Give real examples and actionable advice.
+- Each string field: 3–5 rich, well-developed sentences.
+- signs_you_need_this: exactly 5 specific behavioral signs that reveal this is someone's primary love language.
+
+Required JSON:
+{{
+  "overview": "<3-5 sentences — what this love language is, where it comes from, why it matters in relationships>",
+  "how_to_express": "<3-5 sentences — practical guide on how to speak this love language to a partner who needs it>",
+  "how_to_receive": "<3-4 sentences — what fills up a person who has this love language, what makes them feel truly loved>",
+  "signs_you_need_this": ["<behavioral sign 1>", "<behavioral sign 2>", "<behavioral sign 3>", "<behavioral sign 4>", "<behavioral sign 5>"],
+  "common_mistakes": "<3-4 sentences — the most common ways people get this love language wrong and how to avoid them>",
+  "in_relationships": "<3-5 sentences — how this love language plays out in romantic relationships: conflicts, mismatches, compatibility>",
+  "compatibility_notes": "<3-4 sentences — how {label} pairs with the other four love languages — which are harmonious, which create friction>",
+  "growth_tips": "<3-4 sentences — how to grow in expressing and receiving this love language even if it doesn't come naturally>"
+}}"""
+
+
+def _prompt_love_style_article(slug: str) -> str:
+    label = LOVE_STYLE_LABELS.get(slug, slug)
+    desc = LOVE_STYLE_DESCRIPTIONS.get(slug, "")
+    return f"""You are ZodicogAI, a behavioral intelligence engine. Write a rich, magazine-quality educational article about the love style: **{label}**.
+
+{label} is {desc}.
+
+This article is from sociologist John Alan Lee's color wheel theory of love (1973). Write as an expert in behavioral psychology and relationship dynamics.
+
+Instructions:
+- Write in an engaging, insightful tone — direct, warm, psychologically grounded.
+- Each string field: 3–5 rich sentences.
+- characteristics: exactly 6 specific traits that define someone with this love style.
+- Be honest about both the gifts and the shadows of this style.
+
+Required JSON:
+{{
+  "overview": "<3-5 sentences — what this love style is, its psychological roots, and how it shows up in people's lives>",
+  "characteristics": ["<trait 1>", "<trait 2>", "<trait 3>", "<trait 4>", "<trait 5>", "<trait 6>"],
+  "in_relationships": "<4-5 sentences — how this style plays out in romantic relationships: how they pursue, bond, conflict, and commit>",
+  "shadow_side": "<3-4 sentences — the unconscious patterns, potential harms, and blind spots of this love style>",
+  "compatibility": "<3-4 sentences — which other love styles harmonize well with {label} and which create friction — and why>",
+  "growth_path": "<3-4 sentences — how someone with this style can grow into a more conscious, balanced way of loving>",
+  "recognizing_this_style": "<3-4 sentences — how to identify this style in yourself or a partner — the telltale patterns and behaviors>"
+}}"""
+
+
+def _prompt_numerology_lp_article(number: str) -> str:
+    master = number in ("11", "22", "33")
+    label = f"Master Number {number}" if master else f"Life Path {number}"
+    return f"""You are ZodicogAI, a behavioral intelligence engine. Write a rich, magazine-quality educational article about Numerology {label}.
+
+{"This is a master number — do not reduce it. Master numbers carry amplified energy and higher spiritual calling." if master else f"Life Path {number} is calculated by reducing the birth date to a single digit."}
+
+Instructions:
+- Write in a warm, insightful, psychologically rich tone.
+- Be specific to Life Path {number}. Every sentence should feel unmistakably about this number.
+- Each string field: 3–5 rich sentences.
+- core_themes: exactly 5 single-phrase themes (e.g. "Leadership and independence")
+- famous_people: exactly 5 well-known real people with Life Path {number}
+
+Required JSON:
+{{
+  "overview": "<3-5 sentences — the essence of Life Path {number}: what it means, its core energy, and what drives people with this life path>",
+  "core_themes": ["<theme 1>", "<theme 2>", "<theme 3>", "<theme 4>", "<theme 5>"],
+  "personality": "<4-5 sentences — full personality breakdown: how Life Path {number} people think, feel, behave, and what they need>",
+  "love_and_relationships": "<3-5 sentences — how Life Path {number} loves, what they need in a partner, how they behave in relationships>",
+  "career_and_purpose": "<3-4 sentences — natural career paths, work style, relationship with success and ambition>",
+  "shadow_and_challenges": "<3-4 sentences — the unconscious patterns, fears, and growth edges of Life Path {number}>",
+  "spiritual_meaning": "<2-3 sentences — the deeper spiritual or karmic significance of this life path>",
+  "famous_people": ["<name>", "<name>", "<name>", "<name>", "<name>"]
+}}"""
+
+
+def _prompt_sextrology_guide() -> str:
+    return """You are ZodicogAI, a behavioral intelligence engine. Write a comprehensive, magazine-quality educational guide to Sextrology — the study of how personality traits (zodiac sign + MBTI type) influence intimacy, sexual character, and long-term passion dynamics.
+
+This guide should be educational, psychologically grounded, and tasteful — treating the subject with the same maturity as a relationship psychology textbook.
+
+Instructions:
+- Write in an engaging, intelligent, and direct tone.
+- Be specific about the 6 dimensions ZodicogAI analyses: Sexual Character, Erogenous Zones, Fantasies, Positions & Dynamics, Emotional Needs, Long-Term Fire.
+- the_6_dimensions: exactly 6 entries, one per dimension — each a concise description of what that dimension reveals.
+- faq: exactly 5 common questions and answers about sextrology (format each as "Q: ... A: ...").
+
+Required JSON:
+{
+  "what_is_sextrology": "<4-5 sentences — what sextrology is, where it comes from, how it differs from generic relationship advice, and why personality matters in intimacy>",
+  "zodiac_and_intimacy": "<3-5 sentences — how zodiac signs shape intimacy: element differences (Fire vs Water vs Earth vs Air), modality influence, and archetypal patterns>",
+  "mbti_and_intimacy": "<3-5 sentences — how MBTI cognitive functions influence intimacy: I/E, S/N, T/F, J/P differences in bedroom behaviour and emotional needs>",
+  "the_6_dimensions": ["<Sexual Character — what this dimension reveals>", "<Erogenous Zones — what this dimension reveals>", "<Fantasies — what this dimension reveals>", "<Positions & Dynamics — what this dimension reveals>", "<Emotional Needs — what this dimension reveals>", "<Long-Term Fire — what this dimension reveals>"],
+  "how_to_use": "<3-4 sentences — practical guide: how to use sextrology insights to improve intimacy, have better conversations with partners, and build deeper connection>",
+  "faq": ["Q: ... A: ...", "Q: ... A: ...", "Q: ... A: ...", "Q: ... A: ...", "Q: ... A: ..."]
+}"""
+
+
+def _prompt_zodiac_compat_article(sign: str) -> str:
+    return f"""You are ZodicogAI, a behavioral intelligence engine. Write a rich, magazine-quality compatibility guide for the zodiac sign {sign}.
+
+This article explains how {sign} connects romantically with all four elements — Fire, Earth, Air, and Water — and which specific signs are most and least compatible.
+
+Instructions:
+- Write in an engaging, direct, astrologically grounded tone.
+- Be specific to {sign}. Every sentence should feel unmistakably about {sign}'s way of loving.
+- Each string field: 3–5 rich sentences.
+- best_matches: exactly 3 zodiac signs that are {sign}'s strongest romantic matches
+- challenging_matches: exactly 2 zodiac signs that create the most friction with {sign}
+
+Required JSON:
+{{
+  "overview": "<3-5 sentences — {sign}'s overall approach to love, what they seek in a partner, their relationship archetype>",
+  "relationship_style": "<3-5 sentences — how {sign} loves: their attachment style, how they pursue, bond, fight, and commit>",
+  "best_matches": ["<sign 1>", "<sign 2>", "<sign 3>"],
+  "challenging_matches": ["<sign 1>", "<sign 2>"],
+  "fire_compatibility": "<2-3 sentences — how {sign} connects with Fire signs (Aries, Leo, Sagittarius) — what works, what clashes>",
+  "earth_compatibility": "<2-3 sentences — how {sign} connects with Earth signs (Taurus, Virgo, Capricorn)>",
+  "air_compatibility": "<2-3 sentences — how {sign} connects with Air signs (Gemini, Libra, Aquarius)>",
+  "water_compatibility": "<2-3 sentences — how {sign} connects with Water signs (Cancer, Scorpio, Pisces)>",
+  "dealbreakers": "<2-3 sentences — what {sign} absolutely cannot tolerate in a partner — the non-negotiables>",
+  "what_they_need": "<2-3 sentences — what {sign} genuinely needs from a partner to feel secure, loved, and alive>"
+}}"""
+
+
+def _prompt_mbti_compat_article(mbti_type: str) -> str:
+    return f"""You are ZodicogAI, a behavioral intelligence engine. Write a rich, magazine-quality compatibility guide for the MBTI type {mbti_type}.
+
+This article explains how {mbti_type} connects romantically with others — their relationship strengths, needs, best pairings, and growth areas.
+
+Instructions:
+- Write in an engaging, psychologically sharp tone.
+- Be specific to {mbti_type}. Mention their cognitive functions where relevant.
+- Each string field: 3–5 rich sentences.
+- best_matches: exactly 3 MBTI types that pair best with {mbti_type}
+- challenging_matches: exactly 2 MBTI types that create the most friction
+
+Required JSON:
+{{
+  "overview": "<3-5 sentences — {mbti_type}'s overall approach to relationships: what they seek, their relational archetype, how they show love>",
+  "relationship_style": "<3-5 sentences — how {mbti_type} loves: their attachment patterns, how they pursue, communicate, fight, and commit>",
+  "best_matches": ["<MBTI type 1>", "<MBTI type 2>", "<MBTI type 3>"],
+  "challenging_matches": ["<MBTI type 1>", "<MBTI type 2>"],
+  "what_they_need": "<3-4 sentences — what {mbti_type} genuinely needs from a partner to feel understood, valued, and secure>",
+  "communication_in_love": "<3-4 sentences — how {mbti_type} communicates in relationships: their style, their blindspots, what they need from a partner's communication>",
+  "dealbreakers": "<2-3 sentences — what {mbti_type} absolutely cannot tolerate in a partner>",
+  "growth_in_relationships": "<3-4 sentences — the key growth edges {mbti_type} faces in relationships and how to work through them>"
+}}"""
+
+
+# ---------------------------------------------------------------------------
+# Blog article generator — direct Gemini call (no engine pipeline)
+# ---------------------------------------------------------------------------
+
+from models.schemas import (
+    LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
+    SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
+)
+
+
+def generate_love_lang_article(slug: str) -> dict:
+    prompt = _prompt_love_lang_article(slug)
+    result = call_gemini(prompt, LoveLangArticle)
+    return {"slug": slug, "label": LOVE_LANG_LABELS.get(slug, slug), "article": result.model_dump()}
+
+
+def generate_love_style_article(slug: str) -> dict:
+    prompt = _prompt_love_style_article(slug)
+    result = call_gemini(prompt, LoveStyleArticle)
+    return {"slug": slug, "label": LOVE_STYLE_LABELS.get(slug, slug), "article": result.model_dump()}
+
+
+def generate_numerology_lp_article(number: str) -> dict:
+    prompt = _prompt_numerology_lp_article(number)
+    result = call_gemini(prompt, NumerologyLifePathArticle)
+    return {"number": number, "article": result.model_dump()}
+
+
+def generate_sextrology_guide() -> dict:
+    prompt = _prompt_sextrology_guide()
+    result = call_gemini(prompt, SextrologyGuideArticle)
+    return {"article": result.model_dump()}
+
+
+def generate_zodiac_compat_article(sign: str) -> dict:
+    prompt = _prompt_zodiac_compat_article(sign)
+    result = call_gemini(prompt, ZodiacCompatArticle)
+    return {"sign": sign, "article": result.model_dump()}
+
+
+def generate_mbti_compat_article(mbti_type: str) -> dict:
+    prompt = _prompt_mbti_compat_article(mbti_type)
+    result = call_gemini(prompt, MbtiCompatArticle)
+    return {"type": mbti_type, "article": result.model_dump()}

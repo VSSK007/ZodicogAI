@@ -87,6 +87,29 @@ export default function BlogIndexPage() {
         </div>
       </section>
 
+      {/* New guide sections */}
+      <section className="mb-12">
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-4">Relationship Guides</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {[
+            { href: "/blog/love-languages", title: "The 5 Love Languages", desc: "Words, Acts, Gifts, Time, Touch — deep guides on each", emoji: "💬" },
+            { href: "/blog/love-styles",    title: "The 6 Love Styles",    desc: "Eros, Storge, Pragma, Ludus, Mania, Agape explained", emoji: "🎭" },
+            { href: "/blog/numerology",     title: "Numerology Life Paths", desc: "Life path numbers 1–9 + master numbers 11, 22, 33",  emoji: "🔢" },
+            { href: "/blog/sextrology",     title: "Sextrology Guide",      desc: "How zodiac & MBTI shape intimacy and desire",        emoji: "✦" },
+            { href: "/blog/compatibility",  title: "Compatibility Guides",  desc: "Zodiac × Zodiac and MBTI × MBTI deep-dives",         emoji: "♥" },
+          ].map(g => (
+            <Link key={g.href} href={g.href}
+              className="rounded-xl border border-white/8 bg-white/[0.02] p-4 hover:bg-white/[0.05] transition-colors group flex items-start gap-3">
+              <span className="text-xl mt-0.5">{g.emoji}</span>
+              <div>
+                <p className="font-semibold text-sm group-hover:text-white transition-colors">{g.title}</p>
+                <p className="text-xs text-zinc-500 mt-0.5">{g.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* FAQ */}
       <section>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-4">FAQ</h2>

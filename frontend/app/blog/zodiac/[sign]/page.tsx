@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const revalidate = false; // static — content never changes
+export const revalidate = 2592000; // revalidate every 30 days
 
 // ── Static sign data ──────────────────────────────────────────────────────────
 
@@ -169,7 +169,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
 
           {/* Famous People */}
           <div className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous {name}s</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous {name} Natives</h2>
             <div className="flex flex-wrap gap-2">
               {article.famous_people.map(p => (
                 <span key={p} className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{p}</span>

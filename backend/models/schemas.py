@@ -348,3 +348,67 @@ class DiscoverInput(BaseModel):
     day: int
     month: int
     mbti: str
+
+
+# ---------------------------------------------------------------------------
+# Blog article LLM response schemas
+# ---------------------------------------------------------------------------
+
+class LoveLangArticle(BaseModel):
+    overview: str = "—"
+    how_to_express: str = "—"
+    how_to_receive: str = "—"
+    signs_you_need_this: list[str] = []
+    common_mistakes: str = "—"
+    in_relationships: str = "—"
+    compatibility_notes: str = "—"
+    growth_tips: str = "—"
+
+class LoveStyleArticle(BaseModel):
+    overview: str = "—"
+    characteristics: list[str] = []
+    in_relationships: str = "—"
+    shadow_side: str = "—"
+    compatibility: str = "—"
+    growth_path: str = "—"
+    recognizing_this_style: str = "—"
+
+class NumerologyLifePathArticle(BaseModel):
+    overview: str = "—"
+    core_themes: list[str] = []
+    personality: str = "—"
+    love_and_relationships: str = "—"
+    career_and_purpose: str = "—"
+    shadow_and_challenges: str = "—"
+    spiritual_meaning: str = "—"
+    famous_people: list[str] = []
+
+class SextrologyGuideArticle(BaseModel):
+    what_is_sextrology: str = "—"
+    zodiac_and_intimacy: str = "—"
+    mbti_and_intimacy: str = "—"
+    the_6_dimensions: list[str] = []
+    how_to_use: str = "—"
+    faq: list[str] = []
+
+class ZodiacCompatArticle(BaseModel):
+    overview: str = "—"
+    relationship_style: str = "—"
+    best_matches: list[str] = []
+    challenging_matches: list[str] = []
+    fire_compatibility: str = "—"
+    earth_compatibility: str = "—"
+    air_compatibility: str = "—"
+    water_compatibility: str = "—"
+    dealbreakers: str = "—"
+    what_they_need: str = "—"
+
+class MbtiCompatArticle(BaseModel):
+    overview: str = "—"
+    relationship_style: str = "—"
+    best_matches: list[str] = []
+    challenging_matches: list[str] = []
+    what_they_need: str = "—"
+    communication_in_love: str = "—"
+    dealbreakers: str = "—"
+    growth_in_relationships: str = "—"
