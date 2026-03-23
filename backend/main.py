@@ -456,7 +456,7 @@ def celebrity_profile(
 ):
     def _run():
         num = get_numerology_profile(name, day, month)
-        life_path = num["life_path"]
+        life_path = num["life_path_number"]
         result = generate_celebrity_bio(name, sign, born, nationality, category, life_path)
         return {"life_path": life_path, **result}
     return _wrap(_run)
