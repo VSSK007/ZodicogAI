@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 
-export const revalidate = 86400; // regenerate every 24 hours
+export const revalidate = false; // static — content never changes
 
 // ── Static sign data ──────────────────────────────────────────────────────────
 
@@ -81,7 +81,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, day: meta.day, month: meta.month }),
-      next: { revalidate: 86400 },
+      cache: "force-cache",
     });
     if (res.ok) {
       const data = await res.json();
