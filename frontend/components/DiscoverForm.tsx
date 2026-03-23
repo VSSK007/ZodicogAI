@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { AnimatePresence } from "framer-motion";
 import { MBTI_TYPES } from "@/lib/api";
 import MbtiSelect from "./MbtiSelect";
+import MbtiQuiz from "./MbtiQuiz";
 
 export interface DiscoverFormData {
   name: string;
@@ -20,10 +22,11 @@ interface Props {
 const INPUT = "w-full bg-white/[0.04] border border-white/10 px-3 py-3 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-amber-500/40 transition-colors rounded-lg";
 
 export default function DiscoverForm({ onSubmit, loading, error }: Props) {
-  const [name,  setName]  = useState("");
-  const [day,   setDay]   = useState("");
-  const [month, setMonth] = useState("");
-  const [mbti,  setMbti]  = useState("");
+  const [name,     setName]     = useState("");
+  const [day,      setDay]      = useState("");
+  const [month,    setMonth]    = useState("");
+  const [mbti,     setMbti]     = useState("");
+  const [showQuiz, setShowQuiz] = useState(false);
 
   function validate(): string | null {
     if (!name.trim())                          return "Name is required";
@@ -68,6 +71,21 @@ export default function DiscoverForm({ onSubmit, loading, error }: Props) {
         />
       </div>
       <MbtiSelect value={mbti} onChange={setMbti} />
+      <button
+        type="button"
+        onClick={() => setShowQuiz((v) => !v)}
+        className="text-[11px] text-zinc-500 hover:text-zinc-300 transition pl-1"
+      >
+        {showQuiz ? "▲ Hide quiz" : "▾ Don't know your type? Take a quick quiz"}
+      </button>
+      <AnimatePresence>
+        {showQuiz && (
+          <MbtiQuiz
+            onResult={(type) => { setMbti(type); setShowQuiz(false); }}
+            onClose={() => setShowQuiz(false)}
+          />
+        )}
+      </AnimatePresence>
       {error && <p className="text-red-400 text-sm">{error}</p>}
       <button
         type="submit"
