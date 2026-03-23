@@ -9,6 +9,7 @@ import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
 
@@ -118,6 +119,8 @@ export default function LoveStylePage() {
       >
         {loading ? "Analyzing…" : "Analyze Love Styles"}
       </button>
+
+      {loading && <AnalyzeSkeleton variant="pair" />}
 
       <AnimatePresence>
         {result && (

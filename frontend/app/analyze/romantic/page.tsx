@@ -11,6 +11,7 @@ import PersonForm from "@/components/PersonForm";
 import ConstellationStream from "@/components/ConstellationStream";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody } from "@/lib/api";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
@@ -134,6 +135,8 @@ export default function RomanticPage() {
       >
         {loading ? "Analyzing…" : "Analyze Romantic Compatibility"}
       </button>
+
+      {loading && !streamedText && <AnalyzeSkeleton variant="pair" />}
 
       {/* Streaming section */}
       <div className="mb-4 md:mb-5">

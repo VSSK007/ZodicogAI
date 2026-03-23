@@ -10,6 +10,7 @@ import BehavioralMap from "@/components/BehavioralMap";
 import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 
 interface Traits {
   intensity: number;
@@ -90,6 +91,8 @@ export default function RelationshipIntelligencePage() {
       >
         {loading ? "Analyzing…" : "Run Full Intelligence Report"}
       </button>
+
+      {loading && <AnalyzeSkeleton variant="pair" />}
 
       <AnimatePresence>
         {result && (

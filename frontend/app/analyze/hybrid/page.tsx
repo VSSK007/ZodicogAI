@@ -7,6 +7,7 @@ import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 
 interface HybridResult {
   name: string;
@@ -100,6 +101,8 @@ export default function HybridPage() {
       >
         {loading ? "Analyzing…" : "Analyze Your Profile"}
       </button>
+
+      {loading && <AnalyzeSkeleton variant="solo" />}
 
       <AnimatePresence>
         {result && zodiac && mbtiProf && analysis && (

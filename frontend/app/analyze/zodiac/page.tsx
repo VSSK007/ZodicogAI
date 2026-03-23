@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import { renderMd } from "@/lib/renderMd";
 import TraitRadar from "@/components/TraitRadar";
 import RevealOnScroll from "@/components/RevealOnScroll";
@@ -243,10 +244,7 @@ function ZodiacPageInner() {
         </button>
       )}
 
-      {/* Loading state when form is hidden */}
-      {loading && !showForm && (
-        <div className="text-center py-12 text-zinc-500 text-sm">Reading the stars…</div>
-      )}
+      {loading && <AnalyzeSkeleton variant="solo" />}
 
       {/* Results */}
       <AnimatePresence>

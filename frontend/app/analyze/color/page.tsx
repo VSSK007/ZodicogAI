@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import { renderMd } from "@/lib/renderMd";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -283,6 +284,8 @@ export default function ColorPage() {
         >
           {loading ? "Reading the spectrum…" : "Reveal Aura Colors"}
         </button>
+
+        {loading && <AnalyzeSkeleton variant="solo" />}
 
         {/* Results */}
         <AnimatePresence>
