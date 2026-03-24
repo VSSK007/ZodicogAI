@@ -108,41 +108,53 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         </Link>
 
         {/* Hero */}
-        <div className="relative rounded-2xl overflow-hidden border border-white/[0.07] mb-8"
-          style={{ background: `radial-gradient(ellipse at top, ${color}18 0%, transparent 70%)` }}>
-          <div className="p-8">
+        <div className="relative rounded-2xl overflow-hidden border border-white/[0.07] mb-8">
 
-            {/* Photo + sign symbol row */}
-            <div className="flex items-start gap-4 mb-5">
-              {wikiImage ? (
-                <div className="relative w-20 h-20 rounded-2xl overflow-hidden border border-white/[0.10] shrink-0">
-                  <Image
-                    src={wikiImage}
-                    alt={celeb.name}
-                    fill
-                    className="object-cover object-top"
-                    sizes="80px"
-                    unoptimized
-                  />
-                </div>
-              ) : (
-                <div
-                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold shrink-0"
-                  style={{ backgroundColor: `${color}20`, border: `1px solid ${color}40`, color }}
-                >
-                  {symbol}
-                </div>
-              )}
+          {/* Image banner or colour fallback */}
+          {wikiImage ? (
+            <div className="relative w-full h-64 md:h-80">
+              <Image
+                src={wikiImage}
+                alt={celeb.name}
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 768px) 100vw, 672px"
+                unoptimized
+              />
+              {/* Cinematic fade: transparent top → solid dark bottom */}
               <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold shrink-0"
+                className="absolute inset-0"
+                style={{
+                  background: `linear-gradient(to bottom, transparent 20%, rgba(8,8,16,0.6) 60%, #080810 100%)`,
+                }}
+              />
+              {/* Sign badge — floats top-right over image */}
+              <div
+                className="absolute top-4 right-4 w-11 h-11 rounded-xl flex items-center justify-center text-xl font-bold backdrop-blur-sm"
+                style={{ backgroundColor: `${color}30`, border: `1px solid ${color}60`, color }}
+              >
+                {symbol}
+              </div>
+            </div>
+          ) : (
+            <div
+              className="w-full h-44 flex items-center justify-center"
+              style={{ background: `radial-gradient(ellipse at top, ${color}22 0%, transparent 70%)` }}
+            >
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold"
                 style={{ backgroundColor: `${color}20`, border: `1px solid ${color}40`, color }}
               >
                 {symbol}
               </div>
             </div>
+          )}
+
+          {/* Info — pulled up over the image fade */}
+          <div className={`px-7 pb-7 ${wikiImage ? "-mt-16 relative" : "pt-2"}`}>
 
             {/* Name */}
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3 drop-shadow-lg">
               {celeb.name}
             </h1>
 
