@@ -131,7 +131,7 @@ def main():
             print("FAILED")
 
         # Persist progress periodically so interruption doesn't lose work
-        if completed_this_run % SAVE_EVERY == 0:
+        if completed_this_run > 0 and completed_this_run % SAVE_EVERY == 0:
             out_path.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
             print(f"  [saved {len(results)} entries so far]")
 

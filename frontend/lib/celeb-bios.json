@@ -431,18 +431,6 @@
     "wiki_url": "https://en.wikipedia.org/wiki/Madhuri_Dixit",
     "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Madhuri_Dixit_in_November_2022.jpg"
   },
-  "varun-dhawan": {
-    "life_path": 1,
-    "article": {
-      "famous_for": "Varun Dhawan is renowned for his energetic performances in commercially successful Hindi films, particularly romantic comedies like the \"Dulhania\" franchise and action thrillers such as \"Badlapur.\" He consistently delivers blockbusters, cementing his status as a leading actor.",
-      "personality_snapshot": "As a **Taurus** with a Life Path 1, Varun radiates a grounded yet pioneering energy, making him exceptionally driven. He possesses a strong work ethic, appreciating the tangible rewards of his efforts, and shows a natural leadership quality in his career choices and public presence. This blend creates a resilient and reliable public persona.",
-      "love_style": "As a Taurus, Varun approaches love with a deep desire for **stability** and loyalty, valuing commitment and a strong, enduring partnership above all else. His long-term relationship with Natasha Dalal perfectly exemplifies this steadfast and devoted approach to intimacy.",
-      "compatibility_note": "Varun, being a Taurus, finds his deepest connections with other Earth signs (Virgo, Capricorn) for mutual grounding, or Water signs (Cancer, Pisces) who provide emotional nourishment.",
-      "fun_fact": "Before launching his acting career, Varun Dhawan worked as an assistant director on Karan Johar's film *My Name Is Khan*."
-    },
-    "wiki_url": "https://en.wikipedia.org/wiki/Varun_Dhawan",
-    "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/1/15/Varun_Dhawan_at_Mehboob_Studios_in_2025_%28cropped%29.jpg"
-  },
   "dwayne-johnson": {
     "life_path": 7,
     "article": {
@@ -1738,18 +1726,6 @@
     },
     "wiki_url": "https://en.wikipedia.org/wiki/Anna_Kendrick",
     "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/1/13/Anna_Kendrick_Cannes_2016_2.jpg"
-  },
-  "dustin-hoffman": {
-    "life_path": 7,
-    "article": {
-      "famous_for": "Dustin Hoffman is celebrated for his transformative method acting, delivering iconic, complex performances in films like \"The Graduate\", \"Rain Man\", and \"Tootsie\". He is an actor renowned for his chameleon-like ability to inhabit diverse characters.",
-      "personality_snapshot": "As a Leo, Dustin exudes a natural magnetism and an inherent need to shine, evident in his powerful screen presence and a career dedicated to capturing the spotlight. His Life Path 7 also reveals a deep introspection and a relentless pursuit of truth within his roles, driving his meticulous character work. He commands attention, even off-screen, with his often outspoken and **passionate** demeanor.",
-      "love_style": "Leos like Dustin approach love with grand gestures and fierce loyalty, desiring a partner who genuinely appreciates their unique brilliance. They want to be adored, craving a love that mirrors their own passionate nature and profound devotion.",
-      "compatibility_note": "Dustin, as a Leo, finds deep connection with Fire signs like Aries and Sagittarius for their shared passion and drive, and Air signs such as Libra or Gemini for intellectual stimulation and mutual admiration.",
-      "fun_fact": "Before his big break in \"The Graduate\", Dustin Hoffman worked various odd jobs, including as a coat checker and a toy demonstrator, while pursuing his acting dream."
-    },
-    "wiki_url": "https://en.wikipedia.org/wiki/Dustin_Hoffman",
-    "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/d/de/Dustin_Hoffman_at_the_2025_Toronto_International_Film_Festival._02.jpg"
   },
   "coco-chanel": {
     "life_path": 9,
@@ -4318,5 +4294,29 @@
     },
     "wiki_url": "https://en.wikipedia.org/wiki/Kurt_Cobain",
     "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/3/37/Nirvana_around_1992_%28cropped%29.jpg"
+  },
+  "sabrina-carpenter": {
+    "life_path": 7,
+    "article": {
+      "famous_for": "Sabrina Carpenter is widely recognized as a pop music sensation and actress, celebrated for her roles in Disney Channel's \"Girl Meets World\" and for hits like \"Espresso.\" She's established herself as a formidable talent in both music and acting.",
+      "personality_snapshot": "As a **Taurus** with a Life Path 7, Sabrina exudes a grounded yet introspective energy in her public life. She consistently builds her career with the earthy resilience and patience typical of her sign, demonstrating a quiet determination. Her 7 Life Path adds an intellectual depth and an analytical eye beneath her poised exterior.",
+      "love_style": "Sabrina, as a steadfast Taurus, gravitates toward **stability** and deep devotion in relationships, prioritizing sensual connection and unwavering loyalty. She seeks a partner who offers genuine commitment and appreciates her grounded nature.",
+      "compatibility_note": "As a Taurus, Sabrina would find natural harmony with Water signs like Cancer or Scorpio, who offer profound emotional depth, or fellow Earth signs like Virgo, for reliable and practical partnership.",
+      "fun_fact": "Sabrina Carpenter got her start by regularly posting videos of herself singing covers on YouTube at the age of 10."
+    },
+    "wiki_url": "https://en.wikipedia.org/wiki/Sabrina_Carpenter",
+    "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/1/15/Primavera2025_%28139_of_182%29_%2854574520207%29_%28cropped%29.jpg"
+  },
+  "dua-lipa": {
+    "life_path": 3,
+    "article": {
+      "famous_for": "Dua Lipa is globally renowned for her infectious pop anthems, distinct deep vocal tone, and captivating stage presence. Her hits like 'New Rules' and 'Levitating' have cemented her as a leading figure in contemporary music.",
+      "personality_snapshot": "As a vibrant Leo, Dua projects immense confidence and a natural magnetism that demands attention on every stage. She thrives in the spotlight, using her powerful creative expression (Life Path 3) to share her bold vision with the world, making her a true **performer**.",
+      "love_style": "A Leo in love is fiercely loyal and intensely passionate, showering their partner with affection but also expecting devotion and admiration in return. For Dua, love is a grand, romantic gesture, a true **center-stage** experience.",
+      "compatibility_note": "Dua's fiery Leo energy creates electric chemistry with Air signs like Gemini or Libra, who can intellectually stimulate her, and other Fire signs like Sagittarius for shared passion.",
+      "fun_fact": "Before music, Dua's initial passion was fashion, even working as a model before her music career took off."
+    },
+    "wiki_url": "https://en.wikipedia.org/wiki/Dua_Lipa",
+    "wiki_image": "https://upload.wikimedia.org/wikipedia/commons/6/66/Dua_Lipa-69798_%28cropped%29.jpg"
   }
 }

@@ -9,6 +9,7 @@ import {
 } from "@/lib/celebrities"
 import CELEB_BIOS from "@/lib/celeb-bios.json"
 import ShareCelebButton from "@/components/ShareCelebButton"
+import CelebEasterEgg from "@/components/CelebEasterEgg"
 
 export const revalidate = false  // fully static — data comes from celeb-bios.json
 
@@ -327,6 +328,9 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
           </Link>
         </div>
       </div>
+
+      {/* Easter eggs — only active for sabrina-carpenter and dua-lipa */}
+      <CelebEasterEgg slug={slug} />
     </main>
   )
 }
