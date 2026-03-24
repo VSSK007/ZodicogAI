@@ -43,8 +43,8 @@ export default function MobileNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // On blog/about/analyze pages: only show when scrolled near the bottom
-  const inCelebProfile  = pathname.startsWith("/celebrities/");
-  const scrollControlled = inBlog || inAbout || inAnalyze || inCelebProfile;
+  const inCelebs        = pathname.startsWith("/celebrities");
+  const scrollControlled = inBlog || inAbout || inAnalyze || inCelebs;
   const [scrollVisible, setScrollVisible] = useState(false);
   useEffect(() => {
     if (!scrollControlled) return;
