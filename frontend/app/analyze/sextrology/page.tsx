@@ -270,41 +270,45 @@ export default function SextrologyPage() {
         <p className="text-zinc-500 mt-1 text-sm">Intimacy dynamics — sexual character, fantasies, kinks, and erotic compatibility</p>
       </div>
 
-      <div className={`grid gap-4 mb-4 ${showB ? "md:grid-cols-2" : ""}`}>
-        <PersonForm label="Person A" value={a} onChange={setA} />
-        {showB && <PersonForm label="Person B" value={b} onChange={setB} />}
-      </div>
+      {!result && (<>
+        <div className={`grid gap-4 mb-4 ${showB ? "md:grid-cols-2" : ""}`}>
+          <PersonForm label="Person A" value={a} onChange={setA} />
+          {showB && <PersonForm label="Person B" value={b} onChange={setB} />}
+        </div>
 
-      <button
-        onClick={() => { setShowB((v) => !v); setResult(null); setStreamedText(""); setStreamScores(null); }}
-        className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
-      >
-        {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for compatibility"}
-      </button>
+        <button
+          onClick={() => { setShowB((v) => !v); setResult(null); setStreamedText(""); setStreamScores(null); }}
+          className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
+        >
+          {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for compatibility"}
+        </button>
 
-      {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
-      <button
-        onClick={handleStream} disabled={loading}
-        className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
-      >
-        {loading ? "Analyzing…" : showB ? "Analyze Intimacy Compatibility" : "Reveal Your Sextrology Profile"}
-      </button>
+        <button
+          onClick={handleStream} disabled={loading}
+          className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
+        >
+          {loading ? "Analyzing…" : showB ? "Analyze Intimacy Compatibility" : "Reveal Your Sextrology Profile"}
+        </button>
 
-      {loading && !streamedText && <AnalyzeSkeleton variant="pair" />}
+        {loading && !streamedText && <AnalyzeSkeleton variant="pair" />}
 
-      {/* Streaming section */}
-      <div className="mb-4 md:mb-6">
-        <ConstellationStream
-          text={streamedText}
-          streaming={streaming}
-          visible={!!streamedText}
-        />
-      </div>
+        {/* Streaming section */}
+        <div className="mb-4 md:mb-6">
+          <ConstellationStream
+            text={streamedText}
+            streaming={streaming}
+            visible={!!streamedText}
+          />
+        </div>
+      </>)}
 
       <AnimatePresence>
         {result && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-6">
+
+            <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
 
             {(submittedAsPair || isPair(result)) ? (
               (() => { const pr = result as PairResult; return (

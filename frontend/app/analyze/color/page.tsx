@@ -262,30 +262,32 @@ export default function ColorPage() {
           </p>
         </div>
 
-        {/* Forms */}
-        <div className={`grid gap-4 mb-4 ${showB ? "md:grid-cols-2" : ""}`}>
-          <SimpleForm label="Person A" value={a} onChange={setA} />
-          {showB && <SimpleForm label="Person B" value={b} onChange={setB} />}
-        </div>
+        {!result && (<>
+          {/* Forms */}
+          <div className={`grid gap-4 mb-4 ${showB ? "md:grid-cols-2" : ""}`}>
+            <SimpleForm label="Person A" value={a} onChange={setA} />
+            {showB && <SimpleForm label="Person B" value={b} onChange={setB} />}
+          </div>
 
-        <button
-          onClick={() => { setShowB((v) => !v); setResult(null); }}
-          className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
-        >
-          {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for pair compatibility"}
-        </button>
+          <button
+            onClick={() => { setShowB((v) => !v); setResult(null); }}
+            className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
+          >
+            {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for pair compatibility"}
+          </button>
 
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+          {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
-        >
-          {loading ? "Reading the spectrum…" : "Reveal Aura Colors"}
-        </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
+          >
+            {loading ? "Reading the spectrum…" : "Reveal Aura Colors"}
+          </button>
 
-        {loading && <AnalyzeSkeleton variant="solo" />}
+          {loading && <AnalyzeSkeleton variant="solo" />}
+        </>)}
 
         {/* Results */}
         <AnimatePresence>
@@ -296,6 +298,8 @@ export default function ColorPage() {
               transition={{ duration: 0.5 }}
               className="space-y-4 md:space-y-6"
             >
+              <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+
               {isPair(result) ? (
                 <>
                   {/* Pair: aura swatches */}
