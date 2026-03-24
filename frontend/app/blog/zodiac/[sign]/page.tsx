@@ -59,6 +59,7 @@ export async function generateMetadata({ params }: { params: Promise<{ sign: str
 
 interface ZodiacArticle {
   overview: string; the_symbol: string; personality: string;
+  modality_profile?: string;
   highest_expression: string; shadow_expression: string;
   strengths: string[]; weaknesses: string[];
   in_love: string; as_a_friend: string; career_and_ambition: string;
