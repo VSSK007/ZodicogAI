@@ -54,13 +54,29 @@ interface BioEntry {
   wiki_image?: string
 }
 
-// ── Aura color names per sign (from color engine data) ───────────────────────
+// ── Aura color names + their actual hex (separate from sign color) ───────────
 
 const AURA_NAME: Record<string, string> = {
   aries: "Aura Red", taurus: "Emerald Aura", gemini: "Solar Yellow",
   cancer: "Moonstone Blue", leo: "Gold Aura", virgo: "Sage Green",
   libra: "Rose Aura", scorpio: "Deep Indigo", sagittarius: "Electric Purple",
   capricorn: "Forest Aura", aquarius: "Electric Blue", pisces: "Lavender Mist",
+}
+
+// Actual hex that matches each aura name — used for the dot indicator
+const AURA_COLOR: Record<string, string> = {
+  aries:       "#EF4444", // Aura Red
+  taurus:      "#22C55E", // Emerald Aura
+  gemini:      "#EAB308", // Solar Yellow
+  cancer:      "#93C5FD", // Moonstone Blue
+  leo:         "#FBBF24", // Gold Aura
+  virgo:       "#84CC16", // Sage Green
+  libra:       "#F472B6", // Rose Aura
+  scorpio:     "#6D28D9", // Deep Indigo
+  sagittarius: "#A855F7", // Electric Purple
+  capricorn:   "#16A34A", // Forest Aura
+  aquarius:    "#38BDF8", // Electric Blue
+  pisces:      "#C4B5FD", // Lavender Mist
 }
 
 // ── Section card ──────────────────────────────────────────────────────────────
@@ -84,7 +100,8 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
   const color     = SIGN_COLOR[celeb.sign]
   const symbol    = SIGN_SYMBOL[celeb.sign]
   const signLabel = SIGN_LABEL[celeb.sign]
-  const auraName  = AURA_NAME[celeb.sign] ?? "Aura"
+  const auraName  = AURA_NAME[celeb.sign]  ?? "Aura"
+  const auraColor = AURA_COLOR[celeb.sign] ?? color
 
   const bioEntry = (CELEB_BIOS as Record<string, BioEntry>)[slug]
   const article: CelebrityArticle | null = bioEntry?.article ?? null
@@ -206,9 +223,9 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
               <div className="flex items-center gap-2.5">
                 <div
                   className="w-8 h-8 rounded-full border flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: `${color}20`, borderColor: `${color}50` }}
+                  style={{ backgroundColor: `${auraColor}20`, borderColor: `${auraColor}50` }}
                 >
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: auraColor }} />
                 </div>
                 <div>
                   <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Aura</p>
