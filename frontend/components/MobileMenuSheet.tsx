@@ -74,6 +74,21 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
               </div>
             </div>
 
+            {/* Celebrities */}
+            <div className="px-5 pb-4">
+              <Link
+                href="/celebrities"
+                onClick={onClose}
+                className="flex items-center gap-3 rounded-xl bg-white/[0.04] border border-white/[0.09] px-4 py-3 hover:bg-white/[0.07] transition-all tap-highlight-none"
+              >
+                <span className="text-lg">⭐</span>
+                <div>
+                  <p className="text-sm font-semibold text-zinc-100">Celebrities</p>
+                  <p className="text-[10px] text-zinc-500">360 zodiac profiles</p>
+                </div>
+              </Link>
+            </div>
+
             {/* Analyze section */}
             <div className="px-5 pb-1">
               <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">Analyze</p>
