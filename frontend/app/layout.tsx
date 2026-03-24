@@ -21,6 +21,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://zodicogai.com"),
   title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
   description: "AI-powered behavioral analysis combining zodiac signs and MBTI personality types for deep compatibility insights, love language matching, and relationship intelligence.",
   keywords: "zodiac compatibility, MBTI relationships, astrology AI, relationship analysis, love compatibility, aura reading, numerology, sextrology",
