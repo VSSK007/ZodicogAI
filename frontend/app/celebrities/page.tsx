@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { CELEBRITIES, SIGN_ORDER, SIGN_SYMBOL, SIGN_LABEL, SIGN_COLOR, getCelebritiesBySign } from "@/lib/celebrities"
+import { SIGN_ORDER, SIGN_SYMBOL, SIGN_LABEL, SIGN_COLOR, getCelebritiesBySign } from "@/lib/celebrities"
 
 export const metadata = {
   title: "Celebrity Zodiac Database | ZodicogAI",
@@ -56,7 +56,7 @@ export default function CelebritiesPage() {
           const label = SIGN_LABEL[sign]
 
           return (
-            <section key={sign}>
+            <section key={sign} id={sign}>
               {/* Sign header */}
               <div className="flex items-center gap-4 mb-6">
                 <div

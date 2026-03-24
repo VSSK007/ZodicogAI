@@ -265,7 +265,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         {/* Sign index link */}
         <div className="mt-6 text-center">
           <Link
-            href="/celebrities"
+            href={`/celebrities#${celeb.sign}`}
             className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
           >
             View all {signLabel} celebrities →
