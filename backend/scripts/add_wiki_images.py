@@ -86,12 +86,12 @@ def main():
 
     # Decide which entries to process:
     # 1. Missing wiki_url → needs enrichment
-    # 2. Has a wikiTitle override → force-refetch (fixes wrong images/links)
+    # 2. Missing wiki_image → retry (previous fetch returned no image)
+    # 3. Has a wikiTitle override → force-refetch (fixes wrong images/links)
     to_enrich = {
         slug: data for slug, data in bios.items()
-        if "wiki_url" not in data or slug in overrides
+        if "wiki_url" not in data or "wiki_image" not in data or slug in overrides
     }
-    already_done = len(bios) - len(to_enrich) + len([s for s in overrides if s in bios and "wiki_url" in bios[s]])
     print(f"To fetch/re-fetch: {len(to_enrich)}  |  Skipping: {len(bios) - len(to_enrich)}\n")
 
     found_images = 0
