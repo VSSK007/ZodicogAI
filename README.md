@@ -316,6 +316,9 @@ backend/
 │   ├── numerology_engine.py         # Pythagorean life path + expression
 │   ├── color_engine.py              # HSL harmony + aura mapping
 │   └── decan_engine.py              # 108 decan profiles + sub-rulers
+├── scripts/
+│   ├── generate_celeb_bios.py       # Batch-generate 360 celeb bios via Gemini (resumable)
+│   └── add_wiki_images.py           # Enrich celeb-bios.json with Wikipedia images + URLs
 └── models/
     └── schemas.py                   # Pydantic v2 schemas (50+ dataclasses)
 ```
@@ -377,7 +380,10 @@ frontend/
 │   │   ├── numerology/page.tsx      # Numerology (life path + compatibility)
 │   │   ├── zodiac/page.tsx          # Zodiac article (13-field deep dive)
 │   │   └── relationship-intelligence/page.tsx  # Full 10-dimensional synastry
-│   └── blog/                        # 29+ SEO-optimized articles
+│   ├── celebrities/
+│   │   ├── page.tsx                 # Celebrity index — 360 profiles across 12 signs
+│   │   └── [slug]/page.tsx          # Individual celebrity page (static, from JSON)
+│   └── blog/                        # 400+ SEO-optimized pages
 │       ├── page.tsx                 # Blog index (all articles + guides)
 │       ├── zodiac/[sign]/page.tsx   # 12 zodiac articles (ISR, Gemini-powered)
 │       ├── mbti/[type]/page.tsx     # 16 MBTI type profiles (static data)
@@ -386,13 +392,16 @@ frontend/
 │   ├── HybridForm.tsx               # Dual-input form with MBTI quiz
 │   ├── PersonForm.tsx               # Reusable person input (name, date, MBTI, gender)
 │   ├── MbtiSelect.tsx               # MBTI dropdown with quiz
-│   ├── MobileNavbar.tsx             # Mobile FAB + back button (scroll-triggered on blog)
+│   ├── MobileNavbar.tsx             # Mobile FAB + home button (scroll-triggered on blog/celebs)
+│   ├── ShareCelebButton.tsx         # Web Share API + clipboard fallback
 │   ├── MarkdownText.tsx             # Structured markdown rendering (sections + bullets)
 │   ├── ScoreRing.tsx                # Circular % visualization
 │   ├── TraitRadar.tsx               # 5-axis radar chart (Recharts)
 │   └── BehavioralMap.tsx            # 2D MBTI function scatter
 └── lib/
     ├── api.ts                       # API client (apiFetch wrapper)
+    ├── celebrities.ts               # 360 celebrity definitions (slug, sign, name, born, etc.)
+    ├── celeb-bios.json              # Pre-generated bios + life paths + Wikipedia data (static)
     ├── mbti-data.ts                 # Static MBTI type definitions (16 types)
     ├── colors.ts                    # Zodiac color palette
     └── motion.ts                    # Framer Motion easing presets
@@ -468,9 +477,18 @@ A portmanteau capturing the core philosophy: the intersection of ancient astrolo
 
 ## SEO & Content Strategy
 
-### Blog System: 29+ Organic Traffic Engines
+### Content System: 400+ Organic Traffic Engines
 
-ZodicogAI includes a comprehensive blog system designed for search discoverability and long-tail keyword ranking:
+ZodicogAI includes a comprehensive content system designed for search discoverability and long-tail keyword ranking:
+
+#### Celebrity Zodiac Database (`/celebrities`, `/celebrities/[slug]`)
+- **Scale:** 360 celebrity profiles — 30 per zodiac sign, covering Hollywood, Bollywood, athletes, musicians, entrepreneurs
+- **Rendering:** Fully static — pre-built at compile time from `celeb-bios.json` (zero API calls at build or runtime)
+- **Generation:** One-time script (`generate_celeb_bios.py`) hits `/analyze/celebrity` sequentially with exponential backoff; result committed as static JSON
+- **Each profile:** Famous for · Personality snapshot · Love style · Best matches · Fun fact · Life path number · Aura color · Wikipedia image + link
+- **Share:** Web Share API (native mobile share sheet) with clipboard fallback
+- **SEO:** Unique title/description per celebrity + OpenGraph tags
+- **Target keywords:** "{Name} zodiac sign", "{Name} MBTI", "celebrities born {month}", etc.
 
 #### 12 Zodiac Articles (`/blog/zodiac/[sign]`)
 - **Rendering:** Server-side with Incremental Static Regeneration (ISR, 24h revalidate)
@@ -497,7 +515,7 @@ ZodicogAI includes a comprehensive blog system designed for search discoverabili
 ### SEO Infrastructure
 
 **Sitemap & Robots:**
-- `sitemap.xml` auto-generated with all 40+ pages (home + analyzes + blog articles + about)
+- `sitemap.xml` auto-generated with all 400+ pages (home + analyzes + blog articles + 360 celebrity profiles + about)
 - `robots.txt` generated with sitemap reference
 - All metadata: title, description, keywords, OpenGraph, Twitter cards
 
@@ -638,7 +656,7 @@ Every computation is **auditable** — trace the code path to see exactly how ea
 ```bibtex
 @software{zodicogai2026,
   title={ZodicogAI: Grounding Large Language Models in Structured Behavioral Data},
-  author={Zodiacog Contributors},
+  author={ZodicogAI Contributors},
   url={https://github.com/VSSK007/ZodicogAI},
   year={2026}
 }

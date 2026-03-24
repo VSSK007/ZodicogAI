@@ -95,6 +95,16 @@ export default function AboutPage() {
             insights with warmth and specificity. The LLM isn't guessing — it's
             interpreting structured data I've carefully engineered.
           </p>
+          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+            Beyond analysis, ZodicogAI now includes a{" "}
+            <span className="text-amber-300 font-medium">
+              360-profile Celebrity Zodiac Database
+            </span>{" "}
+            — 30 celebrities per sign, each with a full astrological profile,
+            life path number, aura color, and Wikipedia context. Because the
+            best way to understand a sign is to see it embodied in people you
+            already know.
+          </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
             The core principle:{" "}
             <span className="text-amber-300">
@@ -242,7 +252,7 @@ export default function AboutPage() {
             <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
               <p className="text-xs font-semibold text-zinc-400">Engines</p>
               <p className="text-xs text-zinc-500 mt-1">
-                Zodiac, MBTI, Numerology, Love Languages
+                Zodiac, MBTI, Numerology, Love Languages, 360 Celebrities
               </p>
             </div>
             <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
