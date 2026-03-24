@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 /* ─── Espresso character (Sabrina Carpenter) ───────────────────────────────── */
 function EspressoScene() {
   return (
-    <div className="flex flex-col items-center gap-4 select-none w-full px-6">
+    <div className="flex flex-col items-center gap-3 md:gap-4 select-none w-full px-4 md:px-6">
 
       <motion.p
         initial={{ opacity: 0, y: -14 }}
@@ -22,7 +22,7 @@ function EspressoScene() {
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 14, delay: 0.05 }}
-        className="text-5xl font-black tracking-widest"
+        className="text-4xl sm:text-5xl font-black tracking-widest"
         style={{ color: "#fde68a", textShadow: "0 0 32px #f59e0b, 0 0 64px #d97706" }}
       >
         ☕ ESPRESSO
@@ -134,7 +134,7 @@ function EspressoScene() {
 /* ─── Levitating character (Dua Lipa) ──────────────────────────────────────── */
 function LevitatingScene() {
   return (
-    <div className="flex flex-col items-center gap-4 select-none w-full px-6">
+    <div className="flex flex-col items-center gap-3 md:gap-4 select-none w-full px-4 md:px-6">
 
       <motion.p
         initial={{ opacity: 0, y: -14 }}
@@ -150,7 +150,7 @@ function LevitatingScene() {
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 14, delay: 0.05 }}
-        className="text-5xl font-black tracking-widest"
+        className="text-4xl sm:text-5xl font-black tracking-widest"
         style={{ color: "#e9d5ff", textShadow: "0 0 32px #a855f7, 0 0 64px #7c3aed" }}
       >
         ✦ LEVITATING
