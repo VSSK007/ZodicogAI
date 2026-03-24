@@ -3,313 +3,369 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-/* ─── Espresso (Sabrina Carpenter) ─────────────────────────────────────────── */
-
-const BEAN_FLOATERS = [
-  { left: "6%",  delay: 0,    dur: 3.2 },
-  { left: "18%", delay: 0.7,  dur: 2.8 },
-  { left: "32%", delay: 1.3,  dur: 3.6 },
-  { left: "48%", delay: 0.4,  dur: 3.0 },
-  { left: "63%", delay: 1.0,  dur: 2.7 },
-  { left: "77%", delay: 0.2,  dur: 3.4 },
-  { left: "90%", delay: 1.6,  dur: 3.1 },
-  { left: "38%", delay: 0.9,  dur: 2.9 },
-  { left: "55%", delay: 1.8,  dur: 3.5 },
-  { left: "82%", delay: 0.5,  dur: 2.6 },
-];
-
-const STEAM_PATHS = [
-  "M 118 165 C 108 145, 128 125, 118 105",
-  "M 140 160 C 150 140, 130 120, 140 100",
-  "M 162 165 C 172 145, 152 125, 162 105",
-  "M 96  168 C 86  148, 106 128, 96  108",
-  "M 184 168 C 194 148, 174 128, 184 108",
-];
-
+/* ─────────────────────────────────────────────────────────────────────────────
+   ESPRESSO — Sabrina Carpenter
+   Style ref: Google zodiac Easter eggs — cute animated character, bouncy,
+   personality-driven. A lil espresso cup with a face that dances.
+───────────────────────────────────────────────────────────────────────────── */
 function EspressoScene() {
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center select-none">
+    <div className="flex flex-col items-center gap-6 select-none">
 
-      {/* Coffee cups flying upward */}
-      {BEAN_FLOATERS.map((b, i) => (
-        <motion.div
-          key={i}
-          className="absolute pointer-events-none"
-          style={{ left: b.left, fontSize: 28 + (i % 3) * 8 }}
-          initial={{ bottom: "-8%", opacity: 0 }}
-          animate={{ bottom: "110%", opacity: [0, 1, 1, 0], rotate: [0, 20, -20, 0] }}
-          transition={{ duration: b.dur, delay: b.delay, repeat: Infinity, ease: "easeOut" }}
-        >
-          ☕
-        </motion.div>
-      ))}
-
-      {/* Corner sparkles */}
-      {([ ["4%","6%"], ["88%","5%"], ["3%","80%"], ["89%","82%"], ["46%","3%"] ] as const).map(([l, t], i) => (
-        <motion.div
-          key={i}
-          className="absolute text-amber-300 pointer-events-none"
-          style={{ left: l, top: t, fontSize: 20 + (i % 2) * 12 }}
-          animate={{ opacity: [0, 1, 0], scale: [0.4, 1.8, 0.4], rotate: [0, 90] }}
-          transition={{ duration: 1.8, delay: i * 0.38, repeat: Infinity, repeatDelay: 0.9 }}
-        >
-          ✦
-        </motion.div>
-      ))}
-
-      {/* Central panel */}
-      <div className="relative z-10 flex flex-col items-center gap-3 px-4">
-
+      {/* Artist + song label */}
+      <div className="text-center">
         <motion.p
-          initial={{ opacity: 0, y: -16 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
-          className="text-amber-200/70 text-[11px] font-semibold tracking-[0.5em] uppercase"
+          transition={{ delay: 0.1 }}
+          className="text-[10px] tracking-[0.45em] uppercase font-semibold"
+          style={{ color: "#fbbf24cc" }}
         >
           Sabrina Carpenter
         </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.4 }}
+        <motion.p
+          initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
-          className="text-center leading-none"
+          transition={{ type: "spring", stiffness: 320, damping: 16, delay: 0.15 }}
+          className="text-3xl font-black tracking-widest mt-1"
+          style={{
+            color: "#fde68a",
+            textShadow: "0 0 24px #f59e0b, 0 0 48px #d97706",
+          }}
         >
-          <p
-            className="text-[4rem] sm:text-[6rem] font-black tracking-tighter text-amber-300"
-            style={{
-              textShadow:
-                "0 0 30px #f59e0b, 0 0 60px #d97706, 0 0 100px #b45309, 0 0 160px #92400e",
-            }}
-          >
-            ESPRESSO
-          </p>
-          <motion.p
-            className="text-5xl mt-2"
-            animate={{ rotate: [0, -8, 8, -8, 0], scale: [1, 1.15, 1] }}
-            transition={{ duration: 1.2, delay: 0.6, repeat: Infinity, repeatDelay: 1.5 }}
-          >
-            ☕
-          </motion.p>
-        </motion.div>
-
-        {/* Cup SVG */}
-        <motion.div
-          initial={{ scale: 0, rotate: -20 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.3 }}
-        >
-          <svg width="280" height="200" viewBox="0 0 280 200">
-            {/* Saucer shadow */}
-            <ellipse cx="140" cy="188" rx="85" ry="12" fill="#000" opacity="0.4" />
-            <ellipse cx="140" cy="184" rx="78" ry="10" fill="#78350f" opacity="0.55" />
-            {/* Cup body */}
-            <path d="M68 112 L77 168 L203 168 L212 112 Z"
-              fill="#150600" stroke="#f59e0b" strokeWidth="2.5" />
-            {/* Inner highlight */}
-            <path d="M70 118 L210 118" stroke="#f59e0b" strokeWidth="1" opacity="0.3" />
-            {/* Handle */}
-            <path d="M203 128 Q242 138 242 152 Q242 168 203 160"
-              fill="none" stroke="#f59e0b" strokeWidth="5" strokeLinecap="round" />
-            {/* Coffee pool */}
-            <ellipse cx="140" cy="114" rx="70" ry="11" fill="#3b1200" />
-            <ellipse cx="140" cy="114" rx="55" ry="8"  fill="#b45309" opacity="0.55" />
-            <ellipse cx="140" cy="114" rx="32" ry="5"  fill="#d97706" opacity="0.35" />
-            {/* Cup rim */}
-            <ellipse cx="140" cy="112" rx="71" ry="12" fill="none" stroke="#f59e0b" strokeWidth="3" />
-            {/* Steam */}
-            {STEAM_PATHS.map((d, i) => (
-              <motion.path
-                key={i}
-                d={d}
-                fill="none"
-                stroke="#fbbf24"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: [0, 1], opacity: [0, 1, 0], y: [0, -28] }}
-                transition={{
-                  duration: 2.0,
-                  delay: i * 0.38,
-                  repeat: Infinity,
-                  repeatDelay: 0.1,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-          </svg>
-        </motion.div>
+          ☕ ESPRESSO
+        </motion.p>
       </div>
 
-      <motion.p
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 2.5, repeat: Infinity }}
-        className="absolute bottom-6 text-amber-400/70 text-[10px] tracking-[0.4em] uppercase"
+      {/* Cup character */}
+      <motion.div
+        initial={{ scale: 0, rotate: -30 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.2 }}
       >
-        tap anywhere to close
+        <svg width="200" height="240" viewBox="0 0 200 240">
+
+          {/* Saucer */}
+          <motion.ellipse
+            cx="100" cy="210" rx="68" ry="12"
+            fill="#92400e"
+            animate={{ scaleX: [1, 1.06, 1], scaleY: [1, 0.94, 1] }}
+            style={{ transformOrigin: "100px 210px" }}
+            transition={{ duration: 0.55, delay: 0.9, repeat: Infinity, repeatDelay: 1.8, ease: "easeInOut" }}
+          />
+          <motion.ellipse
+            cx="100" cy="207" rx="60" ry="9"
+            fill="#b45309" opacity="0.6"
+            animate={{ scaleX: [1, 1.06, 1], scaleY: [1, 0.94, 1] }}
+            style={{ transformOrigin: "100px 207px" }}
+            transition={{ duration: 0.55, delay: 0.9, repeat: Infinity, repeatDelay: 1.8, ease: "easeInOut" }}
+          />
+
+          {/* Cup body — bounces on "land" */}
+          <motion.g
+            animate={{
+              y: [0, -28, 0, -12, 0, -5, 0],
+              scaleY: [1, 1.06, 0.88, 1.04, 0.96, 1.02, 1],
+              scaleX: [1, 0.94, 1.08, 0.97, 1.02, 0.99, 1],
+            }}
+            style={{ transformOrigin: "100px 200px" }}
+            transition={{
+              duration: 1.4,
+              delay: 0.8,
+              repeat: Infinity,
+              repeatDelay: 1.6,
+              ease: "easeOut",
+            }}
+          >
+            {/* Body */}
+            <path d="M52 118 L58 188 L142 188 L148 118 Z"
+              fill="#1c0800" stroke="#f59e0b" strokeWidth="2.5" />
+            {/* Handle */}
+            <path d="M144 132 Q172 140 172 155 Q172 170 144 163"
+              fill="none" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
+            {/* Coffee */}
+            <ellipse cx="100" cy="120" rx="45" ry="8" fill="#3b1200" />
+            <ellipse cx="100" cy="120" rx="34" ry="5.5" fill="#b45309" opacity="0.55" />
+            {/* Rim */}
+            <ellipse cx="100" cy="118" rx="46" ry="9" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+
+            {/* Face — eyes */}
+            <motion.circle cx="86" cy="148" r="5" fill="#fbbf24"
+              animate={{ scaleY: [1, 0.1, 1] }}
+              transition={{ duration: 0.15, delay: 2.5, repeat: Infinity, repeatDelay: 3.2 }}
+            />
+            <motion.circle cx="114" cy="148" r="5" fill="#fbbf24"
+              animate={{ scaleY: [1, 0.1, 1] }}
+              transition={{ duration: 0.15, delay: 2.5, repeat: Infinity, repeatDelay: 3.2 }}
+            />
+            {/* Pupils */}
+            <circle cx="88" cy="149" r="2.5" fill="#1c0800" />
+            <circle cx="116" cy="149" r="2.5" fill="#1c0800" />
+
+            {/* Smile */}
+            <motion.path
+              d="M88 165 Q100 175 112 165"
+              fill="none" stroke="#fbbf24" strokeWidth="2.5" strokeLinecap="round"
+              animate={{ d: ["M88 165 Q100 175 112 165", "M88 162 Q100 172 112 162", "M88 165 Q100 175 112 165"] }}
+              transition={{ duration: 1.4, delay: 0.8, repeat: Infinity, repeatDelay: 1.6 }}
+            />
+
+            {/* Rosy cheeks */}
+            <circle cx="72" cy="158" r="8" fill="#f87171" opacity="0.35" />
+            <circle cx="128" cy="158" r="8" fill="#f87171" opacity="0.35" />
+          </motion.g>
+
+          {/* Steam wisps */}
+          {[
+            "M 82 112 C 76 96, 88 82, 82 66",
+            "M 100 108 C 106 92, 94 78, 100 62",
+            "M 118 112 C 124 96, 112 82, 118 66",
+          ].map((d, i) => (
+            <motion.path
+              key={i}
+              d={d}
+              fill="none"
+              stroke="#fbbf24"
+              strokeWidth="3"
+              strokeLinecap="round"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: [0, 1], opacity: [0, 0.9, 0], y: [0, -18] }}
+              transition={{
+                duration: 1.8,
+                delay: i * 0.5,
+                repeat: Infinity,
+                repeatDelay: 0.2,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+
+          {/* Floating sparkles around cup */}
+          {[[28, 80], [168, 75], [18, 155], [178, 160], [96, 42], [154, 42]].map(([x, y], i) => (
+            <motion.text
+              key={i}
+              x={x} y={y}
+              fontSize={10 + (i % 3) * 4}
+              fill="#fbbf24"
+              textAnchor="middle"
+              animate={{ opacity: [0, 1, 0], scale: [0.3, 1.5, 0.3] }}
+              style={{ transformOrigin: `${x}px ${y}px` }}
+              transition={{
+                duration: 1.4,
+                delay: i * 0.32,
+                repeat: Infinity,
+                repeatDelay: 0.7,
+              }}
+            >
+              ✦
+            </motion.text>
+          ))}
+        </svg>
+      </motion.div>
+
+      {/* Tap hint */}
+      <motion.p
+        animate={{ opacity: [0.35, 0.7, 0.35] }}
+        transition={{ duration: 2.4, repeat: Infinity }}
+        className="text-[9px] tracking-[0.4em] uppercase"
+        style={{ color: "#fbbf2466" }}
+      >
+        tap to close
       </motion.p>
     </div>
   );
 }
 
-/* ─── Levitating (Dua Lipa) ────────────────────────────────────────────────── */
-
-const STAR_FLOATERS = [
-  { left: "5%",  delay: 0,    dur: 3.4, char: "✦", color: "#f0abfc", size: 30 },
-  { left: "16%", delay: 0.5,  dur: 2.9, char: "✷", color: "#38bdf8", size: 22 },
-  { left: "29%", delay: 1.1,  dur: 3.7, char: "✦", color: "#c084fc", size: 18 },
-  { left: "45%", delay: 0.3,  dur: 3.1, char: "✸", color: "#e879f9", size: 26 },
-  { left: "61%", delay: 0.8,  dur: 2.7, char: "✦", color: "#67e8f9", size: 34 },
-  { left: "74%", delay: 1.4,  dur: 3.5, char: "✷", color: "#a855f7", size: 20 },
-  { left: "87%", delay: 0.6,  dur: 3.0, char: "✦", color: "#f0abfc", size: 28 },
-  { left: "38%", delay: 1.7,  dur: 2.8, char: "✸", color: "#38bdf8", size: 16 },
-  { left: "53%", delay: 0.9,  dur: 3.3, char: "✦", color: "#e879f9", size: 24 },
-  { left: "93%", delay: 1.9,  dur: 3.2, char: "✷", color: "#c084fc", size: 32 },
-  { left: "2%",  delay: 1.3,  dur: 2.6, char: "✦", color: "#67e8f9", size: 26 },
-];
-
+/* ─────────────────────────────────────────────────────────────────────────────
+   LEVITATING — Dua Lipa
+   A glowing star character that floats and radiates — cute, magical, bouncy.
+───────────────────────────────────────────────────────────────────────────── */
 function LevitatingScene() {
-  const ORBS = [100, 80, 60, 42, 28, 14] as const;
-  const ORB_FILLS = ["none","none","none","#4c1d95","#7e22ce","#e9d5ff"] as const;
-  const ORB_STROKES = ["#3b0764","#581c87","#7e22ce","none","none","none"] as const;
-
   return (
-    <div className="relative w-full h-full flex flex-col items-center justify-center select-none">
+    <div className="flex flex-col items-center gap-6 select-none">
 
-      {/* Stars rising from bottom */}
-      {STAR_FLOATERS.map((s, i) => (
-        <motion.div
-          key={i}
-          className="absolute pointer-events-none font-bold"
-          style={{ left: s.left, color: s.color, fontSize: s.size }}
-          initial={{ bottom: "-6%", opacity: 0 }}
-          animate={{ bottom: "112%", opacity: [0, 1, 1, 0] }}
-          transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: "easeOut" }}
-        >
-          {s.char}
-        </motion.div>
-      ))}
-
-      {/* Corner bursts */}
-      {([
-        ["4%","6%","#f0abfc"], ["88%","5%","#38bdf8"],
-        ["3%","82%","#e879f9"], ["89%","83%","#c084fc"],
-        ["46%","2%","#f0abfc"],
-      ] as const).map(([l, t, c], i) => (
-        <motion.div
-          key={i}
-          className="absolute pointer-events-none font-bold"
-          style={{ left: l, top: t, color: c, fontSize: 22 + (i % 2) * 14 }}
-          animate={{ opacity: [0, 1, 0], scale: [0.3, 2.2, 0.3], rotate: [0, 180] }}
-          transition={{ duration: 2.0, delay: i * 0.4, repeat: Infinity, repeatDelay: 0.5 }}
-        >
-          ✦
-        </motion.div>
-      ))}
-
-      {/* Central panel */}
-      <div className="relative z-10 flex flex-col items-center gap-3 px-4">
-
+      {/* Artist + song label */}
+      <div className="text-center">
         <motion.p
-          initial={{ opacity: 0, y: -16 }}
+          initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
-          className="text-purple-200/70 text-[11px] font-semibold tracking-[0.5em] uppercase"
+          transition={{ delay: 0.1 }}
+          className="text-[10px] tracking-[0.45em] uppercase font-semibold"
+          style={{ color: "#d8b4fecc" }}
         >
           Dua Lipa
         </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.4 }}
+        <motion.p
+          initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ type: "spring", stiffness: 280, damping: 18, delay: 0.1 }}
-          className="text-center leading-none"
+          transition={{ type: "spring", stiffness: 320, damping: 16, delay: 0.15 }}
+          className="text-3xl font-black tracking-widest mt-1"
+          style={{
+            color: "#e9d5ff",
+            textShadow: "0 0 24px #a855f7, 0 0 48px #7c3aed",
+          }}
         >
-          <motion.p
-            className="text-[4rem] sm:text-[6rem] font-black tracking-tighter text-purple-300"
-            style={{
-              textShadow:
-                "0 0 30px #a855f7, 0 0 60px #7c3aed, 0 0 100px #4c1d95, 0 0 160px #2e1065",
-            }}
-            animate={{ y: [0, -14, 0] }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-          >
-            LEVITATING
-          </motion.p>
-          <motion.p
-            className="text-5xl mt-2"
-            animate={{ y: [0, -14, 0], opacity: [0.7, 1, 0.7] }}
-            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-          >
-            ✦
-          </motion.p>
-        </motion.div>
-
-        {/* Orb SVG */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 180, damping: 14, delay: 0.3 }}
-        >
-          <svg width="280" height="200" viewBox="0 0 280 200">
-            {/* Rings */}
-            {ORBS.map((r, i) => (
-              <motion.circle
-                key={i}
-                cx="140" cy="110"
-                r={r}
-                fill={ORB_FILLS[i]}
-                stroke={ORB_STROKES[i]}
-                strokeWidth={i < 3 ? 1.5 : 0}
-                animate={{
-                  y: [0, -14, 0],
-                  opacity: i < 3 ? [0.35, 0.7, 0.35] : [0.9, 1, 0.9],
-                  scale: i < 3 ? [0.95, 1.06, 0.95] : [1, 1.06, 1],
-                }}
-                style={{ transformOrigin: "140px 110px" }}
-                transition={{
-                  duration: 2.8,
-                  delay: i * 0.18,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            ))}
-
-            {/* Orbiting sparkles */}
-            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg, i) => {
-              const rad = (deg * Math.PI) / 180;
-              const x = 140 + Math.cos(rad) * 72;
-              const y = 110 + Math.sin(rad) * 72;
-              return (
-                <motion.text
-                  key={i}
-                  x={x} y={y}
-                  fontSize="15"
-                  fill={i % 2 === 0 ? "#f0abfc" : "#67e8f9"}
-                  textAnchor="middle"
-                  animate={{
-                    opacity: [0, 1, 0],
-                    y: [y, y - 14, y],
-                    scale: [0.4, 1.4, 0.4],
-                  }}
-                  style={{ transformOrigin: `${x}px ${y}px` }}
-                  transition={{ duration: 1.9, delay: i * 0.24, repeat: Infinity }}
-                >
-                  {i % 3 === 0 ? "✦" : i % 3 === 1 ? "✷" : "✸"}
-                </motion.text>
-              );
-            })}
-          </svg>
-        </motion.div>
+          ✦ LEVITATING
+        </motion.p>
       </div>
 
-      <motion.p
-        animate={{ opacity: [0.4, 0.8, 0.4] }}
-        transition={{ duration: 2.5, repeat: Infinity }}
-        className="absolute bottom-6 text-purple-300/70 text-[10px] tracking-[0.4em] uppercase"
+      {/* Star character */}
+      <motion.div
+        initial={{ scale: 0, rotate: -20 }}
+        animate={{ scale: 1, rotate: 0 }}
+        transition={{ type: "spring", stiffness: 260, damping: 14, delay: 0.2 }}
       >
-        tap anywhere to close
+        <svg width="220" height="240" viewBox="0 0 220 240">
+
+          {/* Shadow on ground — shrinks as character floats up */}
+          <motion.ellipse
+            cx="110" cy="225" rx="40" ry="7"
+            fill="#000" opacity="0.3"
+            animate={{ rx: [40, 22, 40], opacity: [0.3, 0.1, 0.3] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Outer glow rings */}
+          {[72, 55, 40].map((r, i) => (
+            <motion.circle
+              key={i}
+              cx="110" cy="118"
+              r={r}
+              fill="none"
+              stroke={["#3b0764", "#6d28d9", "#a855f7"][i]}
+              strokeWidth={[1, 1.5, 2][i]}
+              animate={{ y: [0, -18, 0], opacity: [0.4, 0.7, 0.4], scale: [0.96, 1.05, 0.96] }}
+              style={{ transformOrigin: "110px 118px" }}
+              transition={{ duration: 2.6, delay: i * 0.28, repeat: Infinity, ease: "easeInOut" }}
+            />
+          ))}
+
+          {/* Body glow layers */}
+          <motion.circle cx="110" cy="118" r="30"
+            fill="#4c1d95"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.circle cx="110" cy="118" r="22"
+            fill="#7e22ce"
+            animate={{ y: [0, -18, 0], scale: [1, 1.06, 1] }}
+            style={{ transformOrigin: "110px 118px" }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.circle cx="110" cy="118" r="13"
+            fill="#a855f7"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.circle cx="110" cy="118" r="6"
+            fill="#f3e8ff"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Face — eyes */}
+          <motion.circle cx="103" cy="113" r="4" fill="#e9d5ff"
+            animate={{ y: [0, -18, 0], scaleY: [1, 0.1, 1] }}
+            style={{ transformOrigin: "103px 113px" }}
+            transition={{
+              y: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+              scaleY: { duration: 0.12, delay: 3.1, repeat: Infinity, repeatDelay: 3.5 },
+            }}
+          />
+          <motion.circle cx="117" cy="113" r="4" fill="#e9d5ff"
+            animate={{ y: [0, -18, 0], scaleY: [1, 0.1, 1] }}
+            style={{ transformOrigin: "117px 113px" }}
+            transition={{
+              y: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+              scaleY: { duration: 0.12, delay: 3.1, repeat: Infinity, repeatDelay: 3.5 },
+            }}
+          />
+          {/* Pupils */}
+          <motion.circle cx="104" cy="114" r="2" fill="#4c1d95"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.circle cx="118" cy="114" r="2" fill="#4c1d95"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Smile */}
+          <motion.path
+            d="M103 126 Q110 132 117 126"
+            fill="none" stroke="#e9d5ff" strokeWidth="2" strokeLinecap="round"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          {/* Rosy cheeks */}
+          <motion.circle cx="96" cy="121" r="6" fill="#f0abfc" opacity="0.4"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+          <motion.circle cx="124" cy="121" r="6" fill="#f0abfc" opacity="0.4"
+            animate={{ y: [0, -18, 0] }}
+            transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+
+          {/* Orbiting sparkle stars */}
+          {[0, 60, 120, 180, 240, 300].map((deg, i) => {
+            const rad = (deg * Math.PI) / 180;
+            const ox = 110 + Math.cos(rad) * 62;
+            const oy = 118 + Math.sin(rad) * 62;
+            return (
+              <motion.text
+                key={i}
+                x={ox} y={oy}
+                fontSize={8 + (i % 2) * 5}
+                fill={i % 2 === 0 ? "#f0abfc" : "#67e8f9"}
+                textAnchor="middle"
+                animate={{
+                  rotate: 360,
+                  opacity: [0.5, 1, 0.5],
+                  y: [oy, oy - 18, oy],
+                }}
+                style={{ transformOrigin: "110px 118px" }}
+                transition={{
+                  rotate: { duration: 6 + i * 0.4, repeat: Infinity, ease: "linear" },
+                  opacity: { duration: 1.6, delay: i * 0.25, repeat: Infinity },
+                  y: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+                }}
+              >
+                {i % 3 === 0 ? "✦" : i % 3 === 1 ? "✷" : "✸"}
+              </motion.text>
+            );
+          })}
+
+          {/* Scattered sparkles in background */}
+          {[[22, 50], [192, 55], [14, 170], [200, 165], [108, 30], [56, 195], [164, 200]].map(([x, y], i) => (
+            <motion.text
+              key={i}
+              x={x} y={y}
+              fontSize={8 + (i % 3) * 4}
+              fill={i % 2 === 0 ? "#c084fc" : "#38bdf8"}
+              textAnchor="middle"
+              animate={{ opacity: [0, 1, 0], scale: [0.3, 1.4, 0.3] }}
+              style={{ transformOrigin: `${x}px ${y}px` }}
+              transition={{
+                duration: 1.5,
+                delay: i * 0.28,
+                repeat: Infinity,
+                repeatDelay: 0.8,
+              }}
+            >
+              ✦
+            </motion.text>
+          ))}
+        </svg>
+      </motion.div>
+
+      {/* Tap hint */}
+      <motion.p
+        animate={{ opacity: [0.35, 0.7, 0.35] }}
+        transition={{ duration: 2.4, repeat: Infinity }}
+        className="text-[9px] tracking-[0.4em] uppercase"
+        style={{ color: "#a855f766" }}
+      >
+        tap to close
       </motion.p>
     </div>
   );
@@ -345,22 +401,21 @@ export default function CelebEasterEgg({ slug }: { slug: string }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.2 }}
             onClick={() => setOpen(false)}
-            className="fixed inset-0 z-[60] cursor-pointer overflow-hidden"
+            className="fixed inset-0 z-[60] flex items-center justify-center cursor-pointer overflow-hidden"
             style={{
               background: isSabrina
-                ? "radial-gradient(ellipse at 50% 60%, #92400e 0%, #451a03 35%, #1c0800 65%, #000 100%)"
-                : "radial-gradient(ellipse at 50% 55%, #4c1d95 0%, #2e0b5e 35%, #0d0129 65%, #000 100%)",
-              backdropFilter: "blur(8px)",
+                ? "radial-gradient(ellipse at 50% 55%, #3b1a05 0%, #1c0a00 50%, #000 100%)"
+                : "radial-gradient(ellipse at 50% 50%, #2e0b5e 0%, #0d0129 50%, #000 100%)",
+              backdropFilter: "blur(6px)",
             }}
           >
             <motion.div
-              initial={{ scale: 0.7, opacity: 0 }}
+              initial={{ scale: 0.55, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.7, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 250, damping: 20 }}
-              className="w-full h-full"
+              exit={{ scale: 0.55, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
             >
               {isSabrina ? <EspressoScene /> : <LevitatingScene />}
             </motion.div>
