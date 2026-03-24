@@ -8,6 +8,8 @@ import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
+import ShareImageButton from "@/components/ShareImageButton";
+import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 
 const MODALITY_COLOR: Record<string, string> = {
   Cardinal: "#ef4444", Fixed: "#22c55e", Mutable: "#818cf8",
@@ -125,6 +127,18 @@ export default function HybridPage() {
             >
               <div className="h-0.5 bg-gradient-to-r from-amber-500/60 via-amber-500/20 to-transparent" />
               <div className="p-5 md:p-8">
+                {/* Share button */}
+                <div className="flex justify-end mb-4">
+                  <ShareImageButton data={{
+                    type: "hybrid",
+                    name: result.name || name,
+                    sign: zodiac.sign,
+                    symbol: SIGN_SYMBOL[zodiac.sign.toLowerCase()] ?? "✦",
+                    signColor: SIGN_COLOR[zodiac.sign.toLowerCase()] ?? "#f59e0b",
+                    mbtiType: mbtiProf.type,
+                    modality: zodiac.modality,
+                  }} />
+                </div>
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div>
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Zodiac</p>

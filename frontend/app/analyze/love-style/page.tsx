@@ -10,6 +10,24 @@ import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
+import ShareImageButton from "@/components/ShareImageButton";
+import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
+
+function getSign(month: number, day: number): string {
+  const d = month * 100 + day;
+  if (d >= 321 && d <= 419) return "aries";
+  if (d >= 420 && d <= 520) return "taurus";
+  if (d >= 521 && d <= 620) return "gemini";
+  if (d >= 621 && d <= 722) return "cancer";
+  if (d >= 723 && d <= 822) return "leo";
+  if (d >= 823 && d <= 922) return "virgo";
+  if (d >= 923 && d <= 1022) return "libra";
+  if (d >= 1023 && d <= 1121) return "scorpio";
+  if (d >= 1122 && d <= 1221) return "sagittarius";
+  if (d >= 1222 || d <= 119) return "capricorn";
+  if (d >= 120 && d <= 218) return "aquarius";
+  return "pisces";
+}
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
 
@@ -133,11 +151,22 @@ export default function LoveStylePage() {
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#fb923c]/60 via-[#fb923c]/20 to-transparent" />
-              <div className="p-5 md:p-8 flex flex-col md:flex-row items-center gap-5 md:gap-8">
+              <div className="p-5 md:p-8">
+                <div className="flex justify-end mb-4">
+                  <ShareImageButton data={{
+                    type: "compat",
+                    nameA: names.a, nameB: names.b,
+                    signA: getSign(a.month, a.day), symbolA: SIGN_SYMBOL[getSign(a.month, a.day)] ?? "✦", colorA: SIGN_COLOR[getSign(a.month, a.day)] ?? "#f59e0b",
+                    signB: getSign(b.month, b.day), symbolB: SIGN_SYMBOL[getSign(b.month, b.day)] ?? "✦", colorB: SIGN_COLOR[getSign(b.month, b.day)] ?? "#818cf8",
+                    score: result.love_style_compatibility_score,
+                  }} />
+                </div>
+                <div className="flex flex-col md:flex-row items-center gap-5 md:gap-8">
                 <ScoreRing score={result.love_style_compatibility_score} size={160} label="Style Compatibility" color="#fb923c" />
                 <div className="grid grid-cols-2 gap-3 flex-1">
                   <MetricCard label={`${names.a} Style`} value={result.a_love_style.dominant_style} unit="" accent="orange" />
                   <MetricCard label={`${names.b} Style`} value={result.b_love_style.dominant_style} unit="" accent="orange" />
+                </div>
                 </div>
               </div>
             </motion.div>

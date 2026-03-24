@@ -10,8 +10,26 @@ import PersonForm from "@/components/PersonForm";
 import ConstellationStream from "@/components/ConstellationStream";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
+import ShareImageButton from "@/components/ShareImageButton";
+import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+
+function getSign(month: number, day: number): string {
+  const d = month * 100 + day;
+  if (d >= 321 && d <= 419) return "aries";
+  if (d >= 420 && d <= 520) return "taurus";
+  if (d >= 521 && d <= 620) return "gemini";
+  if (d >= 621 && d <= 722) return "cancer";
+  if (d >= 723 && d <= 822) return "leo";
+  if (d >= 823 && d <= 922) return "virgo";
+  if (d >= 923 && d <= 1022) return "libra";
+  if (d >= 1023 && d <= 1121) return "scorpio";
+  if (d >= 1122 && d <= 1221) return "sagittarius";
+  if (d >= 1222 || d <= 119) return "capricorn";
+  if (d >= 120 && d <= 218) return "aquarius";
+  return "pisces";
+}
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
 
@@ -298,8 +316,19 @@ export default function SextrologyPage() {
                   className={CARD}
                 >
                   <div className="h-0.5 bg-gradient-to-r from-[#6366f1]/60 via-[#6366f1]/20 to-transparent" />
-                  <div className="p-5 md:p-8 flex justify-center">
-                    <ScoreRing score={pr.sexual_compatibility_score} size={180} label="Intimacy Score" color="#6366f1" />
+                  <div className="p-5 md:p-8">
+                    <div className="flex justify-end mb-4">
+                      <ShareImageButton data={{
+                        type: "compat",
+                        nameA: names.a, nameB: names.b,
+                        signA: getSign(a.month, a.day), symbolA: SIGN_SYMBOL[getSign(a.month, a.day)] ?? "✦", colorA: SIGN_COLOR[getSign(a.month, a.day)] ?? "#f59e0b",
+                        signB: getSign(b.month, b.day), symbolB: SIGN_SYMBOL[getSign(b.month, b.day)] ?? "✦", colorB: SIGN_COLOR[getSign(b.month, b.day)] ?? "#818cf8",
+                        score: pr.sexual_compatibility_score,
+                      }} />
+                    </div>
+                    <div className="flex justify-center">
+                      <ScoreRing score={pr.sexual_compatibility_score} size={180} label="Intimacy Score" color="#6366f1" />
+                    </div>
                   </div>
                 </motion.div>
 
