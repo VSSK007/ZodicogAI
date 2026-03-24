@@ -7,6 +7,7 @@ export interface Celebrity {
   birthMonth: number
   nationality: string
   category: string    // "Actor", "Musician", "Athlete", etc.
+  wikiTitle?: string  // override when name is ambiguous on Wikipedia
 }
 
 export const SIGN_ORDER = [
@@ -41,7 +42,7 @@ export const CELEBRITIES: Celebrity[] = [
   { name: "Rani Mukerji",        slug: "rani-mukerji",        sign: "aries", born: "Mar 21, 1978", birthDay: 21, birthMonth: 3,  nationality: "Indian",              category: "Actress" },
   { name: "Lady Gaga",           slug: "lady-gaga",           sign: "aries", born: "Mar 28, 1986", birthDay: 28, birthMonth: 3,  nationality: "American",            category: "Musician" },
   { name: "Mariah Carey",        slug: "mariah-carey",        sign: "aries", born: "Mar 27, 1969", birthDay: 27, birthMonth: 3,  nationality: "American",            category: "Musician" },
-  { name: "Robert Downey Jr.",   slug: "robert-downey-jr",    sign: "aries", born: "Apr 4, 1965",  birthDay: 4,  birthMonth: 4,  nationality: "American",            category: "Actor" },
+  { name: "Robert Downey Jr.",   slug: "robert-downey-jr",    sign: "aries", born: "Apr 4, 1965",  birthDay: 4,  birthMonth: 4,  nationality: "American",            category: "Actor",    wikiTitle: "Robert Downey Jr." },
   { name: "Emma Watson",         slug: "emma-watson",         sign: "aries", born: "Apr 15, 1990", birthDay: 15, birthMonth: 4,  nationality: "British",             category: "Actress" },
   { name: "Elton John",          slug: "elton-john",          sign: "aries", born: "Mar 25, 1947", birthDay: 25, birthMonth: 3,  nationality: "British",             category: "Musician" },
   { name: "Victoria Beckham",    slug: "victoria-beckham",    sign: "aries", born: "Apr 17, 1974", birthDay: 17, birthMonth: 4,  nationality: "British",             category: "Fashion Designer" },
@@ -61,12 +62,12 @@ export const CELEBRITIES: Celebrity[] = [
   { name: "Kourtney Kardashian", slug: "kourtney-kardashian", sign: "aries", born: "Apr 18, 1979", birthDay: 18, birthMonth: 4,  nationality: "American",            category: "TV Personality" },
   { name: "Big Sean",            slug: "big-sean",            sign: "aries", born: "Mar 25, 1988", birthDay: 25, birthMonth: 3,  nationality: "American",            category: "Musician" },
   { name: "Chance the Rapper",   slug: "chance-the-rapper",   sign: "aries", born: "Apr 16, 1993", birthDay: 16, birthMonth: 4,  nationality: "American",            category: "Musician" },
-  { name: "Conan O'Brien",       slug: "conan-obrien",        sign: "aries", born: "Apr 18, 1963", birthDay: 18, birthMonth: 4,  nationality: "American",            category: "TV Host" },
+  { name: "Conan O'Brien",       slug: "conan-obrien",        sign: "aries", born: "Apr 18, 1963", birthDay: 18, birthMonth: 4,  nationality: "American",            category: "TV Host",  wikiTitle: "Conan O'Brien" },
   { name: "Mandy Moore",         slug: "mandy-moore",         sign: "aries", born: "Apr 10, 1984", birthDay: 10, birthMonth: 4,  nationality: "American",            category: "Actress" },
   { name: "Harry Houdini",       slug: "harry-houdini",       sign: "aries", born: "Mar 24, 1874", birthDay: 24, birthMonth: 3,  nationality: "Hungarian-American",  category: "Illusionist" },
 
   // ── TAURUS ──────────────────────────────────────────────────────────────────
-  { name: "Jr NTR",              slug: "jr-ntr",              sign: "taurus", born: "May 20, 1983", birthDay: 20, birthMonth: 5,  nationality: "Indian",    category: "Actor" },
+  { name: "Jr NTR",              slug: "jr-ntr",              sign: "taurus", born: "May 20, 1983", birthDay: 20, birthMonth: 5,  nationality: "Indian",    category: "Actor",    wikiTitle: "Jr. NTR" },
   { name: "Samantha Ruth Prabhu",slug: "samantha-ruth-prabhu",sign: "taurus", born: "Apr 28, 1987", birthDay: 28, birthMonth: 4,  nationality: "Indian",    category: "Actress" },
   { name: "Ajith Kumar",         slug: "ajith-kumar",         sign: "taurus", born: "May 1, 1971",  birthDay: 1,  birthMonth: 5,  nationality: "Indian",    category: "Actor" },
   { name: "Trisha Krishnan",     slug: "trisha-krishnan",     sign: "taurus", born: "May 4, 1983",  birthDay: 4,  birthMonth: 5,  nationality: "Indian",    category: "Actress" },
@@ -122,7 +123,7 @@ export const CELEBRITIES: Celebrity[] = [
   { name: "Bob Dylan",           slug: "bob-dylan",           sign: "gemini", born: "May 24, 1941", birthDay: 24, birthMonth: 5,  nationality: "American",  category: "Musician" },
   { name: "Kendrick Lamar",      slug: "kendrick-lamar",      sign: "gemini", born: "Jun 17, 1987", birthDay: 17, birthMonth: 6,  nationality: "American",  category: "Musician" },
   { name: "Naomi Campbell",      slug: "naomi-campbell",      sign: "gemini", born: "May 22, 1970", birthDay: 22, birthMonth: 5,  nationality: "British",   category: "Model" },
-  { name: "Chris Evans",         slug: "chris-evans",         sign: "gemini", born: "Jun 13, 1981", birthDay: 13, birthMonth: 6,  nationality: "American",  category: "Actor" },
+  { name: "Chris Evans",         slug: "chris-evans",         sign: "gemini", born: "Jun 13, 1981", birthDay: 13, birthMonth: 6,  nationality: "American",  category: "Actor",    wikiTitle: "Chris Evans (actor)" },
   { name: "Nicole Kidman",       slug: "nicole-kidman",       sign: "gemini", born: "Jun 20, 1967", birthDay: 20, birthMonth: 6,  nationality: "Australian", category: "Actress" },
   { name: "Colin Farrell",       slug: "colin-farrell",       sign: "gemini", born: "May 31, 1976", birthDay: 31, birthMonth: 5,  nationality: "Irish",     category: "Actor" },
   { name: "Walt Whitman",        slug: "walt-whitman",        sign: "gemini", born: "May 31, 1819", birthDay: 31, birthMonth: 5,  nationality: "American",  category: "Poet" },
@@ -133,7 +134,7 @@ export const CELEBRITIES: Celebrity[] = [
   { name: "Priyanka Chopra",     slug: "priyanka-chopra",     sign: "cancer", born: "Jul 18, 1982", birthDay: 18, birthMonth: 7,  nationality: "Indian",          category: "Actress" },
   { name: "Katrina Kaif",        slug: "katrina-kaif",        sign: "cancer", born: "Jul 16, 1983", birthDay: 16, birthMonth: 7,  nationality: "British-Indian",  category: "Actress" },
   { name: "Ranveer Singh",       slug: "ranveer-singh",       sign: "cancer", born: "Jul 6, 1985",  birthDay: 6,  birthMonth: 7,  nationality: "Indian",          category: "Actor" },
-  { name: "MS Dhoni",            slug: "ms-dhoni",            sign: "cancer", born: "Jul 7, 1981",  birthDay: 7,  birthMonth: 7,  nationality: "Indian",          category: "Athlete" },
+  { name: "MS Dhoni",            slug: "ms-dhoni",            sign: "cancer", born: "Jul 7, 1981",  birthDay: 7,  birthMonth: 7,  nationality: "Indian",          category: "Athlete",  wikiTitle: "MS Dhoni" },
   { name: "Vijay",               slug: "vijay-actor",         sign: "cancer", born: "Jun 22, 1974", birthDay: 22, birthMonth: 6,  nationality: "Indian",          category: "Actor" },
   { name: "Sundar Pichai",       slug: "sundar-pichai",       sign: "cancer", born: "Jul 12, 1972", birthDay: 12, birthMonth: 7,  nationality: "Indian-American", category: "Entrepreneur" },
   { name: "Tom Hanks",           slug: "tom-hanks",           sign: "cancer", born: "Jul 9, 1956",  birthDay: 9,  birthMonth: 7,  nationality: "American",        category: "Actor" },
@@ -198,7 +199,7 @@ export const CELEBRITIES: Celebrity[] = [
   { name: "Akshay Kumar",        slug: "akshay-kumar",        sign: "virgo", born: "Sep 9, 1967",  birthDay: 9,  birthMonth: 9,  nationality: "Indian",    category: "Actor" },
   { name: "Nagarjuna",           slug: "nagarjuna",           sign: "virgo", born: "Aug 29, 1959", birthDay: 29, birthMonth: 8,  nationality: "Indian",    category: "Actor" },
   { name: "Pawan Kalyan",        slug: "pawan-kalyan",        sign: "virgo", born: "Sep 2, 1971",  birthDay: 2,  birthMonth: 9,  nationality: "Indian",    category: "Actor" },
-  { name: "Simbu",               slug: "simbu",               sign: "virgo", born: "Sep 2, 1983",  birthDay: 2,  birthMonth: 9,  nationality: "Indian",    category: "Actor" },
+  { name: "Simbu",               slug: "simbu",               sign: "virgo", born: "Sep 2, 1983",  birthDay: 2,  birthMonth: 9,  nationality: "Indian",    category: "Actor",    wikiTitle: "Silambarasan" },
   { name: "Rishi Kapoor",        slug: "rishi-kapoor",        sign: "virgo", born: "Sep 4, 1952",  birthDay: 4,  birthMonth: 9,  nationality: "Indian",    category: "Actor" },
   { name: "Beyoncé",             slug: "beyonce",             sign: "virgo", born: "Sep 4, 1981",  birthDay: 4,  birthMonth: 9,  nationality: "American",  category: "Musician" },
   { name: "Michael Jackson",     slug: "michael-jackson",     sign: "virgo", born: "Aug 29, 1958", birthDay: 29, birthMonth: 8,  nationality: "American",  category: "Musician" },
@@ -325,7 +326,7 @@ export const CELEBRITIES: Celebrity[] = [
   { name: "Salman Khan",         slug: "salman-khan",         sign: "capricorn", born: "Dec 27, 1965", birthDay: 27, birthMonth: 12, nationality: "Indian",         category: "Actor" },
   { name: "Deepika Padukone",    slug: "deepika-padukone",    sign: "capricorn", born: "Jan 5, 1986",  birthDay: 5,  birthMonth: 1,  nationality: "Indian",         category: "Actress" },
   { name: "Hrithik Roshan",      slug: "hrithik-roshan",      sign: "capricorn", born: "Jan 10, 1974", birthDay: 10, birthMonth: 1,  nationality: "Indian",         category: "Actor" },
-  { name: "AR Rahman",           slug: "ar-rahman",           sign: "capricorn", born: "Jan 6, 1967",  birthDay: 6,  birthMonth: 1,  nationality: "Indian",         category: "Musician" },
+  { name: "AR Rahman",           slug: "ar-rahman",           sign: "capricorn", born: "Jan 6, 1967",  birthDay: 6,  birthMonth: 1,  nationality: "Indian",         category: "Musician", wikiTitle: "A. R. Rahman" },
   { name: "Vijay Sethupathi",    slug: "vijay-sethupathi",    sign: "capricorn", born: "Jan 16, 1978", birthDay: 16, birthMonth: 1,  nationality: "Indian",         category: "Actor" },
   { name: "Ratan Tata",          slug: "ratan-tata",          sign: "capricorn", born: "Dec 28, 1937", birthDay: 28, birthMonth: 12, nationality: "Indian",         category: "Entrepreneur" },
   { name: "Irrfan Khan",         slug: "irrfan-khan",         sign: "capricorn", born: "Jan 7, 1967",  birthDay: 7,  birthMonth: 1,  nationality: "Indian",         category: "Actor" },
