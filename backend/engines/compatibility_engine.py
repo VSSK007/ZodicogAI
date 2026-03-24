@@ -28,10 +28,18 @@ def element_compatibility(a, b):
     return "Moderate"
 
 
-def modality_interaction(a, b):
-    if a == b:
-        return "Intense"
-    return "Dynamic"
+_MODALITY_LABELS: dict[frozenset, str] = {
+    frozenset({"Cardinal"}):              "Rival Initiators — two starters competing for direction; high ambition, power-struggle risk",
+    frozenset({"Fixed"}):                 "Immovable Force — fierce loyalty and resolve, but neither budges in conflict",
+    frozenset({"Mutable"}):               "Fluid Mirrors — open-minded and endlessly adaptable together, but may drift without direction",
+    frozenset({"Cardinal", "Fixed"}):     "Drive Meets Resistance — bold initiative meets stubborn resolve; transformative tension if both learn to yield",
+    frozenset({"Cardinal", "Mutable"}):   "Direction Meets Flow — the initiator sets the path, the adaptor expands it; a natural creative synergy",
+    frozenset({"Fixed", "Mutable"}):      "Anchor Meets Wind — stability meets curiosity; deeply grounding if the Fixed allows the Mutable to roam",
+}
+
+
+def modality_interaction(a: str, b: str) -> str:
+    return _MODALITY_LABELS.get(frozenset({a, b}), "Dynamic")
 
 
 # Numeric affinity tables for zodiac compatibility scoring
@@ -49,12 +57,12 @@ _ELEMENT_AFFINITY: dict[frozenset, float] = {
 }
 
 _MODALITY_SCORE: dict[frozenset, float] = {
-    frozenset({"Cardinal"}):              55.0,  # same modality
-    frozenset({"Fixed"}):                 55.0,
-    frozenset({"Mutable"}):               55.0,
-    frozenset({"Cardinal", "Mutable"}):   80.0,  # complementary flow
-    frozenset({"Cardinal", "Fixed"}):     60.0,
-    frozenset({"Fixed", "Mutable"}):      60.0,
+    frozenset({"Cardinal"}):              58.0,  # competing initiators — ambitious but power-struggle risk
+    frozenset({"Fixed"}):                 55.0,  # stubborn standoff — deep loyalty but rigid
+    frozenset({"Mutable"}):               65.0,  # fluid understanding — flexible but may lack anchor
+    frozenset({"Cardinal", "Mutable"}):   82.0,  # best complement — direction + adaptability
+    frozenset({"Fixed", "Mutable"}):      72.0,  # strong complement — stability + flexibility
+    frozenset({"Cardinal", "Fixed"}):     58.0,  # tension arc — drive meets resistance
 }
 
 

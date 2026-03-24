@@ -48,6 +48,12 @@ const ELEMENT_COLOR: Record<string, string> = {
   Water: "text-blue-400 border-blue-500/30 bg-blue-500/10",
 };
 
+const MODALITY_COLOR: Record<string, string> = {
+  Cardinal: "text-red-400 border-red-500/30 bg-red-500/10",
+  Fixed:    "text-green-400 border-green-500/30 bg-green-500/10",
+  Mutable:  "text-indigo-400 border-indigo-500/30 bg-indigo-500/10",
+};
+
 const MBTI_GROUP: Record<string, { name: string; color: string }> = {
   INTJ: { name: "Analyst", color: "text-violet-400" }, INTP: { name: "Analyst", color: "text-violet-400" },
   ENTJ: { name: "Analyst", color: "text-violet-400" }, ENTP: { name: "Analyst", color: "text-violet-400" },
@@ -124,7 +130,8 @@ export default function HybridForm() {
   const analysis  = result?.analysis;
   const traits    = zodiac?.trait_vector;
   const zodMeta   = zodiac ? ZODIAC_META[zodiac.sign] : null;
-  const elemClass = zodiac ? (ELEMENT_COLOR[zodiac.element] ?? "text-white/50 border-white/10 bg-white/5") : "";
+  const elemClass     = zodiac ? (ELEMENT_COLOR[zodiac.element]   ?? "text-white/50 border-white/10 bg-white/5") : "";
+  const modalityClass = zodiac ? (MODALITY_COLOR[zodiac.modality] ?? "text-white/50 border-white/10 bg-white/5") : "";
   const mbtiGroup = mbti ? (MBTI_GROUP[mbti] ?? null) : null;
 
   return (
@@ -234,7 +241,7 @@ export default function HybridForm() {
                     <span className={`text-xs font-medium px-3 py-1 rounded-full border ${elemClass}`}>
                       {zodiac.element}
                     </span>
-                    <span className="text-xs font-medium px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">
+                    <span className={`text-xs font-medium px-3 py-1 rounded-full border ${modalityClass}`}>
                       {zodiac.modality}
                     </span>
                   </div>

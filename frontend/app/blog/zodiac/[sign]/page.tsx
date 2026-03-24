@@ -8,22 +8,22 @@ export const revalidate = 2592000; // revalidate every 30 days
 // ── Static sign data ──────────────────────────────────────────────────────────
 
 const SIGN_META: Record<string, {
-  symbol: string; dates: string; ruling: string; element: string;
+  symbol: string; dates: string; ruling: string; element: string; modality: string;
   archetype: string; polarity: string; keywords: string[];
   day: number; month: number;
 }> = {
-  aries:       { symbol: "♈", dates: "Mar 21 – Apr 19", ruling: "Mars",             element: "Fire",  archetype: "The Pioneer",     polarity: "Yang", keywords: ["Bold","Driven","Courageous","Impulsive"],     day: 5,  month: 4  },
-  taurus:      { symbol: "♉", dates: "Apr 20 – May 20", ruling: "Venus",            element: "Earth", archetype: "The Sensualist",  polarity: "Yin",  keywords: ["Grounded","Loyal","Patient","Stubborn"],     day: 5,  month: 5  },
-  gemini:      { symbol: "♊", dates: "May 21 – Jun 20", ruling: "Mercury",          element: "Air",   archetype: "The Messenger",   polarity: "Yang", keywords: ["Curious","Witty","Adaptable","Restless"],    day: 5,  month: 6  },
-  cancer:      { symbol: "♋", dates: "Jun 21 – Jul 22", ruling: "Moon",             element: "Water", archetype: "The Nurturer",    polarity: "Yin",  keywords: ["Empathic","Protective","Intuitive","Moody"], day: 5,  month: 7  },
-  leo:         { symbol: "♌", dates: "Jul 23 – Aug 22", ruling: "Sun",              element: "Fire",  archetype: "The Sovereign",   polarity: "Yang", keywords: ["Charismatic","Generous","Proud","Creative"], day: 5,  month: 8  },
-  virgo:       { symbol: "♍", dates: "Aug 23 – Sep 22", ruling: "Mercury",          element: "Earth", archetype: "The Analyst",     polarity: "Yin",  keywords: ["Precise","Reliable","Critical","Devoted"],   day: 5,  month: 9  },
-  libra:       { symbol: "♎", dates: "Sep 23 – Oct 22", ruling: "Venus",            element: "Air",   archetype: "The Diplomat",    polarity: "Yang", keywords: ["Harmonious","Aesthetic","Fair","Indecisive"],day: 5,  month: 10 },
-  scorpio:     { symbol: "♏", dates: "Oct 23 – Nov 21", ruling: "Pluto · Mars",     element: "Water", archetype: "The Alchemist",   polarity: "Yin",  keywords: ["Intense","Perceptive","Private","Magnetic"], day: 5,  month: 11 },
-  sagittarius: { symbol: "♐", dates: "Nov 22 – Dec 21", ruling: "Jupiter",          element: "Fire",  archetype: "The Philosopher", polarity: "Yang", keywords: ["Adventurous","Optimistic","Direct","Free"],  day: 5,  month: 12 },
-  capricorn:   { symbol: "♑", dates: "Dec 22 – Jan 19", ruling: "Saturn",           element: "Earth", archetype: "The Architect",   polarity: "Yin",  keywords: ["Disciplined","Ambitious","Resilient","Reserved"],day:5,month:1},
-  aquarius:    { symbol: "♒", dates: "Jan 20 – Feb 18", ruling: "Uranus · Saturn",  element: "Air",   archetype: "The Visionary",   polarity: "Yang", keywords: ["Unconventional","Humanitarian","Detached","Original"],day:5,month:2},
-  pisces:      { symbol: "♓", dates: "Feb 19 – Mar 20", ruling: "Neptune · Jupiter",element: "Water", archetype: "The Dreamer",     polarity: "Yin",  keywords: ["Compassionate","Mystical","Dreamy","Selfless"],day:5,month:3},
+  aries:       { symbol: "♈", dates: "Mar 21 – Apr 19", ruling: "Mars",             element: "Fire",  modality: "Cardinal", archetype: "The Pioneer",     polarity: "Yang", keywords: ["Bold","Driven","Courageous","Impulsive"],     day: 5,  month: 4  },
+  taurus:      { symbol: "♉", dates: "Apr 20 – May 20", ruling: "Venus",            element: "Earth", modality: "Fixed",    archetype: "The Sensualist",  polarity: "Yin",  keywords: ["Grounded","Loyal","Patient","Stubborn"],     day: 5,  month: 5  },
+  gemini:      { symbol: "♊", dates: "May 21 – Jun 20", ruling: "Mercury",          element: "Air",   modality: "Mutable",  archetype: "The Messenger",   polarity: "Yang", keywords: ["Curious","Witty","Adaptable","Restless"],    day: 5,  month: 6  },
+  cancer:      { symbol: "♋", dates: "Jun 21 – Jul 22", ruling: "Moon",             element: "Water", modality: "Cardinal", archetype: "The Nurturer",    polarity: "Yin",  keywords: ["Empathic","Protective","Intuitive","Moody"], day: 5,  month: 7  },
+  leo:         { symbol: "♌", dates: "Jul 23 – Aug 22", ruling: "Sun",              element: "Fire",  modality: "Fixed",    archetype: "The Sovereign",   polarity: "Yang", keywords: ["Charismatic","Generous","Proud","Creative"], day: 5,  month: 8  },
+  virgo:       { symbol: "♍", dates: "Aug 23 – Sep 22", ruling: "Mercury",          element: "Earth", modality: "Mutable",  archetype: "The Analyst",     polarity: "Yin",  keywords: ["Precise","Reliable","Critical","Devoted"],   day: 5,  month: 9  },
+  libra:       { symbol: "♎", dates: "Sep 23 – Oct 22", ruling: "Venus",            element: "Air",   modality: "Cardinal", archetype: "The Diplomat",    polarity: "Yang", keywords: ["Harmonious","Aesthetic","Fair","Indecisive"],day: 5,  month: 10 },
+  scorpio:     { symbol: "♏", dates: "Oct 23 – Nov 21", ruling: "Pluto · Mars",     element: "Water", modality: "Fixed",    archetype: "The Alchemist",   polarity: "Yin",  keywords: ["Intense","Perceptive","Private","Magnetic"], day: 5,  month: 11 },
+  sagittarius: { symbol: "♐", dates: "Nov 22 – Dec 21", ruling: "Jupiter",          element: "Fire",  modality: "Mutable",  archetype: "The Philosopher", polarity: "Yang", keywords: ["Adventurous","Optimistic","Direct","Free"],  day: 5,  month: 12 },
+  capricorn:   { symbol: "♑", dates: "Dec 22 – Jan 19", ruling: "Saturn",           element: "Earth", modality: "Cardinal", archetype: "The Architect",   polarity: "Yin",  keywords: ["Disciplined","Ambitious","Resilient","Reserved"],day:5,month:1},
+  aquarius:    { symbol: "♒", dates: "Jan 20 – Feb 18", ruling: "Uranus · Saturn",  element: "Air",   modality: "Fixed",    archetype: "The Visionary",   polarity: "Yang", keywords: ["Unconventional","Humanitarian","Detached","Original"],day:5,month:2},
+  pisces:      { symbol: "♓", dates: "Feb 19 – Mar 20", ruling: "Neptune · Jupiter",element: "Water", modality: "Mutable",  archetype: "The Dreamer",     polarity: "Yin",  keywords: ["Compassionate","Mystical","Dreamy","Selfless"],day:5,month:3},
 };
 
 const ALL_SIGNS = Object.keys(SIGN_META);
@@ -93,7 +93,11 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
   const ELEMENT_COLOR: Record<string, string> = {
     Fire: "#f59e0b", Earth: "#a3a37a", Air: "#7dd3fc", Water: "#818cf8",
   };
-  const elColor = ELEMENT_COLOR[meta.element] ?? "#f59e0b";
+  const MODALITY_COLOR: Record<string, string> = {
+    Cardinal: "#ef4444", Fixed: "#22c55e", Mutable: "#818cf8",
+  };
+  const elColor  = ELEMENT_COLOR[meta.element]   ?? "#f59e0b";
+  const modColor = MODALITY_COLOR[meta.modality] ?? "#a1a1aa";
 
   return (
     <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
@@ -117,6 +121,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
         </div>
         <div className="flex flex-wrap gap-2 mb-4">
           <span className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{meta.element}</span>
+          <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ background: `${modColor}18`, color: modColor, border: `1px solid ${modColor}40` }}>{meta.modality}</span>
           <span className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{meta.ruling}</span>
           <span className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{meta.polarity}</span>
           {meta.keywords.map(k => (
@@ -132,6 +137,16 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
 
           {/* Personality */}
           <Section title="Personality" text={article.personality} />
+
+          {/* Modality Profile */}
+          {article.modality_profile && article.modality_profile !== "—" && (
+            <div className="rounded-xl border p-5" style={{ borderColor: `${modColor}30`, background: `${modColor}08` }}>
+              <h2 className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: modColor }}>
+                {meta.modality} Sign
+              </h2>
+              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.modality_profile)}</p>
+            </div>
+          )}
 
           {/* Strengths & Weaknesses */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -9,6 +9,10 @@ import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 
+const MODALITY_COLOR: Record<string, string> = {
+  Cardinal: "#ef4444", Fixed: "#22c55e", Mutable: "#818cf8",
+};
+
 interface HybridResult {
   name: string;
   zodiac_profile: {
@@ -126,7 +130,7 @@ export default function HybridPage() {
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Zodiac</p>
                     <p className="text-2xl font-bold text-amber-200">{zodiac.sign}</p>
                     <p className="text-xs text-zinc-400 mt-1">
-                      {zodiac.element} · {zodiac.modality}
+                      {zodiac.element} · <span style={{ color: MODALITY_COLOR[zodiac.modality] ?? "#a1a1aa" }}>{zodiac.modality}</span>
                     </p>
                   </div>
                   <div>

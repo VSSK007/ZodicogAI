@@ -451,10 +451,14 @@ def _pair_header(ctx: dict) -> str:
 
 
 def _compat_scores_block(ctx: dict) -> str:
+    mod = ctx['modality_score']
+    mod_label = mod.split(" — ")[0] if " — " in mod else mod
+    mod_desc  = mod.split(" — ")[1] if " — " in mod else ""
     return (
         f"  Vector similarity : {ctx['vector_score']}%\n"
         f"  Element compat.   : {ctx['element_score']}\n"
-        f"  Modality          : {ctx['modality_score']}"
+        f"  Modality pairing  : {mod_label}\n"
+        + (f"  Modality note     : {mod_desc}" if mod_desc else "")
     )
 
 
@@ -464,7 +468,8 @@ def _compat_json_schema() -> str:
         '  "relationship_dynamic":  "<2-3 sentences>",\n'
         '  "communication_pattern": "<2-3 sentences>",\n'
         '  "conflict_risk":         "<2-3 sentences>",\n'
-        '  "long_term_viability":   "<2-3 sentences>"\n'
+        '  "long_term_viability":   "<2-3 sentences>",\n'
+        '  "modality_dynamic":      "<2-3 sentences — how their Cardinal/Fixed/Mutable energies interact: who initiates, who resists, who adapts, and what this means for the relationship rhythm>"\n'
         '}'
     )
 
@@ -856,6 +861,7 @@ Required JSON structure:
   "overview":              "<3-5 sentences — the essence of {sign}: mythology, symbol, what drives them at the core>",
   "the_symbol":            "<3-5 sentences — the symbol's meaning, the mythology behind the sign, ruling planet's influence>",
   "personality":           "<4-6 sentences — full personality breakdown: how they think, feel, act, what they need, their contradictions>",
+  "modality_profile":      "<2-3 sentences — what it means that {sign} is a {modality} sign: how this modality shapes their approach to life, relationships, and change; what they initiate, sustain, or adapt — and how this is both their gift and their challenge>",
   "highest_expression":    "<2-3 sentences — {sign} fully evolved: their gifts at peak, the consciousness level they can reach>",
   "shadow_expression":     "<2-3 sentences — {sign} in shadow: the unconscious, the destructive pattern, the fear that drives it>",
   "strengths":             ["<trait 1>", "<trait 2>", "<trait 3>", "<trait 4>", "<trait 5>", "<trait 6>"],

@@ -52,7 +52,22 @@ def _extract(profile: dict) -> dict:
         "expressiveness": float(tv["expressiveness"]),
         "intensity":      float(tv["intensity"]),
         "stability":      float(tv["stability"]),
+        "modality":       profile.get("modality", ""),
     }
+
+
+# Modality pairing → emotional compatibility bonus/penalty (applied to final score)
+# Cardinal = initiates emotional processing (can be anxious/reactive)
+# Fixed    = sustains emotional states (can be resistant to change)
+# Mutable  = adapts emotionally (can be inconsistent)
+_MODALITY_EMOTIONAL_BONUS: dict[frozenset, float] = {
+    frozenset({"Cardinal", "Mutable"}):  +5.0,  # initiator + adaptor — natural emotional flow
+    frozenset({"Fixed", "Mutable"}):     +4.0,  # anchor + flexibility — grounding dynamic
+    frozenset({"Cardinal", "Fixed"}):    -4.0,  # initiator meets resistance — emotional friction
+    frozenset({"Cardinal"}):             -3.0,  # two initiators — competing emotional triggers
+    frozenset({"Fixed"}):                +2.0,  # two anchors — stable but can get stuck
+    frozenset({"Mutable"}):              +1.0,  # two adaptors — fluid but no emotional anchor
+}
 
 
 # ---------------------------------------------------------------------------
@@ -82,7 +97,12 @@ def compute_emotional_compatibility(profile_a: dict, profile_b: dict) -> dict:
         + _WEIGHTS["intensity"]  * intensity_align
         + _WEIGHTS["stability"]  * stability_compat
     )
-    emotional_score = round(combined, 2)
+
+    # Apply modality emotional bonus/penalty
+    modality_bonus = _MODALITY_EMOTIONAL_BONUS.get(
+        frozenset({a["modality"], b["modality"]}), 0.0
+    )
+    emotional_score = round(max(0.0, min(100.0, combined + modality_bonus)), 2)
 
     result = EmotionalCompatibilityResult(
         emotional_expression_similarity=expression_sim,

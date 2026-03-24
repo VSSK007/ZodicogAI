@@ -32,6 +32,7 @@ interface FullResult {
     communication_pattern: string;
     conflict_risk: string;
     long_term_viability: string;
+    modality_dynamic?: string;
   };
 }
 
@@ -192,6 +193,12 @@ export default function RelationshipIntelligencePage() {
                     <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
                   </div>
                 ))}
+                {result.analysis.modality_dynamic && result.analysis.modality_dynamic !== "—" && (
+                  <div className="border-l-2 border-indigo-500/50 pl-4">
+                    <p className="text-xs uppercase tracking-wider mb-1 text-indigo-400/70">Modality Dynamic</p>
+                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis.modality_dynamic)}</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>

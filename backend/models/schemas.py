@@ -65,6 +65,7 @@ class CompatibilityAnalysis(BaseModel):
     communication_pattern: str = "—"
     conflict_risk: str = "—"
     long_term_viability: str = "—"
+    modality_dynamic: str = "—"
 
 
 class SextrologyAnalysis(BaseModel):
@@ -154,6 +155,7 @@ class ZodiacArticle(BaseModel):
     overview: str = "—"
     the_symbol: str = "—"
     personality: str = "—"
+    modality_profile: str = "—"
     highest_expression: str = "—"
     shadow_expression: str = "—"
     strengths: list[str] = []

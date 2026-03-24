@@ -55,6 +55,18 @@ interface BioEntry {
   wiki_image?: string
 }
 
+// ── Modality ──────────────────────────────────────────────────────────────────
+
+const MODALITY: Record<string, string> = {
+  aries: "Cardinal", cancer: "Cardinal", libra: "Cardinal", capricorn: "Cardinal",
+  taurus: "Fixed",   leo: "Fixed",       scorpio: "Fixed",  aquarius: "Fixed",
+  gemini: "Mutable", virgo: "Mutable",   sagittarius: "Mutable", pisces: "Mutable",
+}
+
+const MODALITY_COLOR: Record<string, string> = {
+  Cardinal: "#ef4444", Fixed: "#22c55e", Mutable: "#818cf8",
+}
+
 // ── Aura color names + their actual hex (separate from sign color) ───────────
 
 const AURA_NAME: Record<string, string> = {
@@ -101,8 +113,10 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
   const color     = SIGN_COLOR[celeb.sign]
   const symbol    = SIGN_SYMBOL[celeb.sign]
   const signLabel = SIGN_LABEL[celeb.sign]
-  const auraName  = AURA_NAME[celeb.sign]  ?? "Aura"
-  const auraColor = AURA_COLOR[celeb.sign] ?? color
+  const auraName  = AURA_NAME[celeb.sign]    ?? "Aura"
+  const auraColor = AURA_COLOR[celeb.sign]   ?? color
+  const modality  = MODALITY[celeb.sign]     ?? ""
+  const modColor  = MODALITY_COLOR[modality] ?? "#a1a1aa"
 
   const bioEntry = (CELEB_BIOS as Record<string, BioEntry>)[slug]
   const article: CelebrityArticle | null = bioEntry?.article ?? null
@@ -187,6 +201,14 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
               >
                 {symbol} {signLabel}
               </span>
+              {modality && (
+                <span
+                  className="text-xs font-medium px-2.5 py-1 rounded-full"
+                  style={{ background: `${modColor}18`, color: modColor, border: `1px solid ${modColor}40` }}
+                >
+                  {modality}
+                </span>
+              )}
               <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-400">
                 {celeb.category}
               </span>

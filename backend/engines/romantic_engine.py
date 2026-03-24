@@ -31,6 +31,19 @@ _WEIGHTS = {
     "vector":     0.10,
 }
 
+# Modality pairing → romantic compatibility bonus/penalty
+# Cardinal = pursuer (initiates romance, sets the pace)
+# Fixed    = steady partner (reliable, slow to open but deeply loyal)
+# Mutable  = romantic chameleon (adapts to partner's love style)
+_MODALITY_ROMANTIC_BONUS: dict[frozenset, float] = {
+    frozenset({"Cardinal", "Mutable"}):  +6.0,  # pursuer + chameleon — thrilling, responsive dynamic
+    frozenset({"Fixed", "Mutable"}):     +4.0,  # anchor + adaptor — safe depth meets excitement
+    frozenset({"Cardinal", "Fixed"}):    -3.0,  # pursuer meets wall — initial spark, long-term friction
+    frozenset({"Cardinal"}):             -4.0,  # two pursuers — competition over initiation
+    frozenset({"Fixed"}):                +3.0,  # two anchors — deep trust, low spontaneity
+    frozenset({"Mutable"}):              +0.0,  # two chameleons — fun but neither leads
+}
+
 
 # ---------------------------------------------------------------------------
 # Internal helpers
@@ -124,14 +137,19 @@ def compute_romantic_compatibility(
     emotional_score = float(emotional_result["emotional_compatibility_score"])
 
     # --- Weighted final score ---
-    romantic_score = round(
+    base_score = (
         _WEIGHTS["pacing"]    * pacing_sim
         + _WEIGHTS["affection"] * affection_sim
         + _WEIGHTS["polarity"]  * polarity
         + _WEIGHTS["emotional"] * emotional_score
-        + _WEIGHTS["vector"]    * float(vector_similarity),
-        2,
+        + _WEIGHTS["vector"]    * float(vector_similarity)
     )
+
+    # Apply modality romantic bonus/penalty
+    modality_bonus = _MODALITY_ROMANTIC_BONUS.get(
+        frozenset({profile_a.get("modality", ""), profile_b.get("modality", "")}), 0.0
+    )
+    romantic_score = round(max(0.0, min(100.0, base_score + modality_bonus)), 2)
 
     result = RomanticCompatibilityResult(
         attachment_pacing_similarity=pacing_sim,
