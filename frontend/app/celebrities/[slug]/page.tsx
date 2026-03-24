@@ -108,58 +108,61 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         </Link>
 
         {/* Hero */}
-        <div className="relative rounded-2xl overflow-hidden border border-white/[0.07] mb-8">
-
-          {/* Image banner or colour fallback */}
-          {wikiImage ? (
-            <div className="relative w-full h-64 md:h-80">
-              <Image
-                src={wikiImage}
-                alt={celeb.name}
-                fill
-                className="object-cover object-top"
-                sizes="(max-width: 768px) 100vw, 672px"
-                unoptimized
-              />
-              {/* Cinematic fade: transparent top → solid dark bottom */}
+        <div
+          className="relative rounded-2xl overflow-hidden border border-white/[0.07] mb-8 pt-10 pb-7 px-7"
+          style={{ background: `radial-gradient(ellipse at top, ${color}18 0%, transparent 65%)` }}
+        >
+          {/* Avatar — centered circle with sign-color glow */}
+          <div className="flex flex-col items-center mb-6">
+            <div className="relative">
+              {wikiImage ? (
+                <div
+                  className="w-32 h-32 rounded-full overflow-hidden"
+                  style={{
+                    border: `3px solid ${color}80`,
+                    boxShadow: `0 0 0 6px ${color}18, 0 0 32px ${color}40`,
+                  }}
+                >
+                  <Image
+                    src={wikiImage}
+                    alt={celeb.name}
+                    width={128}
+                    height={128}
+                    className="w-full h-full object-cover object-top"
+                    unoptimized
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-32 h-32 rounded-full flex items-center justify-center text-4xl font-bold"
+                  style={{
+                    backgroundColor: `${color}18`,
+                    border: `3px solid ${color}60`,
+                    boxShadow: `0 0 0 6px ${color}10, 0 0 28px ${color}30`,
+                    color,
+                  }}
+                >
+                  {symbol}
+                </div>
+              )}
+              {/* Sign badge — bottom-right of circle */}
               <div
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(to bottom, transparent 20%, rgba(8,8,16,0.6) 60%, #080810 100%)`,
-                }}
-              />
-              {/* Sign badge — floats top-right over image */}
-              <div
-                className="absolute top-4 right-4 w-11 h-11 rounded-xl flex items-center justify-center text-xl font-bold backdrop-blur-sm"
-                style={{ backgroundColor: `${color}30`, border: `1px solid ${color}60`, color }}
+                className="absolute bottom-0 right-0 w-9 h-9 rounded-full flex items-center justify-center text-base font-bold"
+                style={{ backgroundColor: `${color}30`, border: `2px solid ${color}70`, color, backdropFilter: "blur(4px)" }}
               >
                 {symbol}
               </div>
             </div>
-          ) : (
-            <div
-              className="w-full h-44 flex items-center justify-center"
-              style={{ background: `radial-gradient(ellipse at top, ${color}22 0%, transparent 70%)` }}
-            >
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold"
-                style={{ backgroundColor: `${color}20`, border: `1px solid ${color}40`, color }}
-              >
-                {symbol}
-              </div>
-            </div>
-          )}
+          </div>
 
-          {/* Info — pulled up over the image fade */}
-          <div className={`px-7 pb-7 ${wikiImage ? "-mt-16 relative" : "pt-2"}`}>
-
-            {/* Name */}
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3 drop-shadow-lg">
+          {/* Name — centered */}
+          <div className="text-center">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
               {celeb.name}
             </h1>
 
-            {/* Meta row */}
-            <div className="flex flex-wrap items-center gap-2 mb-5">
+            {/* Meta pills — centered */}
+            <div className="flex flex-wrap justify-center gap-2 mb-5">
               <span
                 className="text-xs font-semibold px-2.5 py-1 rounded-full"
                 style={{ backgroundColor: `${color}20`, color, border: `1px solid ${color}40` }}
@@ -187,8 +190,8 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
               )}
             </div>
 
-            {/* Life path + aura row */}
-            <div className="flex flex-wrap gap-4">
+            {/* Life path + aura — centered */}
+            <div className="flex flex-wrap justify-center gap-6">
               {lifePathNum !== null && (
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 rounded-full border border-amber-500/40 bg-amber-500/10 flex items-center justify-center text-sm font-bold text-amber-400">
