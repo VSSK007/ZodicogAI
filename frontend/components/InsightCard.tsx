@@ -76,6 +76,15 @@ function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
   return lines;
 }
 
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [head, b64] = dataUrl.split(",");
+  const mime = head.match(/:(.*?);/)?.[1] ?? "image/png";
+  const bin  = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+}
+
 async function captureInsightCard(
   hook: string,
   name: string | undefined,
@@ -187,7 +196,7 @@ export default function InsightCard({
     setState("capturing");
     try {
       const dataUrl  = await captureInsightCard(hook, name, tags, score, hookType);
-      const blob     = await (await fetch(dataUrl)).blob();
+      const blob     = dataUrlToBlob(dataUrl);
       const file     = new File([blob], "zodicogai.png", { type: "image/png" });
       const text     = shareText ?? hook;
 

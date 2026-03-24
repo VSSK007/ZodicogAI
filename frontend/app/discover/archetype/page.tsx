@@ -85,8 +85,8 @@ export default function ArchetypePage() {
           </p>
         </div>
 
-        {/* Form */}
-        <DiscoverForm onSubmit={handleSubmit} loading={loading} error={error} />
+        {/* Form — hidden once result is shown */}
+        {!result && <DiscoverForm onSubmit={handleSubmit} loading={loading} error={error} />}
 
         {/* Skeleton */}
         {loading && <DiscoverSkeleton />}
@@ -101,6 +101,15 @@ export default function ArchetypePage() {
               exit={{ opacity: 0 }}
               className="space-y-5"
             >
+              {/* Reset */}
+              <button
+                onClick={() => setResult(null)}
+                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+                Try again
+              </button>
+
               {/* Identity pill */}
               <div className="flex flex-wrap gap-2 items-center">
                 <span className="px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-sm font-semibold">

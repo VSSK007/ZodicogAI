@@ -87,8 +87,8 @@ export default function RecommendationsPage() {
           </p>
         </div>
 
-        {/* Form */}
-        <DiscoverForm onSubmit={handleSubmit} loading={loading} error={error} />
+        {/* Form — hidden once result is shown */}
+        {!result && <DiscoverForm onSubmit={handleSubmit} loading={loading} error={error} />}
 
         {/* Skeleton */}
         {loading && <DiscoverSkeleton />}
@@ -103,6 +103,15 @@ export default function RecommendationsPage() {
               exit={{ opacity: 0 }}
               className="space-y-5"
             >
+              {/* Reset */}
+              <button
+                onClick={() => setResult(null)}
+                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+                Try again
+              </button>
+
               {/* Tags */}
               <div className="flex flex-wrap gap-2 items-center">
                 <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.sign}</span>

@@ -177,6 +177,15 @@ function renderCompat(ctx: CanvasRenderingContext2D, d: CompatShareData) {
   ctx.restore();
 }
 
+function dataUrlToBlob(dataUrl: string): Blob {
+  const [head, b64] = dataUrl.split(",");
+  const mime = head.match(/:(.*?);/)?.[1] ?? "image/png";
+  const bin  = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+}
+
 async function renderCard(data: ShareData): Promise<string> {
   const canvas = document.createElement("canvas");
   canvas.width = W;
@@ -200,7 +209,7 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
     setState("capturing");
     try {
       const dataUrl  = await renderCard(data);
-      const blob     = await (await fetch(dataUrl)).blob();
+      const blob     = dataUrlToBlob(dataUrl);
       const file     = new File([blob], "zodicogai.png", { type: "image/png" });
       const shareText =
         data.type === "hybrid"
