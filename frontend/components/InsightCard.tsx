@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 
 interface InsightCardProps {
@@ -13,42 +13,160 @@ interface InsightCardProps {
   hookType?: string;
 }
 
-/** Hidden 1080×1080 capture card */
-function CaptureCard({ hook, name, tags = [], score, hookType }: InsightCardProps) {
-  const primary = tags[0];
-  const rest    = tags.slice(1);
-  return (
-    <div style={{ width: 1080, height: 1080, backgroundColor: "#080810", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", fontFamily: "system-ui, -apple-system, sans-serif", padding: 80, position: "relative", overflow: "hidden" }}>
-      {/* Amber glow */}
-      <div style={{ position: "absolute", top: -140, left: "50%", width: 720, height: 480, borderRadius: "50%", background: "radial-gradient(ellipse, rgba(245,158,11,0.22) 0%, transparent 65%)", transform: "translateX(-50%)" }} />
-      {/* Person name */}
-      {name && <div style={{ fontSize: 28, color: "rgba(255,255,255,0.35)", marginBottom: 20, letterSpacing: "0.06em" }}>{name}</div>}
-      {/* Primary tag — archetype / pattern label */}
-      {primary && <div style={{ fontSize: 54, fontWeight: 800, color: "#f59e0b", marginBottom: 28, textAlign: "center", lineHeight: 1.1 }}>{primary}</div>}
-      {/* Hook text */}
-      <div style={{ fontSize: hook.length > 120 ? 30 : 36, fontWeight: 600, color: "#ffffff", textAlign: "center", lineHeight: 1.45, marginBottom: 44, maxWidth: 880 }}>
-        &ldquo;{hook}&rdquo;
-      </div>
-      {/* Score */}
-      {score !== undefined && (
-        <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 32 }}>
-          <div style={{ fontSize: 22, color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em", textTransform: "uppercase" }}>{hookType ?? "confidence"}</div>
-          <div style={{ fontSize: 36, fontWeight: 700, color: "#fbbf24" }}>{Math.round(score)}%</div>
-        </div>
-      )}
-      {/* Remaining tag pills */}
-      {rest.length > 0 && (
-        <div style={{ display: "flex", gap: 14, flexWrap: "wrap", justifyContent: "center" }}>
-          {rest.map((tag) => (
-            <div key={tag} style={{ padding: "10px 26px", borderRadius: 999, backgroundColor: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)", fontSize: 22, fontWeight: 500 }}>{tag}</div>
-          ))}
-        </div>
-      )}
-      {/* Watermark */}
-      <div style={{ position: "absolute", bottom: 52, color: "rgba(255,255,255,0.18)", fontSize: 26, letterSpacing: "0.14em" }}>ZODICOGAI.COM</div>
-    </div>
-  );
+// ── Canvas capture ────────────────────────────────────────────────────────────
+
+const W = 1080;
+const H = 1080;
+
+function hexRgba(hex: string, a: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${a})`;
 }
+
+function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+function tagPillRow(ctx: CanvasRenderingContext2D, tags: string[], cy: number) {
+  const PH = 50, PAD = 26, GAP = 14;
+  ctx.save();
+  ctx.font = "500 22px system-ui, sans-serif";
+  ctx.textBaseline = "middle";
+  const widths = tags.map(t => ctx.measureText(t).width + PAD * 2);
+  const total  = widths.reduce((a, b) => a + b, 0) + GAP * (tags.length - 1);
+  let x = (W - total) / 2;
+  for (let i = 0; i < tags.length; i++) {
+    const pw = widths[i];
+    rrect(ctx, x, cy, pw, PH, PH / 2);
+    ctx.fillStyle = "rgba(255,255,255,0.05)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.textAlign = "left";
+    ctx.fillText(tags[i], x + PAD, cy + PH / 2);
+    x += pw + GAP;
+  }
+  ctx.restore();
+}
+
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let line = "";
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = test;
+    }
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+async function captureInsightCard(
+  hook: string,
+  name: string | undefined,
+  tags: string[],
+  score: number | undefined,
+  hookType: string | undefined,
+): Promise<string> {
+  const canvas = document.createElement("canvas");
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext("2d")!;
+
+  // Background
+  ctx.fillStyle = "#080810";
+  ctx.fillRect(0, 0, W, H);
+
+  // Amber radial glow
+  const grd = ctx.createRadialGradient(W / 2, -120, 0, W / 2, -120, 520);
+  grd.addColorStop(0, "rgba(245,158,11,0.22)");
+  grd.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, 0, W, H);
+
+  const primary  = tags[0];
+  const rest     = tags.slice(1);
+  const hookFs   = hook.length > 120 ? 30 : 36;
+  const hookLineH = hookFs * 1.55;
+
+  // Pre-measure hook lines for vertical centering
+  ctx.font = `600 ${hookFs}px system-ui, sans-serif`;
+  const hookLines = wrapText(ctx, `\u201C${hook}\u201D`, 880);
+  const hookH = hookLines.length * hookLineH;
+
+  let totalH = hookH;
+  if (name)              totalH += 52;
+  if (primary)           totalH += 80;
+  if (score !== undefined) totalH += 52;
+  if (rest.length > 0)   totalH += 70;
+
+  let y = (H - totalH) / 2;
+
+  ctx.textAlign = "center";
+
+  if (name) {
+    ctx.font = "28px system-ui, sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.textBaseline = "middle";
+    ctx.fillText(name, W / 2, y + 14);
+    y += 52;
+  }
+
+  if (primary) {
+    ctx.font = "bold 54px system-ui, sans-serif";
+    ctx.fillStyle = "#f59e0b";
+    ctx.textBaseline = "middle";
+    ctx.fillText(primary, W / 2, y + 27);
+    y += 80;
+  }
+
+  ctx.font = `600 ${hookFs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "middle";
+  for (let i = 0; i < hookLines.length; i++) {
+    ctx.fillText(hookLines[i], W / 2, y + i * hookLineH + hookLineH / 2);
+  }
+  y += hookH + 36;
+
+  if (score !== undefined) {
+    const label = (hookType ?? "confidence").toUpperCase();
+    ctx.font = "500 24px system-ui, sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.35)";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`${label}  ·  ${Math.round(score)}%`, W / 2, y + 14);
+    y += 52;
+  }
+
+  if (rest.length > 0) {
+    tagPillRow(ctx, rest, y + 10);
+  }
+
+  // Watermark
+  ctx.font = "24px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.18)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("ZODICOGAI.COM", W / 2, H - 52);
+
+  return canvas.toDataURL("image/png");
+}
+
+// ── Component ─────────────────────────────────────────────────────────────────
 
 /**
  * Viral identity card — large hook text, tag pills, optional score bar, share-as-image button.
@@ -62,19 +180,16 @@ export default function InsightCard({
   score,
   hookType,
 }: InsightCardProps) {
-  const captureRef = useRef<HTMLDivElement>(null);
   const [state, setState] = useState<"idle" | "capturing" | "done">("idle");
 
   async function handleShare() {
-    if (!captureRef.current || state === "capturing") return;
+    if (state === "capturing") return;
     setState("capturing");
     try {
-      const { toPng } = await import("html-to-image");
-      const dataUrl = await toPng(captureRef.current, { pixelRatio: 2, cacheBust: true });
-      const blob    = await (await fetch(dataUrl)).blob();
-      const file    = new File([blob], "zodicogai.png", { type: "image/png" });
-      const text    = shareText ?? hook;
-      const url     = typeof window !== "undefined" ? window.location.href : "";
+      const dataUrl  = await captureInsightCard(hook, name, tags, score, hookType);
+      const blob     = await (await fetch(dataUrl)).blob();
+      const file     = new File([blob], "zodicogai.png", { type: "image/png" });
+      const text     = shareText ?? hook;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: "ZodicogAI", text });
@@ -99,15 +214,6 @@ export default function InsightCard({
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.05] p-5 md:p-6 space-y-4"
     >
-      {/* Hidden capture card */}
-      <div
-        ref={captureRef}
-        aria-hidden="true"
-        style={{ position: "fixed", left: "-9999px", top: 0, zIndex: -1 }}
-      >
-        <CaptureCard hook={hook} name={name} tags={tags} score={score} hookType={hookType} />
-      </div>
-
       {/* Hook text — the viral hero */}
       <p className="text-xl md:text-2xl font-semibold text-white leading-snug tracking-tight">
         &ldquo;{hook}&rdquo;
@@ -171,7 +277,7 @@ export default function InsightCard({
           </>
         ) : (
           <>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
               <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
             </svg>
