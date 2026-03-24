@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import type { Metadata } from "next"
 import { renderMd } from "@/lib/renderMd"
 import {
@@ -49,6 +50,8 @@ interface CelebrityArticle {
 interface BioEntry {
   article: CelebrityArticle
   life_path: number
+  wiki_url?: string
+  wiki_image?: string
 }
 
 // ── Aura color names per sign (from color engine data) ───────────────────────
@@ -86,6 +89,8 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
   const bioEntry = (CELEB_BIOS as Record<string, BioEntry>)[slug]
   const article: CelebrityArticle | null = bioEntry?.article ?? null
   const lifePathNum: number | null       = bioEntry?.life_path ?? null
+  const wikiUrl: string | null           = bioEntry?.wiki_url ?? null
+  const wikiImage: string | null         = bioEntry?.wiki_image ?? null
 
   return (
     <main className="min-h-screen bg-[#080810] text-white pt-20 pb-24">
@@ -106,12 +111,34 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         <div className="relative rounded-2xl overflow-hidden border border-white/[0.07] mb-8"
           style={{ background: `radial-gradient(ellipse at top, ${color}18 0%, transparent 70%)` }}>
           <div className="p-8">
-            {/* Sign symbol */}
-            <div
-              className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5"
-              style={{ backgroundColor: `${color}20`, border: `1px solid ${color}40`, color }}
-            >
-              {symbol}
+
+            {/* Photo + sign symbol row */}
+            <div className="flex items-start gap-4 mb-5">
+              {wikiImage ? (
+                <div className="relative w-20 h-20 rounded-2xl overflow-hidden border border-white/[0.10] shrink-0">
+                  <Image
+                    src={wikiImage}
+                    alt={celeb.name}
+                    fill
+                    className="object-cover object-top"
+                    sizes="80px"
+                    unoptimized
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl font-bold shrink-0"
+                  style={{ backgroundColor: `${color}20`, border: `1px solid ${color}40`, color }}
+                >
+                  {symbol}
+                </div>
+              )}
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold shrink-0"
+                style={{ backgroundColor: `${color}20`, border: `1px solid ${color}40`, color }}
+              >
+                {symbol}
+              </div>
             </div>
 
             {/* Name */}
@@ -136,6 +163,16 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
               <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-500">
                 Born {celeb.born}
               </span>
+              {wikiUrl && (
+                <a
+                  href={wikiUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
+                >
+                  Wikipedia ↗
+                </a>
+              )}
             </div>
 
             {/* Life path + aura row */}
