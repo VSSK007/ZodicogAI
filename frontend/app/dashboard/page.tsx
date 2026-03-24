@@ -568,21 +568,23 @@ export default function DashboardPage() {
           <p className="text-zinc-500 mt-1 text-sm">Full read — 8 dimensions + AI interpretation</p>
         </div>
 
-        {/* Input forms */}
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <PersonForm label="Person A" value={a} onChange={setA} />
-          <PersonForm label="Person B" value={b} onChange={setB} />
-        </div>
+        {/* Input forms — hidden once result is shown */}
+        {!result && (<>
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <PersonForm label="Person A" value={a} onChange={setA} />
+            <PersonForm label="Person B" value={b} onChange={setB} />
+          </div>
 
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+          {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-100 disabled:opacity-40 transition mb-10"
-        >
-          {loading ? "Reading the stars…" : "Generate Synastry Report"}
-        </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-100 disabled:opacity-40 transition mb-10"
+          >
+            {loading ? "Reading the stars…" : "Generate Synastry Report"}
+          </button>
+        </>)}
 
         {/* Carousel results */}
         <AnimatePresence>
@@ -593,6 +595,14 @@ export default function DashboardPage() {
               transition={{ duration: 0.3 }}
               style={{ paddingTop: 48 }}
             >
+              <button
+                onClick={() => setResult(null)}
+                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors mb-4"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+                Try again
+              </button>
+
               {/* Touch wrapper */}
               <div
                 onTouchStart={(e) => { touchX.current = e.targetTouches[0].clientX; }}
