@@ -8,6 +8,7 @@ import {
   SIGN_SYMBOL, SIGN_LABEL, SIGN_COLOR,
 } from "@/lib/celebrities"
 import CELEB_BIOS from "@/lib/celeb-bios.json"
+import ShareCelebButton from "@/components/ShareCelebButton"
 
 export const revalidate = false  // fully static — data comes from celeb-bios.json
 
@@ -205,6 +206,18 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                   Wikipedia ↗
                 </a>
               )}
+            </div>
+
+            {/* Share button */}
+            <div className="flex justify-center mb-5">
+              <ShareCelebButton
+                name={celeb.name}
+                signLabel={signLabel}
+                symbol={symbol}
+                slug={slug}
+                lifePathNum={lifePathNum}
+                auraName={auraName}
+              />
             </div>
 
             {/* Life path + aura — centered */}
