@@ -5,7 +5,7 @@ import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
 import MobileMenuSheet from "./MobileMenuSheet";
 
-function BackButton({ onClick }: { onClick: () => void }) {
+function HomeButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
@@ -17,16 +17,22 @@ function BackButton({ onClick }: { onClick: () => void }) {
         boxShadow: "0 0 14px rgba(99,102,241,0.25), inset 0 0 8px rgba(129,140,248,0.08)",
       }}
     >
-      {/* Cosmic back arrow */}
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      {/* Home icon */}
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none">
         <path
-          d="M13 4L7 10L13 16"
+          d="M3 12L12 3L21 12"
           stroke="rgba(165,180,252,0.9)"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="7" cy="10" r="1.5" fill="rgba(165,180,252,0.7)" />
+        <path
+          d="M5 10V20C5 20.55 5.45 21 6 21H10V16H14V21H18C18.55 21 19 20.55 19 20V10"
+          stroke="rgba(165,180,252,0.9)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       </svg>
     </button>
   );
@@ -70,7 +76,7 @@ export default function MobileNavbar() {
         {/* Left of FAB: back button on non-home pages */}
         {!inChat && !isHome && (
           <div className="absolute right-full mr-5">
-            <BackButton onClick={() => router.push("/")} />
+            <HomeButton onClick={() => router.push("/")} />
           </div>
         )}
 
