@@ -256,7 +256,7 @@ export default function CelebEasterEgg({ slug }: { slug: string }) {
       <motion.button
         onClick={() => setOpen(true)}
         aria-label="Easter egg"
-        className="fixed bottom-28 right-4 z-40 w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-base"
+        className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom,0px))] right-4 z-40 w-9 h-9 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-base"
         initial={{ opacity: 0.2 }}
         whileHover={{ opacity: 1, scale: 1.15 }}
         transition={{ duration: 0.2 }}
