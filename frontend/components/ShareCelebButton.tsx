@@ -98,7 +98,8 @@ async function renderCelebCard(p: Props): Promise<string> {
       ctx.clip();
       const scale = Math.max((r * 2) / img.width, (r * 2) / img.height);
       const sw = img.width * scale, sh = img.height * scale;
-      ctx.drawImage(img, cx - sw / 2, cy - sh / 2, sw, sh);
+      // object-top: align image top to circle top so faces aren't cut off
+      ctx.drawImage(img, cx - sw / 2, cy - r, sw, sh);
       ctx.restore();
       // Ring border
       ctx.save();
