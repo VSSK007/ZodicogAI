@@ -94,8 +94,6 @@ html {
     width: 100%;
   }
 
-  /* Hide the Zodicognac FAB while "Explore All" grid is open */
-  body.explore-open .mobile-fab,
   /* Hide FAB + back button while MBTI quiz is expanded */
   body.quiz-open .mobile-fab {
     opacity: 0;

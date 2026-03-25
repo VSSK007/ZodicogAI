@@ -13,24 +13,10 @@ import { EASE, EASE_SPRING, charReveal } from "@/lib/motion";
 const TITLE_CHARS = "ZodicogAI".split("");
 const ZN_DURATION_MS = 2000;
 
-const MORE_OPTIONS = [
-  { label: "Zodiac",        href: "/analyze/zodiac",                   sym: "♈" },
-  { label: "Emotional",     href: "/analyze/emotional",                sym: "◈" },
-  { label: "Romantic",      href: "/analyze/romantic",                 sym: "♥" },
-  { label: "Love Style",    href: "/analyze/love-style",               sym: "✦" },
-  { label: "Love Lang",     href: "/analyze/love-language",            sym: "❝" },
-  { label: "Sextrology",    href: "/analyze/sextrology",               sym: "◉" },
-  { label: "Aura Colors",   href: "/analyze/color",                    sym: "○" },
-  { label: "Numerology",    href: "/analyze/numerology",               sym: "∞" },
-  { label: "Full Intel",    href: "/dashboard",                        sym: "⚡" },
-  { label: "Blog",          href: "/blog",                             sym: "✍" },
-  { label: "About",         href: "/about",                            sym: "◆" },
-];
 
 function HomeContent() {
   const [mode, setMode] = useState<"hybrid" | "compatibility">("hybrid");
   const [znMode, setZnMode] = useState(false);
-  const [showMore, setShowMore] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -42,15 +28,6 @@ function HomeContent() {
       return () => clearTimeout(t);
     }
   }, [searchParams, router]);
-
-  useEffect(() => {
-    if (showMore) {
-      document.body.classList.add("explore-open");
-    } else {
-      document.body.classList.remove("explore-open");
-    }
-    return () => document.body.classList.remove("explore-open");
-  }, [showMore]);
 
   return (
     <main>
@@ -139,27 +116,6 @@ function HomeContent() {
             <Link href="/discover" className="w-full py-4 rounded-2xl text-sm font-semibold bg-white/[0.04] text-amber-300/70 border border-amber-500/15 text-center flex items-center justify-center gap-2 min-h-[52px] tap-highlight-none active:scale-[0.98] transition-transform">
               <span>◈</span> Discover Who You Are
             </Link>
-            <button
-              onClick={() => setShowMore((v) => !v)}
-              className="w-full py-4 rounded-2xl text-sm font-medium bg-white/[0.03] text-amber-200/45 border border-white/[0.06] flex items-center justify-center gap-2 min-h-[52px] tap-highlight-none active:scale-[0.98] transition-transform"
-            >
-              <motion.span animate={{ rotate: showMore ? 45 : 0 }} transition={{ duration: 0.22, ease: EASE }} className="text-xl leading-none">+</motion.span>
-              {showMore ? "Close" : "Explore All"}
-            </button>
-            <AnimatePresence>
-              {showMore && (
-                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.28, ease: EASE }} className="overflow-hidden">
-                  <div className="grid grid-cols-3 gap-2 pt-1 pb-2">
-                    {MORE_OPTIONS.map((opt) => (
-                      <Link key={opt.href} href={opt.href} className="flex flex-col items-center gap-1.5 py-3.5 px-2 rounded-xl bg-amber-500/[0.07] border border-amber-500/[0.14] tap-highlight-none active:scale-[0.96] transition-transform">
-                        <span className="text-base text-amber-400/70">{opt.sym}</span>
-                        <span className="text-[11px] text-amber-200/55 text-center leading-tight">{opt.label}</span>
-                      </Link>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </motion.div>
         </div>
       </div>
