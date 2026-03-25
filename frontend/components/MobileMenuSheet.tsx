@@ -114,7 +114,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
               {[
                 { label: "Blog",  href: "/blog" },
                 { label: "About", href: "/about" },
-                { label: "FAQ",   href: "/faq" },
+                { label: "FAQ",   href: "/blog/faq" },
               ].map((link) => (
                 <Link
                   key={link.href}
