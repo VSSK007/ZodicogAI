@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import { renderMd } from "@/lib/renderMd";
+import ShareImageButton from "@/components/ShareImageButton";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -298,7 +299,13 @@ export default function ColorPage() {
               transition={{ duration: 0.5 }}
               className="space-y-4 md:space-y-6"
             >
-              <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+              <div className="flex items-center justify-between">
+                <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+                {isPair(result)
+                  ? <ShareImageButton data={{ type: "color-pair", nameA: result.a_name, nameB: result.b_name, hexA: result.a_color.hex, hexB: result.b_color.hex, auraNameA: result.a_color.name, auraNameB: result.b_color.name }} />
+                  : <ShareImageButton data={{ type: "color-single", name: result.name, sign: result.sign, auraHex: result.color.hex, auraName: result.color.name, powerName: result.color.power_name }} />
+                }
+              </div>
 
               {isPair(result) ? (
                 <>

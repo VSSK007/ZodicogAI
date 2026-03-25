@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import { renderMd } from "@/lib/renderMd";
+import ShareImageButton from "@/components/ShareImageButton";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -342,7 +343,13 @@ export default function NumerologyPage() {
             transition={{ duration: 0.5 }}
             className="space-y-4 md:space-y-8"
           >
-            <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+            <div className="flex items-center justify-between">
+              <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+              {isPair(result)
+                ? <ShareImageButton data={{ type: "numerology-pair", nameA: result.a_name, nameB: result.b_name, lifePathA: result.a_numerology.life_path_number, lifePathB: result.b_numerology.life_path_number, score: result.compatibility.compatibility_score }} />
+                : <ShareImageButton data={{ type: "numerology", name: result.name, lifePath: result.numerology.life_path_number, expression: result.numerology.expression_number, lucky: result.numerology.lucky_number, numberTitle: result.numerology.number_title }} />
+              }
+            </div>
 
             {isPair(result) ? (
               <>

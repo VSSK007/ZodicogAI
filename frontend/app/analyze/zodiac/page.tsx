@@ -10,6 +10,7 @@ import { renderMd } from "@/lib/renderMd";
 import TraitRadar from "@/components/TraitRadar";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { ZODIAC_COLORS } from "@/lib/colors";
+import ShareImageButton from "@/components/ShareImageButton";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -255,7 +256,10 @@ function ZodiacPageInner() {
             transition={{ duration: 0.35 }}
             className="space-y-8"
           >
-            <button onClick={() => { setResult(null); setShowForm(true); }} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+            <div className="flex items-center justify-between">
+              <button onClick={() => { setResult(null); setShowForm(true); }} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+              <ShareImageButton data={{ type: "zodiac", name: result.name, sign: z.sign, symbol: meta.symbol, signColor: theme.accent, element: z.element, modality: z.modality }} />
+            </div>
 
             {/* ── Hero ── */}
             <RevealOnScroll delay={0.05}>

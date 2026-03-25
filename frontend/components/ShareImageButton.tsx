@@ -27,7 +27,54 @@ export interface CompatShareData {
   score: number;
 }
 
-export type ShareData = HybridShareData | CompatShareData;
+export interface ZodiacShareData {
+  type: "zodiac";
+  name: string;
+  sign: string;
+  symbol: string;
+  signColor: string;
+  element: string;
+  modality: string;
+}
+
+export interface NumerologyShareData {
+  type: "numerology";
+  name: string;
+  lifePath: number;
+  expression: number;
+  lucky: number;
+  numberTitle: string;
+}
+
+export interface NumerologyPairShareData {
+  type: "numerology-pair";
+  nameA: string;
+  nameB: string;
+  lifePathA: number;
+  lifePathB: number;
+  score: number;
+}
+
+export interface ColorSingleShareData {
+  type: "color-single";
+  name: string;
+  sign: string;
+  auraHex: string;
+  auraName: string;
+  powerName: string;
+}
+
+export interface ColorPairShareData {
+  type: "color-pair";
+  nameA: string;
+  nameB: string;
+  hexA: string;
+  hexB: string;
+  auraNameA: string;
+  auraNameB: string;
+}
+
+export type ShareData = HybridShareData | CompatShareData | ZodiacShareData | NumerologyShareData | NumerologyPairShareData | ColorSingleShareData | ColorPairShareData;
 
 // ── Canvas utilities ──────────────────────────────────────────────────────────
 
@@ -177,6 +224,166 @@ function renderCompat(ctx: CanvasRenderingContext2D, d: CompatShareData) {
   ctx.restore();
 }
 
+function renderZodiac(ctx: CanvasRenderingContext2D, d: ZodiacShareData) {
+  glow(ctx, W / 2, 0, 400, d.signColor, 0.28);
+  ctx.font = "120px system-ui, 'Segoe UI Symbol', sans-serif";
+  ctx.fillStyle = d.signColor;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.symbol, W / 2, 240);
+  const nfs = d.name.length > 14 ? 58 : 70;
+  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.name, W / 2, 390);
+  pillRow(ctx, [
+    { text: `${d.symbol} ${d.sign}`, color: d.signColor },
+    { text: d.element, color: d.signColor },
+    { text: d.modality, color: "#a1a1aa" },
+  ], 490);
+}
+
+const GOLD = "#f59e0b";
+
+function renderNumerology(ctx: CanvasRenderingContext2D, d: NumerologyShareData) {
+  glow(ctx, W / 2, 0, 420, GOLD, 0.24);
+  ctx.font = "900 160px system-ui, sans-serif";
+  ctx.fillStyle = GOLD;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(String(d.lifePath), W / 2, 240);
+  ctx.font = "600 24px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.35)";
+  ctx.fillText("LIFE PATH", W / 2, 340);
+  const nfs = d.name.length > 14 ? 52 : 64;
+  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(d.name, W / 2, 430);
+  ctx.font = "26px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.4)";
+  ctx.fillText(d.numberTitle, W / 2, 498);
+  pillRow(ctx, [
+    { text: `LP ${d.lifePath}`, color: GOLD },
+    { text: `Exp ${d.expression}`, color: "#a5b4fc" },
+    { text: `Lucky ${d.lucky}`, color: "#34d399" },
+  ], 560);
+}
+
+function renderNumerologyPair(ctx: CanvasRenderingContext2D, d: NumerologyPairShareData) {
+  glow(ctx, W * 0.28, -60, 340, GOLD, 0.18);
+  glow(ctx, W * 0.72, -60, 340, "#a5b4fc", 0.18);
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 10 ? 44 : 54;
+  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "right";
+  ctx.fillText(d.nameA, W / 2 - 22, 180);
+  ctx.font = "30px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.22)";
+  ctx.textAlign = "center";
+  ctx.fillText("×", W / 2, 180);
+  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "left";
+  ctx.fillText(d.nameB, W / 2 + 22, 180);
+  ctx.font = "900 90px system-ui, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillStyle = GOLD;
+  ctx.fillText(String(d.lifePathA), W / 2 - 150, 320);
+  ctx.fillStyle = "rgba(255,255,255,0.15)";
+  ctx.font = "44px system-ui, sans-serif";
+  ctx.fillText("×", W / 2, 320);
+  ctx.fillStyle = "#a5b4fc";
+  ctx.font = "900 90px system-ui, sans-serif";
+  ctx.fillText(String(d.lifePathB), W / 2 + 150, 320);
+  ctx.font = "22px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.28)";
+  ctx.fillText("LIFE PATHS", W / 2, 390);
+  pillRow(ctx, [
+    { text: `LP ${d.lifePathA}`, color: GOLD },
+    { text: `LP ${d.lifePathB}`, color: "#a5b4fc" },
+  ], 440);
+  ctx.save();
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+  const scoreStr = String(Math.round(d.score));
+  ctx.font = "900 108px system-ui, sans-serif";
+  const sw = ctx.measureText(scoreStr).width;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(scoreStr, W / 2 - 22, 618);
+  ctx.font = "900 60px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.45)";
+  ctx.textAlign = "left";
+  ctx.fillText("%", W / 2 - 22 + sw / 2 + 4, 618);
+  ctx.restore();
+  ctx.font = "22px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.25)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("NUMEROLOGY COMPATIBILITY", W / 2, 700);
+}
+
+function renderColorSingle(ctx: CanvasRenderingContext2D, d: ColorSingleShareData) {
+  glow(ctx, W / 2, H * 0.25, 480, d.auraHex, 0.40);
+  ctx.beginPath();
+  ctx.arc(W / 2, 240, 115, 0, Math.PI * 2);
+  ctx.fillStyle = d.auraHex;
+  ctx.fill();
+  const auraNfs = d.auraName.length > 16 ? 44 : 56;
+  ctx.font = `bold ${auraNfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.auraName, W / 2, 420);
+  const nfs = d.name.length > 14 ? 44 : 54;
+  ctx.font = `${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.fillText(d.name, W / 2, 498);
+  pillRow(ctx, [
+    { text: d.sign, color: d.auraHex },
+    { text: d.powerName, color: "#a1a1aa" },
+  ], 560);
+}
+
+function renderColorPair(ctx: CanvasRenderingContext2D, d: ColorPairShareData) {
+  glow(ctx, W * 0.28, -60, 340, d.hexA, 0.24);
+  glow(ctx, W * 0.72, -60, 340, d.hexB, 0.24);
+  ctx.beginPath();
+  ctx.arc(W / 2 - 150, 215, 78, 0, Math.PI * 2);
+  ctx.fillStyle = d.hexA;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(W / 2 + 150, 215, 78, 0, Math.PI * 2);
+  ctx.fillStyle = d.hexB;
+  ctx.fill();
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 10 ? 44 : 54;
+  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "right";
+  ctx.fillText(d.nameA, W / 2 - 22, 365);
+  ctx.font = "30px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.22)";
+  ctx.textAlign = "center";
+  ctx.fillText("×", W / 2, 365);
+  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "left";
+  ctx.fillText(d.nameB, W / 2 + 22, 365);
+  // Gradient bar
+  const grad = ctx.createLinearGradient(W * 0.1, 0, W * 0.9, 0);
+  grad.addColorStop(0, d.hexA);
+  grad.addColorStop(1, d.hexB);
+  ctx.fillStyle = grad;
+  rrect(ctx, W * 0.1, 430, W * 0.8, 20, 10);
+  ctx.fill();
+  pillRow(ctx, [
+    { text: d.auraNameA, color: d.hexA },
+    { text: d.auraNameB, color: d.hexB },
+  ], 480);
+}
+
 function dataUrlToBlob(dataUrl: string): Blob {
   const [head, b64] = dataUrl.split(",");
   const mime = head.match(/:(.*?);/)?.[1] ?? "image/png";
@@ -193,8 +400,13 @@ async function renderCard(data: ShareData): Promise<string> {
   const ctx = canvas.getContext("2d")!;
   ctx.fillStyle = "#080810";
   ctx.fillRect(0, 0, W, H);
-  if (data.type === "hybrid") renderHybrid(ctx, data);
-  else renderCompat(ctx, data);
+  if      (data.type === "hybrid")          renderHybrid(ctx, data);
+  else if (data.type === "compat")          renderCompat(ctx, data);
+  else if (data.type === "zodiac")          renderZodiac(ctx, data);
+  else if (data.type === "numerology")      renderNumerology(ctx, data);
+  else if (data.type === "numerology-pair") renderNumerologyPair(ctx, data);
+  else if (data.type === "color-single")    renderColorSingle(ctx, data);
+  else if (data.type === "color-pair")      renderColorPair(ctx, data);
   wmk(ctx);
   return canvas.toDataURL("image/png");
 }
@@ -212,9 +424,13 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
       const blob     = dataUrlToBlob(dataUrl);
       const file     = new File([blob], "zodicogai.png", { type: "image/png" });
       const shareText =
-        data.type === "hybrid"
-          ? `${data.name} · ${data.sign} ${data.mbtiType} — my ZodicogAI profile`
-          : `${data.nameA} × ${data.nameB} · ${Math.round(data.score)}% compatibility — ZodicogAI`;
+        data.type === "hybrid"          ? `${data.name} · ${data.sign} ${data.mbtiType} — my ZodicogAI profile` :
+        data.type === "compat"          ? `${data.nameA} × ${data.nameB} · ${Math.round(data.score)}% compatibility — ZodicogAI` :
+        data.type === "zodiac"          ? `${data.name} · ${data.sign} ${data.element} ${data.modality} — ZodicogAI` :
+        data.type === "numerology"      ? `${data.name} · Life Path ${data.lifePath} · ${data.numberTitle} — ZodicogAI` :
+        data.type === "numerology-pair" ? `${data.nameA} × ${data.nameB} · ${Math.round(data.score)}% numerology match — ZodicogAI` :
+        data.type === "color-single"    ? `${data.name} · ${data.auraName} aura · ${data.sign} — ZodicogAI` :
+                                          `${data.nameA} × ${data.nameB} · ${data.auraNameA} & ${data.auraNameB} — ZodicogAI`;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: "ZodicogAI", text: shareText });
