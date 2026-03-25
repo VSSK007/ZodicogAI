@@ -259,9 +259,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Mobile navbar — hidden on desktop */}
         <MobileNavbar />
 
-        <PageTransition>
-          <div className="pt-0 md:pt-12 pb-24 md:pb-0 min-h-dvh md:min-h-0">{children}</div>
-        </PageTransition>
+        {/* Flex wrapper ensures footer always stays below content */}
+        <div className="flex flex-col min-h-screen">
+          <div className="flex-1">
+            <PageTransition>
+              <div className="pt-0 md:pt-12 pb-24 md:pb-0">{children}</div>
+            </PageTransition>
+          </div>
 
         {/* Footer — desktop: full row; mobile: centered, clears fixed nav */}
         <footer className="border-t border-white/[0.05] py-5 px-6 mb-20 md:mb-0">
@@ -294,6 +298,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
+        </div>{/* end flex wrapper */}
       </body>
       <GoogleAnalytics gaId="G-HY2R286L2X" />
     </html>

@@ -42,9 +42,6 @@ export default function AboutPage() {
         <p className="text-base text-amber-400 font-medium">
           The world&apos;s first Astrological Intelligence platform.
         </p>
-        <p className="text-xs text-zinc-600 uppercase tracking-widest mt-1">
-          AI ≠ Artificial &nbsp;·&nbsp; AI = Astrological
-        </p>
       </div>
 
       <div className="space-y-8">

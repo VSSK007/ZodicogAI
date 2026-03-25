@@ -277,6 +277,18 @@ function HomeContent() {
             </AnimatePresence>
           </div>
 
+          {/* Desktop subtitle */}
+          {!znMode && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: reduced ? 0 : 0.58, ease: EASE }}
+              className="text-zinc-500 text-sm tracking-[0.18em] uppercase mt-5"
+            >
+              Astrological Intelligence
+            </motion.p>
+          )}
+
         </div>
 
         {/* Desktop forms */}
