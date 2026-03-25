@@ -22,20 +22,20 @@ const dmSans = DM_Sans({
 
 export const metadata = {
   metadataBase: new URL("https://zodicogai.com"),
-  title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
-  description: "AI-powered behavioral analysis combining zodiac signs and MBTI personality types for deep compatibility insights, love language matching, and relationship intelligence.",
-  keywords: "zodiac compatibility, MBTI relationships, astrology AI, relationship analysis, love compatibility, aura reading, numerology, sextrology",
+  title: "ZodicogAI | The World's First Astrological Intelligence Platform",
+  description: "The world's first Astrological Intelligence platform. AI = Astrological Intelligence — not artificial. Deep compatibility insights combining zodiac, MBTI, numerology, love languages, and behavioral science.",
+  keywords: "astrological intelligence, zodiac compatibility, MBTI relationships, astrology AI, relationship analysis, love compatibility, aura reading, numerology, sextrology",
   openGraph: {
-    title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
-    description: "AI-powered behavioral analysis combining zodiac signs and MBTI for deep relationship compatibility insights.",
+    title: "ZodicogAI | The World's First Astrological Intelligence Platform",
+    description: "The world's first Astrological Intelligence platform. AI = Astrological, not artificial. Zodiac × MBTI × numerology × behavioral science.",
     url: "https://zodicogai.com",
     siteName: "ZodicogAI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ZodicogAI | Zodiac & MBTI Relationship Intelligence",
-    description: "AI-powered behavioral analysis combining zodiac signs and MBTI for deep relationship compatibility insights.",
+    title: "ZodicogAI | The World's First Astrological Intelligence Platform",
+    description: "The world's first Astrological Intelligence platform. AI = Astrological, not artificial.",
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
@@ -269,7 +269,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <p className="text-xs text-zinc-600">
               <span className="text-zinc-500 font-medium">ZodicogAI</span>
               <span className="mx-2 text-zinc-700">·</span>
-              <span className="text-amber-700/70">AI = Astrological Intelligence</span>
+              <span className="text-amber-700/70">The world&apos;s first Astrological Intelligence platform</span>
             </p>
             <div className="flex items-center gap-5 text-xs text-zinc-600">
               <a href="/about" className="hover:text-zinc-400 transition-colors">About</a>

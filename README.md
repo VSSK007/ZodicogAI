@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/ZodicogAI-Astrological%20Intelligence-7c3aed?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/ZodicogAI-World's%20First%20Astrological%20Intelligence-7c3aed?style=for-the-badge" />
 </p>
 
-<h1 align="center">ZodicogAI: Astrological Intelligence Grounded in Structured Behavioral Data</h1>
+<h1 align="center">ZodicogAI: The World's First Astrological Intelligence Platform</h1>
 
 <p align="center">
-  <strong>The AI in ZodicogAI stands for Astrological Intelligence — the capacity to read patterns in stars, personality, and human behaviour and synthesize them into something meaningful. Technology is the medium. The intelligence is ancient.</strong>
+  <strong>AI ≠ Artificial. AI = Astrological Intelligence — the capacity to read patterns in stars, personality, and human behaviour and synthesize them into something meaningful. ZodicogAI is the first platform built entirely around this premise.</strong>
 </p>
 
 <p align="center">

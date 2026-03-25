@@ -36,9 +36,15 @@ export default function AboutPage() {
             My Story
           </span>
         </div>
-        <h1 className="text-4xl font-bold tracking-tight mb-4">
+        <h1 className="text-4xl font-bold tracking-tight mb-3">
           The Birth of Zodicog
         </h1>
+        <p className="text-base text-amber-400 font-medium">
+          The world&apos;s first Astrological Intelligence platform.
+        </p>
+        <p className="text-xs text-zinc-600 uppercase tracking-widest mt-1">
+          AI ≠ Artificial &nbsp;·&nbsp; AI = Astrological
+        </p>
       </div>
 
       <div className="space-y-8">
