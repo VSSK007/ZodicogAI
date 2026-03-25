@@ -145,11 +145,32 @@ export default function AboutPage() {
               </p>
             </div>
           </div>
-          <p className="text-zinc-300 text-sm leading-relaxed">
+          <p className="text-zinc-300 text-sm leading-relaxed mb-8">
             <span className="text-amber-300">Zodicog</span> = the intersection
             of ancient stars and modern psychology. Where mythology meets
             neuroscience.
           </p>
+
+          {/* AI = Astrological Intelligence */}
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-5">
+            <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">
+              And the AI in ZodicogAI?
+            </p>
+            <p className="text-2xl font-bold text-white mb-3">
+              Astrological Intelligence.
+            </p>
+            <p className="text-sm text-zinc-300 leading-relaxed">
+              Not artificial. Not algorithmic in the cold sense. The{" "}
+              <span className="text-amber-300 font-medium">AI</span> in
+              ZodicogAI stands for{" "}
+              <span className="text-amber-300 font-semibold">
+                Astrological Intelligence
+              </span>{" "}
+              — the capacity to read patterns in the stars, in personality, in
+              human behaviour, and synthesize them into something meaningful.
+              Technology is just the medium. The intelligence is ancient.
+            </p>
+          </div>
         </section>
 
         {/* Section 4: My Philosophy */}

@@ -97,7 +97,15 @@ function HomeContent() {
             transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
             className="text-amber-200/35 mt-3 text-sm tracking-wide"
           >
-            Behavioral Intelligence Agent
+            Astrological Intelligence
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: reduced ? 0 : 0.68, ease: EASE }}
+            className="text-amber-200/18 mt-1 text-[11px] tracking-widest uppercase"
+          >
+            AI = Astrological Intelligence
           </motion.p>
 
           {/* CTA buttons */}

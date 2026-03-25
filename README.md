@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/ZodicogAI-Symbolic--Generative%20Reasoning-7c3aed?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/ZodicogAI-Astrological%20Intelligence-7c3aed?style=for-the-badge" />
 </p>
 
-<h1 align="center">ZodicogAI: Grounding Large Language Models in Structured Behavioral Data</h1>
+<h1 align="center">ZodicogAI: Astrological Intelligence Grounded in Structured Behavioral Data</h1>
 
 <p align="center">
-  <strong>A hybrid symbolic-generative system that uses deterministic personality engines and multi-dimensional compatibility matrices to ground LLM reasoning in reproducible behavioral signals.</strong>
+  <strong>The AI in ZodicogAI stands for Astrological Intelligence — the capacity to read patterns in stars, personality, and human behaviour and synthesize them into something meaningful. Technology is the medium. The intelligence is ancient.</strong>
 </p>
 
 <p align="center">
@@ -15,6 +15,16 @@
   <img src="https://img.shields.io/badge/Pydantic_v2-Schema%20Validation-FF6D00?style=flat-square" />
   <img src="https://img.shields.io/badge/Live-Production%20Deployment-22c55e?style=flat-square" />
 </p>
+
+---
+
+## What is Astrological Intelligence?
+
+**AI = Astrological Intelligence.** Not artificial in the cold sense — something older and more specific.
+
+Astrological Intelligence is the ability to read the layered signals that make a person who they are: their zodiac archetype, their cognitive type, their numerological resonance, their love language, their attachment style. It is the synthesis of ancient symbolic frameworks with modern behavioral science. ZodicogAI operationalises this synthesis as a deterministic computation system, then uses generative AI to narrate the output with warmth and precision.
+
+**Zodicog** = **Zodiac** + **Cognition** — the intersection of ancient stars and modern psychology, where mythology meets neuroscience.
 
 ---
 
@@ -36,9 +46,9 @@ The system computes personality vectors across 10 independent behavioral dimensi
 
 For years, I've been deeply invested in zodiac astrology, personality psychology, and relationship dynamics. I studied how a Scorpio ENFP navigates the world differently than a Gemini INFP — the layers of mythology, behavioral science, attachment styles, sexual archetypes, and numerological resonance that make people unique.
 
-I searched everywhere for a tool that could synthesize this knowledge. Something that honored both ancient zodiac wisdom and modern psychology. Something that integrated MBTI, numerology, love languages, and attachment theory into a coherent system. But everything I found was fragmented. No AI truly understood the intersection.
+I searched everywhere for a tool that could synthesize this knowledge — something that honored both the ancient wisdom of the zodiac and the empirical rigor of modern psychology. Something that integrated MBTI, numerology, love languages, and attachment theory into a coherent system. But everything I found was fragmented. No tool truly understood the intersection.
 
-So in 2026, I decided to build it myself. From scratch.
+So in 2026, I decided to build it myself. From scratch. The result is ZodicogAI: a system built on the conviction that **Astrological Intelligence** — the deep reading of who someone is across every symbolic and psychological axis — deserves an engine worthy of it.
 
 **The Challenge:**
 
@@ -368,7 +378,7 @@ frontend/
 │   ├── page.tsx                     # Home (dual-identity: desktop + mobile)
 │   ├── chat/page.tsx                # Zodicognac conversational interface
 │   ├── dashboard/page.tsx           # Full synastry results
-│   ├── about/page.tsx               # Brand origin story & Zodicog explanation
+│   ├── about/page.tsx               # Brand origin story & Zodicog + AI meaning
 │   ├── analyze/                     # 10 single + pair analysis pages
 │   │   ├── hybrid/page.tsx          # Self-analysis (zodiac + MBTI + traits)
 │   │   ├── emotional/page.tsx       # Emotional compatibility (attachment + empathy)
@@ -393,7 +403,9 @@ frontend/
 │   ├── PersonForm.tsx               # Reusable person input (name, date, MBTI, gender)
 │   ├── MbtiSelect.tsx               # MBTI dropdown with quiz
 │   ├── MobileNavbar.tsx             # Mobile FAB + home button (scroll-triggered on blog/celebs)
-│   ├── ShareCelebButton.tsx         # Web Share API + clipboard fallback
+│   ├── ShareCelebButton.tsx         # Canvas PNG share card (Web Share / clipboard / download)
+│   ├── ShareImageButton.tsx         # Canvas PNG share cards for all analysis types
+│   ├── InsightCard.tsx              # Discover section viral identity cards
 │   ├── MarkdownText.tsx             # Structured markdown rendering (sections + bullets)
 │   ├── ScoreRing.tsx                # Circular % visualization
 │   ├── TraitRadar.tsx               # 5-axis radar chart (Recharts)
@@ -407,71 +419,15 @@ frontend/
     └── motion.ts                    # Framer Motion easing presets
 ```
 
-**Dual-identity pattern:**
-```tsx
-// Single codebase, two distinct experiences at CSS breakpoint md:768px
-export default function Home() {
-  const isMobile = useIsMobile();
-
-  return (
-    <>
-      {/* Desktop: analytical layout */}
-      <div className="hidden md:block">
-        <DesktopHero />
-        <DesktopNavbar />
-        <InlineAnalyzeForms />
-      </div>
-
-      {/* Mobile: immersive companion */}
-      <div className="md:hidden bg-[#070509]">
-        <MobileHero />
-        <MobileMenuSheet />
-        <MobileNavbar /> {/* Single centered FAB */}
-      </div>
-    </>
-  );
-}
-```
-
-**Markdown rendering with structure:**
-```tsx
-// Example: Structured bullet points + section cards
-export function MarkdownText({ content }: { content: string }) {
-  const lines = content.split('\n');
-  const sections: Section[] = parseIntoSections(lines);
-
-  return (
-    <div className="space-y-4">
-      {sections.map((section, i) => (
-        <div key={i} className="ring-1 ring-white/10 bg-white/[0.03] rounded-2xl p-4">
-          {section.heading && (
-            <div className="uppercase text-xs font-semibold text-amber-200 flex items-center gap-2 mb-3">
-              <div className="w-2 h-2 rounded-full bg-amber-400" />
-              {section.heading}
-            </div>
-          )}
-          <ul className="space-y-2">
-            {section.bullets.map((bullet, j) => (
-              <li key={j} className="text-sm text-white/80 leading-relaxed">
-                {/* **Bold** — description format */}
-                {parseInlineMarkdown(bullet)}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  );
-}
-```
-
 ---
 
 ## What is Zodicog?
 
 **Zodicog** = **Zodiac** + **Cognition**
 
-A portmanteau capturing the core philosophy: the intersection of ancient astrological archetypes (zodiac) with modern cognitive science (how minds actually work). ZodicogAI bridges mythology and neuroscience, deterministic personality frameworks with AI synthesis.
+A portmanteau capturing the core philosophy: the intersection of ancient astrological archetypes (zodiac) with modern cognitive science (how minds actually work). And the **AI** in ZodicogAI is not incidental — it stands for **Astrological Intelligence**: the synthesis of celestial pattern-reading and psychological depth into a coherent, actionable system.
+
+ZodicogAI bridges mythology and neuroscience, deterministic personality frameworks with generative synthesis. The LLM is the narrator. The astrological intelligence is the foundation.
 
 ---
 
@@ -486,7 +442,7 @@ ZodicogAI includes a comprehensive content system designed for search discoverab
 - **Rendering:** Fully static — pre-built at compile time from `celeb-bios.json` (zero API calls at build or runtime)
 - **Generation:** One-time script (`generate_celeb_bios.py`) hits `/analyze/celebrity` sequentially with exponential backoff; result committed as static JSON
 - **Each profile:** Famous for · Personality snapshot · Love style · Best matches · Fun fact · Life path number · Aura color · Wikipedia image + link
-- **Share:** Web Share API (native mobile share sheet) with clipboard fallback
+- **Share:** Canvas-generated PNG share cards (Web Share API on mobile / clipboard copy on desktop / download fallback)
 - **SEO:** Unique title/description per celebrity + OpenGraph tags
 - **Target keywords:** "{Name} zodiac sign", "{Name} MBTI", "celebrities born {month}", etc.
 
@@ -655,7 +611,7 @@ Every computation is **auditable** — trace the code path to see exactly how ea
 **Citation:**
 ```bibtex
 @software{zodicogai2026,
-  title={ZodicogAI: Grounding Large Language Models in Structured Behavioral Data},
+  title={ZodicogAI: Astrological Intelligence Grounded in Structured Behavioral Data},
   author={ZodicogAI Contributors},
   url={https://github.com/VSSK007/ZodicogAI},
   year={2026}
@@ -667,7 +623,7 @@ Every computation is **auditable** — trace the code path to see exactly how ea
 **Links:**
 - **Live App:** [zodicogai.com](https://zodicogai.com)
 - **Blog:** [zodicogai.com/blog](https://zodicogai.com/blog) — 12 zodiac + 16 MBTI + FAQ articles
-- **About:** [zodicogai.com/about](https://zodicogai.com/about) — Origin story & Zodicog meaning
+- **About:** [zodicogai.com/about](https://zodicogai.com/about) — Origin story, Zodicog meaning & AI = Astrological Intelligence
 - **Sitemap:** [zodicogai.com/sitemap.xml](https://zodicogai.com/sitemap.xml)
 - **GitHub:** [github.com/VSSK007/ZodicogAI](https://github.com/VSSK007/ZodicogAI)
 

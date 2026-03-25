@@ -124,7 +124,10 @@ export default function Navbar() {
               transition={{ duration: 0.15 }}
             >
               <ZodicogMark size={18} />
-              <span className={`text-sm font-semibold tracking-tight ${path === "/" ? "text-white" : "text-zinc-400 hover:text-white transition-colors"}`}>
+              <span
+                title="AI = Astrological Intelligence"
+                className={`text-sm font-semibold tracking-tight ${path === "/" ? "text-white" : "text-zinc-400 hover:text-white transition-colors"}`}
+              >
                 ZodicogAI
               </span>
             </motion.div>
