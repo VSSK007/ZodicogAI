@@ -144,7 +144,7 @@ export default function ShareCelebButton(props: Props) {
       const text    = `${props.name} ${props.symbol} ${props.signLabel}${props.lifePathNum ? ` · Life Path ${props.lifePathNum}` : ""} · ${props.auraName} — ZodicogAI`;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: `${props.name} — ZodicogAI`, text });
+        await navigator.share({ files: [file], title: `${props.name} — ZodicogAI` });
       } else {
         const a = document.createElement("a");
         a.href = dataUrl;

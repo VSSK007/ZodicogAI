@@ -433,7 +433,7 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
                                           `${data.nameA} × ${data.nameB} · ${data.auraNameA} & ${data.auraNameB} — ZodicogAI`;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "ZodicogAI", text: shareText });
+        await navigator.share({ files: [file], title: "ZodicogAI" });
       } else {
         const a = document.createElement("a");
         a.href = dataUrl;

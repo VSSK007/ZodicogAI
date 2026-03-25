@@ -201,7 +201,7 @@ export default function InsightCard({
       const text     = shareText ?? hook;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "ZodicogAI", text });
+        await navigator.share({ files: [file], title: "ZodicogAI" });
       } else {
         const a = document.createElement("a");
         a.href     = dataUrl;
