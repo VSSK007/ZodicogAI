@@ -84,42 +84,98 @@ export type ShareData =
   | ColorSingleShareData
   | ColorPairShareData;
 
-// ── Canvas utilities ──────────────────────────────────────────────────────────
+// ── Canvas constants ───────────────────────────────────────────────────────────
 
 const W = 1080;
 const H = 1080;
 
-function darken(hex: string, amt: number): string {
-  const r = Math.max(0, Math.round(parseInt(hex.slice(1, 3), 16) * (1 - amt)));
-  const g = Math.max(0, Math.round(parseInt(hex.slice(3, 5), 16) * (1 - amt)));
-  const b = Math.max(0, Math.round(parseInt(hex.slice(5, 7), 16) * (1 - amt)));
-  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+// ── Font loader (cached) ───────────────────────────────────────────────────────
+
+let _cachedFont: string | null = null;
+async function getFont(): Promise<string> {
+  if (_cachedFont) return _cachedFont;
+  await document.fonts.ready;
+  _cachedFont = window.getComputedStyle(document.documentElement).fontFamily;
+  return _cachedFont;
 }
 
-function bgGrad(ctx: CanvasRenderingContext2D, c1: string, c2: string, horiz = false) {
-  const g = horiz
-    ? ctx.createLinearGradient(0, 0, W, 0)
-    : ctx.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, c1);
-  g.addColorStop(1, c2);
-  ctx.fillStyle = g;
+// ── Color utilities ────────────────────────────────────────────────────────────
+
+function hexRgba(hex: string, a: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ── Background: dark base + radial glow(s) + vignette ────────────────────────
+
+function drawBg(
+  ctx: CanvasRenderingContext2D,
+  c1: string,
+  c2?: string,
+) {
+  ctx.fillStyle = "#06060f";
+  ctx.fillRect(0, 0, W, H);
+
+  // Primary glow — top-center
+  const g1 = ctx.createRadialGradient(W / 2, -80, 0, W / 2, -80, H * 0.82);
+  g1.addColorStop(0,   hexRgba(c1, 0.22));
+  g1.addColorStop(0.5, hexRgba(c1, 0.06));
+  g1.addColorStop(1,   "transparent");
+  ctx.fillStyle = g1;
+  ctx.fillRect(0, 0, W, H);
+
+  // Secondary glow — bottom-right (optional, for pair cards)
+  if (c2 && c2 !== c1) {
+    const g2 = ctx.createRadialGradient(W * 0.85, H * 0.80, 0, W * 0.85, H * 0.80, H * 0.58);
+    g2.addColorStop(0,   hexRgba(c2, 0.18));
+    g2.addColorStop(1,   "transparent");
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  // Vignette — edges darker
+  const vig = ctx.createRadialGradient(W / 2, H / 2, H * 0.28, W / 2, H / 2, H * 0.82);
+  vig.addColorStop(0, "transparent");
+  vig.addColorStop(1, "rgba(0,0,0,0.52)");
+  ctx.fillStyle = vig;
   ctx.fillRect(0, 0, W, H);
 }
 
-/** Draw text with manual letter spacing, centered at (cx, y). */
+// ── Structural helpers ─────────────────────────────────────────────────────────
+
+/** Centered horizontal rule. */
+function hRule(
+  ctx: CanvasRenderingContext2D,
+  y: number,
+  width = 220,
+  opacity = 0.11,
+) {
+  ctx.save();
+  ctx.strokeStyle = `rgba(255,255,255,${opacity})`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - width / 2, y);
+  ctx.lineTo(W / 2 + width / 2, y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+/** Centered letter-spaced text. Sets font + fillStyle before calling. */
 function spaced(
   ctx: CanvasRenderingContext2D,
   text: string,
   cx: number,
   y: number,
-  gap = 5,
+  gap = 4,
 ) {
   ctx.save();
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  const chars = text.split("");
+  const chars  = text.split("");
   const widths = chars.map((c) => ctx.measureText(c).width);
-  const total = widths.reduce((a, b) => a + b, 0) + gap * (chars.length - 1);
+  const total  = widths.reduce((a, b) => a + b, 0) + gap * (chars.length - 1);
   let x = cx - total / 2;
   for (let i = 0; i < chars.length; i++) {
     ctx.fillText(chars[i], x, y);
@@ -128,285 +184,464 @@ function spaced(
   ctx.restore();
 }
 
-function brand(ctx: CanvasRenderingContext2D) {
+// ── Brand mark — bottom-right stamp ───────────────────────────────────────────
+// Two rows: [signet] ZODICOGAI  /  zodicogai.com
+
+function brand(ctx: CanvasRenderingContext2D, font: string) {
+  const markSz  = 32;
+  const scale   = markSz / 28;
+  const txSz    = 18;
+  const urlSz   = 14;
+  const lsGap   = 3;
+  const marg    = 60;
+  const rowGap  = 22; // gap between wordmark row and URL row
+  const urlY    = H - marg;
+  const markY   = urlY - rowGap;
+
   ctx.save();
-  ctx.font = "700 27px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.38)";
-  spaced(ctx, "ZODICOGAI", W / 2, H - 58, 5);
+
+  // ── Measure wordmark width ──
+  ctx.font = `600 ${txSz}px ${font}`;
+  const chars  = "ZODICOGAI".split("");
+  const cW     = chars.map((c) => ctx.measureText(c).width);
+  const textW  = cW.reduce((a, b) => a + b, 0) + lsGap * (chars.length - 1);
+  const gap    = 10;
+  // Right-align: startX such that mark+gap+text ends at W-marg
+  const blockW = markSz + gap + textW;
+  const startX = W - marg - blockW;
+
+  // ── ZodicogMark signet ──
+  ctx.save();
+  ctx.translate(startX, markY - markSz / 2);
+  ctx.scale(scale, scale);
+
+  ctx.beginPath();
+  ctx.arc(14, 14, 12.5, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(255,255,255,0.42)";
+  ctx.lineWidth   = 1.8 / scale;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(14, 1.5, 1.5, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.50)";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(7.5, 10.5); ctx.lineTo(20.5, 10.5);
+  ctx.lineTo(7.5, 17.5); ctx.lineTo(20.5, 17.5);
+  ctx.strokeStyle = "rgba(255,255,255,0.50)";
+  ctx.lineWidth   = 2.2 / scale;
+  ctx.lineCap     = "square";
+  ctx.lineJoin    = "miter";
+  ctx.stroke();
+
+  ctx.restore();
+
+  // ── Wordmark ──
+  ctx.font         = `600 ${txSz}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.52)";
+  ctx.textAlign    = "left";
+  ctx.textBaseline = "middle";
+  let x = startX + markSz + gap;
+  for (let i = 0; i < chars.length; i++) {
+    ctx.fillText(chars[i], x, markY);
+    x += cW[i] + lsGap;
+  }
+
+  // ── URL — right-aligned below wordmark ──
+  ctx.font         = `400 ${urlSz}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.28)";
+  ctx.textAlign    = "right";
+  ctx.textBaseline = "middle";
+  ctx.fillText("zodicogai.com", W - marg, urlY);
+
+  ctx.restore();
+}
+
+// ── Faint background symbol ────────────────────────────────────────────────────
+
+function bgSymbol(ctx: CanvasRenderingContext2D, symbol: string, font: string) {
+  ctx.save();
+  ctx.font         = `400 560px ${font}, 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif`;
+  ctx.fillStyle    = "rgba(255,255,255,0.024)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(symbol, W * 0.74, H * 0.58);
   ctx.restore();
 }
 
 // ── Renderers ─────────────────────────────────────────────────────────────────
 
-function renderHybrid(ctx: CanvasRenderingContext2D, d: HybridShareData) {
-  bgGrad(ctx, d.signColor, darken(d.signColor, 0.72));
+function renderHybrid(ctx: CanvasRenderingContext2D, d: HybridShareData, font: string) {
+  drawBg(ctx, d.signColor);
+  bgSymbol(ctx, d.symbol, font);
 
-  // Top label — sign
+  // Label — sign
   ctx.save();
-  ctx.font = "700 26px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, `${d.symbol}  ${d.sign.toUpperCase()}`, W / 2, 140, 4);
+  ctx.font      = `500 20px ${font}, 'Segoe UI Symbol', sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, `${d.symbol}  ${d.sign.toUpperCase()}`, W / 2, 120, 4);
   ctx.restore();
 
-  // HERO — MBTI type
-  ctx.font = "900 220px system-ui, sans-serif";
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
+  hRule(ctx, 166, 200);
+
+  // MBTI hero
+  ctx.save();
+  ctx.font         = `700 162px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(d.mbtiType, W / 2, 390);
+  ctx.restore();
+
+  hRule(ctx, 510, 300);
 
   // Name
-  const nfs = d.name.length > 14 ? 50 : 66;
-  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.88)";
-  ctx.textAlign = "center";
+  const nfs = d.name.length > 16 ? 52 : d.name.length > 12 ? 64 : 74;
+  ctx.save();
+  ctx.font         = `600 ${nfs}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.90)";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.name, W / 2, 560);
+  ctx.fillText(d.name, W / 2, 606);
+  ctx.restore();
 
-  // Modality / life path
-  const sub: string[] = [];
-  if (d.modality) sub.push(d.modality.toUpperCase());
-  if (d.lifePathNum != null) sub.push(`LIFE PATH ${d.lifePathNum}`);
-  if (sub.length) {
+  // Metadata
+  const meta: string[] = [];
+  if (d.modality) meta.push(d.modality.toUpperCase());
+  if (d.lifePathNum != null) meta.push(`LIFE PATH ${d.lifePathNum}`);
+  if (meta.length) {
     ctx.save();
-    ctx.font = "600 25px system-ui, sans-serif";
-    ctx.fillStyle = "rgba(255,255,255,0.48)";
-    spaced(ctx, sub.join("  ·  "), W / 2, 642, 3);
+    ctx.font      = `400 22px ${font}`;
+    ctx.fillStyle = "rgba(255,255,255,0.36)";
+    spaced(ctx, meta.join("  ·  "), W / 2, 682, 3);
     ctx.restore();
   }
 
-  brand(ctx);
+  brand(ctx, font);
 }
 
-function renderCompat(ctx: CanvasRenderingContext2D, d: CompatShareData) {
-  bgGrad(ctx, d.colorA, d.colorB);
+function renderCompat(ctx: CanvasRenderingContext2D, d: CompatShareData, font: string) {
+  drawBg(ctx, d.colorA, d.colorB);
 
-  // Top label
+  // Label
   ctx.save();
-  ctx.font = "700 24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, "COMPATIBILITY", W / 2, 136, 6);
+  ctx.font      = `500 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, "COMPATIBILITY", W / 2, 120, 6);
   ctx.restore();
+
+  hRule(ctx, 166, 200);
 
   // Score
-  ctx.save();
-  ctx.textBaseline = "middle";
   const scoreStr = String(Math.round(d.score));
-  ctx.font = "900 230px system-ui, sans-serif";
+  ctx.save();
+  ctx.font         = `700 188px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
   const sw = ctx.measureText(scoreStr).width;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.fillText(scoreStr, W / 2 - 30, 400);
-  ctx.font = "900 100px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.fillText(scoreStr, W / 2 - 24, 390);
+  ctx.font      = `600 76px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.48)";
   ctx.textAlign = "left";
-  ctx.fillText("%", W / 2 - 30 + sw / 2 + 8, 370);
+  ctx.fillText("%", W / 2 - 24 + sw / 2 + 6, 360);
   ctx.restore();
 
+  hRule(ctx, 510, 300);
+
   // Names
-  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 40 : 52;
-  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.textAlign = "center";
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 44 : 58;
+  ctx.save();
+  ctx.font         = `600 ${nfs}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.88)";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 578);
+  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 604);
+  ctx.restore();
 
   // Signs
   ctx.save();
-  ctx.font = "600 25px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.48)";
-  spaced(
-    ctx,
-    `${d.symbolA} ${d.signA.toUpperCase()}  ×  ${d.symbolB} ${d.signB.toUpperCase()}`,
-    W / 2, 652, 3,
-  );
+  ctx.font      = `400 22px ${font}, 'Segoe UI Symbol', sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.36)";
+  spaced(ctx, `${d.symbolA} ${d.signA.toUpperCase()}  ×  ${d.symbolB} ${d.signB.toUpperCase()}`, W / 2, 672, 3);
   ctx.restore();
 
-  brand(ctx);
+  brand(ctx, font);
 }
 
-function renderZodiac(ctx: CanvasRenderingContext2D, d: ZodiacShareData) {
-  bgGrad(ctx, d.signColor, darken(d.signColor, 0.70));
+function renderZodiac(ctx: CanvasRenderingContext2D, d: ZodiacShareData, font: string) {
+  drawBg(ctx, d.signColor);
+  bgSymbol(ctx, d.symbol, font);
 
-  // Symbol
-  ctx.font = "180px system-ui, 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.88)";
-  ctx.textAlign = "center";
+  // Label — person name
+  ctx.save();
+  ctx.font      = `500 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, d.name.toUpperCase(), W / 2, 120, 4);
+  ctx.restore();
+
+  hRule(ctx, 166, 200);
+
+  // Sign symbol (medium — legible)
+  ctx.save();
+  ctx.font         = `400 154px ${font}, 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif`;
+  ctx.fillStyle    = "rgba(255,255,255,0.88)";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.symbol, W / 2, 300);
+  ctx.fillText(d.symbol, W / 2, 336);
+  ctx.restore();
 
   // Sign name
-  const signSize = d.sign.length > 9 ? 88 : 112;
-  ctx.font = `900 ${signSize}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
+  const signSz = d.sign.length > 9 ? 88 : 112;
+  ctx.save();
+  ctx.font         = `700 ${signSz}px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.sign.toUpperCase(), W / 2, 462);
+  ctx.fillText(d.sign.toUpperCase(), W / 2, 494);
+  ctx.restore();
 
-  // Person name
-  const nfs = d.name.length > 14 ? 48 : 62;
-  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.80)";
-  ctx.fillText(d.name, W / 2, 576);
+  hRule(ctx, 568, 300);
 
   // Element · Modality
   ctx.save();
-  ctx.font = "600 25px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.48)";
-  spaced(ctx, `${d.element.toUpperCase()}  ·  ${d.modality.toUpperCase()}`, W / 2, 650, 4);
+  ctx.font      = `400 22px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.36)";
+  spaced(ctx, `${d.element.toUpperCase()}  ·  ${d.modality.toUpperCase()}`, W / 2, 636, 4);
   ctx.restore();
 
-  brand(ctx);
+  brand(ctx, font);
 }
 
-function renderNumerology(ctx: CanvasRenderingContext2D, d: NumerologyShareData) {
-  bgGrad(ctx, "#d97706", darken("#d97706", 0.82));
-
-  // Top label
-  ctx.save();
-  ctx.font = "700 26px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, "LIFE PATH", W / 2, 196, 7);
-  ctx.restore();
-
-  // HUGE number
-  ctx.font = "900 300px system-ui, sans-serif";
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(String(d.lifePath), W / 2, 430);
-
-  // Name
-  const nfs = d.name.length > 14 ? 48 : 64;
-  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.85)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(d.name, W / 2, 618);
-
-  // Number title
-  const tfs = d.numberTitle.length > 22 ? 22 : 26;
-  ctx.save();
-  ctx.font = `600 ${tfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.48)";
-  spaced(ctx, d.numberTitle.toUpperCase(), W / 2, 696, 3);
-  ctx.restore();
-
-  brand(ctx);
-}
-
-function renderNumerologyPair(ctx: CanvasRenderingContext2D, d: NumerologyPairShareData) {
-  bgGrad(ctx, "#b45309", "#4338ca");
-
-  // Names
-  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 38 : 50;
-  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.78)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 190);
-
-  // Score
-  ctx.save();
-  ctx.textBaseline = "middle";
-  const scoreStr = String(Math.round(d.score));
-  ctx.font = "900 230px system-ui, sans-serif";
-  const sw = ctx.measureText(scoreStr).width;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.fillText(scoreStr, W / 2 - 30, 418);
-  ctx.font = "900 100px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.55)";
-  ctx.textAlign = "left";
-  ctx.fillText("%", W / 2 - 30 + sw / 2 + 8, 390);
-  ctx.restore();
+function renderNumerology(ctx: CanvasRenderingContext2D, d: NumerologyShareData, font: string) {
+  drawBg(ctx, "#d97706");
 
   // Label
   ctx.save();
-  ctx.font = "700 24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, "NUMEROLOGY MATCH", W / 2, 570, 5);
+  ctx.font      = `500 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, "NUMEROLOGY", W / 2, 120, 6);
   ctx.restore();
+
+  hRule(ctx, 166, 200);
+
+  // Life path number
+  ctx.save();
+  ctx.font         = `700 270px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(String(d.lifePath), W / 2, 416);
+  ctx.restore();
+
+  hRule(ctx, 558, 300);
+
+  // Name
+  const nfs = d.name.length > 16 ? 48 : d.name.length > 12 ? 58 : 68;
+  ctx.save();
+  ctx.font         = `600 ${nfs}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.88)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.name, W / 2, 646);
+  ctx.restore();
+
+  // Number title
+  const tfs = d.numberTitle.length > 22 ? 20 : 24;
+  ctx.save();
+  ctx.font      = `400 ${tfs}px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.36)";
+  spaced(ctx, d.numberTitle.toUpperCase(), W / 2, 714, 3);
+  ctx.restore();
+
+  brand(ctx, font);
+}
+
+function renderNumerologyPair(ctx: CanvasRenderingContext2D, d: NumerologyPairShareData, font: string) {
+  drawBg(ctx, "#b45309", "#4338ca");
+
+  // Label
+  ctx.save();
+  ctx.font      = `500 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, "NUMEROLOGY MATCH", W / 2, 120, 6);
+  ctx.restore();
+
+  hRule(ctx, 166, 200);
+
+  // Names
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 40 : 52;
+  ctx.save();
+  ctx.font         = `600 ${nfs}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.72)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 262);
+  ctx.restore();
+
+  // Score
+  const scoreStr = String(Math.round(d.score));
+  ctx.save();
+  ctx.font         = `700 188px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  const sw = ctx.measureText(scoreStr).width;
+  ctx.fillText(scoreStr, W / 2 - 24, 448);
+  ctx.font      = `600 76px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.48)";
+  ctx.textAlign = "left";
+  ctx.fillText("%", W / 2 - 24 + sw / 2 + 6, 418);
+  ctx.restore();
+
+  hRule(ctx, 562, 300);
 
   // Life paths
   ctx.save();
-  ctx.font = "600 25px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.46)";
-  spaced(ctx, `LP ${d.lifePathA}  ·  LP ${d.lifePathB}`, W / 2, 638, 3);
+  ctx.font      = `400 22px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.36)";
+  spaced(ctx, `LP ${d.lifePathA}  ·  LP ${d.lifePathB}`, W / 2, 630, 3);
   ctx.restore();
 
-  brand(ctx);
+  brand(ctx, font);
 }
 
-function renderColorSingle(ctx: CanvasRenderingContext2D, d: ColorSingleShareData) {
-  bgGrad(ctx, d.auraHex, darken(d.auraHex, 0.72));
-
-  // Person name small top
-  ctx.save();
-  ctx.font = "600 27px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, d.name.toUpperCase(), W / 2, 140, 4);
-  ctx.restore();
-
-  // HERO — aura name
-  const auraSize = d.auraName.length > 14 ? 76 : d.auraName.length > 10 ? 96 : 124;
-  ctx.font = `900 ${auraSize}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(d.auraName.toUpperCase(), W / 2, 420);
-
-  // Hex
-  ctx.font = "500 34px system-ui, 'Courier New', monospace";
-  ctx.fillStyle = "rgba(255,255,255,0.62)";
-  ctx.fillText(d.auraHex.toUpperCase(), W / 2, 528);
-
-  // Sign · power color
-  ctx.save();
-  ctx.font = "600 25px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.46)";
-  spaced(ctx, `${d.sign.toUpperCase()}  ·  ${d.powerName.toUpperCase()}`, W / 2, 608, 3);
-  ctx.restore();
-
-  brand(ctx);
-}
-
-function renderColorPair(ctx: CanvasRenderingContext2D, d: ColorPairShareData) {
-  bgGrad(ctx, d.hexA, d.hexB, true);
-
-  // Names
-  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 38 : 50;
-  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.78)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 196);
+function renderColorSingle(ctx: CanvasRenderingContext2D, d: ColorSingleShareData, font: string) {
+  drawBg(ctx, d.auraHex);
 
   // Label
   ctx.save();
-  ctx.font = "700 24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.50)";
-  spaced(ctx, "COLOR HARMONY", W / 2, 308, 5);
+  ctx.font      = `500 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, `${d.sign.toUpperCase()}  ·  AURA`, W / 2, 120, 4);
   ctx.restore();
 
-  // Aura names stacked
-  const sizeA = d.auraNameA.length > 12 ? 68 : d.auraNameA.length > 9 ? 84 : 100;
-  ctx.font = `900 ${sizeA}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
+  hRule(ctx, 166, 200);
+
+  // Color swatch circle
+  const swatchY = 366;
+  const swatchR = 115;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(W / 2, swatchY, swatchR, 0, Math.PI * 2);
+  ctx.fillStyle = hexRgba(d.auraHex, 0.30);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(W / 2, swatchY, swatchR, 0, Math.PI * 2);
+  ctx.strokeStyle = hexRgba(d.auraHex, 0.55);
+  ctx.lineWidth   = 2;
+  ctx.stroke();
+  ctx.font         = `500 26px 'Courier New', 'Menlo', monospace`;
+  ctx.fillStyle    = "rgba(255,255,255,0.65)";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.auraNameA.toUpperCase(), W / 2, 430);
+  ctx.fillText(d.auraHex.toUpperCase(), W / 2, swatchY);
+  ctx.restore();
 
-  ctx.font = "500 38px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.45)";
-  ctx.fillText("×", W / 2, 524);
+  // Aura name
+  const auraSz = d.auraName.length > 14 ? 60 : d.auraName.length > 10 ? 76 : 96;
+  ctx.save();
+  ctx.font         = `700 ${auraSz}px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.auraName.toUpperCase(), W / 2, 574);
+  ctx.restore();
 
-  const sizeB = d.auraNameB.length > 12 ? 68 : d.auraNameB.length > 9 ? 84 : 100;
-  ctx.font = `900 ${sizeB}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(d.auraNameB.toUpperCase(), W / 2, 616);
+  hRule(ctx, 644, 300);
 
-  brand(ctx);
+  // Name
+  const nfs = d.name.length > 16 ? 38 : 50;
+  ctx.save();
+  ctx.font         = `600 ${nfs}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.82)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.name, W / 2, 714);
+  ctx.restore();
+
+  ctx.save();
+  ctx.font      = `400 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, d.powerName.toUpperCase(), W / 2, 774, 4);
+  ctx.restore();
+
+  brand(ctx, font);
+}
+
+function renderColorPair(ctx: CanvasRenderingContext2D, d: ColorPairShareData, font: string) {
+  // Custom split-glow background
+  ctx.fillStyle = "#06060f";
+  ctx.fillRect(0, 0, W, H);
+
+  const gA = ctx.createRadialGradient(W * 0.16, H * 0.44, 0, W * 0.16, H * 0.44, H * 0.66);
+  gA.addColorStop(0, hexRgba(d.hexA, 0.28));
+  gA.addColorStop(1, "transparent");
+  ctx.fillStyle = gA;
+  ctx.fillRect(0, 0, W, H);
+
+  const gB = ctx.createRadialGradient(W * 0.84, H * 0.44, 0, W * 0.84, H * 0.44, H * 0.66);
+  gB.addColorStop(0, hexRgba(d.hexB, 0.28));
+  gB.addColorStop(1, "transparent");
+  ctx.fillStyle = gB;
+  ctx.fillRect(0, 0, W, H);
+
+  const vig = ctx.createRadialGradient(W / 2, H / 2, H * 0.26, W / 2, H / 2, H * 0.82);
+  vig.addColorStop(0, "transparent");
+  vig.addColorStop(1, "rgba(0,0,0,0.52)");
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, W, H);
+
+  // Label
+  ctx.save();
+  ctx.font      = `500 20px ${font}`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, "COLOR HARMONY", W / 2, 120, 6);
+  ctx.restore();
+
+  hRule(ctx, 166, 200);
+
+  // Names
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 42 : 54;
+  ctx.save();
+  ctx.font         = `600 ${nfs}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.80)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 262);
+  ctx.restore();
+
+  hRule(ctx, 318, 260);
+
+  // Aura name A
+  const szA = d.auraNameA.length > 12 ? 60 : d.auraNameA.length > 9 ? 76 : 94;
+  ctx.save();
+  ctx.font         = `700 ${szA}px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.auraNameA.toUpperCase(), W / 2, 438);
+  ctx.restore();
+
+  ctx.save();
+  ctx.font         = `400 34px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.28)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("×", W / 2, 534);
+  ctx.restore();
+
+  const szB = d.auraNameB.length > 12 ? 60 : d.auraNameB.length > 9 ? 76 : 94;
+  ctx.save();
+  ctx.font         = `700 ${szB}px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.auraNameB.toUpperCase(), W / 2, 630);
+  ctx.restore();
+
+  brand(ctx, font);
 }
 
 // ── Blob helper ───────────────────────────────────────────────────────────────
@@ -423,18 +658,19 @@ function dataUrlToBlob(dataUrl: string): Blob {
 // ── Card dispatcher ───────────────────────────────────────────────────────────
 
 async function renderCard(data: ShareData): Promise<string> {
+  const font   = await getFont();
   const canvas = document.createElement("canvas");
   canvas.width  = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
 
-  if      (data.type === "hybrid")          renderHybrid(ctx, data);
-  else if (data.type === "compat")          renderCompat(ctx, data);
-  else if (data.type === "zodiac")          renderZodiac(ctx, data);
-  else if (data.type === "numerology")      renderNumerology(ctx, data);
-  else if (data.type === "numerology-pair") renderNumerologyPair(ctx, data);
-  else if (data.type === "color-single")    renderColorSingle(ctx, data);
-  else if (data.type === "color-pair")      renderColorPair(ctx, data);
+  if      (data.type === "hybrid")          renderHybrid(ctx, data, font);
+  else if (data.type === "compat")          renderCompat(ctx, data, font);
+  else if (data.type === "zodiac")          renderZodiac(ctx, data, font);
+  else if (data.type === "numerology")      renderNumerology(ctx, data, font);
+  else if (data.type === "numerology-pair") renderNumerologyPair(ctx, data, font);
+  else if (data.type === "color-single")    renderColorSingle(ctx, data, font);
+  else if (data.type === "color-pair")      renderColorPair(ctx, data, font);
 
   return canvas.toDataURL("image/png");
 }
@@ -460,7 +696,6 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
     const blob = dataUrlToBlob(dataUrl);
 
     if (isMobile) {
-      // Mobile: always download so user can share from gallery
       const a = document.createElement("a");
       a.href = dataUrl;
       a.download = "zodicogai.png";

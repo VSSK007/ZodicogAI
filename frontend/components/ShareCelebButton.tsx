@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
+// ── Props ──────────────────────────────────────────────────────────────────────
+
 interface Props {
   name: string;
   signLabel: string;
@@ -13,25 +15,61 @@ interface Props {
   wikiImage?: string | null;
 }
 
-// ── Canvas utilities ──────────────────────────────────────────────────────────
+// ── Constants ──────────────────────────────────────────────────────────────────
 
 const W = 1080;
 const H = 1080;
 
-function darken(hex: string, amt: number): string {
-  const r = Math.max(0, Math.round(parseInt(hex.slice(1, 3), 16) * (1 - amt)));
-  const g = Math.max(0, Math.round(parseInt(hex.slice(3, 5), 16) * (1 - amt)));
-  const b = Math.max(0, Math.round(parseInt(hex.slice(5, 7), 16) * (1 - amt)));
-  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+// ── Font loader (cached) ───────────────────────────────────────────────────────
+
+let _cachedFont: string | null = null;
+async function getFont(): Promise<string> {
+  if (_cachedFont) return _cachedFont;
+  await document.fonts.ready;
+  _cachedFont = window.getComputedStyle(document.documentElement).fontFamily;
+  return _cachedFont;
 }
 
-function spaced(ctx: CanvasRenderingContext2D, text: string, cx: number, y: number, gap = 5) {
+// ── Color utilities ────────────────────────────────────────────────────────────
+
+function hexRgba(hex: string, a: number): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+// ── Structural helpers ─────────────────────────────────────────────────────────
+
+function hRule(
+  ctx: CanvasRenderingContext2D,
+  y: number,
+  width = 220,
+  opacity = 0.11,
+) {
+  ctx.save();
+  ctx.strokeStyle = `rgba(255,255,255,${opacity})`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(W / 2 - width / 2, y);
+  ctx.lineTo(W / 2 + width / 2, y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function spaced(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  cx: number,
+  y: number,
+  gap = 4,
+) {
   ctx.save();
   ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  const chars = text.split("");
+  const chars  = text.split("");
   const widths = chars.map((c) => ctx.measureText(c).width);
-  const total = widths.reduce((a, b) => a + b, 0) + gap * (chars.length - 1);
+  const total  = widths.reduce((a, b) => a + b, 0) + gap * (chars.length - 1);
   let x = cx - total / 2;
   for (let i = 0; i < chars.length; i++) {
     ctx.fillText(chars[i], x, y);
@@ -40,13 +78,89 @@ function spaced(ctx: CanvasRenderingContext2D, text: string, cx: number, y: numb
   ctx.restore();
 }
 
-function brand(ctx: CanvasRenderingContext2D) {
+// ── Brand mark — bottom-right stamp ───────────────────────────────────────────
+
+function brand(ctx: CanvasRenderingContext2D, font: string) {
+  const markSz  = 32;
+  const scale   = markSz / 28;
+  const txSz    = 18;
+  const urlSz   = 14;
+  const lsGap   = 3;
+  const marg    = 60;
+  const rowGap  = 22;
+  const urlY    = H - marg;
+  const markY   = urlY - rowGap;
+
   ctx.save();
-  ctx.font = "700 27px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.38)";
-  spaced(ctx, "ZODICOGAI", W / 2, H - 58, 5);
+
+  ctx.font = `600 ${txSz}px ${font}`;
+  const chars  = "ZODICOGAI".split("");
+  const cW     = chars.map((c) => ctx.measureText(c).width);
+  const textW  = cW.reduce((a, b) => a + b, 0) + lsGap * (chars.length - 1);
+  const gap    = 10;
+  const startX = W - marg - textW - gap - markSz;
+
+  // ZodicogMark signet
+  ctx.save();
+  ctx.translate(startX, markY - markSz / 2);
+  ctx.scale(scale, scale);
+
+  ctx.beginPath();
+  ctx.arc(14, 14, 12.5, 0, Math.PI * 2);
+  ctx.strokeStyle = "rgba(255,255,255,0.42)";
+  ctx.lineWidth   = 1.8 / scale;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(14, 1.5, 1.5, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.50)";
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(7.5, 10.5); ctx.lineTo(20.5, 10.5);
+  ctx.lineTo(7.5, 17.5); ctx.lineTo(20.5, 17.5);
+  ctx.strokeStyle = "rgba(255,255,255,0.50)";
+  ctx.lineWidth   = 2.2 / scale;
+  ctx.lineCap     = "square";
+  ctx.lineJoin    = "miter";
+  ctx.stroke();
+
+  ctx.restore();
+
+  // Wordmark
+  ctx.font         = `600 ${txSz}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.52)";
+  ctx.textAlign    = "left";
+  ctx.textBaseline = "middle";
+  let x = startX + markSz + gap;
+  for (let i = 0; i < chars.length; i++) {
+    ctx.fillText(chars[i], x, markY);
+    x += cW[i] + lsGap;
+  }
+
+  // URL
+  ctx.font         = `400 ${urlSz}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.28)";
+  ctx.textAlign    = "right";
+  ctx.textBaseline = "middle";
+  ctx.fillText("zodicogai.com", W - marg, urlY);
+
   ctx.restore();
 }
+
+// ── Image loader ───────────────────────────────────────────────────────────────
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload  = () => resolve(img);
+    img.onerror = reject;
+    img.src     = src;
+  });
+}
+
+// ── Blob helper ────────────────────────────────────────────────────────────────
 
 function dataUrlToBlob(dataUrl: string): Blob {
   const [head, b64] = dataUrl.split(",");
@@ -57,106 +171,127 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([bytes], { type: mime });
 }
 
-// ── Image loader ──────────────────────────────────────────────────────────────
-
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new window.Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
-  });
-}
-
-// ── Card renderer ─────────────────────────────────────────────────────────────
+// ── Card renderer ──────────────────────────────────────────────────────────────
 
 async function renderCelebCard(p: Props): Promise<string> {
+  const font   = await getFont();
   const canvas = document.createElement("canvas");
   canvas.width  = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
 
-  // Background gradient
-  const g = ctx.createLinearGradient(0, 0, W, H);
-  g.addColorStop(0, p.signColor);
-  g.addColorStop(1, darken(p.signColor, 0.72));
-  ctx.fillStyle = g;
+  // ── Background ──
+  ctx.fillStyle = "#06060f";
   ctx.fillRect(0, 0, W, H);
 
-  // Try to load and draw celebrity photo
+  // Radial glow — sign color at top-center
+  const g1 = ctx.createRadialGradient(W / 2, -80, 0, W / 2, -80, H * 0.82);
+  g1.addColorStop(0,   hexRgba(p.signColor, 0.22));
+  g1.addColorStop(0.5, hexRgba(p.signColor, 0.06));
+  g1.addColorStop(1,   "transparent");
+  ctx.fillStyle = g1;
+  ctx.fillRect(0, 0, W, H);
+
+  // Vignette
+  const vig = ctx.createRadialGradient(W / 2, H / 2, H * 0.28, W / 2, H / 2, H * 0.84);
+  vig.addColorStop(0, "transparent");
+  vig.addColorStop(1, "rgba(0,0,0,0.54)");
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, W, H);
+
+  // Faint background sign symbol — bottom-right, rotated slightly
+  ctx.save();
+  ctx.font         = `400 540px ${font}, 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif`;
+  ctx.fillStyle    = "rgba(255,255,255,0.022)";
+  ctx.textAlign    = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(p.symbol, W * 0.74, H * 0.60);
+  ctx.restore();
+
+  // ── Top label — sign ──
+  ctx.save();
+  ctx.font      = `500 20px ${font}, 'Segoe UI Symbol', sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.34)";
+  spaced(ctx, `${p.symbol}  ${p.signLabel.toUpperCase()}`, W / 2, 120, 4);
+  ctx.restore();
+
+  hRule(ctx, 166, 200);
+
+  // ── Photo circle ──
   let hasPhoto = false;
+  const photoY = 384;
+  const photoR = 145;
+
   if (p.wikiImage) {
     try {
       const img = await loadImage(p.wikiImage);
-      const r = 110;
-      const cx = W / 2, cy = 300;
-      // Clip to circle
       ctx.save();
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.arc(W / 2, photoY, photoR, 0, Math.PI * 2);
       ctx.clip();
-      const scale = Math.max((r * 2) / img.width, (r * 2) / img.height);
-      const sw = img.width * scale, sh = img.height * scale;
-      // object-top: align image top to circle top so faces aren't cut off
-      ctx.drawImage(img, cx - sw / 2, cy - r, sw, sh);
+      const sc = Math.max((photoR * 2) / img.width, (photoR * 2) / img.height);
+      const sw = img.width * sc, sh = img.height * sc;
+      // object-top: align image top to circle top — keeps faces visible
+      ctx.drawImage(img, W / 2 - sw / 2, photoY - photoR, sw, sh);
       ctx.restore();
-      // Ring border
-      ctx.save();
+      // Ring
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(255,255,255,0.35)";
-      ctx.lineWidth = 4;
+      ctx.arc(W / 2, photoY, photoR, 0, Math.PI * 2);
+      ctx.strokeStyle = hexRgba(p.signColor, 0.55);
+      ctx.lineWidth   = 3;
       ctx.stroke();
-      ctx.restore();
       hasPhoto = true;
     } catch {
-      // Image failed (CORS / network) — fall back to text-only layout
+      // CORS / network failure — fall through to text-only
     }
   }
 
-  const nameY  = hasPhoto ? 498 : 400;
-  const auraY  = hasPhoto ? 624 : 540;
-  const lpY    = hasPhoto ? 708 : 624;
-  const labelY = hasPhoto ? 115 : 140;
+  // Layout shifts based on whether photo loaded
+  const nameY = hasPhoto ? 610 : 360;
+  const metaY = hasPhoto ? 706 : 458;
+  const lpY   = hasPhoto ? 772 : 524;
 
-  // Top label — sign symbol + label
+  // ── Celebrity name ──
+  const heroSz = p.name.length > 18 ? 70
+               : p.name.length > 14 ? 84
+               : p.name.length > 10 ? 100
+               : 118;
   ctx.save();
-  ctx.font = "700 26px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, `${p.symbol}  ${p.signLabel.toUpperCase()}`, W / 2, labelY, 4);
-  ctx.restore();
-
-  // HERO — celebrity name
-  const heroSize = p.name.length > 16 ? 80 : p.name.length > 12 ? 100 : 130;
-  ctx.font = `900 ${heroSize}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "center";
+  ctx.font         = `700 ${heroSz}px ${font}`;
+  ctx.fillStyle    = "#ffffff";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
   ctx.fillText(p.name, W / 2, nameY);
+  ctx.restore();
 
-  // Aura name
-  const auraSize = p.auraName.length > 14 ? 52 : 66;
-  ctx.font = `700 ${auraSize}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.80)";
-  ctx.textAlign = "center";
+  hRule(ctx, nameY + heroSz / 2 + 28, 320, 0.10);
+
+  // ── Aura name ──
+  const auraSz = p.auraName.length > 14 ? 36
+               : p.auraName.length > 10 ? 44
+               : 52;
+  ctx.save();
+  ctx.font         = `500 ${auraSz}px ${font}`;
+  ctx.fillStyle    = "rgba(255,255,255,0.52)";
+  ctx.textAlign    = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(p.auraName.toUpperCase(), W / 2, auraY);
+  ctx.fillText(p.auraName.toUpperCase(), W / 2, metaY);
+  ctx.restore();
 
-  // Life path if present
+  // ── Life path ──
   if (p.lifePathNum != null) {
     ctx.save();
-    ctx.font = "600 26px system-ui, sans-serif";
-    ctx.fillStyle = "rgba(255,255,255,0.50)";
+    ctx.font      = `400 22px ${font}`;
+    ctx.fillStyle = "rgba(255,255,255,0.32)";
     spaced(ctx, `LIFE PATH ${p.lifePathNum}`, W / 2, lpY, 4);
     ctx.restore();
   }
 
-  brand(ctx);
+  brand(ctx, font);
   return canvas.toDataURL("image/png");
 }
 
-// ── Button ────────────────────────────────────────────────────────────────────
+// ── Button ─────────────────────────────────────────────────────────────────────
 
 export default function ShareCelebButton(props: Props) {
   const [state, setState] = useState<"idle" | "capturing" | "done">("idle");
@@ -177,7 +312,6 @@ export default function ShareCelebButton(props: Props) {
     const blob = dataUrlToBlob(dataUrl);
 
     if (isMobile) {
-      // Mobile: always download so user can share from gallery
       const a = document.createElement("a");
       a.href = dataUrl;
       a.download = "zodicogai-celeb.png";
