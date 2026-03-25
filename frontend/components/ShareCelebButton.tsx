@@ -16,63 +16,33 @@ interface Props {
 const W = 1080;
 const H = 1080;
 
-function hexRgba(hex: string, a: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${a})`;
+function darken(hex: string, amt: number): string {
+  const r = Math.max(0, Math.round(parseInt(hex.slice(1, 3), 16) * (1 - amt)));
+  const g = Math.max(0, Math.round(parseInt(hex.slice(3, 5), 16) * (1 - amt)));
+  const b = Math.max(0, Math.round(parseInt(hex.slice(5, 7), 16) * (1 - amt)));
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
 
-function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
-function pillRow(ctx: CanvasRenderingContext2D, pills: { text: string; color: string }[], cy: number) {
-  const PH = 54, PAD = 28, GAP = 14;
+function spaced(ctx: CanvasRenderingContext2D, text: string, cx: number, y: number, gap = 5) {
   ctx.save();
-  ctx.font = "600 24px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  const widths = pills.map(p => ctx.measureText(p.text).width + PAD * 2);
-  const total  = widths.reduce((a, b) => a + b, 0) + GAP * (pills.length - 1);
-  let x = (W - total) / 2;
-  for (let i = 0; i < pills.length; i++) {
-    const { text, color } = pills[i];
-    const pw = widths[i];
-    rrect(ctx, x, cy, pw, PH, PH / 2);
-    ctx.fillStyle = hexRgba(color, 0.13);
-    ctx.fill();
-    ctx.strokeStyle = hexRgba(color, 0.5);
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.fillStyle = color;
-    ctx.textAlign = "left";
-    ctx.fillText(text, x + PAD, cy + PH / 2);
-    x += pw + GAP;
+  const chars = text.split("");
+  const widths = chars.map((c) => ctx.measureText(c).width);
+  const total = widths.reduce((a, b) => a + b, 0) + gap * (chars.length - 1);
+  let x = cx - total / 2;
+  for (let i = 0; i < chars.length; i++) {
+    ctx.fillText(chars[i], x, y);
+    x += widths[i] + gap;
   }
   ctx.restore();
 }
 
-function glow(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, color: string, a: number) {
-  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-  g.addColorStop(0, hexRgba(color, a));
-  g.addColorStop(1, "rgba(0,0,0,0)");
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, W, H);
-}
-
-function wmk(ctx: CanvasRenderingContext2D) {
+function brand(ctx: CanvasRenderingContext2D) {
   ctx.save();
-  ctx.font = "24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("ZODICOGAI.COM", W / 2, H - 52);
+  ctx.font = "700 27px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.38)";
+  spaced(ctx, "ZODICOGAI", W / 2, H - 58, 5);
   ctx.restore();
 }
 
@@ -87,45 +57,52 @@ function dataUrlToBlob(dataUrl: string): Blob {
 
 // ── Card renderer ─────────────────────────────────────────────────────────────
 
-async function renderCelebCard(props: Props): Promise<string> {
+async function renderCelebCard(p: Props): Promise<string> {
   const canvas = document.createElement("canvas");
-  canvas.width = W;
+  canvas.width  = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
 
-  // Background
-  ctx.fillStyle = "#080810";
+  // Background gradient
+  const g = ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, p.signColor);
+  g.addColorStop(1, darken(p.signColor, 0.72));
+  ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
-  // Sign-color glow at top
-  glow(ctx, W / 2, 0, 420, props.signColor, 0.28);
+  // Top label — sign symbol + label
+  ctx.save();
+  ctx.font = "700 26px system-ui, 'Segoe UI Symbol', sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.52)";
+  spaced(ctx, `${p.symbol}  ${p.signLabel.toUpperCase()}`, W / 2, 140, 4);
+  ctx.restore();
 
-  // Symbol
-  ctx.font = "120px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillStyle = props.signColor;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(props.symbol, W / 2, 240);
-
-  // Name
-  const nfs = props.name.length > 14 ? 54 : 66;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  // HERO — celebrity name
+  const heroSize = p.name.length > 16 ? 80 : p.name.length > 12 ? 100 : 130;
+  ctx.font = `900 ${heroSize}px system-ui, sans-serif`;
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(props.name, W / 2, 390);
+  ctx.fillText(p.name, W / 2, 400);
 
-  // Pills
-  const pills: { text: string; color: string }[] = [
-    { text: `${props.symbol} ${props.signLabel}`, color: props.signColor },
-  ];
-  if (props.lifePathNum != null) {
-    pills.push({ text: `Life Path ${props.lifePathNum}`, color: "#f59e0b" });
+  // Aura name
+  const auraSize = p.auraName.length > 14 ? 52 : 66;
+  ctx.font = `700 ${auraSize}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.80)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(p.auraName.toUpperCase(), W / 2, 540);
+
+  // Life path if present
+  if (p.lifePathNum != null) {
+    ctx.save();
+    ctx.font = "600 26px system-ui, sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.50)";
+    spaced(ctx, `LIFE PATH ${p.lifePathNum}`, W / 2, 624, 4);
+    ctx.restore();
   }
-  pills.push({ text: props.auraName, color: "#a1a1aa" });
-  pillRow(ctx, pills, 490);
 
-  wmk(ctx);
+  brand(ctx);
   return canvas.toDataURL("image/png");
 }
 
@@ -141,7 +118,6 @@ export default function ShareCelebButton(props: Props) {
       const dataUrl = await renderCelebCard(props);
       const blob    = dataUrlToBlob(dataUrl);
       const file    = new File([blob], "zodicogai-celeb.png", { type: "image/png" });
-      const text    = `${props.name} ${props.symbol} ${props.signLabel}${props.lifePathNum ? ` · Life Path ${props.lifePathNum}` : ""} · ${props.auraName} — ZodicogAI`;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: `${props.name} — ZodicogAI` });

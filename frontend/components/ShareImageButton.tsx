@@ -74,315 +74,341 @@ export interface ColorPairShareData {
   auraNameB: string;
 }
 
-export type ShareData = HybridShareData | CompatShareData | ZodiacShareData | NumerologyShareData | NumerologyPairShareData | ColorSingleShareData | ColorPairShareData;
+export type ShareData =
+  | HybridShareData
+  | CompatShareData
+  | ZodiacShareData
+  | NumerologyShareData
+  | NumerologyPairShareData
+  | ColorSingleShareData
+  | ColorPairShareData;
 
 // ── Canvas utilities ──────────────────────────────────────────────────────────
 
 const W = 1080;
 const H = 1080;
 
-const MODALITY_HEX: Record<string, string> = {
-  Cardinal: "#ef4444", Fixed: "#22c55e", Mutable: "#818cf8",
-};
-
-function hexRgba(hex: string, a: number): string {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-  return `rgba(${r},${g},${b},${a})`;
+function darken(hex: string, amt: number): string {
+  const r = Math.max(0, Math.round(parseInt(hex.slice(1, 3), 16) * (1 - amt)));
+  const g = Math.max(0, Math.round(parseInt(hex.slice(3, 5), 16) * (1 - amt)));
+  const b = Math.max(0, Math.round(parseInt(hex.slice(5, 7), 16) * (1 - amt)));
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
 
-function rrect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
-  ctx.beginPath();
-  ctx.moveTo(x + r, y);
-  ctx.arcTo(x + w, y, x + w, y + h, r);
-  ctx.arcTo(x + w, y + h, x, y + h, r);
-  ctx.arcTo(x, y + h, x, y, r);
-  ctx.arcTo(x, y, x + w, y, r);
-  ctx.closePath();
-}
-
-function pillRow(ctx: CanvasRenderingContext2D, pills: { text: string; color: string }[], cy: number) {
-  const PH = 54, PAD = 28, GAP = 14;
-  ctx.save();
-  ctx.font = "600 24px system-ui, -apple-system, sans-serif";
-  ctx.textBaseline = "middle";
-  const widths = pills.map(p => ctx.measureText(p.text).width + PAD * 2);
-  const total  = widths.reduce((a, b) => a + b, 0) + GAP * (pills.length - 1);
-  let x = (W - total) / 2;
-  for (let i = 0; i < pills.length; i++) {
-    const { text, color } = pills[i];
-    const pw = widths[i];
-    rrect(ctx, x, cy, pw, PH, PH / 2);
-    ctx.fillStyle = hexRgba(color, 0.13);
-    ctx.fill();
-    ctx.strokeStyle = hexRgba(color, 0.5);
-    ctx.lineWidth = 2;
-    ctx.stroke();
-    ctx.fillStyle = color;
-    ctx.textAlign = "left";
-    ctx.fillText(text, x + PAD, cy + PH / 2);
-    x += pw + GAP;
-  }
-  ctx.restore();
-}
-
-function glow(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, color: string, a: number) {
-  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
-  g.addColorStop(0, hexRgba(color, a));
-  g.addColorStop(1, "rgba(0,0,0,0)");
+function bgGrad(ctx: CanvasRenderingContext2D, c1: string, c2: string, horiz = false) {
+  const g = horiz
+    ? ctx.createLinearGradient(0, 0, W, 0)
+    : ctx.createLinearGradient(0, 0, W, H);
+  g.addColorStop(0, c1);
+  g.addColorStop(1, c2);
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 }
 
-function wmk(ctx: CanvasRenderingContext2D) {
+/** Draw text with manual letter spacing, centered at (cx, y). */
+function spaced(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  cx: number,
+  y: number,
+  gap = 5,
+) {
   ctx.save();
-  ctx.font = "24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
-  ctx.textAlign = "center";
+  ctx.textAlign = "left";
   ctx.textBaseline = "middle";
-  ctx.fillText("ZODICOGAI.COM", W / 2, H - 52);
+  const chars = text.split("");
+  const widths = chars.map((c) => ctx.measureText(c).width);
+  const total = widths.reduce((a, b) => a + b, 0) + gap * (chars.length - 1);
+  let x = cx - total / 2;
+  for (let i = 0; i < chars.length; i++) {
+    ctx.fillText(chars[i], x, y);
+    x += widths[i] + gap;
+  }
   ctx.restore();
 }
 
-// ── Card renderers ────────────────────────────────────────────────────────────
+function brand(ctx: CanvasRenderingContext2D) {
+  ctx.save();
+  ctx.font = "700 27px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.38)";
+  spaced(ctx, "ZODICOGAI", W / 2, H - 58, 5);
+  ctx.restore();
+}
+
+// ── Renderers ─────────────────────────────────────────────────────────────────
 
 function renderHybrid(ctx: CanvasRenderingContext2D, d: HybridShareData) {
-  glow(ctx, W / 2, 0, 400, d.signColor, 0.28);
+  bgGrad(ctx, d.signColor, darken(d.signColor, 0.72));
 
-  ctx.font = "120px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillStyle = d.signColor;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(d.symbol, W / 2, 240);
+  // Top label — sign
+  ctx.save();
+  ctx.font = "700 26px system-ui, 'Segoe UI Symbol', sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.52)";
+  spaced(ctx, `${d.symbol}  ${d.sign.toUpperCase()}`, W / 2, 140, 4);
+  ctx.restore();
 
-  const nfs = d.name.length > 14 ? 58 : 70;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  // HERO — MBTI type
+  ctx.font = "900 220px system-ui, sans-serif";
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.name, W / 2, 390);
+  ctx.fillText(d.mbtiType, W / 2, 390);
 
-  const pills: { text: string; color: string }[] = [
-    { text: `${d.symbol} ${d.sign}`, color: d.signColor },
-    { text: d.mbtiType, color: "#a5b4fc" },
-  ];
-  if (d.modality) pills.push({ text: d.modality, color: MODALITY_HEX[d.modality] ?? "#a1a1aa" });
-  if (d.lifePathNum != null) pills.push({ text: `Life Path ${d.lifePathNum}`, color: "#f59e0b" });
-  pillRow(ctx, pills, 490);
+  // Name
+  const nfs = d.name.length > 14 ? 50 : 66;
+  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.88)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.name, W / 2, 560);
+
+  // Modality / life path
+  const sub: string[] = [];
+  if (d.modality) sub.push(d.modality.toUpperCase());
+  if (d.lifePathNum != null) sub.push(`LIFE PATH ${d.lifePathNum}`);
+  if (sub.length) {
+    ctx.save();
+    ctx.font = "600 25px system-ui, sans-serif";
+    ctx.fillStyle = "rgba(255,255,255,0.48)";
+    spaced(ctx, sub.join("  ·  "), W / 2, 642, 3);
+    ctx.restore();
+  }
+
+  brand(ctx);
 }
 
 function renderCompat(ctx: CanvasRenderingContext2D, d: CompatShareData) {
-  glow(ctx, W * 0.28, -60, 340, d.colorA, 0.18);
-  glow(ctx, W * 0.72, -60, 340, d.colorB, 0.18);
+  bgGrad(ctx, d.colorA, d.colorB);
 
-  ctx.font = "100px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "center";
-  ctx.fillStyle = d.colorA;
-  ctx.fillText(d.symbolA, W / 2 - 155, 215);
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
-  ctx.font = "50px system-ui, sans-serif";
-  ctx.fillText("×", W / 2, 215);
-  ctx.fillStyle = d.colorB;
-  ctx.font = "100px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillText(d.symbolB, W / 2 + 155, 215);
+  // Top label
+  ctx.save();
+  ctx.font = "700 24px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.52)";
+  spaced(ctx, "COMPATIBILITY", W / 2, 136, 6);
+  ctx.restore();
 
-  const nfs = Math.max(d.nameA.length, d.nameB.length) > 10 ? 44 : 54;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "right";
-  ctx.fillText(d.nameA, W / 2 - 22, 365);
-  ctx.font = "30px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.22)";
-  ctx.textAlign = "center";
-  ctx.fillText("×", W / 2, 365);
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "left";
-  ctx.fillText(d.nameB, W / 2 + 22, 365);
-
-  pillRow(ctx, [
-    { text: `${d.symbolA} ${d.signA}`, color: d.colorA },
-    { text: `${d.symbolB} ${d.signB}`, color: d.colorB },
-  ], 455);
-
-  // Score — measure numerals to position % correctly
+  // Score
   ctx.save();
   ctx.textBaseline = "middle";
-  ctx.textAlign = "center";
   const scoreStr = String(Math.round(d.score));
-  ctx.font = "900 108px system-ui, sans-serif";
+  ctx.font = "900 230px system-ui, sans-serif";
   const sw = ctx.measureText(scoreStr).width;
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(scoreStr, W / 2 - 22, 632);
-  ctx.font = "900 60px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.45)";
+  ctx.textAlign = "center";
+  ctx.fillText(scoreStr, W / 2 - 30, 400);
+  ctx.font = "900 100px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
   ctx.textAlign = "left";
-  ctx.fillText("%", W / 2 - 22 + sw / 2 + 4, 632);
+  ctx.fillText("%", W / 2 - 30 + sw / 2 + 8, 370);
   ctx.restore();
+
+  // Names
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 40 : 52;
+  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 578);
+
+  // Signs
+  ctx.save();
+  ctx.font = "600 25px system-ui, 'Segoe UI Symbol', sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.48)";
+  spaced(
+    ctx,
+    `${d.symbolA} ${d.signA.toUpperCase()}  ×  ${d.symbolB} ${d.signB.toUpperCase()}`,
+    W / 2, 652, 3,
+  );
+  ctx.restore();
+
+  brand(ctx);
 }
 
 function renderZodiac(ctx: CanvasRenderingContext2D, d: ZodiacShareData) {
-  glow(ctx, W / 2, 0, 400, d.signColor, 0.28);
-  ctx.font = "120px system-ui, 'Segoe UI Symbol', sans-serif";
-  ctx.fillStyle = d.signColor;
+  bgGrad(ctx, d.signColor, darken(d.signColor, 0.70));
+
+  // Symbol
+  ctx.font = "180px system-ui, 'Segoe UI Symbol', 'Apple Color Emoji', sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.88)";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.symbol, W / 2, 240);
-  const nfs = d.name.length > 14 ? 58 : 70;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.fillText(d.symbol, W / 2, 300);
+
+  // Sign name
+  const signSize = d.sign.length > 9 ? 88 : 112;
+  ctx.font = `900 ${signSize}px system-ui, sans-serif`;
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.name, W / 2, 390);
-  pillRow(ctx, [
-    { text: `${d.symbol} ${d.sign}`, color: d.signColor },
-    { text: d.element, color: d.signColor },
-    { text: d.modality, color: "#a1a1aa" },
-  ], 490);
+  ctx.fillText(d.sign.toUpperCase(), W / 2, 462);
+
+  // Person name
+  const nfs = d.name.length > 14 ? 48 : 62;
+  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.80)";
+  ctx.fillText(d.name, W / 2, 576);
+
+  // Element · Modality
+  ctx.save();
+  ctx.font = "600 25px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.48)";
+  spaced(ctx, `${d.element.toUpperCase()}  ·  ${d.modality.toUpperCase()}`, W / 2, 650, 4);
+  ctx.restore();
+
+  brand(ctx);
 }
 
-const GOLD = "#f59e0b";
-
 function renderNumerology(ctx: CanvasRenderingContext2D, d: NumerologyShareData) {
-  glow(ctx, W / 2, 0, 420, GOLD, 0.24);
-  ctx.font = "900 160px system-ui, sans-serif";
-  ctx.fillStyle = GOLD;
+  bgGrad(ctx, "#d97706", darken("#d97706", 0.82));
+
+  // Top label
+  ctx.save();
+  ctx.font = "700 26px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.52)";
+  spaced(ctx, "LIFE PATH", W / 2, 196, 7);
+  ctx.restore();
+
+  // HUGE number
+  ctx.font = "900 300px system-ui, sans-serif";
+  ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(String(d.lifePath), W / 2, 240);
-  ctx.font = "600 24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.35)";
-  ctx.fillText("LIFE PATH", W / 2, 340);
-  const nfs = d.name.length > 14 ? 52 : 64;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.fillText(d.name, W / 2, 430);
-  ctx.font = "26px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.4)";
-  ctx.fillText(d.numberTitle, W / 2, 498);
-  pillRow(ctx, [
-    { text: `LP ${d.lifePath}`, color: GOLD },
-    { text: `Exp ${d.expression}`, color: "#a5b4fc" },
-    { text: `Lucky ${d.lucky}`, color: "#34d399" },
-  ], 560);
+  ctx.fillText(String(d.lifePath), W / 2, 430);
+
+  // Name
+  const nfs = d.name.length > 14 ? 48 : 64;
+  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.name, W / 2, 618);
+
+  // Number title
+  const tfs = d.numberTitle.length > 22 ? 22 : 26;
+  ctx.save();
+  ctx.font = `600 ${tfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.48)";
+  spaced(ctx, d.numberTitle.toUpperCase(), W / 2, 696, 3);
+  ctx.restore();
+
+  brand(ctx);
 }
 
 function renderNumerologyPair(ctx: CanvasRenderingContext2D, d: NumerologyPairShareData) {
-  glow(ctx, W * 0.28, -60, 340, GOLD, 0.18);
-  glow(ctx, W * 0.72, -60, 340, "#a5b4fc", 0.18);
-  const nfs = Math.max(d.nameA.length, d.nameB.length) > 10 ? 44 : 54;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
+  bgGrad(ctx, "#b45309", "#4338ca");
+
+  // Names
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 38 : 50;
+  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.78)";
+  ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.textAlign = "right";
-  ctx.fillText(d.nameA, W / 2 - 22, 180);
-  ctx.font = "30px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.22)";
-  ctx.textAlign = "center";
-  ctx.fillText("×", W / 2, 180);
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "left";
-  ctx.fillText(d.nameB, W / 2 + 22, 180);
-  ctx.font = "900 90px system-ui, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillStyle = GOLD;
-  ctx.fillText(String(d.lifePathA), W / 2 - 150, 320);
-  ctx.fillStyle = "rgba(255,255,255,0.15)";
-  ctx.font = "44px system-ui, sans-serif";
-  ctx.fillText("×", W / 2, 320);
-  ctx.fillStyle = "#a5b4fc";
-  ctx.font = "900 90px system-ui, sans-serif";
-  ctx.fillText(String(d.lifePathB), W / 2 + 150, 320);
-  ctx.font = "22px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.28)";
-  ctx.fillText("LIFE PATHS", W / 2, 390);
-  pillRow(ctx, [
-    { text: `LP ${d.lifePathA}`, color: GOLD },
-    { text: `LP ${d.lifePathB}`, color: "#a5b4fc" },
-  ], 440);
+  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 190);
+
+  // Score
   ctx.save();
   ctx.textBaseline = "middle";
-  ctx.textAlign = "center";
   const scoreStr = String(Math.round(d.score));
-  ctx.font = "900 108px system-ui, sans-serif";
+  ctx.font = "900 230px system-ui, sans-serif";
   const sw = ctx.measureText(scoreStr).width;
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(scoreStr, W / 2 - 22, 618);
-  ctx.font = "900 60px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.45)";
-  ctx.textAlign = "left";
-  ctx.fillText("%", W / 2 - 22 + sw / 2 + 4, 618);
-  ctx.restore();
-  ctx.font = "22px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.25)";
   ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("NUMEROLOGY COMPATIBILITY", W / 2, 700);
+  ctx.fillText(scoreStr, W / 2 - 30, 418);
+  ctx.font = "900 100px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.textAlign = "left";
+  ctx.fillText("%", W / 2 - 30 + sw / 2 + 8, 390);
+  ctx.restore();
+
+  // Label
+  ctx.save();
+  ctx.font = "700 24px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.52)";
+  spaced(ctx, "NUMEROLOGY MATCH", W / 2, 570, 5);
+  ctx.restore();
+
+  // Life paths
+  ctx.save();
+  ctx.font = "600 25px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.46)";
+  spaced(ctx, `LP ${d.lifePathA}  ·  LP ${d.lifePathB}`, W / 2, 638, 3);
+  ctx.restore();
+
+  brand(ctx);
 }
 
 function renderColorSingle(ctx: CanvasRenderingContext2D, d: ColorSingleShareData) {
-  glow(ctx, W / 2, H * 0.25, 480, d.auraHex, 0.40);
-  ctx.beginPath();
-  ctx.arc(W / 2, 240, 115, 0, Math.PI * 2);
-  ctx.fillStyle = d.auraHex;
-  ctx.fill();
-  const auraNfs = d.auraName.length > 16 ? 44 : 56;
-  ctx.font = `bold ${auraNfs}px system-ui, sans-serif`;
+  bgGrad(ctx, d.auraHex, darken(d.auraHex, 0.72));
+
+  // Person name small top
+  ctx.save();
+  ctx.font = "600 27px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.52)";
+  spaced(ctx, d.name.toUpperCase(), W / 2, 140, 4);
+  ctx.restore();
+
+  // HERO — aura name
+  const auraSize = d.auraName.length > 14 ? 76 : d.auraName.length > 10 ? 96 : 124;
+  ctx.font = `900 ${auraSize}px system-ui, sans-serif`;
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(d.auraName, W / 2, 420);
-  const nfs = d.name.length > 14 ? 44 : 54;
-  ctx.font = `${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "rgba(255,255,255,0.6)";
-  ctx.fillText(d.name, W / 2, 498);
-  pillRow(ctx, [
-    { text: d.sign, color: d.auraHex },
-    { text: d.powerName, color: "#a1a1aa" },
-  ], 560);
+  ctx.fillText(d.auraName.toUpperCase(), W / 2, 420);
+
+  // Hex
+  ctx.font = "500 34px system-ui, 'Courier New', monospace";
+  ctx.fillStyle = "rgba(255,255,255,0.62)";
+  ctx.fillText(d.auraHex.toUpperCase(), W / 2, 528);
+
+  // Sign · power color
+  ctx.save();
+  ctx.font = "600 25px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.46)";
+  spaced(ctx, `${d.sign.toUpperCase()}  ·  ${d.powerName.toUpperCase()}`, W / 2, 608, 3);
+  ctx.restore();
+
+  brand(ctx);
 }
 
 function renderColorPair(ctx: CanvasRenderingContext2D, d: ColorPairShareData) {
-  glow(ctx, W * 0.28, -60, 340, d.hexA, 0.24);
-  glow(ctx, W * 0.72, -60, 340, d.hexB, 0.24);
-  ctx.beginPath();
-  ctx.arc(W / 2 - 150, 215, 78, 0, Math.PI * 2);
-  ctx.fillStyle = d.hexA;
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(W / 2 + 150, 215, 78, 0, Math.PI * 2);
-  ctx.fillStyle = d.hexB;
-  ctx.fill();
-  const nfs = Math.max(d.nameA.length, d.nameB.length) > 10 ? 44 : 54;
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
-  ctx.fillStyle = "#ffffff";
-  ctx.textBaseline = "middle";
-  ctx.textAlign = "right";
-  ctx.fillText(d.nameA, W / 2 - 22, 365);
-  ctx.font = "30px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.22)";
+  bgGrad(ctx, d.hexA, d.hexB, true);
+
+  // Names
+  const nfs = Math.max(d.nameA.length, d.nameB.length) > 12 ? 38 : 50;
+  ctx.font = `700 ${nfs}px system-ui, sans-serif`;
+  ctx.fillStyle = "rgba(255,255,255,0.78)";
   ctx.textAlign = "center";
-  ctx.fillText("×", W / 2, 365);
-  ctx.font = `bold ${nfs}px system-ui, sans-serif`;
+  ctx.textBaseline = "middle";
+  ctx.fillText(`${d.nameA}  ×  ${d.nameB}`, W / 2, 196);
+
+  // Label
+  ctx.save();
+  ctx.font = "700 24px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.50)";
+  spaced(ctx, "COLOR HARMONY", W / 2, 308, 5);
+  ctx.restore();
+
+  // Aura names stacked
+  const sizeA = d.auraNameA.length > 12 ? 68 : d.auraNameA.length > 9 ? 84 : 100;
+  ctx.font = `900 ${sizeA}px system-ui, sans-serif`;
   ctx.fillStyle = "#ffffff";
-  ctx.textAlign = "left";
-  ctx.fillText(d.nameB, W / 2 + 22, 365);
-  // Gradient bar
-  const grad = ctx.createLinearGradient(W * 0.1, 0, W * 0.9, 0);
-  grad.addColorStop(0, d.hexA);
-  grad.addColorStop(1, d.hexB);
-  ctx.fillStyle = grad;
-  rrect(ctx, W * 0.1, 430, W * 0.8, 20, 10);
-  ctx.fill();
-  pillRow(ctx, [
-    { text: d.auraNameA, color: d.hexA },
-    { text: d.auraNameB, color: d.hexB },
-  ], 480);
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(d.auraNameA.toUpperCase(), W / 2, 430);
+
+  ctx.font = "500 38px system-ui, sans-serif";
+  ctx.fillStyle = "rgba(255,255,255,0.45)";
+  ctx.fillText("×", W / 2, 524);
+
+  const sizeB = d.auraNameB.length > 12 ? 68 : d.auraNameB.length > 9 ? 84 : 100;
+  ctx.font = `900 ${sizeB}px system-ui, sans-serif`;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(d.auraNameB.toUpperCase(), W / 2, 616);
+
+  brand(ctx);
 }
+
+// ── Blob helper ───────────────────────────────────────────────────────────────
 
 function dataUrlToBlob(dataUrl: string): Blob {
   const [head, b64] = dataUrl.split(",");
@@ -393,13 +419,14 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([bytes], { type: mime });
 }
 
+// ── Card dispatcher ───────────────────────────────────────────────────────────
+
 async function renderCard(data: ShareData): Promise<string> {
   const canvas = document.createElement("canvas");
-  canvas.width = W;
+  canvas.width  = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
-  ctx.fillStyle = "#080810";
-  ctx.fillRect(0, 0, W, H);
+
   if      (data.type === "hybrid")          renderHybrid(ctx, data);
   else if (data.type === "compat")          renderCompat(ctx, data);
   else if (data.type === "zodiac")          renderZodiac(ctx, data);
@@ -407,7 +434,7 @@ async function renderCard(data: ShareData): Promise<string> {
   else if (data.type === "numerology-pair") renderNumerologyPair(ctx, data);
   else if (data.type === "color-single")    renderColorSingle(ctx, data);
   else if (data.type === "color-pair")      renderColorPair(ctx, data);
-  wmk(ctx);
+
   return canvas.toDataURL("image/png");
 }
 
@@ -423,20 +450,12 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
       const dataUrl  = await renderCard(data);
       const blob     = dataUrlToBlob(dataUrl);
       const file     = new File([blob], "zodicogai.png", { type: "image/png" });
-      const shareText =
-        data.type === "hybrid"          ? `${data.name} · ${data.sign} ${data.mbtiType} — my ZodicogAI profile` :
-        data.type === "compat"          ? `${data.nameA} × ${data.nameB} · ${Math.round(data.score)}% compatibility — ZodicogAI` :
-        data.type === "zodiac"          ? `${data.name} · ${data.sign} ${data.element} ${data.modality} — ZodicogAI` :
-        data.type === "numerology"      ? `${data.name} · Life Path ${data.lifePath} · ${data.numberTitle} — ZodicogAI` :
-        data.type === "numerology-pair" ? `${data.nameA} × ${data.nameB} · ${Math.round(data.score)}% numerology match — ZodicogAI` :
-        data.type === "color-single"    ? `${data.name} · ${data.auraName} aura · ${data.sign} — ZodicogAI` :
-                                          `${data.nameA} × ${data.nameB} · ${data.auraNameA} & ${data.auraNameB} — ZodicogAI`;
 
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: "ZodicogAI" });
       } else {
         const a = document.createElement("a");
-        a.href = dataUrl;
+        a.href     = dataUrl;
         a.download = "zodicogai.png";
         a.click();
       }
@@ -475,7 +494,7 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
             <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
             <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
           </svg>
-          Share Image
+          Share
         </>
       )}
     </button>
