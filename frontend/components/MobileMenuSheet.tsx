@@ -93,13 +93,34 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
             <div className="px-5 pb-1">
               <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">Analyze</p>
             </div>
-            <div className="grid grid-cols-3 gap-3 px-5 pb-12">
+            <div className="grid grid-cols-3 gap-3 px-5 pb-4">
               {analyzeLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={onClose}
                   className="rounded-xl bg-white/[0.04] border border-white/[0.07] p-3 text-center text-xs font-medium text-white/80 hover:bg-white/[0.08] hover:text-white transition-all tap-highlight-none"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* More */}
+            <div className="px-5 pb-1">
+              <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest mb-2">More</p>
+            </div>
+            <div className="grid grid-cols-3 gap-3 px-5 pb-12">
+              {[
+                { label: "Blog",  href: "/blog" },
+                { label: "About", href: "/about" },
+                { label: "FAQ",   href: "/faq" },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={onClose}
+                  className="rounded-xl bg-white/[0.04] border border-white/[0.07] p-3 text-center text-xs font-medium text-zinc-400 hover:bg-white/[0.08] hover:text-zinc-200 transition-all tap-highlight-none"
                 >
                   {link.label}
                 </Link>
