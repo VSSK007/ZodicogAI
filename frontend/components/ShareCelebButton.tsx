@@ -9,6 +9,7 @@ interface Props {
   signColor: string;
   lifePathNum: number | null;
   auraName: string;
+  wikiImage?: string | null;
 }
 
 // ── Canvas utilities ──────────────────────────────────────────────────────────
@@ -55,6 +56,18 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([bytes], { type: mime });
 }
 
+// ── Image loader ──────────────────────────────────────────────────────────────
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
 // ── Card renderer ─────────────────────────────────────────────────────────────
 
 async function renderCelebCard(p: Props): Promise<string> {
@@ -70,11 +83,46 @@ async function renderCelebCard(p: Props): Promise<string> {
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 
+  // Try to load and draw celebrity photo
+  let hasPhoto = false;
+  if (p.wikiImage) {
+    try {
+      const img = await loadImage(p.wikiImage);
+      const r = 110;
+      const cx = W / 2, cy = 300;
+      // Clip to circle
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.clip();
+      const scale = Math.max((r * 2) / img.width, (r * 2) / img.height);
+      const sw = img.width * scale, sh = img.height * scale;
+      ctx.drawImage(img, cx - sw / 2, cy - sh / 2, sw, sh);
+      ctx.restore();
+      // Ring border
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(255,255,255,0.35)";
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      ctx.restore();
+      hasPhoto = true;
+    } catch {
+      // Image failed (CORS / network) — fall back to text-only layout
+    }
+  }
+
+  const nameY  = hasPhoto ? 498 : 400;
+  const auraY  = hasPhoto ? 624 : 540;
+  const lpY    = hasPhoto ? 708 : 624;
+  const labelY = hasPhoto ? 115 : 140;
+
   // Top label — sign symbol + label
   ctx.save();
   ctx.font = "700 26px system-ui, 'Segoe UI Symbol', sans-serif";
   ctx.fillStyle = "rgba(255,255,255,0.52)";
-  spaced(ctx, `${p.symbol}  ${p.signLabel.toUpperCase()}`, W / 2, 140, 4);
+  spaced(ctx, `${p.symbol}  ${p.signLabel.toUpperCase()}`, W / 2, labelY, 4);
   ctx.restore();
 
   // HERO — celebrity name
@@ -83,7 +131,7 @@ async function renderCelebCard(p: Props): Promise<string> {
   ctx.fillStyle = "#ffffff";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(p.name, W / 2, 400);
+  ctx.fillText(p.name, W / 2, nameY);
 
   // Aura name
   const auraSize = p.auraName.length > 14 ? 52 : 66;
@@ -91,14 +139,14 @@ async function renderCelebCard(p: Props): Promise<string> {
   ctx.fillStyle = "rgba(255,255,255,0.80)";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(p.auraName.toUpperCase(), W / 2, 540);
+  ctx.fillText(p.auraName.toUpperCase(), W / 2, auraY);
 
   // Life path if present
   if (p.lifePathNum != null) {
     ctx.save();
     ctx.font = "600 26px system-ui, sans-serif";
     ctx.fillStyle = "rgba(255,255,255,0.50)";
-    spaced(ctx, `LIFE PATH ${p.lifePathNum}`, W / 2, 624, 4);
+    spaced(ctx, `LIFE PATH ${p.lifePathNum}`, W / 2, lpY, 4);
     ctx.restore();
   }
 

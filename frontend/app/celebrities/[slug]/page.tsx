@@ -241,6 +241,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                 signColor={color}
                 lifePathNum={lifePathNum}
                 auraName={auraName}
+                wikiImage={wikiImage}
               />
             </div>
 
