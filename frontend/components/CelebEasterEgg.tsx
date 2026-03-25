@@ -65,47 +65,52 @@ function HeartBurst({ ox, oy, palette }: { ox: number; oy: number; palette: stri
    Word rain — Gilroy Light, italic, dribbling from top
 ───────────────────────────────────────────────────────────────────────────── */
 
-// Deterministic positions: varied x, size, speed, opacity, rotation
-const RAIN_DROPS = Array.from({ length: 16 }, (_, i) => ({
-  left:     `${5 + ((i * 41.3 + 7) % 88)}%`,
-  delay:    (i * 0.11) % 1.4,
-  duration: 2.0 + (i % 5) * 0.28,
-  size:     `${1.05 + (i % 4) * 0.18}rem`,
-  opacity:  0.28 + (i % 7) * 0.08,
-  rotate:   -10 + (i % 6) * 4,
-}));
+// Deterministic sprinkle drops — varied position, diagonal drift, rotation
+const SPRINKLE = Array.from({ length: 18 }, (_, i) => {
+  const h = ((i * 17 + 5) % 10) / 10; // pseudo-hash 0–1
+  return {
+    left:    `${5 + ((i * 43 + 9) % 86)}%`,
+    driftX:  -30 + (i % 9) * 8,         // -30 to +34px horizontal wander
+    delay:   (i * 0.13) % 1.5,
+    dur:     3.2 + h * 1.8,              // 3.2–5s — slow, peaceful
+    size:    `${0.88 + (i % 4) * 0.17}rem`,
+    opacity: 0.38 + (i % 5) * 0.12,
+    rotate:  -14 + (i % 7) * 5,         // -14 to +16 deg
+  };
+});
 
 function WordRain({ word, color, glow }: { word: string; color: string; glow: string }) {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {RAIN_DROPS.map((d, i) => (
-        <motion.span
+    <div className="absolute inset-0 pointer-events-none" style={{ overflow: "hidden" }}>
+      {SPRINKLE.map((d, i) => (
+        <motion.div
           key={i}
-          initial={{ y: -70, opacity: 0 }}
-          animate={{ y: 920, opacity: [0, d.opacity, d.opacity, 0] }}
+          // rotate goes in initial/animate so Framer Motion composes it
+          // with x/y inside a single transform — never put rotate in style.transform
+          initial={{ x: 0,       y: -55,  opacity: 0,         rotate: d.rotate }}
+          animate={{ x: d.driftX, y: 900, opacity: [0, d.opacity, d.opacity, 0], rotate: d.rotate }}
           transition={{
-            duration: d.duration,
+            duration: d.dur,
             delay:    d.delay,
-            ease:     "linear",
-            opacity:  { times: [0, 0.08, 0.88, 1] },
+            ease:     "easeIn",
+            opacity:  { duration: d.dur, delay: d.delay, times: [0, 0.10, 0.82, 1] },
           }}
           style={{
-            position:   "absolute",
-            left:       d.left,
-            top:        0,
-            fontSize:   d.size,
-            fontFamily: "'Gilroy', sans-serif",
-            fontWeight: 300,
-            fontStyle:  "italic",
+            position:      "absolute",
+            left:          d.left,
+            top:           0,
+            fontSize:      d.size,
+            fontFamily:    "'Gilroy', sans-serif",
+            fontWeight:    300,
+            fontStyle:     "italic",
             color,
-            textShadow: `0 0 10px ${glow}`,
-            rotate:     `${d.rotate}deg`,
-            whiteSpace: "nowrap",
+            textShadow:    `0 0 10px ${glow}`,
+            whiteSpace:    "nowrap",
             letterSpacing: "0.14em",
           }}
         >
           {word}
-        </motion.span>
+        </motion.div>
       ))}
     </div>
   );
