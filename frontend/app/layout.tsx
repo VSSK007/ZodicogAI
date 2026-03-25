@@ -260,18 +260,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <MobileNavbar />
 
         <PageTransition>
-          <div className="pt-0 md:pt-12 pb-24 md:pb-0">{children}</div>
+          <div className="pt-0 md:pt-12 pb-24 md:pb-0 min-h-dvh md:min-h-0">{children}</div>
         </PageTransition>
 
-        {/* Footer */}
-        <footer className="hidden md:block border-t border-white/[0.05] py-5 px-6">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Footer — desktop: full row; mobile: centered, clears fixed nav */}
+        <footer className="border-t border-white/[0.05] py-5 px-6 mb-20 md:mb-0">
+          {/* Desktop */}
+          <div className="hidden md:flex max-w-7xl mx-auto items-center justify-between">
             <p className="text-xs text-zinc-600">
               <span className="text-zinc-500 font-medium">ZodicogAI</span>
               <span className="mx-2 text-zinc-700">·</span>
               <span className="text-amber-700/70">The world&apos;s first Astrological Intelligence platform</span>
             </p>
             <div className="flex items-center gap-5 text-xs text-zinc-600">
+              <a href="/about" className="hover:text-zinc-400 transition-colors">About</a>
+              <a href="/blog" className="hover:text-zinc-400 transition-colors">Blog</a>
+              <a href="/blog/faq" className="hover:text-zinc-400 transition-colors">FAQ</a>
+              <a href="mailto:kar1mr@zodicogai.com" className="hover:text-zinc-400 transition-colors">Contact</a>
+            </div>
+          </div>
+          {/* Mobile */}
+          <div className="md:hidden text-center space-y-3">
+            <p className="text-xs text-zinc-600">
+              <span className="text-zinc-500 font-medium">ZodicogAI</span>
+              <span className="mx-2 text-zinc-700">·</span>
+              <span className="text-amber-700/60">Astrological Intelligence</span>
+            </p>
+            <div className="flex items-center justify-center gap-5 text-xs text-zinc-600">
               <a href="/about" className="hover:text-zinc-400 transition-colors">About</a>
               <a href="/blog" className="hover:text-zinc-400 transition-colors">Blog</a>
               <a href="/blog/faq" className="hover:text-zinc-400 transition-colors">FAQ</a>

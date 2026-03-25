@@ -95,17 +95,9 @@ function HomeContent() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
-            className="text-amber-200/55 mt-3 text-sm font-medium tracking-wide"
+            className="text-amber-200/35 mt-3 text-sm tracking-wide"
           >
-            The world&apos;s first Astrological Intelligence.
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: reduced ? 0 : 0.70, ease: EASE }}
-            className="text-amber-200/20 mt-1.5 text-[10px] tracking-widest uppercase"
-          >
-            AI ≠ Artificial &nbsp;·&nbsp; AI = Astrological
+            Astrological Intelligence
           </motion.p>
 
           {/* CTA buttons */}
@@ -285,26 +277,6 @@ function HomeContent() {
             </AnimatePresence>
           </div>
 
-          {/* Desktop claim */}
-          <AnimatePresence mode="wait">
-            {!znMode && (
-              <motion.div
-                key="desk-claim"
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: reduced ? 0 : 0.55, ease: EASE }}
-                className="text-center mt-[-10px] mb-8"
-              >
-                <p className="text-zinc-400 text-base font-medium">
-                  The world&apos;s first <span className="text-amber-400">Astrological Intelligence</span> platform.
-                </p>
-                <p className="text-zinc-600 text-xs tracking-widest uppercase mt-1.5">
-                  AI ≠ Artificial &nbsp;·&nbsp; AI = Astrological
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
 
         {/* Desktop forms */}
