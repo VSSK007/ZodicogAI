@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/ZodicogAI-World's%20First%20Astrological%20Intelligence-7c3aed?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/ZodicogAI-Astrological%20Intelligence-7c3aed?style=for-the-badge" />
 </p>
 
-<h1 align="center">ZodicogAI: The World's First Astrological Intelligence Platform</h1>
+<h1 align="center">ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks</h1>
 
 <p align="center">
-  <strong>AI ≠ Artificial. AI = Astrological Intelligence — the capacity to read patterns in stars, personality, and human behaviour and synthesize them into something meaningful. ZodicogAI is the first platform built entirely around this premise.</strong>
+  <strong>A hybrid symbolic-generative system that operationalises Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, and behavioral science — as deterministic computation, then uses structured LLM prompting to interpret and narrate the output.</strong>
 </p>
 
 <p align="center">
@@ -18,19 +18,9 @@
 
 ---
 
-## What is Astrological Intelligence?
-
-**AI = Astrological Intelligence.** Not artificial in the cold sense — something older and more specific.
-
-Astrological Intelligence is the ability to read the layered signals that make a person who they are: their zodiac archetype, their cognitive type, their numerological resonance, their love language, their attachment style. It is the synthesis of ancient symbolic frameworks with modern behavioral science. ZodicogAI operationalises this synthesis as a deterministic computation system, then uses generative AI to narrate the output with warmth and precision.
-
-**Zodicog** = **Zodiac** + **Cognition** — the intersection of ancient stars and modern psychology, where mythology meets neuroscience.
-
----
-
 ## Abstract
 
-This work presents ZodicogAI, a production system that addresses the fundamental limitation of generic LLMs when reasoning about complex interpersonal dynamics: **the absence of grounded structural knowledge**. I demonstrate that integrating deterministic engines spanning multiple personality frameworks (zodiac archetypes, MBTI typology, Pythagorean numerology, love style theory) with structured LLM prompting produces more specific, reproducible, and psychologically coherent outputs than conventional retrieval-augmented or in-context learning approaches.
+This work presents ZodicogAI, a production system in the domain of Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, and behavioral science into reproducible personality and compatibility models. It addresses the fundamental limitation of generic LLMs when reasoning about complex interpersonal dynamics: **the absence of grounded structural knowledge**. I demonstrate that integrating deterministic engines spanning multiple personality frameworks with structured LLM prompting produces more specific, reproducible, and psychologically coherent outputs than conventional retrieval-augmented or in-context learning approaches.
 
 The system computes personality vectors across 10 independent behavioral dimensions, executes deterministic multi-dimensional compatibility matrices, and synthesizes results through purpose-built prompt templates that reduce hallucination through explicit context framing. Unlike black-box personality prediction systems, every numerical output is auditable, every compatibility score is replicable, and the LLM's role is **interpretation of structured data**, not generation from scratch.
 
@@ -48,7 +38,7 @@ For years, I've been deeply invested in zodiac astrology, personality psychology
 
 I searched everywhere for a tool that could synthesize this knowledge — something that honored both the ancient wisdom of the zodiac and the empirical rigor of modern psychology. Something that integrated MBTI, numerology, love languages, and attachment theory into a coherent system. But everything I found was fragmented. No tool truly understood the intersection.
 
-So in 2026, I decided to build it myself. From scratch. The result is ZodicogAI: a system built on the conviction that **Astrological Intelligence** — the deep reading of who someone is across every symbolic and psychological axis — deserves an engine worthy of it.
+So in 2026, I decided to build it myself. From scratch. The result is ZodicogAI — a system that treats **Astrological Intelligence** not as mysticism but as structured computation: every insight is traceable to a deterministic engine, every score is reproducible, and the LLM's role is interpretation rather than invention.
 
 **The Challenge:**
 
@@ -425,9 +415,9 @@ frontend/
 
 **Zodicog** = **Zodiac** + **Cognition**
 
-A portmanteau capturing the core philosophy: the intersection of ancient astrological archetypes (zodiac) with modern cognitive science (how minds actually work). And the **AI** in ZodicogAI is not incidental — it stands for **Astrological Intelligence**: the synthesis of celestial pattern-reading and psychological depth into a coherent, actionable system.
+A portmanteau capturing the core methodology: the intersection of ancient astrological archetypes with modern cognitive science. The **AI** in ZodicogAI stands for **Astrological Intelligence** — a term for the domain this system operates in: structured, multi-framework personality reasoning that treats zodiac and psychological typologies as complementary encoding schemes rather than competing belief systems.
 
-ZodicogAI bridges mythology and neuroscience, deterministic personality frameworks with generative synthesis. The LLM is the narrator. The astrological intelligence is the foundation.
+The LLM synthesises; the deterministic engines ground. Neither operates alone.
 
 ---
 
@@ -611,7 +601,7 @@ Every computation is **auditable** — trace the code path to see exactly how ea
 **Citation:**
 ```bibtex
 @software{zodicogai2026,
-  title={ZodicogAI: Astrological Intelligence Grounded in Structured Behavioral Data},
+  title={ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks},
   author={ZodicogAI Contributors},
   url={https://github.com/VSSK007/ZodicogAI},
   year={2026}
