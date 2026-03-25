@@ -76,15 +76,29 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
 
             {/* Celebrities */}
             <div className="px-5 pb-4">
+              <p className="text-[10px] font-semibold text-yellow-400/60 uppercase tracking-widest mb-2">Celebrities</p>
               <Link
                 href="/celebrities"
                 onClick={onClose}
-                className="flex items-center gap-3 rounded-xl bg-white/[0.04] border border-white/[0.09] px-4 py-3 hover:bg-white/[0.07] transition-all tap-highlight-none"
+                className="relative block rounded-2xl overflow-hidden tap-highlight-none active:scale-[0.98] transition-transform"
+                style={{
+                  background: "linear-gradient(135deg, #92400e 0%, #78350f 40%, #1c1917 100%)",
+                  border: "1px solid rgba(251,191,36,0.25)",
+                  boxShadow: "0 0 24px rgba(251,191,36,0.08)",
+                }}
               >
-                <span className="text-lg">⭐</span>
-                <div>
-                  <p className="text-sm font-semibold text-zinc-100">Celebrities</p>
-                  <p className="text-[10px] text-zinc-500">360 zodiac profiles</p>
+                {/* Glow orb */}
+                <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 70%)" }} />
+                <div className="relative px-4 py-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-bold text-yellow-100 mb-0.5">Zodiac Celebrities</p>
+                    <p className="text-[11px] text-yellow-200/50">360 profiles across all 12 signs</p>
+                    {/* Sign symbol strip */}
+                    <p className="text-[13px] mt-2 tracking-wide text-yellow-300/40 leading-none">♈♉♊♋♌♍♎♏♐♑♒♓</p>
+                  </div>
+                  <div className="shrink-0 ml-3 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)" }}>
+                    <span className="text-2xl">⭐</span>
+                  </div>
                 </div>
               </Link>
             </div>
