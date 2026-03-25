@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -442,6 +443,7 @@ async function renderCard(data: ShareData): Promise<string> {
 
 export default function ShareImageButton({ data }: { data: ShareData }) {
   const [state, setState] = useState<"idle" | "capturing" | "done">("idle");
+  const isMobile = useIsMobile();
 
   async function handleShare() {
     if (state === "capturing") return;
@@ -456,25 +458,32 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
     }
 
     const blob = dataUrlToBlob(dataUrl);
-    const file = new File([blob], "zodicogai.png", { type: "image/png" });
 
-    try {
-      if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "ZodicogAI" });
-      } else if (typeof navigator.clipboard?.write === "function" && typeof ClipboardItem !== "undefined") {
-        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-      } else {
+    if (isMobile) {
+      // Mobile: always download so user can share from gallery
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "zodicogai.png";
+      a.click();
+    } else {
+      const file = new File([blob], "zodicogai.png", { type: "image/png" });
+      try {
+        if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: "ZodicogAI" });
+        } else if (typeof navigator.clipboard?.write === "function" && typeof ClipboardItem !== "undefined") {
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+        } else {
+          const a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = "zodicogai.png";
+          a.click();
+        }
+      } catch {
         const a = document.createElement("a");
         a.href = dataUrl;
         a.download = "zodicogai.png";
         a.click();
       }
-    } catch {
-      // share/clipboard failed — fall back to download
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = "zodicogai.png";
-      a.click();
     }
 
     setState("done");
@@ -500,15 +509,21 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
           <svg width="12" height="12" viewBox="0 0 14 14" fill="none">
             <path d="M2 7l4 4 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          Done!
+          Saved!
         </>
       ) : (
         <>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-          </svg>
-          Share
+          {isMobile ? (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 15V3m0 12-4-4m4 4 4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17" />
+            </svg>
+          ) : (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          )}
+          {isMobile ? "Save & Share" : "Share"}
         </>
       )}
     </button>
