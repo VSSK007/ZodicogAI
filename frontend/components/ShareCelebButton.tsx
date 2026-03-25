@@ -114,24 +114,37 @@ export default function ShareCelebButton(props: Props) {
   async function handleShare() {
     if (state === "capturing") return;
     setState("capturing");
-    try {
-      const dataUrl = await renderCelebCard(props);
-      const blob    = dataUrlToBlob(dataUrl);
-      const file    = new File([blob], "zodicogai-celeb.png", { type: "image/png" });
 
+    let dataUrl: string;
+    try {
+      dataUrl = await renderCelebCard(props);
+    } catch {
+      setState("idle");
+      return;
+    }
+
+    const blob = dataUrlToBlob(dataUrl);
+    const file = new File([blob], "zodicogai-celeb.png", { type: "image/png" });
+
+    try {
       if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file], title: `${props.name} — ZodicogAI` });
+      } else if (typeof navigator.clipboard?.write === "function" && typeof ClipboardItem !== "undefined") {
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
       } else {
         const a = document.createElement("a");
         a.href = dataUrl;
         a.download = "zodicogai-celeb.png";
         a.click();
       }
-      setState("done");
     } catch {
-      setState("idle");
-      return;
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "zodicogai-celeb.png";
+      a.click();
     }
+
+    setState("done");
     setTimeout(() => setState("idle"), 2500);
   }
 

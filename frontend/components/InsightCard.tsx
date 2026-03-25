@@ -194,25 +194,37 @@ export default function InsightCard({
   async function handleShare() {
     if (state === "capturing") return;
     setState("capturing");
-    try {
-      const dataUrl  = await captureInsightCard(hook, name, tags, score, hookType);
-      const blob     = dataUrlToBlob(dataUrl);
-      const file     = new File([blob], "zodicogai.png", { type: "image/png" });
-      const text     = shareText ?? hook;
 
-      if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "ZodicogAI" });
-      } else {
-        const a = document.createElement("a");
-        a.href     = dataUrl;
-        a.download = "zodicogai.png";
-        a.click();
-      }
-      setState("done");
+    let dataUrl: string;
+    try {
+      dataUrl = await captureInsightCard(hook, name, tags, score, hookType);
     } catch {
       setState("idle");
       return;
     }
+
+    const blob = dataUrlToBlob(dataUrl);
+    const file = new File([blob], "zodicogai.png", { type: "image/png" });
+
+    try {
+      if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "ZodicogAI" });
+      } else if (typeof navigator.clipboard?.write === "function" && typeof ClipboardItem !== "undefined") {
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      } else {
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = "zodicogai.png";
+        a.click();
+      }
+    } catch {
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "zodicogai.png";
+      a.click();
+    }
+
+    setState("done");
     setTimeout(() => setState("idle"), 2500);
   }
 

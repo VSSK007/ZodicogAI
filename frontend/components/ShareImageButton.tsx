@@ -446,24 +446,38 @@ export default function ShareImageButton({ data }: { data: ShareData }) {
   async function handleShare() {
     if (state === "capturing") return;
     setState("capturing");
-    try {
-      const dataUrl  = await renderCard(data);
-      const blob     = dataUrlToBlob(dataUrl);
-      const file     = new File([blob], "zodicogai.png", { type: "image/png" });
 
-      if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], title: "ZodicogAI" });
-      } else {
-        const a = document.createElement("a");
-        a.href     = dataUrl;
-        a.download = "zodicogai.png";
-        a.click();
-      }
-      setState("done");
+    let dataUrl: string;
+    try {
+      dataUrl = await renderCard(data);
     } catch {
       setState("idle");
       return;
     }
+
+    const blob = dataUrlToBlob(dataUrl);
+    const file = new File([blob], "zodicogai.png", { type: "image/png" });
+
+    try {
+      if (typeof navigator.share === "function" && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], title: "ZodicogAI" });
+      } else if (typeof navigator.clipboard?.write === "function" && typeof ClipboardItem !== "undefined") {
+        await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      } else {
+        const a = document.createElement("a");
+        a.href = dataUrl;
+        a.download = "zodicogai.png";
+        a.click();
+      }
+    } catch {
+      // share/clipboard failed — fall back to download
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "zodicogai.png";
+      a.click();
+    }
+
+    setState("done");
     setTimeout(() => setState("idle"), 2500);
   }
 
