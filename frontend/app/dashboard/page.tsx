@@ -519,44 +519,45 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.22 }}
-            className="fixed left-1/2 -translate-x-1/2 z-30"
-            style={{ top: 52 }}
+            className="fixed left-1/2 -translate-x-1/2 z-30 top-2 md:top-[52px]"
           >
-            <div className="flex items-center gap-0.5 bg-[#0c0c1c]/90 backdrop-blur-xl border border-white/[0.08] rounded-[14px] px-1.5 py-1 shadow-xl">
+            <div className="flex items-center gap-0.5 bg-[#0c0c1c]/90 backdrop-blur-xl border border-white/[0.08] rounded-[14px] px-1.5 py-1 shadow-xl max-w-[calc(100vw-24px)] md:max-w-none">
               <button
                 onClick={() => goTo(activeSlide - 1)}
                 disabled={activeSlide === 0}
-                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-zinc-400 hover:text-white disabled:opacity-20 transition-colors text-base leading-none"
+                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-zinc-400 hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
               >
                 ‹
               </button>
-              {SLIDE_LABELS.map((label, i) => (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  className={`px-3 py-1.5 rounded-[10px] text-xs font-medium transition-all whitespace-nowrap ${
-                    activeSlide === i
-                      ? "bg-[#4285f4] text-white shadow-sm"
-                      : "text-zinc-500 hover:text-zinc-300"
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
+              <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-none">
+                {SLIDE_LABELS.map((label, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    className={`px-2.5 md:px-3 py-1.5 rounded-[10px] text-xs font-medium transition-all whitespace-nowrap ${
+                      activeSlide === i
+                        ? "bg-[#4285f4] text-white shadow-sm"
+                        : "text-zinc-500 hover:text-zinc-300"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
               <button
                 onClick={() => goTo(activeSlide + 1)}
                 disabled={activeSlide === 5}
-                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-zinc-400 hover:text-white disabled:opacity-20 transition-colors text-base leading-none"
+                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-zinc-400 hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
               >
                 ›
               </button>
-              <span className="text-[10px] text-zinc-600 ml-1 tabular-nums pr-1">{activeSlide + 1}/6</span>
+              <span className="text-[10px] text-zinc-600 ml-1 tabular-nums pr-1 shrink-0">{activeSlide + 1}/6</span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <main className="min-h-screen px-6 py-10 max-w-4xl mx-auto">
+      <main className="min-h-screen px-4 md:px-6 py-6 md:py-10 max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-1.5 mb-2">
@@ -594,7 +595,7 @@ export default function DashboardPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
-              style={{ paddingTop: 48 }}
+              className="pt-10 md:pt-12"
             >
               <button
                 onClick={() => setResult(null)}
