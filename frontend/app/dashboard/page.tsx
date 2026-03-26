@@ -479,6 +479,13 @@ export default function DashboardPage() {
   // Reset to slide 0 when new result arrives
   useEffect(() => { if (result) { setActiveSlide(0); setSlideDir(1); } }, [result]);
 
+  // Hide mobile FAB/nav while results carousel is visible
+  useEffect(() => {
+    if (result) document.body.classList.add("results-open");
+    else document.body.classList.remove("results-open");
+    return () => document.body.classList.remove("results-open");
+  }, [result]);
+
   async function handleSubmit() {
     const errA = validatePerson(a, "Person A");
     const errB = validatePerson(b, "Person B");

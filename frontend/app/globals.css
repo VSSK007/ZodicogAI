@@ -117,6 +117,14 @@ html {
     transform: scale(0.75);
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
+
+  /* Hide FAB while synastry results carousel is visible */
+  body.results-open .mobile-fab {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.75);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
   .mobile-fab {
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
