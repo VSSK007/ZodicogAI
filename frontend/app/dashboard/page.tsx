@@ -7,6 +7,7 @@ import TraitRadar from "@/components/TraitRadar";
 import BehavioralMap from "@/components/BehavioralMap";
 import PersonForm from "@/components/PersonForm";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
+import { renderMd } from "@/lib/renderMd";
 import { getZodiacSign } from "@/lib/colors";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -438,7 +439,7 @@ function SlideAI({ result }: { result: FullResult }) {
             <p className="text-[10px] text-zinc-600 uppercase tracking-[0.1em] font-semibold mb-2">
               {key.replace(/_/g, " ")}
             </p>
-            <p className="text-sm text-zinc-300 leading-relaxed">{result.analysis[key]}</p>
+            <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
           </motion.div>
         ))}
       </div>

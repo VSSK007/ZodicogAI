@@ -6,6 +6,7 @@ import axios from "axios";
 import TraitRadar from "./TraitRadar";
 import MbtiSelect from "./MbtiSelect";
 import { API } from "@/lib/api";
+import { renderMd } from "@/lib/renderMd";
 
 export default function CompatibilityForm() {
   const [aName, setAName] = useState("");
@@ -325,7 +326,7 @@ function Insight({ title, text }: { title: string; text: string }) {
   return (
     <div className="bg-white/[0.03] p-6 rounded-2xl ring-1 ring-white/10">
       <h3 className="mb-2">{title}</h3>
-      <p className="text-zinc-300 text-sm">{text || "Unavailable"}</p>
+      <p className="text-zinc-300 text-sm">{text ? renderMd(text) : "Unavailable"}</p>
     </div>
   );
 }
