@@ -24,9 +24,9 @@ interface Traits {
 
 interface FullResult {
   vector_similarity_percent: number;
-  romantic_compatibility_score: number;
-  emotional_compatibility_score: number;
-  sexual_compatibility_score: number;
+  romantic: { romantic_compatibility_score: number };
+  emotional: { emotional_compatibility_score: number };
+  sextrology: { sexual_compatibility_score: number };
   a_traits: Traits;
   b_traits: Traits;
   analysis: {
@@ -145,24 +145,24 @@ export default function RelationshipIntelligencePage() {
                     signB: getSign(b.month, b.day),
                     symbolB: SIGN_SYMBOL[getSign(b.month, b.day)] ?? "✦",
                     colorB: SIGN_COLOR[getSign(b.month, b.day)] ?? "#818cf8",
-                    score: Math.round(((Number(result.romantic_compatibility_score) || 0) + (Number(result.emotional_compatibility_score) || 0) + (Number(result.sexual_compatibility_score) || 0)) / 3),
+                    score: Math.round(((Number(result.romantic?.romantic_compatibility_score) || 0) + (Number(result.emotional?.emotional_compatibility_score) || 0) + (Number(result.sextrology?.sexual_compatibility_score) || 0)) / 3),
                   }} />
                 </div>
                 <div className="flex flex-wrap justify-center gap-5 md:gap-10">
                 <ScoreRing
-                  score={result.romantic_compatibility_score}
+                  score={result.romantic?.romantic_compatibility_score}
                   size={160}
                   label="Romantic"
                   color="#f43f5e"
                 />
                 <ScoreRing
-                  score={result.emotional_compatibility_score}
+                  score={result.emotional?.emotional_compatibility_score}
                   size={160}
                   label="Emotional"
                   color="#a855f7"
                 />
                 <ScoreRing
-                  score={result.sexual_compatibility_score}
+                  score={result.sextrology?.sexual_compatibility_score}
                   size={160}
                   label="Sexual"
                   color="#ec4899"
