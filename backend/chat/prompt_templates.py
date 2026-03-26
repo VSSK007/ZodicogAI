@@ -878,14 +878,44 @@ Coach {na} on progressing to commitment with {nb}:
 
 _UNIVERSAL_FORMAT = """
 
-MANDATORY FORMAT RULES — every response must follow these exactly:
-- Separate every paragraph with a blank line (\\n\\n). Never run paragraphs together.
-- ANY list of traits, advice steps, tips, or insights = bullet points (- ). Not prose.
-- When discussing two people separately, use ### [Name] as a heading for each person.
-- Bold (**text**) the single most important word or phrase per section — not everything.
-- Start with the substance. No preamble, no restating the question.
-- Word count: 80–150 words for simple answers, 150–250 for multi-topic ones.
-- Minimum structure: if you give 3+ pieces of advice or name 3+ traits, they MUST be bullets."""
+MANDATORY STRUCTURE — pick ONE template based on the response type:
+
+SIMPLE (one topic, direct question, single person):
+[1–2 sentences naming the core insight.]
+- **[Key point 1]** — [one sentence of detail]
+- **[Key point 2]** — [one sentence of detail]
+- **[Key point 3]** — [one sentence of detail]
+
+TWO-PERSON (comparing two people, or covering both):
+[One opener sentence on the core dynamic.]
+
+### [Person A's real name]
+- **[Their dominant trait]** — [one sentence]
+- **[How they behave / what they need]** — [one sentence]
+
+### [Person B's real name]
+- **[Their dominant trait]** — [one sentence]
+- **[How they behave / what they need]** — [one sentence]
+
+### Together
+- **[The dynamic]** — [one sentence]
+- **[The advice or action]** — [one sentence]
+
+MULTI-TOPIC (3+ genuinely distinct themes):
+[One opener sentence framing the situation.]
+
+### [Topic Name]
+- **[Key point]** — [one sentence grounded in their profiles]
+(2–4 bullets per section)
+
+CRITICAL RULES — no exceptions:
+— Use the REAL names in ### headings. Never write "### Person A" or "### Person B".
+— Every item under a ### heading MUST be a bullet: - **Bold label** — description.
+— NO prose paragraphs under any ### heading. Bullets only.
+— One sentence per bullet. No semicolons stacking two ideas.
+— Bold (**text**) only the label — not descriptions or filler words.
+— Banned words: "might", "could", "perhaps", "potentially", "possibly".
+— Word count: 80–150 for simple, 150–250 for complex. Never more."""
 
 _TEMPLATES: dict[str, callable] = {
     "personality_analysis":      _prompt_personality_analysis,
