@@ -145,7 +145,7 @@ export default function RelationshipIntelligencePage() {
                     signB: getSign(b.month, b.day),
                     symbolB: SIGN_SYMBOL[getSign(b.month, b.day)] ?? "✦",
                     colorB: SIGN_COLOR[getSign(b.month, b.day)] ?? "#818cf8",
-                    score: Math.round((result.romantic_compatibility_score + result.emotional_compatibility_score + result.sexual_compatibility_score) / 3),
+                    score: Math.round(((Number(result.romantic_compatibility_score) || 0) + (Number(result.emotional_compatibility_score) || 0) + (Number(result.sexual_compatibility_score) || 0)) / 3),
                   }} />
                 </div>
                 <div className="flex flex-wrap justify-center gap-5 md:gap-10">

@@ -20,7 +20,7 @@ export default function ScoreRing({
   const center = size / 2;
   const radius = center - strokeWidth - 2;
   const circumference = 2 * Math.PI * radius;
-  const clamped = Math.min(Math.max(score, 0), 100);
+  const clamped = Math.min(Math.max(Number(score) || 0, 0), 100);
   const offset = circumference - (clamped / 100) * circumference;
 
   return (
