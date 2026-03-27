@@ -416,6 +416,9 @@ function SlideRisk({ result }: { result: FullResult }) {
 // ── Slide 6: AI Reading ───────────────────────────────────────────────────────
 
 function SlideAI({ result }: { result: FullResult }) {
+  const keys = ["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const;
+  const allDash = keys.every(k => !result.analysis[k] || result.analysis[k] === "—");
+
   return (
     <div className={CARD}>
       <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
@@ -428,21 +431,28 @@ function SlideAI({ result }: { result: FullResult }) {
           Gemini 2.5 Flash
         </span>
       </div>
-      <div className="p-6 grid md:grid-cols-2 gap-6">
-        {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key, i) => (
-          <motion.div
-            key={key}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-          >
-            <p className="text-[10px] text-zinc-600 uppercase tracking-[0.1em] font-semibold mb-2">
-              {key.replace(/_/g, " ")}
-            </p>
-            <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
-          </motion.div>
-        ))}
-      </div>
+      {allDash ? (
+        <div className="p-8 flex flex-col items-center gap-3 text-center">
+          <p className="text-zinc-500 text-sm">AI interpretation unavailable — the model timed out or was rate-limited.</p>
+          <p className="text-zinc-600 text-xs">Run the report again to retry.</p>
+        </div>
+      ) : (
+        <div className="p-6 grid md:grid-cols-2 gap-6">
+          {keys.map((key, i) => (
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <p className="text-[10px] text-zinc-600 uppercase tracking-[0.1em] font-semibold mb-2">
+                {key.replace(/_/g, " ")}
+              </p>
+              <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

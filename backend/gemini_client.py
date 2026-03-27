@@ -189,20 +189,26 @@ energetically compatible pairs. Analogous colors (30-60° apart) produce harmoni
 
 # Cache registry: model_name → cached content object
 _cache_registry: dict = {}
+_cache_expiry:   dict = {}   # model_name → expiry UNIX timestamp
 _cache_lock = threading.Lock()
-_CACHE_TTL  = "3600s"   # 1 hour — recreated automatically when expired
+_CACHE_TTL_SECS = 3300        # 55 min — refresh 5 min before Gemini's 60-min TTL
+_CACHE_TTL      = "3600s"     # TTL sent to Gemini API
 _CACHE_MODEL = "gemini-2.5-flash"  # Only primary model supports caching
 
 
 def _get_or_create_cache():
     """
     Return the cached content object for the static framework context.
-    Creates it on first call; returns existing on subsequent calls.
+    Creates it on first call; recreates when approaching TTL expiry (55 min).
     Falls back gracefully if caching is unavailable (older SDK, quota, etc.)
     """
     with _cache_lock:
+        # Return existing cache only if it hasn't expired locally
         if _CACHE_MODEL in _cache_registry:
-            return _cache_registry[_CACHE_MODEL]
+            if time.time() < _cache_expiry.get(_CACHE_MODEL, 0):
+                return _cache_registry[_CACHE_MODEL]
+            # Expired — clear it and recreate below
+            del _cache_registry[_CACHE_MODEL]
         try:
             cache = _client.caches.create(
                 model=_CACHE_MODEL,
@@ -212,11 +218,13 @@ def _get_or_create_cache():
                 ),
             )
             _cache_registry[_CACHE_MODEL] = cache
+            _cache_expiry[_CACHE_MODEL]   = time.time() + _CACHE_TTL_SECS
             _log.info("Gemini context cache created: %s", cache.name)
             return cache
         except Exception as exc:
             _log.warning("Context cache creation failed (%s) — using uncached calls.", exc)
-            _cache_registry[_CACHE_MODEL] = None  # Don't retry on every call
+            _cache_registry[_CACHE_MODEL] = None   # sentinel: don't retry every call
+            _cache_expiry[_CACHE_MODEL]   = time.time() + 60  # retry cache creation in 1 min
             return None
 
 
@@ -257,9 +265,23 @@ def _api_call(prompt: str, schema: type[BaseModel]) -> str:
                     contents=prompt,
                     config=types.GenerateContentConfig(**config_kwargs),
                 )
-                return response.text
+                text = response.text
+                if not text:
+                    raise RuntimeError("Gemini returned empty/blocked response")
+                return text
             except Exception as exc:
                 last_error = exc
+                _log.warning(
+                    "Gemini attempt failed (model=%s attempt=%d): %s",
+                    model_name, attempt + 1, exc,
+                )
+                # If cache was used and the call failed, invalidate it so the
+                # next attempt (and future calls) try without the stale cache.
+                if cache and model_name == _CACHE_MODEL:
+                    with _cache_lock:
+                        _cache_registry.pop(_CACHE_MODEL, None)
+                        _cache_expiry.pop(_CACHE_MODEL, None)
+                    cache = None
                 if attempt < _MAX_RETRIES - 1:
                     time.sleep(2 ** attempt)
 
