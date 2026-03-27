@@ -192,7 +192,7 @@ async function captureInsightCard(
 
     // Measure wordmark width
     ctx.font = `800 ${txSz}px ${font}`;
-    const chars = "ZODICOGAI".split("");
+    const chars = "ZodicogAI".split("");
     const cW    = chars.map((c) => ctx.measureText(c).width);
     const textW = cW.reduce((a, b) => a + b, 0) + lsGap * (chars.length - 1);
     const gap   = 12;
