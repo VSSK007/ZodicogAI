@@ -86,6 +86,14 @@ function dataUrlToBlob(dataUrl: string): Blob {
   return new Blob([bytes], { type: mime });
 }
 
+let _cachedFont: string | null = null;
+async function getFont(): Promise<string> {
+  if (_cachedFont) return _cachedFont;
+  await document.fonts.ready;
+  _cachedFont = window.getComputedStyle(document.documentElement).fontFamily;
+  return _cachedFont;
+}
+
 async function captureInsightCard(
   hook: string,
   name: string | undefined,
@@ -93,6 +101,7 @@ async function captureInsightCard(
   score: number | undefined,
   hookType: string | undefined,
 ): Promise<string> {
+  const appFont = await getFont();
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -168,25 +177,25 @@ async function captureInsightCard(
 
   // ── ZodicogMark — bottom-right stamp ──
   {
-    const font    = "system-ui, sans-serif";
-    const markSz  = 32;
+    const font    = appFont;
+    const markSz  = 40;
     const scale   = markSz / 28;
-    const txSz    = 18;
-    const urlSz   = 14;
+    const txSz    = 24;
+    const urlSz   = 15;
     const lsGap   = 3;
     const marg    = 60;
-    const rowGap  = 22;
+    const rowGap  = 28;
     const urlY    = H - marg;
     const markY   = urlY - rowGap;
 
     ctx.save();
 
     // Measure wordmark width
-    ctx.font = `600 ${txSz}px ${font}`;
+    ctx.font = `800 ${txSz}px ${font}`;
     const chars = "ZODICOGAI".split("");
     const cW    = chars.map((c) => ctx.measureText(c).width);
     const textW = cW.reduce((a, b) => a + b, 0) + lsGap * (chars.length - 1);
-    const gap   = 10;
+    const gap   = 12;
     const blockW = markSz + gap + textW;
     const startX = W - marg - blockW;
 
@@ -217,13 +226,13 @@ async function captureInsightCard(
 
     ctx.restore();
 
-    // Wordmark — "ZODICOG" white, "AI" brand blue
-    ctx.font         = `600 ${txSz}px ${font}`;
+    // Wordmark — "ZODICOG" white, "AI" cosmic purple
+    ctx.font         = `800 ${txSz}px ${font}`;
     ctx.textAlign    = "left";
     ctx.textBaseline = "middle";
     let bx = startX + markSz + gap;
     for (let i = 0; i < chars.length; i++) {
-      ctx.fillStyle = i >= 7 ? "rgba(66,133,244,0.80)" : "rgba(255,255,255,0.52)";
+      ctx.fillStyle = i >= 7 ? "rgba(167,139,250,0.82)" : "rgba(255,255,255,0.52)";
       ctx.fillText(chars[i], bx, markY);
       bx += cW[i] + lsGap;
     }

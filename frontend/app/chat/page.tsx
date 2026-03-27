@@ -234,16 +234,20 @@ export default function ChatPage() {
 
   function endSession() {
     // Export conversation as a .txt file
-    const lines: string[] = ["ZODICOGNAC SESSION EXPORT", `Date: ${new Date().toLocaleString()}`, ""];
+    const lines: string[] = [`# Zodicognac Session`, `*${new Date().toLocaleString()}*`, ""];
     messages.forEach((m) => {
-      lines.push(m.role === "user" ? `You: ${m.text}` : `Zodicognac: ${m.text}`);
+      if (m.role === "user") {
+        lines.push(`**You:** ${m.text}`);
+      } else {
+        lines.push(`**Zodicognac:** ${m.text}`);
+      }
       lines.push("");
     });
-    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    const blob = new Blob([lines.join("\n")], { type: "text/markdown" });
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement("a");
     a.href     = url;
-    a.download = `zodicognac-${Date.now()}.txt`;
+    a.download = `zodicognac-${Date.now()}.md`;
     a.click();
     URL.revokeObjectURL(url);
 

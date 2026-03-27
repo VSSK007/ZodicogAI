@@ -188,24 +188,24 @@ function spaced(
 // Two rows: [signet] ZODICOGAI  /  zodicogai.com
 
 function brand(ctx: CanvasRenderingContext2D, font: string) {
-  const markSz  = 32;
+  const markSz  = 40;
   const scale   = markSz / 28;
-  const txSz    = 18;
-  const urlSz   = 14;
+  const txSz    = 24;
+  const urlSz   = 15;
   const lsGap   = 3;
   const marg    = 60;
-  const rowGap  = 22; // gap between wordmark row and URL row
+  const rowGap  = 28;
   const urlY    = H - marg;
   const markY   = urlY - rowGap;
 
   ctx.save();
 
   // ── Measure wordmark width ──
-  ctx.font = `600 ${txSz}px ${font}`;
+  ctx.font = `800 ${txSz}px ${font}`;
   const chars  = "ZODICOGAI".split("");
   const cW     = chars.map((c) => ctx.measureText(c).width);
   const textW  = cW.reduce((a, b) => a + b, 0) + lsGap * (chars.length - 1);
-  const gap    = 10;
+  const gap    = 12;
   // Right-align: startX such that mark+gap+text ends at W-marg
   const blockW = markSz + gap + textW;
   const startX = W - marg - blockW;
@@ -237,13 +237,13 @@ function brand(ctx: CanvasRenderingContext2D, font: string) {
 
   ctx.restore();
 
-  // ── Wordmark — "ZODICOG" white, "AI" brand blue ──
-  ctx.font         = `600 ${txSz}px ${font}`;
+  // ── Wordmark — "ZODICOG" white, "AI" cosmic purple ──
+  ctx.font         = `800 ${txSz}px ${font}`;
   ctx.textAlign    = "left";
   ctx.textBaseline = "middle";
   let x = startX + markSz + gap;
   for (let i = 0; i < chars.length; i++) {
-    ctx.fillStyle = i >= 7 ? "rgba(66,133,244,0.80)" : "rgba(255,255,255,0.52)";
+    ctx.fillStyle = i >= 7 ? "rgba(167,139,250,0.82)" : "rgba(255,255,255,0.52)";
     ctx.fillText(chars[i], x, markY);
     x += cW[i] + lsGap;
   }

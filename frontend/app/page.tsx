@@ -254,13 +254,13 @@ function HomeContent() {
                     {reduced ? (
                       <>
                         <span className="text-white">Zodicog</span>
-                        <span className="text-[#4285f4]">AI</span>
+                        <span className="text-violet-400">AI</span>
                       </>
                     ) : (
                       TITLE_CHARS.map((char, i) => (
                         <motion.span
                           key={i}
-                          className={`inline-block ${i >= 7 ? "text-[#4285f4]" : "text-white"}`}
+                          className={`inline-block ${i >= 7 ? "text-violet-400" : "text-white"}`}
                           variants={charReveal}
                         >
                           {char}
