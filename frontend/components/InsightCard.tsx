@@ -166,12 +166,77 @@ async function captureInsightCard(
     tagPillRow(ctx, rest, y + 10);
   }
 
-  // Watermark
-  ctx.font = "24px system-ui, sans-serif";
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("ZODICOGAI.COM", W / 2, H - 52);
+  // ── ZodicogMark — bottom-right stamp ──
+  {
+    const font    = "system-ui, sans-serif";
+    const markSz  = 32;
+    const scale   = markSz / 28;
+    const txSz    = 18;
+    const urlSz   = 14;
+    const lsGap   = 3;
+    const marg    = 60;
+    const rowGap  = 22;
+    const urlY    = H - marg;
+    const markY   = urlY - rowGap;
+
+    ctx.save();
+
+    // Measure wordmark width
+    ctx.font = `600 ${txSz}px ${font}`;
+    const chars = "ZODICOGAI".split("");
+    const cW    = chars.map((c) => ctx.measureText(c).width);
+    const textW = cW.reduce((a, b) => a + b, 0) + lsGap * (chars.length - 1);
+    const gap   = 10;
+    const blockW = markSz + gap + textW;
+    const startX = W - marg - blockW;
+
+    // Z signet (circle + Z letterform)
+    ctx.save();
+    ctx.translate(startX, markY - markSz / 2);
+    ctx.scale(scale, scale);
+
+    ctx.beginPath();
+    ctx.arc(14, 14, 12.5, 0, Math.PI * 2);
+    ctx.strokeStyle = "rgba(255,255,255,0.42)";
+    ctx.lineWidth   = 1.8 / scale;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(14, 1.5, 1.5, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255,255,255,0.50)";
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(7.5, 10.5); ctx.lineTo(20.5, 10.5);
+    ctx.lineTo(7.5, 17.5); ctx.lineTo(20.5, 17.5);
+    ctx.strokeStyle = "rgba(255,255,255,0.50)";
+    ctx.lineWidth   = 2.2 / scale;
+    ctx.lineCap     = "square";
+    ctx.lineJoin    = "miter";
+    ctx.stroke();
+
+    ctx.restore();
+
+    // Wordmark
+    ctx.font         = `600 ${txSz}px ${font}`;
+    ctx.fillStyle    = "rgba(255,255,255,0.52)";
+    ctx.textAlign    = "left";
+    ctx.textBaseline = "middle";
+    let bx = startX + markSz + gap;
+    for (let i = 0; i < chars.length; i++) {
+      ctx.fillText(chars[i], bx, markY);
+      bx += cW[i] + lsGap;
+    }
+
+    // URL below wordmark
+    ctx.font         = `400 ${urlSz}px ${font}`;
+    ctx.fillStyle    = "rgba(255,255,255,0.28)";
+    ctx.textAlign    = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText("zodicogai.com", W - marg, urlY);
+
+    ctx.restore();
+  }
 
   return canvas.toDataURL("image/png");
 }
