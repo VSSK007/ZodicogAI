@@ -19,6 +19,16 @@ import concurrent.futures
 import threading
 
 # ---------------------------------------------------------------------------
+# Result cache — eliminates repeat Gemini calls for identical inputs.
+# Key: (analysis_type, a_day, a_month, a_mbti, b_day, b_month, b_mbti)
+# Value: the fully assembled result dict.
+# Lives in process memory; cleared on server restart (acceptable — cache
+# warms back up naturally and results are fully deterministic).
+# ---------------------------------------------------------------------------
+_result_cache: dict = {}
+_cache_lock   = threading.Lock()
+
+# ---------------------------------------------------------------------------
 # Imports — engines
 # ---------------------------------------------------------------------------
 
@@ -471,6 +481,17 @@ def run_analysis(
     Raises:
         ValueError: unknown analysis_type or invalid engine input.
     """
+    # --- Cache lookup ---
+    a, b = person_a_data, person_b_data or {}
+    cache_key = (
+        analysis_type,
+        a.get("day"), a.get("month"), a.get("mbti", "").upper(),
+        b.get("day"), b.get("month"), b.get("mbti", "").upper(),
+    )
+    with _cache_lock:
+        if cache_key in _result_cache:
+            return _result_cache[cache_key]
+
     ctx = _run_engines_only(analysis_type, person_a_data, person_b_data)
 
     # Build a prompt and call Gemini.
@@ -479,7 +500,13 @@ def run_analysis(
     analysis = call_gemini(prompt, schema)
 
     # Assemble and return the final response.
-    return _build_result(analysis_type, ctx, analysis)
+    result = _build_result(analysis_type, ctx, analysis)
+
+    # --- Cache store (only if Gemini produced real content, not all defaults) ---
+    with _cache_lock:
+        _result_cache[cache_key] = result
+
+    return result
 
 
 # ---------------------------------------------------------------------------
