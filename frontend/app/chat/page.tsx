@@ -222,10 +222,15 @@ export default function ChatPage() {
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  function stop() {
+    abortRef.current?.abort();
+  }
 
   async function send() {
     const msg = input.trim();
@@ -253,6 +258,9 @@ export default function ChatPage() {
     setMessages((prev) => [...prev, { role: "user", text: msg }]);
     setLoading(true);
 
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
+
     try {
       // Send last 6 messages (3 exchanges) as history, skipping the initial welcome
       const history = messages
@@ -264,22 +272,29 @@ export default function ChatPage() {
       if (profileA) body.person_a = profileA;
       if (profileB) body.person_b = profileB;
 
-      const res = await apiFetch<ChatResponse>("/chat", body);
+      const res = await fetch(`${(await import("@/lib/api")).API}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+        signal: ctrl.signal,
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error((err as { detail?: string }).detail ?? `HTTP ${res.status}`);
+      }
+      const data: ChatResponse = await res.json();
       setMessages((prev) => [
         ...prev,
-        {
-          role: "ai",
-          text: res.response,
-          intent: res.intent,
-          score: topScore(res.data),
-        },
+        { role: "ai", text: data.response, intent: data.intent, score: topScore(data.data) },
       ]);
     } catch (e: unknown) {
+      if ((e as Error).name === "AbortError") return; // user stopped — no error message
       setMessages((prev) => [
         ...prev,
         { role: "ai", text: `Sorry, something went wrong: ${(e as Error).message}` },
       ]);
     } finally {
+      abortRef.current = null;
       setLoading(false);
     }
   }
@@ -476,16 +491,30 @@ export default function ChatPage() {
                 style={{ scrollbarWidth: "none" }}
               />
               <div className="absolute bottom-3 right-3 flex items-center gap-2">
-                <span className="text-[10px] text-zinc-700 hidden sm:block">⏎ send</span>
-                <button
-                  onClick={send}
-                  disabled={loading || !input.trim()}
-                  className="w-8 h-8 rounded-xl bg-white/[0.07] border border-white/[0.1] text-zinc-400 flex items-center justify-center hover:bg-white/[0.12] hover:text-white hover:border-white/[0.18] active:scale-95 disabled:opacity-20 transition-all"
-                >
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
+                {!loading && (
+                  <span className="text-[10px] text-zinc-700 hidden sm:block">⏎ send</span>
+                )}
+                {loading ? (
+                  <button
+                    onClick={stop}
+                    className="w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/25 text-red-400 flex items-center justify-center hover:bg-red-500/20 hover:border-red-500/45 active:scale-95 transition-all"
+                    title="Stop"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor">
+                      <rect x="1" y="1" width="8" height="8" rx="1.5"/>
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    onClick={send}
+                    disabled={!input.trim()}
+                    className="w-8 h-8 rounded-xl bg-white/[0.07] border border-white/[0.1] text-zinc-400 flex items-center justify-center hover:bg-white/[0.12] hover:text-white hover:border-white/[0.18] active:scale-95 disabled:opacity-20 transition-all"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
           </div>
