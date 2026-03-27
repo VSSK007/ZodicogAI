@@ -95,7 +95,8 @@ function HomeContent() {
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: reduced ? 0 : 0.52, ease: EASE }}
-            className="text-amber-200/35 mt-3 text-sm tracking-wide"
+            className="text-amber-200/35 mt-3 text-sm tracking-[0.18em] uppercase"
+            style={{ fontFamily: "var(--font-manrope)" }}
           >
             Astrological Intelligence
           </motion.p>
@@ -280,6 +281,7 @@ function HomeContent() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: reduced ? 0 : 0.58, ease: EASE }}
               className="text-zinc-500 text-sm tracking-[0.18em] uppercase mt-5"
+              style={{ fontFamily: "var(--font-manrope)" }}
             >
               Astrological Intelligence
             </motion.p>
