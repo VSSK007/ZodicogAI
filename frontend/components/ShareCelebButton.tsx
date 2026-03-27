@@ -85,7 +85,7 @@ function brand(ctx: CanvasRenderingContext2D, font: string) {
   const scale   = markSz / 28;
   const txSz    = 24;
   const urlSz   = 15;
-  const lsGap   = 3;
+  const lsGap   = -1;
   const marg    = 60;
   const rowGap  = 28;
   const urlY    = H - marg;
@@ -100,27 +100,27 @@ function brand(ctx: CanvasRenderingContext2D, font: string) {
   const gap    = 12;
   const startX = W - marg - textW - gap - markSz;
 
-  // ZodicogMark signet
+  // ZodicogMark signet — exact SVG spec (viewBox 0 0 28 28, scale applied)
   ctx.save();
   ctx.translate(startX, markY - markSz / 2);
   ctx.scale(scale, scale);
 
   ctx.beginPath();
   ctx.arc(14, 14, 12.5, 0, Math.PI * 2);
-  ctx.strokeStyle = "rgba(255,255,255,0.42)";
-  ctx.lineWidth   = 1.8 / scale;
+  ctx.strokeStyle = "rgba(255,255,255,0.35)";
+  ctx.lineWidth   = 0.75;
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(14, 1.5, 1.5, 0, Math.PI * 2);
-  ctx.fillStyle = "rgba(255,255,255,0.50)";
+  ctx.arc(14, 1.5, 1.25, 0, Math.PI * 2);
+  ctx.fillStyle = "rgba(255,255,255,0.45)";
   ctx.fill();
 
   ctx.beginPath();
   ctx.moveTo(7.5, 10.5); ctx.lineTo(20.5, 10.5);
   ctx.lineTo(7.5, 17.5); ctx.lineTo(20.5, 17.5);
-  ctx.strokeStyle = "rgba(255,255,255,0.50)";
-  ctx.lineWidth   = 2.2 / scale;
+  ctx.strokeStyle = "rgba(255,255,255,0.55)";
+  ctx.lineWidth   = 2.0;
   ctx.lineCap     = "square";
   ctx.lineJoin    = "miter";
   ctx.stroke();
