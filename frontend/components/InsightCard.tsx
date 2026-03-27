@@ -217,13 +217,13 @@ async function captureInsightCard(
 
     ctx.restore();
 
-    // Wordmark
+    // Wordmark — "ZODICOG" white, "AI" brand blue
     ctx.font         = `600 ${txSz}px ${font}`;
-    ctx.fillStyle    = "rgba(255,255,255,0.52)";
     ctx.textAlign    = "left";
     ctx.textBaseline = "middle";
     let bx = startX + markSz + gap;
     for (let i = 0; i < chars.length; i++) {
+      ctx.fillStyle = i >= 7 ? "rgba(66,133,244,0.80)" : "rgba(255,255,255,0.52)";
       ctx.fillText(chars[i], bx, markY);
       bx += cW[i] + lsGap;
     }

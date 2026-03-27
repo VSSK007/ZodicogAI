@@ -237,13 +237,13 @@ function brand(ctx: CanvasRenderingContext2D, font: string) {
 
   ctx.restore();
 
-  // ── Wordmark ──
+  // ── Wordmark — "ZODICOG" white, "AI" brand blue ──
   ctx.font         = `600 ${txSz}px ${font}`;
-  ctx.fillStyle    = "rgba(255,255,255,0.52)";
   ctx.textAlign    = "left";
   ctx.textBaseline = "middle";
   let x = startX + markSz + gap;
   for (let i = 0; i < chars.length; i++) {
+    ctx.fillStyle = i >= 7 ? "rgba(66,133,244,0.80)" : "rgba(255,255,255,0.52)";
     ctx.fillText(chars[i], x, markY);
     x += cW[i] + lsGap;
   }
