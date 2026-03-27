@@ -215,64 +215,60 @@ function HomeContent() {
             />
           )}
 
-          {/* Brand mark — fixed height prevents subtitle jump on mark unmount */}
-          <div className="flex justify-center mb-8 h-14">
+          {/* Wordmark lockup — mark + logotype side by side */}
+          <div className="flex items-center justify-center min-h-[5.5rem]">
             <AnimatePresence mode="wait">
               {znMode ? (
                 <motion.div
-                  key="desk-znmark"
-                  initial={reduced ? false : { opacity: 0, scale: 0.82 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.55, ease: EASE_SPRING }}
-                >
-                  <ZodicognacMark size={56} active />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="desk-zomark"
-                  initial={reduced ? false : { opacity: 0, scale: 0.82 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.22, ease: EASE }}
-                >
-                  <ZodicogMark size={56} />
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Title — min-h prevents subtitle shift when title unmounts */}
-          <div className="min-h-[5.5rem] flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              {znMode ? (
-                <motion.h1
-                  key="desk-zn-title"
+                  key="desk-zn-lockup"
+                  className="flex items-center gap-5"
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, ease: EASE_SPRING }}
-                  className="text-7xl font-extrabold tracking-tight text-amber-400"
-                  style={{ fontFamily: "var(--font-manrope)" }}
                 >
-                  Zodicognac
-                </motion.h1>
+                  <ZodicognacMark size={56} active />
+                  <h1
+                    className="text-7xl font-extrabold tracking-tight text-amber-400"
+                    style={{ fontFamily: "var(--font-manrope)" }}
+                  >
+                    Zodicognac
+                  </h1>
+                </motion.div>
               ) : (
-                <motion.h1
-                  key="desk-zo-title"
-                  initial="hidden"
-                  animate="visible"
+                <motion.div
+                  key="desk-zo-lockup"
+                  className="flex items-center gap-5"
+                  initial={reduced ? false : { opacity: 0, scale: 0.92 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.97, transition: { duration: 0.22 } }}
-                  variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
-                  className="text-7xl font-extrabold tracking-tight select-none leading-tight"
-                  style={{ fontFamily: "var(--font-manrope)" }}
+                  transition={{ duration: 0.45, ease: EASE_SPRING }}
                 >
-                  {reduced
-                    ? "ZodicogAI"
-                    : TITLE_CHARS.map((char, i) => (
-                        <motion.span key={i} className="inline-block" variants={charReveal}>
+                  <ZodicogMark size={56} />
+                  <motion.h1
+                    initial="hidden"
+                    animate="visible"
+                    variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
+                    className="text-7xl font-extrabold tracking-tight select-none leading-tight"
+                    style={{ fontFamily: "var(--font-manrope)" }}
+                  >
+                    {reduced ? (
+                      <>
+                        <span className="text-white">Zodicog</span>
+                        <span className="text-[#4285f4]">AI</span>
+                      </>
+                    ) : (
+                      TITLE_CHARS.map((char, i) => (
+                        <motion.span
+                          key={i}
+                          className={`inline-block ${i >= 7 ? "text-[#4285f4]" : "text-white"}`}
+                          variants={charReveal}
+                        >
                           {char}
                         </motion.span>
-                      ))}
-                </motion.h1>
+                      ))
+                    )}
+                  </motion.h1>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
