@@ -232,6 +232,29 @@ export default function ChatPage() {
     abortRef.current?.abort();
   }
 
+  function endSession() {
+    // Export conversation as a .txt file
+    const lines: string[] = ["ZODICOGNAC SESSION EXPORT", `Date: ${new Date().toLocaleString()}`, ""];
+    messages.forEach((m) => {
+      lines.push(m.role === "user" ? `You: ${m.text}` : `Zodicognac: ${m.text}`);
+      lines.push("");
+    });
+    const blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement("a");
+    a.href     = url;
+    a.download = `zodicognac-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    // Reset session
+    stop();
+    setMessages([
+      { role: "ai", text: "I'm Zodicognac. I've been studying people — how they attract, fight, fall apart, and fall back in — since before I had words for it. Ask me something real. Add your profiles in the sidebar and I'll ground everything in your actual signs and MBTI." },
+    ]);
+    setInput("");
+  }
+
   async function send() {
     const msg = input.trim();
     if (!msg || loading) return;
@@ -262,10 +285,9 @@ export default function ChatPage() {
     abortRef.current = ctrl;
 
     try {
-      // Send last 6 messages (3 exchanges) as history, skipping the initial welcome
+      // Send full session history (skip the static welcome message)
       const history = messages
         .filter((m) => m.role === "user" || (m.role === "ai" && m.text !== messages[0].text))
-        .slice(-6)
         .map((m) => ({ role: m.role, text: m.text }));
 
       const body: Record<string, unknown> = { message: msg, history };
@@ -392,16 +414,26 @@ export default function ChatPage() {
             <span className="text-zinc-700 text-xs select-none">·</span>
             <span className="text-[11px] text-zinc-600">No filter. All insight.</span>
           </div>
-          <button
-            onClick={() => setShowProfiles((v) => !v)}
-            className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-200 ${
-              showProfiles
-                ? "bg-white/[0.06] border-white/[0.12] text-zinc-300"
-                : "border-white/[0.07] text-zinc-600 hover:text-zinc-300 hover:border-white/[0.12]"
-            }`}
-          >
-            {showProfiles ? "Close" : "Profiles"}
-          </button>
+          <div className="flex items-center gap-2">
+            {messages.length > 1 && (
+              <button
+                onClick={endSession}
+                className="text-xs px-3 py-1.5 rounded-full border border-red-500/20 text-red-400/70 hover:text-red-400 hover:border-red-500/40 transition-all duration-200"
+              >
+                End &amp; Export
+              </button>
+            )}
+            <button
+              onClick={() => setShowProfiles((v) => !v)}
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-200 ${
+                showProfiles
+                  ? "bg-white/[0.06] border-white/[0.12] text-zinc-300"
+                  : "border-white/[0.07] text-zinc-600 hover:text-zinc-300 hover:border-white/[0.12]"
+              }`}
+            >
+              {showProfiles ? "Close" : "Profiles"}
+            </button>
+          </div>
         </div>
 
         {/* Messages */}

@@ -186,11 +186,30 @@ def run_engines(intent, person_a, person_b):
 # CHAT ENTRYPOINT
 # -----------------------------
 
+def _format_history(history: list | None) -> str:
+    """
+    Convert the list of prior turns into a formatted block appended to the prompt.
+    Each turn: {"role": "user"|"ai", "text": "..."}
+    Keeps the last 20 turns (10 exchanges) to stay within token budget.
+    """
+    if not history:
+        return ""
+    turns = history[-20:]
+    lines = ["\n\n--- Conversation so far ---"]
+    for turn in turns:
+        role = "You" if turn.get("role") == "user" else "Zodicognac"
+        lines.append(f"{role}: {turn.get('text', '').strip()}")
+    lines.append("--- End of history ---\n")
+    return "\n".join(lines)
+
+
 def handle_chat(message, person_a=None, person_b=None, history=None):
 
     intent = classify_intent(message)
 
     data = run_engines(intent, person_a, person_b)
+
+    history_block = _format_history(history)
 
     prompt = build_chat_prompt(
         intent=intent,
@@ -198,6 +217,7 @@ def handle_chat(message, person_a=None, person_b=None, history=None):
         person_a=person_a,
         person_b=person_b,
         engine_data=data,
+        history_block=history_block,
     )
 
     reply = call_gemini(prompt, ChatReply)
