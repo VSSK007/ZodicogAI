@@ -74,7 +74,7 @@ export default function Navbar() {
         <button
           className={`flex items-center gap-1 px-3 text-sm border-b-2 transition-all duration-200 ${
             active
-              ? "text-white font-medium border-[#4285f4]"
+              ? "text-white font-medium border-violet-400"
               : "text-zinc-500 hover:text-zinc-200 border-transparent"
           }`}
         >
@@ -126,9 +126,10 @@ export default function Navbar() {
               <ZodicogMark size={18} />
               <span
                 title="AI = Astrological Intelligence"
-                className={`text-sm font-semibold tracking-tight ${path === "/" ? "text-white" : "text-zinc-400 hover:text-white transition-colors"}`}
+                className={`text-sm font-extrabold tracking-tight ${path === "/" ? "text-white" : "text-zinc-300 hover:text-white transition-colors"}`}
+                style={{ fontFamily: "var(--font-manrope)" }}
               >
-                ZodicogAI
+                Zodicog<span className="text-violet-400">AI</span>
               </span>
             </motion.div>
           </Link>
@@ -144,7 +145,7 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className={`shrink-0 flex items-center px-3 text-sm border-b-2 transition-all duration-200 ${
                     active
-                      ? "text-white font-medium border-[#4285f4]"
+                      ? "text-white font-medium border-violet-400"
                       : "text-zinc-500 hover:text-zinc-200 border-transparent"
                   }`}
                 >
@@ -164,7 +165,7 @@ export default function Navbar() {
                   href={href}
                   className={`shrink-0 flex items-center px-3 text-sm border-b-2 transition-all duration-200 ${
                     active
-                      ? "text-white font-medium border-[#4285f4]"
+                      ? "text-white font-medium border-violet-400"
                       : "text-zinc-500 hover:text-zinc-200 border-transparent"
                   }`}
                 >
