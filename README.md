@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/wordmark.svg" alt="ZodicogAI" width="480" />
+  <img src="assets/wordmark.png" alt="ZodicogAI" width="560" />
 </p>
 
 <h1 align="center">ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks</h1>
