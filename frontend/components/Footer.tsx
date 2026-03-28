@@ -1,10 +1,14 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function Footer() {
+function FooterInner() {
   const path = usePathname();
+  const params = useSearchParams();
+
   if (path.startsWith("/chat")) return null;
+  if (params.get("zn") === "1") return null;
 
   return (
     <footer className="hidden md:block border-t border-white/[0.05] py-5 px-6">
@@ -22,5 +26,13 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  );
+}
+
+export default function Footer() {
+  return (
+    <Suspense>
+      <FooterInner />
+    </Suspense>
   );
 }
