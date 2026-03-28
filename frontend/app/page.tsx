@@ -82,11 +82,16 @@ function HomeContent() {
             initial="hidden"
             animate="visible"
             variants={reduced ? undefined : { visible: { transition: { staggerChildren: 0.04 } } }}
-            className="text-5xl font-extrabold tracking-tight select-none leading-tight text-amber-50"
+            className="text-5xl font-extrabold tracking-tight select-none leading-tight"
             style={{ fontFamily: "var(--font-manrope)" }}
           >
-            {reduced ? "ZodicogAI" : TITLE_CHARS.map((char, i) => (
-              <motion.span key={i} className="inline-block" variants={charReveal}>{char}</motion.span>
+            {reduced ? (
+              <>
+                <span className="text-white">Zodicog</span>
+                <span className="text-violet-400">AI</span>
+              </>
+            ) : TITLE_CHARS.map((char, i) => (
+              <motion.span key={i} className={`inline-block ${i >= 7 ? "text-violet-400" : "text-white"}`} variants={charReveal}>{char}</motion.span>
             ))}
           </motion.h1>
 
