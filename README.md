@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/ZodicogAI-Astrological%20Intelligence-7c3aed?style=for-the-badge" />
+  <img src="assets/wordmark.svg" alt="ZodicogAI" width="480" />
 </p>
 
 <h1 align="center">ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks</h1>
