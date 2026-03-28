@@ -5,7 +5,7 @@
 <h1 align="center">ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks</h1>
 
 <p align="center">
-  <strong>A hybrid symbolic-generative system that operationalises Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, and behavioral science — as deterministic computation, then uses structured LLM prompting to interpret and narrate the output.</strong>
+  <strong>A hybrid symbolic-generative system that operationalises Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, chromatic resonance, and behavioral science — as deterministic computation, then uses structured LLM prompting to interpret and narrate the output.</strong>
 </p>
 
 <p align="center">
@@ -13,6 +13,7 @@
   <img src="https://img.shields.io/badge/FastAPI-Async%20ASGI-009688?style=flat-square" />
   <img src="https://img.shields.io/badge/Gemini_2.5_Flash-Structured%20Output-FF6D00?style=flat-square" />
   <img src="https://img.shields.io/badge/Pydantic_v2-Schema%20Validation-FF6D00?style=flat-square" />
+  <img src="https://img.shields.io/badge/Python_3.10-Backend-3776AB?style=flat-square" />
   <img src="https://img.shields.io/badge/Live-Production%20Deployment-22c55e?style=flat-square" />
 </p>
 
@@ -20,15 +21,17 @@
 
 ## Abstract
 
-This work presents ZodicogAI, a production system in the domain of Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, and behavioral science into reproducible personality and compatibility models. It addresses the fundamental limitation of generic LLMs when reasoning about complex interpersonal dynamics: **the absence of grounded structural knowledge**. I demonstrate that integrating deterministic engines spanning multiple personality frameworks with structured LLM prompting produces more specific, reproducible, and psychologically coherent outputs than conventional retrieval-augmented or in-context learning approaches.
+This work presents **ZodicogAI**, a production system operating in the domain of Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, and behavioral science into reproducible personality and compatibility models. The system addresses a fundamental limitation of general-purpose LLMs when applied to interpersonal reasoning: **the absence of grounded structural knowledge**. By decomposing personality into ten independent deterministic dimensions and routing LLM inference through schema-constrained prompt templates, ZodicogAI produces outputs that are simultaneously more specific, reproducible, and psychologically coherent than conventional retrieval-augmented or in-context approaches.
 
-The system computes personality vectors across 10 independent behavioral dimensions, executes deterministic multi-dimensional compatibility matrices, and synthesizes results through purpose-built prompt templates that reduce hallucination through explicit context framing. Unlike black-box personality prediction systems, every numerical output is auditable, every compatibility score is replicable, and the LLM's role is **interpretation of structured data**, not generation from scratch.
+Each numerical output is auditable and replicable. The LLM's role is **interpretation of pre-computed structural data**, not generative invention. This design choice eliminates the principal source of personality-context hallucination: competing ungrounded knowledge sources.
 
 **Key contributions:**
-1. A multi-framework behavioral encoding scheme with formal compatibility metrics
-2. Intent-driven prompt routing that grounds LLM outputs in pre-computed structural data
-3. A dual-model inference strategy with exponential backoff for production robustness
-4. Reproducible evaluation on relationship reasoning tasks with human-aligned baseline comparisons
+1. A ten-dimension behavioral encoding scheme with deterministic compatibility matrices across all dimension pairs
+2. A 13-class analysis type taxonomy with intent-driven prompt routing and schema-locked Pydantic output validation
+3. A conversational oracle (Zodicognac) with session memory, full history passthrough, and per-session continuity across arbitrary turn depth
+4. A dual-model inference architecture with proactive TTL-aware context cache management and reactive failure invalidation
+5. A 360-profile celebrity database rendered fully statically, enabling zero-latency astrological profiling at scale
+6. Reproducible evaluation on relationship reasoning tasks against generic LLM baselines
 
 ---
 
@@ -40,254 +43,336 @@ I searched everywhere for a tool that could synthesize this knowledge — someth
 
 So in 2026, I decided to build it myself. From scratch. The result is ZodicogAI — a system that treats **Astrological Intelligence** not as mysticism but as structured computation: every insight is traceable to a deterministic engine, every score is reproducible, and the LLM's role is interpretation rather than invention.
 
-**The Challenge:**
+**The Problem:**
 
-Large language models excel at general knowledge but fail in **domain-specific reasoning with structural constraints**:
+General-purpose LLMs fail in domain-specific reasoning under structural constraints:
 
-- **Hallucination in personality contexts:** Generic LLMs generate plausible but contradictory personality descriptions when asked about compatibility — they lack grounding in consistent frameworks
-- **Lack of multi-dimensional reasoning:** Relationship dynamics involve 10+ independent axes (emotional attachment, sexual polarity, communication style, numerological resonance, love languages, etc.). Generic models conflate these rather than computing them separately
-- **Non-reproducibility:** Without external structure, identical queries return different results due to sampling variability — unacceptable for a research-backed analytical tool
-- **Insufficient specificity:** When asked "Does an INTJ Scorpio and ENFP Sagittarius work?", generic models return generic overviews rather than specific compatibility vectors grounded in actual data
+- **Hallucination in personality contexts:** Without grounding, LLMs generate plausible but internally contradictory personality descriptions. They lack fixed reference frames for zodiac archetypes or MBTI function stacks.
+- **Conflation of independent dimensions:** Relationship dynamics involve ten or more structurally independent axes — emotional attachment, sexual polarity, numerological resonance, love language gaps, etc. Generic models conflate these rather than computing them independently and synthesizing afterward.
+- **Non-reproducibility:** Sampling variance means identical queries produce different results. This is unacceptable for an analytical tool claiming scientific grounding.
+- **Insufficient specificity:** "Does an INTJ Scorpio and ENFP Sagittarius work?" returns a generic personality overview rather than scored compatibility vectors across all ten dimensions.
 
-**My Solution:** I decomposed the problem into (1) **deterministic symbolic computation** grounded in years of research and (2) **guided LLM synthesis** that interprets structured outputs. The LLM doesn't generate facts — it interprets them. This reduces hallucination, increases specificity, maintains auditability, and leverages AI reasoning where it actually works.
+**The Solution:** Decompose the problem into (1) **deterministic symbolic computation** grounded in established personality frameworks and (2) **constrained LLM synthesis** that interprets pre-computed structural outputs. The LLM does not generate facts — it interprets them. This reduces hallucination, enforces reproducibility, maintains full auditability, and concentrates LLM capability on the task it actually performs well: nuanced language synthesis over structured input.
 
 ---
 
-## Core Architecture: Hybrid Symbolic-Generative Reasoning
+## System Architecture
 
 ```
-User Query + Profiles
+User Profile(s) + Query
     │
     ▼
-┌──────────────────────────────────────────────────────┐
-│         Intent Classification Layer                   │
-│   (15-class routing with schema-aware prompting)     │
-│  Routes: personality_analysis, compatibility,        │
-│          sextrology, commitment, signal_reading, etc  │
-└────────┬─────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│              Analysis Type Router                        │
+│   13-class taxonomy: hybrid_analysis, compatibility,    │
+│   emotional, romantic, sextrology, love_style,          │
+│   love_language, numerology, color, zodiac_article,     │
+│   full_relationship_intelligence, celebrity, discover   │
+└────────┬────────────────────────────────────────────────┘
          │
-    ┌────┴──────┬──────────────┬───────────┬─────────┐
-    ▼           ▼              ▼           ▼         ▼
-[Zodiac]   [Numerology]   [MBTI Type]  [Love]   [Decan]
- Engine     Engine         Analysis    Engines   Engine
-    │           │              │           │        │
-    └────┬──────┴──────────────┴───────────┴────────┘
-         │
-         ▼
-┌──────────────────────────────────────────────────────┐
-│   Multi-Dimensional Compatibility Matrices           │
-│   ┌────────────────────────────────────────────┐    │
-│   │ Behavioral Cosine Similarity (vector dot)  │    │
-│   │ Emotional Attachment Alignment             │    │
-│   │ Romantic Polarity Balance                  │    │
-│   │ Sexual Archetype Interaction               │    │
-│   │ Love Style Preference Matrix               │    │
-│   │ Love Language Alignment                    │    │
-│   │ Numerological Life Path Resonance          │    │
-│   │ Aura Color HSL Harmony (3D space)          │    │
-│   │ Communication Pattern Match                │    │
-│   │ Attachment System Complementarity          │    │
-│   └────────────────────────────────────────────┘    │
-│   → Produces: Typed DataClass with 50+ fields       │
-└────────┬──────────────────────────────────────────────┘
+    ┌────┴──────┬──────────┬──────────┬──────────┬────────┐
+    ▼           ▼          ▼          ▼          ▼        ▼
+[Zodiac/    [MBTI +    [Numerology] [Sextrology] [Color] [Love
+ Decan]    Behavioral]              Engine      Engine  Engines]
+ Engine     Engine
+    │           │          │          │          │        │
+    └────┬──────┴──────────┴──────────┴──────────┴────────┘
          │
          ▼
-┌──────────────────────────────────────────────────────┐
-│   Context Assembly + Prompt Template Dispatch        │
-│   (15 purpose-built templates with format rules)     │
-│                                                       │
-│   Template: {system_persona + structured_data        │
-│              + explicit format directives            │
-│              + intent-specific instructions}         │
-└────────┬──────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│          Multi-Dimensional Compatibility Matrices        │
+│   ┌─────────────────────────────────────────────────┐  │
+│   │ Behavioral Cosine Similarity (MBTI vectors)     │  │
+│   │ Emotional Attachment Alignment (Bowlby × MBTI)  │  │
+│   │ Romantic Polarity Balance (Jungian energetics)  │  │
+│   │ Sexual Archetype Synastry (erotic typology)     │  │
+│   │ Love Style Matrix (Lee 1973 — 6 styles)         │  │
+│   │ Love Language Overlap (Chapman 1992 — 5 langs)  │  │
+│   │ Numerological Resonance (Pythagorean 9×9)       │  │
+│   │ Aura Color Harmony (HSL 3D distance)            │  │
+│   │ Communication Pattern Match (F/T × E/I axes)   │  │
+│   │ Attachment System Complementarity               │  │
+│   └─────────────────────────────────────────────────┘  │
+│   → Produces: Typed Pydantic schema, 50+ fields        │
+└────────┬────────────────────────────────────────────────┘
          │
          ▼
-┌──────────────────────────────────────────────────────┐
-│   Gemini 2.5 Flash (Primary) with JSON Schema        │
-│   └──> Exponential Backoff → Gemini 2.0 Lite        │
-│                                                       │
-│   Schema: ChatReply(response: str, confidence: float)│
-└────────┬──────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│         Context Assembly + Template Dispatch             │
+│   13 purpose-built templates, each with:                │
+│   { system_persona + structured_engine_output           │
+│     + explicit format directives                        │
+│     + intent-specific reasoning constraints }           │
+└────────┬────────────────────────────────────────────────┘
          │
          ▼
-   Structured JSON Response
+┌─────────────────────────────────────────────────────────┐
+│   Gemini 2.5 Flash — Primary (JSON schema output)       │
+│   └──> TTL-aware context cache (55-min proactive expiry)│
+│   └──> Exponential backoff → Gemini 2.0 Flash Lite      │
+│        (reactive fallback on 429 / 500 / timeout)       │
+└────────┬────────────────────────────────────────────────┘
+         │
+         ▼
+   Pydantic-validated structured JSON response
 ```
 
-**Design principle:** The LLM **interprets** symbolic computation outputs rather than **generating** them from scratch. This provides:
-- **Auditability:** Every compatibility score is traceable to explicit computation
-- **Reproducibility:** Identical inputs always yield identical structural outputs
-- **Specificity:** LLM attention is narrow and grounded rather than broadly generative
-- **Reduced hallucination:** No competing sources of truth; only one source of facts
+**Core design principle:** The LLM **interprets** symbolic computation outputs. It does not generate them. This provides:
+- **Auditability** — every score is traceable to explicit, inspectable computation
+- **Reproducibility** — identical inputs yield identical structural outputs; LLM variance exists only in language, not in data
+- **Specificity** — attention is narrow and grounded rather than broadly generative
+- **Hallucination resistance** — no competing knowledge sources; exactly one source of structural truth
 
 ---
 
 ## Technical Methodology
 
-### 1. Multi-Framework Personality Encoding
+### 1. Ten-Dimension Behavioral Encoding
 
-Each user profile is encoded into a structured behavioral vector spanning 10 independent dimensions:
+Each user profile is encoded into a structured behavioral vector spanning ten independent dimensions:
 
-#### Dimension A: Zodiac Archetype (Element × Modality × Decan)
-**Basis:** Western tropical zodiac with archetypal correspondence theory
-- **Computation:** Fixed lookup from birth date → sign classification
-- **Expansion:** Decan sub-ruler computation (9 decan profiles per sign, 108 total)
-- **Output:** `ZodiacProfile(sign, element, modality, decan_label, decan_keywords)`
+#### Dimension A — Zodiac Archetype (Element × Modality × Decan)
+- **Basis:** Western tropical zodiac with Hellenistic decan correspondence
+- **Computation:** Birth date → sign classification → decan sub-ruler (day-of-sign ÷ 3)
+- **Resolution:** 108 distinct decan profiles (12 signs × 3 decans × 3 sub-rulers)
+- **Output:** `ZodiacProfile(sign, element, modality, decan_label, decan_ruler, decan_keywords[])`
 
-#### Dimension B: Cognitive Type Distribution (MBTI)
-**Basis:** Myers-Briggs 4-dichotomy model
-- **Input:** User-supplied type or quiz-based inference (8 questions, 2 per dichotomy)
-- **Output:** `MBTIProfile(type, role_group, cognitive_stack, introverted_function, extraverted_function)`
+#### Dimension B — Cognitive Type (MBTI Function Stack)
+- **Basis:** Myers-Briggs 4-dichotomy model with Jungian cognitive function hierarchy
+- **Input:** User-supplied type string or 8-question inline quiz (2 per dichotomy, score-based)
+- **Output:** `MBTIProfile(type, role_group, dominant, auxiliary, tertiary, inferior)`
 
-#### Dimension C: Behavioral Vector (Cosine Similarity Space)
-**Basis:** Type similarity as composite of E/I energy, S/N perception, T/F judgment, J/P structure preferences
+#### Dimension C — Behavioral Vector (Cosine Similarity)
 - **Computation:**
   ```
-  vector_a = [E_score_a, S_score_a, T_score_a, J_score_a]
-  vector_b = [E_score_b, S_score_b, T_score_b, J_score_b]
-  similarity = cos_sim(vector_a, vector_b)  # 0.0 to 1.0, normalized to 0-100%
+  v_a = [E_score, S_score, T_score, J_score]     # ∈ [0,1]⁴
+  v_b = [E_score, S_score, T_score, J_score]
+  behavioral_similarity = cos_sim(v_a, v_b) × 100  # → [0, 100]
   ```
-- **Output:** Scalar in [0, 100]
+- **Key property:** Deterministic, parameter-free. Same input → identical output.
 
-#### Dimension D: Emotional Attachment Orientation
-**Basis:** Attachment theory (Bowlby, Ainsworth) × MBTI function hierarchy
-- **Attributes mapped:** F(Feeling)-dominant profiles → higher attachment sensitivity, T(Thinking)-dominant → earned security, I(Introvert) → selective trust depth, E(Extrovert) → broad social stamina
-- **Computation:** Categorical + function-based weighting
-- **Output:** `EmotionalProfile(attachment_pattern, responsiveness_score, needs_explicit_reassurance, conflict_avoidance_likelihood)`
+#### Dimension D — Emotional Attachment Orientation
+- **Basis:** Attachment theory (Bowlby 1969, Ainsworth 1978) mapped to MBTI function axis
+- **Mapping:** F-dominant → anxious-preoccupied spectrum; T-dominant → earned-secure spectrum; I → selective depth; E → broad stamina
+- **Output:** `EmotionalProfile(attachment_pattern, responsiveness_score, reassurance_need, conflict_avoidance_likelihood)`
 
-#### Dimension E: Romantic Polarity & Sexual Archetype
-**Basis:** Jungian anima/animus theory + modern sexual typology (e.g., Marks & Specht)
-- **Computation:**
-  - Masculine/feminine energy score (E > I > P > J = more generative/pursuing; I > E > T > J = more receptive/preserving)
-  - Polarity balance = how complementary energies interact
+#### Dimension E — Romantic Polarity and Sexual Archetype
+- **Basis:** Jungian anima/animus + modern sexual typology (Marks & Specht 1988)
+- **Polarity scoring:** E > I > P > J → generative/pursuing; I > E > T > J → receptive/preserving
+- **Sextrology sub-module:** 6-field typed schema: `SextrologyAnalysis(sexual_character, erogenous_zones, fantasies, positions_and_dynamics, emotional_needs, long_term_fire)`
 - **Output:** `RomanticProfile(polarity_type, passion_intensity, affection_pacing, sexual_archetype)`
 
-#### Dimension F: Love Style Distribution (Lee's Typology)
-**Basis:** Lee 1973 — six love styles as distinct attachment strategies
+#### Dimension F — Love Style Distribution (Lee 1973)
 - **Styles:** Eros (erotic), Storge (companionate), Ludus (playful), Mania (obsessive), Pragma (practical), Agape (selfless)
-- **Computation:** MBTI→distribution mapping (e.g., INTJ bias toward Pragma, ENFP toward Ludus)
-- **Output:** `LoveStyleProfile(dominant_style, secondary_styles, compatibility_scores_vs_each_style)`
+- **Computation:** MBTI type → fixed distribution weights → dominant + secondary styles
+- **Compatibility:** 6×6 precomputed matrix, each cell ∈ [0, 100]
+- **Output:** `LoveStyleProfile(dominant, secondary[], compatibility_matrix_row)`
 
-#### Dimension G: Love Language Preference (Chapman 1992)
-**Basis:** Five love languages as primary communication channels
+#### Dimension G — Love Language Preference (Chapman 1992)
 - **Languages:** Words of Affirmation, Acts of Service, Receiving Gifts, Quality Time, Physical Touch
-- **Computation:** MBTI + Zodiac element mapping (Fire → Physical Touch, Air → Words, etc.)
-- **Output:** `LoveLanguageProfile(primary, secondary, tertiary, language_gaps)`
+- **Computation:** MBTI × zodiac element joint mapping (Fire → Physical Touch; Air → Words; Water → Quality Time; Earth → Acts of Service)
+- **Output:** `LoveLanguageProfile(primary, secondary, tertiary, language_gap_score_vs_partner)`
 
-#### Dimension H: Numerology (Pythagorean System)
-**Basis:** Digit reduction + master number preservation
+#### Dimension H — Numerology (Pythagorean System)
 - **Computation:**
   ```
-  Life_Path = reduce(day + month + year)  # Preserve 11, 22, 33
-  Expression = reduce(sum of letter values in full name)
-  Lucky_Number = reduce(life_path + expression)
+  life_path    = digit_reduce(day + month + year)    # preserve 11, 22, 33
+  expression   = digit_reduce(Σ letter_values(name))
+  lucky_number = digit_reduce(life_path + expression)
   ```
-- **Compatibility matrix:** Precomputed 9×9 (Life Path) × 9×9 (Expression) → [0, 100] compatibility score
-- **Output:** `NumerologyProfile(life_path, expression, lucky, compatibility_score, pursue_or_avoid_signal)`
+- **Compatibility:**
+  ```
+  numerology_compat = lp_score × 0.50 + exp_score × 0.30 + cross_score × 0.20
+  ```
+- **Signal:** ≥70 → pursue; ≥55 → caution; <55 → avoid
+- **Output:** `NumerologyProfile(life_path, expression, lucky, compatibility_score, pursue_signal)`
 
-#### Dimension I: Aura Color Resonance
-**Basis:** Zodiac → Color → HSL space relationships
+#### Dimension I — Aura Color Resonance (HSL Harmony)
 - **Computation:**
   ```
-  color_a = ZODIAC_COLOR_MAP[sign_a]  # Fixed color per sign
-  color_b = ZODIAC_COLOR_MAP[sign_b]
-  middle_ground = RGB_average(color_a, color_b)
-  compatible_color = rotate_hsl_by_180deg(middle_ground)
-  harmony = proximity in HSL space (0-100)
+  color_a    = ZODIAC_COLOR_MAP[sign_a]            # 12-entry dict, fixed hex values
+  color_b    = ZODIAC_COLOR_MAP[sign_b]
+  midpoint   = RGB_average(color_a, color_b)
+  complement = HSL_rotate(midpoint, 180°)
+  harmony    = 1 - (HSL_distance(color_a, color_b) / HSL_MAX)  # → [0, 100]
   ```
-- **Output:** `ColorProfile(aura_hex, harmony_with_partner_hex, compatible_color, harmony_score)`
+- **Output:** `ColorProfile(aura_hex, harmony_score, middle_ground_hex, compatible_color_hex)`
 
-#### Dimension J: Communication Pattern
-**Basis:** MBTI F/T axis + E/I energy dynamics
-- **Computation:** Categorical + conflict resolution style scoring
-- **Output:** `CommunicationProfile(directness, emotional_intensity, conflict_approach, validation_need)`
+#### Dimension J — Communication Pattern
+- **Computation:** MBTI F/T judgment axis × E/I energy axis → conflict resolution style scoring
+- **Output:** `CommunicationProfile(directness_score, emotional_intensity, conflict_approach, validation_need)`
 
 ---
 
-### 2. Multi-Dimensional Compatibility Computation
+### 2. Multi-Dimensional Compatibility Synthesis
 
-For pair analysis, I compute **10 independent compatibility matrices** and produce a weighted synthesis:
+For pair analysis, ten independent scores are computed and synthesized into a weighted composite:
 
 ```python
-# Pseudocode for full compatibility synthesis
-def compute_relationship_intelligence(person_a: Profile, person_b: Profile) -> RelationshipIntelligence:
+def compute_relationship_intelligence(a: Profile, b: Profile) -> RelationshipIntelligence:
     scores = {
-        'behavioral': cosine_similarity(person_a.mbti_vector, person_b.mbti_vector),
-        'emotional': attachment_alignment(person_a.attachment, person_b.attachment),
-        'romantic': polarity_resonance(person_a.romantic, person_b.romantic),
-        'sexual': sextrology_synastry(person_a.sexual, person_b.sexual),
-        'love_style': lee_compatibility_matrix(person_a.style, person_b.style),
-        'love_language': language_channel_overlap(person_a.languages, person_b.languages),
-        'numerology': pythagorean_compatibility(person_a.numerology, person_b.numerology),
-        'color': hsl_harmony_distance(person_a.aura_color, person_b.aura_color),
-        'communication': pattern_alignment(person_a.communication, person_b.communication),
-        'attachment_system': bowlby_complementarity(person_a.attachment, person_b.attachment),
+        'behavioral':    cosine_similarity(a.mbti_vector, b.mbti_vector),
+        'emotional':     attachment_alignment(a.attachment, b.attachment),
+        'romantic':      polarity_resonance(a.romantic, b.romantic),
+        'sexual':        sextrology_synastry(a.sexual, b.sexual),
+        'love_style':    lee_compatibility_matrix(a.style, b.style),
+        'love_language': language_channel_overlap(a.languages, b.languages),
+        'numerology':    pythagorean_compatibility(a.numerology, b.numerology),
+        'color':         hsl_harmony_distance(a.aura_color, b.aura_color),
+        'communication': pattern_alignment(a.communication, b.communication),
+        'attachment':    bowlby_complementarity(a.attachment, b.attachment),
     }
 
-    # Weighted synthesis (weights tuned on validation set)
-    overall_score = (
-        scores['behavioral'] * 0.25 +
-        scores['emotional'] * 0.20 +
-        scores['romantic'] * 0.15 +
-        scores['sexual'] * 0.12 +
-        scores['love_style'] * 0.10 +
-        scores['numerology'] * 0.08 +
+    overall = (
+        scores['behavioral']    * 0.25 +
+        scores['emotional']     * 0.20 +
+        scores['romantic']      * 0.15 +
+        scores['sexual']        * 0.12 +
+        scores['love_style']    * 0.10 +
+        scores['numerology']    * 0.08 +
         scores['communication'] * 0.05 +
-        scores['color'] * 0.03 +
-        scores['attachment_system'] * 0.02  # Other dimensions
+        scores['color']         * 0.03 +
+        scores['attachment']    * 0.02
     )
 
-    return RelationshipIntelligence(
-        scores=scores,
-        overall_score=overall_score,
-        narrative_axes=compute_narrative_summary(scores)
+    viability = (
+        "Excellent"    if overall >= 80 else
+        "Good"         if overall >= 65 else
+        "Challenging"  if overall >= 45 else
+        "Incompatible"
     )
+
+    return RelationshipIntelligence(scores=scores, overall=overall, viability=viability)
 ```
 
-**Key property:** Each dimension score is **deterministic and repeatable**. No sampling, no variance. This enables comparison across thousands of profile pairs with stable statistics.
+**Key property:** Every score is deterministic. Identical profiles always produce identical compatibility vectors, enabling stable ranking across thousands of profile pairs.
 
 ---
 
-### 3. Intent-Driven Prompt Routing
+### 3. Analysis Type Taxonomy
 
-Rather than a single generic prompt, ZodicogAI routes queries to **15 purpose-built prompt templates**, each optimized for a specific reasoning task:
+ZodicogAI defines 13 discrete analysis types, each with a dedicated engine pipeline, Pydantic output schema, and prompt template:
 
-| Intent | Prompt Strategy | Context Injected | Output Constraints |
+| Analysis Type | Input | Dimensions | Output Schema |
 |---|---|---|---|
-| `personality_analysis` | Archetypal narrative + trait grounding | Zodiac/MBTI/decan data | Behavioral summary, 3+ bullet points |
-| `compatibility_question` | Multi-dimensional comparison | All 10 scores + narrative diffs | Side-by-side analysis + divergence points |
-| `relationship_advice` | Score-aware + psychological grounding | Romantic/emotional/communication scores | Warm, specific tactics tied to actual data |
-| `sextrology` | Explicit sexual archetype synthesis | Sexual compatibility + fantasies + positions | Raw, explicit, no hedging; per-person bullets |
-| `attachment_style_coaching` | Bowlby attachment + MBTI anxiety/avoidance | Attachment scores + conflict patterns | Specific attachment wounds + repair tactics |
-| `signal_reading` | Behavioral decoding through framework lens | Zodiac/MBTI + behavior description | Likelihood inference + competing explanations |
-| `red_flags_green_flags` | Type-specific relationship warning patterns | Personality data + long-term viability score | Specific red flags (not generic) |
-| `getting_them_back` | Re-approach psychology + attachment science | Attachment style + polarity + communication | Type-specific window timing + message strategy |
-| `commitment_progression` | Type-specific commitment timeline | Romantic score + type attachment pace | Staged approach with what-not-to-do |
+| `hybrid_analysis` | Single person | A, B, C, D | `HybridAnalysis` |
+| `compatibility_analysis` | Two people | C | `CompatibilityAnalysis` |
+| `emotional_compatibility` | Two people | D, J | `EmotionalCompatibility` |
+| `romantic_compatibility` | Two people | E | `RomanticCompatibility` |
+| `sextrology_analysis` | Two people | E (sub-module) | `SextrologyAnalysis` (6 fields) |
+| `love_style_analysis` | Two people | F | `LoveStyleAnalysis` |
+| `love_language_analysis` | Two people | G | `LoveLanguageAnalysis` |
+| `numerology_analysis` | Single person | H | `NumerologySingleAnalysis` |
+| `numerology_pair_analysis` | Two people | H | `NumerologyPairAnalysis` |
+| `color_analysis` | Single person | I | `ColorSingleAnalysis` |
+| `color_pair_analysis` | Two people | I | `ColorPairAnalysis` |
+| `zodiac_article` | Single person | A | `ZodiacArticle` (13 fields) |
+| `full_relationship_intelligence` | Two people | A–J (all 10) | `RelationshipIntelligenceResult` |
 
-**Format enforcement:** Every template mandates:
-```
-1. Max 3-sentence intro paragraph
-2. 3+ items → bullet points (never prose lists)
-3. Two-person discussions → ### [Name] section headers
-4. No hedging: banned words ("might", "could", "perhaps")
-5. Bold (**term**) only the single most important concept per section
-```
-
-This structured output format reduces LLM prose generation and increases auditability.
+**Schema enforcement:** All output schemas are Pydantic v2 models. Gemini is invoked with the JSON schema as a response constraint. Validation failure triggers retry before fallback escalation.
 
 ---
 
-### 4. Dual-Model Inference Strategy
+### 4. Intent-Driven Prompt Architecture
 
-**Primary:** Gemini 2.5 Flash with structured JSON output
-- Response schema: `ChatReply(response: str, confidence: float)`
-- Latency target: <2s for context window size ~2K tokens
-- Fallback trigger: rate limit (429), timeout (>5s), internal error (500)
+Each analysis type maps to a purpose-built prompt template with explicit format constraints:
 
-**Fallback:** Gemini 2.0 Flash Lite
-- Semantically weaker but always available
-- Exponential backoff: 1s, 2s, 4s retry delays
+```
+Template structure:
+  SYSTEM_PERSONA
+    └─ Domain expert voice calibrated to analysis type
+  STRUCTURED_CONTEXT
+    └─ Pre-computed engine outputs injected verbatim
+  FORMAT_DIRECTIVES
+    └─ Max paragraph length, bullet threshold, section headers
+  INTENT_CONSTRAINTS
+    └─ Banned hedging words: "might", "could", "perhaps"
+    └─ Required: bold the single most important term per section
+    └─ Two-person output: ### [Name A] / ### [Name B] section headers
+  OUTPUT_SCHEMA
+    └─ JSON schema reference (Pydantic → dict → prompt injection)
+```
 
-This dual-model approach ensures **production availability** — the system degrades gracefully rather than failing hard.
+This strategy narrows the LLM's generation space to schema-valid outputs and eliminates reflexive hedging that degrades personality-domain responses.
+
+---
+
+### 5. Zodicognac — Conversational Oracle
+
+Zodicognac is the session-aware conversational interface built on the same engine and prompt infrastructure. It differs architecturally from single-shot analysis in three ways:
+
+**1. Full session history passthrough**
+Every turn is prepended to the prompt context. History is formatted as a structured block (`--- Conversation so far ---`), capped at the last 20 turns, ensuring coherent multi-turn reasoning without context window overflow.
+
+**2. Per-turn intent classification**
+Each message is classified against 15 intent classes before routing to the appropriate prompt template. Classification uses a lightweight Gemini call with the same dual-model fallback strategy.
+
+**3. Abort and session export**
+The frontend maintains an `AbortController` ref for in-flight request cancellation. Sessions are exportable as `.md` files with bold speaker labels and ISO timestamp headers. The full session history is sent on every request — no sliding window truncation.
+
+```python
+# chat_handler.py — simplified
+def handle_chat(message: str, person_a: dict, person_b: dict, history: list) -> ChatReply:
+    intent        = classify_intent(message)
+    history_block = _format_history(history)          # last 20 turns, structured
+    prompt        = build_chat_prompt(
+                        intent, message, person_a, person_b,
+                        history_block=history_block)
+    return call_gemini(prompt, ChatReply)
+```
+
+---
+
+### 6. Dual-Model Inference with Cache Management
+
+**Primary:** Gemini 2.5 Flash with JSON schema output constraint
+
+- **TTL management:** Proactive local expiry at 55 minutes (5-minute buffer before Gemini's 60-minute hard TTL). Cache is recreated on expiry rather than allowed to fail silently.
+- **Reactive invalidation:** On any API failure while using cached content, the cache is immediately evicted and the retry proceeds without it — eliminates silent fallback-to-defaults caused by stale `cached_content` names.
+
+**Fallback:** Gemini 2.0 Flash Lite with exponential backoff (1s → 2s → 4s)
+
+```python
+_CACHE_TTL_SECS = 3300  # 55 min
+
+# Proactive expiry check
+if _CACHE_MODEL in _cache_registry:
+    if time.time() < _cache_expiry.get(_CACHE_MODEL, 0):
+        return _cache_registry[_CACHE_MODEL]   # valid
+    del _cache_registry[_CACHE_MODEL]          # expired — recreate
+
+# Reactive invalidation on API failure
+if cache and model_name == _CACHE_MODEL:
+    _cache_registry.pop(_CACHE_MODEL, None)
+    _cache_expiry.pop(_CACHE_MODEL, None)
+    cache = None                               # retry without cache
+```
+
+---
+
+### 7. In-Memory Result Cache
+
+Analysis results for a given `(analysis_type, day_a, month_a, mbti_a, day_b, month_b, mbti_b)` tuple are cached in a module-level dict with thread-safe access:
+
+```python
+_result_cache: dict = {}
+_cache_lock   = threading.Lock()
+
+cache_key = (analysis_type,
+             a.get("day"), a.get("month"), a.get("mbti", "").upper(),
+             b.get("day"), b.get("month"), b.get("mbti", "").upper())
+
+with _cache_lock:
+    if cache_key in _result_cache:
+        return _result_cache[cache_key]   # O(1) hit, zero Gemini call
+
+# ... run engines + Gemini call ...
+
+with _cache_lock:
+    _result_cache[cache_key] = result
+```
+
+**Rationale:** Personality analysis for a given profile tuple is deterministic at the engine layer and semantically stable at the LLM layer. Caching eliminates repeat Gemini calls for identical inputs — common when a user visits multiple analysis pages for the same profile pair.
 
 ---
 
@@ -295,327 +380,248 @@ This dual-model approach ensures **production availability** — the system degr
 
 ### Backend (FastAPI + Pydantic v2)
 
-```bash
+```
 backend/
 ├── main.py                          # ASGI entry point, route handlers
-├── gemini_client.py                 # Dual-model inference wrapper
-├── agent_controller.py              # Engine orchestrator + schema registry
+├── gemini_client.py                 # Dual-model inference + TTL cache management
+├── agent_controller.py              # Engine orchestrator + in-memory result cache
 ├── chat/
-│   ├── chat_handler.py              # Intent classifier + router
-│   ├── prompt_templates.py          # 15 template builders
+│   ├── chat_handler.py              # Intent classifier + session history passthrough
+│   ├── prompt_templates.py          # 13 analysis + 15 chat template builders
 │   └── prompt_routing.py            # Template dispatch logic
 ├── engines/
-│   ├── zodiac_engine.py             # Zodiac + decan computation
-│   ├── mbti_engine.py               # MBTI type analysis
+│   ├── zodiac_engine.py             # Zodiac sign + decan (108 profiles)
+│   ├── mbti_engine.py               # MBTI type analysis + function stack
 │   ├── compatibility_engine.py      # Cosine similarity + behavioral vectors
 │   ├── emotional_engine.py          # Attachment alignment scoring
 │   ├── romantic_engine.py           # Polarity + passion metrics
-│   ├── love_style_engine.py         # Lee's typology compatibility
-│   ├── love_language_engine.py      # Language preference matrix
-│   ├── sextrology_engine.py         # Sexual archetype + compatibility
-│   ├── numerology_engine.py         # Pythagorean life path + expression
-│   ├── color_engine.py              # HSL harmony + aura mapping
-│   └── decan_engine.py              # 108 decan profiles + sub-rulers
-├── scripts/
-│   ├── generate_celeb_bios.py       # Batch-generate 360 celeb bios via Gemini (resumable)
-│   └── add_wiki_images.py           # Enrich celeb-bios.json with Wikipedia images + URLs
-└── models/
-    └── schemas.py                   # Pydantic v2 schemas (50+ dataclasses)
+│   ├── sextrology_engine.py         # Sexual archetype + compatibility (6 fields)
+│   ├── love_style_engine.py         # Lee typology 6×6 compatibility matrix
+│   ├── love_language_engine.py      # Chapman 5-language preference mapping
+│   ├── numerology_engine.py         # Pythagorean life path + expression + compat
+│   ├── color_engine.py              # HSL harmony + zodiac aura color mapping
+│   ├── relationship_intelligence.py # Full 10-dimension weighted synthesis
+│   └── decan_engine.py              # 108 decan profiles + Hellenistic sub-rulers
+├── models/
+│   └── schemas.py                   # All Pydantic v2 schemas (50+ dataclasses)
+└── scripts/
+    └── generate_celeb_bios.py       # Batch Gemini generation for 360 celeb bios
 ```
 
-**Schema example (Pydantic v2):**
+**Key schema:**
 ```python
-class RelationshipIntelligence(BaseModel):
-    """Full synastry result across all 10 dimensions"""
-    zodiac_compatibility: ZodiacCompatibility
-    mbti_compatibility: MBTICompatibility
-    behavioral_similarity_percent: int  # 0-100
+class RelationshipIntelligenceResult(BaseModel):
+    zodiac_compatibility:          ZodiacCompatibility
+    mbti_compatibility:            MBTICompatibility
+    behavioral_similarity_percent: int              # [0, 100]
     emotional_compatibility_score: int
-    romantic_compatibility_score: int
-    sexual_compatibility_score: int
-    love_style_compatibility: LoveStyleCompatibility
-    love_language_alignment: LoveLanguageAlignment
-    numerology_compatibility: NumerologyPairAnalysis
-    color_harmony: ColorPairAnalysis
-    communication_pattern: str
-    conflict_risk: str  # "Low" | "Moderate" | "High"
-    long_term_viability: str  # "Excellent" | "Good" | "Challenging"
-    relationship_dynamic: str  # Narrative summary
-    analysis: Dict[str, Any]  # Engine-specific deep results
-
-    model_config = ConfigDict(
-        json_schema_extra={
-            "example": {...}
-        }
-    )
+    romantic_compatibility_score:  int
+    sexual_compatibility_score:    int
+    love_style_compatibility:      LoveStyleCompatibility
+    love_language_alignment:       LoveLanguageAlignment
+    numerology_compatibility:      NumerologyPairAnalysis
+    color_harmony:                 ColorPairAnalysis
+    communication_pattern:         str
+    conflict_risk:                 Literal["Low", "Moderate", "High"]
+    long_term_viability:           Literal["Excellent", "Good", "Challenging"]
+    relationship_dynamic:          str
+    analysis:                      Dict[str, Any]
 ```
-
-**Request/response cycle:**
-1. POST `/chat` with `(message, person_a, person_b, history)`
-2. Intent classification (15-class, cached embeddings)
-3. Engine dispatch (parallel execution of relevant engines)
-4. Prompt template assembly with structured context
-5. Gemini call with JSON schema validation (Pydantic)
-6. Return typed `ChatReply`
-
----
 
 ### Frontend (Next.js 16 + React 19)
 
-```bash
+```
 frontend/
 ├── app/
-│   ├── page.tsx                     # Home (dual-identity: desktop + mobile)
-│   ├── chat/page.tsx                # Zodicognac conversational interface
-│   ├── dashboard/page.tsx           # Full synastry results
-│   ├── about/page.tsx               # Brand origin story & Zodicog + AI meaning
-│   ├── analyze/                     # 10 single + pair analysis pages
-│   │   ├── hybrid/page.tsx          # Self-analysis (zodiac + MBTI + traits)
-│   │   ├── emotional/page.tsx       # Emotional compatibility (attachment + empathy)
-│   │   ├── romantic/page.tsx        # Romantic compatibility (polarity + affection)
-│   │   ├── sextrology/page.tsx      # Sexual compatibility (erogenous + positions)
-│   │   ├── love-style/page.tsx      # Love style alignment (Lee's 6 styles)
-│   │   ├── love-language/page.tsx   # Love language alignment (Chapman's 5)
-│   │   ├── color/page.tsx           # Aura color analysis (HSL harmony)
-│   │   ├── numerology/page.tsx      # Numerology (life path + compatibility)
-│   │   ├── zodiac/page.tsx          # Zodiac article (13-field deep dive)
-│   │   └── relationship-intelligence/page.tsx  # Full 10-dimensional synastry
+│   ├── page.tsx                     # Hero (ZodicogAI + Zodicognac dual-identity)
+│   ├── chat/page.tsx                # Zodicognac oracle (session-aware, abort, export)
+│   ├── dashboard/page.tsx           # Full synastry dashboard (6-slide carousel)
+│   ├── discover/page.tsx            # Single-profile identity discovery
+│   ├── about/page.tsx               # Origin story + Zodicog etymology
+│   ├── analyze/                     # 10 analysis pages
+│   │   ├── hybrid/                  # Self-analysis (zodiac + MBTI + traits)
+│   │   ├── emotional/               # Emotional compatibility
+│   │   ├── romantic/                # Romantic compatibility
+│   │   ├── sextrology/              # Sexual compatibility
+│   │   ├── love-style/              # Love style alignment
+│   │   ├── love-language/           # Love language alignment
+│   │   ├── color/                   # Aura color analysis
+│   │   ├── numerology/              # Numerology (single + pair)
+│   │   ├── zodiac/                  # Zodiac deep-dive article
+│   │   └── relationship-intelligence/  # Full 10-dimension synastry
 │   ├── celebrities/
-│   │   ├── page.tsx                 # Celebrity index — 360 profiles across 12 signs
-│   │   └── [slug]/page.tsx          # Individual celebrity page (static, from JSON)
-│   └── blog/                        # 400+ SEO-optimized pages
-│       ├── page.tsx                 # Blog index (all articles + guides)
-│       ├── zodiac/[sign]/page.tsx   # 12 zodiac articles (ISR, Gemini-powered)
-│       ├── mbti/[type]/page.tsx     # 16 MBTI type profiles (static data)
-│       └── faq/page.tsx             # FAQ with JSON-LD rich snippets
+│   │   ├── page.tsx                 # 360 celebrity index
+│   │   └── [slug]/page.tsx          # Static individual profiles (zero API cost)
+│   └── blog/
+│       ├── zodiac/[sign]/           # 12 zodiac articles (ISR, 24h revalidate)
+│       ├── mbti/[type]/             # 16 MBTI type profiles (static)
+│       └── faq/                     # FAQ with JSON-LD FAQPage schema
 ├── components/
-│   ├── HybridForm.tsx               # Dual-input form with MBTI quiz
-│   ├── PersonForm.tsx               # Reusable person input (name, date, MBTI, gender)
-│   ├── MbtiSelect.tsx               # MBTI dropdown with quiz
-│   ├── MobileNavbar.tsx             # Mobile FAB + home button (scroll-triggered on blog/celebs)
-│   ├── ShareCelebButton.tsx         # Canvas PNG share card (Web Share / clipboard / download)
-│   ├── ShareImageButton.tsx         # Canvas PNG share cards for all analysis types
-│   ├── InsightCard.tsx              # Discover section viral identity cards
-│   ├── MarkdownText.tsx             # Structured markdown rendering (sections + bullets)
-│   ├── ScoreRing.tsx                # Circular % visualization
+│   ├── HybridForm.tsx               # Dual-input form with inline MBTI quiz
+│   ├── ShareImageButton.tsx         # Canvas 2D PNG share cards (analysis results)
+│   ├── ShareCelebButton.tsx         # Canvas 2D PNG share cards (celebrities)
+│   ├── InsightCard.tsx              # Discover identity card with canvas branding
+│   ├── ZodicogMark.tsx              # Z signet SVG (circle + crown jewel + Z path)
+│   ├── ZodicognacMark.tsx           # Diamond-frame variant (amber, Zodicognac identity)
+│   ├── ScoreRing.tsx                # Circular percentage visualization
 │   ├── TraitRadar.tsx               # 5-axis radar chart (Recharts)
-│   └── BehavioralMap.tsx            # 2D MBTI function scatter
+│   └── BehavioralMap.tsx            # 2D MBTI cognitive function scatter
 └── lib/
-    ├── api.ts                       # API client (apiFetch wrapper)
-    ├── celebrities.ts               # 360 celebrity definitions (slug, sign, name, born, etc.)
-    ├── celeb-bios.json              # Pre-generated bios + life paths + Wikipedia data (static)
-    ├── mbti-data.ts                 # Static MBTI type definitions (16 types)
-    ├── colors.ts                    # Zodiac color palette
+    ├── api.ts                       # apiFetch wrapper + TypeScript interfaces
+    ├── celebrities.ts               # 360 celebrity slug definitions
+    ├── celeb-bios.json              # Pre-generated static bios (zero runtime cost)
+    ├── mbti-data.ts                 # 16 MBTI type definitions
     └── motion.ts                    # Framer Motion easing presets
 ```
 
 ---
 
-## What is Zodicog?
+## Celebrity Database
 
-**Zodicog** = **Zodiac** + **Cognition**
+**Scale:** 360 profiles — 30 per zodiac sign, spanning Hollywood, Bollywood, athletics, music, entrepreneurship, and historical figures.
 
-A portmanteau capturing the core methodology: the intersection of ancient astrological archetypes with modern cognitive science. The **AI** in ZodicogAI stands for **Astrological Intelligence** — a term for the domain this system operates in: structured, multi-framework personality reasoning that treats zodiac and psychological typologies as complementary encoding schemes rather than competing belief systems.
+**Rendering:** Fully static. Pre-built at compile time from `celeb-bios.json`. Zero API calls at build or runtime.
 
-The LLM synthesises; the deterministic engines ground. Neither operates alone.
+**Generation pipeline:**
+1. `generate_celeb_bios.py` iterates the 360-entry celebrity list
+2. Each celebrity: POST `/analyze/celebrity` → full astrological profile via Gemini
+3. Results committed to `celeb-bios.json` (resumable with `--resume` flag)
+4. Next.js reads the JSON at build time → static HTML pages
+
+**Each profile:** Personality snapshot · Love style · Best matches · Fun fact · Life path number · Aura color · Wikipedia image + link · Canvas PNG share card
 
 ---
 
-## SEO & Content Strategy
+## Content and SEO Architecture
 
-### Content System: 400+ Organic Traffic Engines
+| Content Type | Count | Rendering | Update Strategy |
+|---|---|---|---|
+| Celebrity profiles | 360 | Static (build-time) | Manual re-generation |
+| MBTI type profiles | 16 | Static | Manual |
+| Zodiac sign articles | 12 | ISR (24h revalidate) | Auto-refreshed |
+| Analysis pages | 10 | Dynamic (client fetch) | Real-time |
+| FAQ page | 1 | Static + JSON-LD | Manual |
 
-ZodicogAI includes a comprehensive content system designed for search discoverability and long-tail keyword ranking:
-
-#### Celebrity Zodiac Database (`/celebrities`, `/celebrities/[slug]`)
-- **Scale:** 360 celebrity profiles — 30 per zodiac sign, covering Hollywood, Bollywood, athletes, musicians, entrepreneurs
-- **Rendering:** Fully static — pre-built at compile time from `celeb-bios.json` (zero API calls at build or runtime)
-- **Generation:** One-time script (`generate_celeb_bios.py`) hits `/analyze/celebrity` sequentially with exponential backoff; result committed as static JSON
-- **Each profile:** Famous for · Personality snapshot · Love style · Best matches · Fun fact · Life path number · Aura color · Wikipedia image + link
-- **Share:** Canvas-generated PNG share cards (Web Share API on mobile / clipboard copy on desktop / download fallback)
-- **SEO:** Unique title/description per celebrity + OpenGraph tags
-- **Target keywords:** "{Name} zodiac sign", "{Name} MBTI", "celebrities born {month}", etc.
-
-#### 12 Zodiac Articles (`/blog/zodiac/[sign]`)
-- **Rendering:** Server-side with Incremental Static Regeneration (ISR, 24h revalidate)
-- **Content:** Fetches from Gemini-powered `/analyze/zodiac` endpoint at first visit, caches result
-- **Each page:** 13-field zodiac article (overview, personality, strengths, weaknesses, love, career, famous people, best matches)
-- **SEO:** Unique title/description per sign + OpenGraph tags for social sharing
-- **Target keywords:** "Aries personality", "Scorpio in love", "Leo career", etc.
-
-#### 16 MBTI Type Profiles (`/blog/mbti/[type]`)
-- **Rendering:** Static, pre-generated at build time (no API calls)
-- **Content:** Hardcoded MBTI type definitions in `/lib/mbti-data.ts` (type description, strengths, weaknesses, love style, career fit, famous examples)
-- **SEO:** Unique title/description per type + color-coded role group badges
-- **Target keywords:** "INTJ personality", "ENFP relationships", "MBTI career guide", etc.
-
-#### FAQ with Rich Snippets (`/blog/faq`)
-- **Content:** 13 curated Q&As covering zodiac, MBTI, numerology, love languages, sextrology
-- **SEO:** JSON-LD `FAQPage` schema markup → appears in Google "People also ask" section
-- **Links:** Each answer links to relevant analyzer (e.g., "Try Sextrology" → `/analyze/sextrology`)
-
-#### Blog Index Page (`/blog`)
-- **Grid layout:** All 12 zodiac signs, all 16 MBTI types, FAQ link
-- **SEO:** Internal linking hub, breadcrumb navigation, canonical URLs
-
-### SEO Infrastructure
-
-**Sitemap & Robots:**
-- `sitemap.xml` auto-generated with all 400+ pages (home + analyzes + blog articles + 360 celebrity profiles + about)
-- `robots.txt` generated with sitemap reference
-- All metadata: title, description, keywords, OpenGraph, Twitter cards
-
-**Google Search Console:**
-- HTML tag verification in layout metadata
-- Sitemap submitted → Google crawls all 40+ indexed pages
-- Monitors ranking keywords, CTR, search impressions
-
-**Google Analytics 4:**
-- Tracks pageviews, user sessions, bounce rate, conversion funnels
-- Identifies high-traffic pages, user behavior patterns
-- Monitors analyze page conversions
+**SEO infrastructure:** `sitemap.xml` covering 400+ URLs, per-page OpenGraph + Twitter card metadata, `FAQPage` JSON-LD schema, Google Search Console integration, Google Analytics 4.
 
 ---
 
 ## Production Deployment
 
-**Tier 1: Inference**
-- Gemini 2.5 Flash (primary, latency-optimized)
-- Gemini 2.0 Flash Lite (fallback, always-available)
-- Exponential backoff with circuit breaker
-
-**Tier 2: Caching**
-- Personality profile computations cached for 24h
-- Decan lookups cached (static data)
-- Intent classification embeddings cached
-
-**Tier 3: Monitoring**
-- Latency percentiles: p50, p95, p99
-- Model fallback rate (how often Lite is used)
-- Prompt template distribution (which intents are most queried)
-
-**Deployment stack:**
 ```
-Internet → Nginx (SSL/TLS) ↘
-                            → Next.js Frontend :3000
-                            → FastAPI Backend :8000
-                                 ↓
-                            Gemini API (dual-model)
+Internet → Nginx (SSL/TLS, reverse proxy)
+               ├── Next.js :3000  (PM2, cluster mode)
+               └── FastAPI :8000  (PM2, uvicorn, no --reload)
+                        └── Gemini API (dual-model, exponential backoff)
 ```
 
-**Environment variables:**
+**Backend restart (Windows VPS):**
 ```bash
-GEMINI_API_KEY              # API key for Gemini
-NEXT_PUBLIC_API_URL         # Backend URL (baked into Next.js at build time)
+# Kill all Python processes
+python3 -c "import subprocess; subprocess.run(['taskkill', '/IM', 'python.exe', '/F'])"
+# Clear stale bytecode
+find backend -name '__pycache__' -type d -exec rm -rf {} +
+# Start without --reload (avoids StatReload silent failures on Windows)
+cd backend && venv/Scripts/uvicorn.exe main:app --host 0.0.0.0 --port 8000
 ```
 
 ---
 
-## Results & Evaluation
+## Results and Evaluation
 
-### Quantitative Baselines
+Evaluated on a validation set of 200 human-annotated relationship scenarios:
 
-On a validation set of 200 human-annotated relationship scenarios:
+| Metric | Generic LLM | ZodicogAI | Delta |
+|---|---|---|---|
+| Specificity (F1, ground-truth traits) | 0.62 | 0.84 | +35% |
+| Reproducibility (score variance σ) | 0.18 | 0.00 | −100% |
+| Cross-query consistency (same input) | 73% | 100% | +37% |
+| Latency p95 | 3.2s | 1.8s | −44% |
+| Grounded statements (% auditable) | 46% | 91% | +98% |
 
-| Metric | Generic LLM | ZodicogAI |
-|---|---|---|
-| **Specificity (F1 on ground-truth traits)** | 0.62 | 0.84 |
-| **Reproducibility (std of score variance)** | σ=0.18 | σ=0.00 |
-| **Consistency across 10 queries (same input)** | 73% | 100% |
-| **Latency (p95)** | 3.2s | 1.8s |
-| **Confidently-grounded statements** | 46% | 91% |
+**Scope note:** Evaluation is restricted to relationship reasoning tasks.
 
-**Note:** Evaluation focused on relationship reasoning tasks (compatibility, attachment dynamics, communication patterns). Results not generalizable to other domains.
-
-### Qualitative Findings
-
-- **Specificity:** Users report that compatibility assessments reference their actual MBTI type and decan profile rather than generic personality summaries
-- **Non-hallucinatory:** LLM outputs map directly to pre-computed matrices; false claims are immediately detectable
-- **Reproducibility:** Same profile pair always yields identical compatibility vectors, enabling comparison across thousands of pairs
+**Qualitative findings:**
+- Compatibility assessments reference the user's actual MBTI function stack and zodiac decan, not generic personality summaries
+- LLM outputs map directly to pre-computed matrices; false claims are immediately detectable by tracing the code path
+- Zodicognac maintains behavioral consistency across session turns because history is explicitly injected rather than left to implicit context window management
 
 ---
 
-## Contributing
+## What Is Zodicog?
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, testing conventions, and pull request process.
+**Zodicog** = **Zodiac** + **Cognition**
+
+A portmanteau encoding the core methodology: the intersection of ancient astrological archetypes with modern cognitive science. The **AI** in ZodicogAI stands for **Astrological Intelligence** — the domain this system operates in. The structured capacity to read patterns in personality, in archetypal correspondence, in numerological resonance, and synthesize them into specific, actionable insight.
+
+The LLM synthesises. The deterministic engines ground. Neither operates alone.
 
 ---
 
 ## Reproducibility
 
-All personality framework implementations are deterministic and open-source. To reproduce compatibility scores:
-
 ```bash
-# Backend only (no frontend)
 cd backend
-python -m venv venv
-source venv/bin/activate
+python -m venv venv && source venv/Scripts/activate
 pip install -r requirements.txt
 
-# Compute compatibility for two profiles
 python -c "
 from engines.compatibility_engine import compute_compatibility
 from models.schemas import PersonData
 
-person_a = PersonData(name='Alex', day=14, month=8, mbti='INTJ', gender='M')
-person_b = PersonData(name='Maya', day=3, month=11, mbti='ENFP', gender='F')
+a = PersonData(name='Alex', day=14, month=8,  mbti='INTJ', gender='M')
+b = PersonData(name='Maya', day=3,  month=11, mbti='ENFP', gender='F')
 
-result = compute_compatibility(person_a, person_b)
-print(f'Behavioral similarity: {result.behavioral_similarity_percent}%')
-print(f'Romantic compatibility: {result.romantic_compatibility_score}/100')
-print(f'Overall viability: {result.long_term_viability}')
+r = compute_compatibility(a, b)
+print(f'Behavioral similarity:  {r.behavioral_similarity_percent}%')
+print(f'Romantic compatibility: {r.romantic_compatibility_score}/100')
+print(f'Long-term viability:    {r.long_term_viability}')
 "
 ```
 
-Every computation is **auditable** — trace the code path to see exactly how each score was calculated.
+Every score is traceable to a specific function call in a specific engine file.
 
 ---
 
 ## References
 
 **Personality Frameworks:**
-- Myers, I. B., & Myers, P. B. (1995). Gifts Differing: Understanding Personality Type.
-- Keirsey, D., & Bates, M. (1984). Please Understand Me: Character and Temperament Types.
-- Lee, J. A. (1973). The Colors of Love: An Exploration of the Ways of Loving.
-- Chapman, G. D. (1992). The Five Love Languages.
-- Marks, S. R., & Specht, R. D. (1988). Patterns of Love.
+- Myers, I. B., & Myers, P. B. (1995). *Gifts Differing: Understanding Personality Type.*
+- Keirsey, D., & Bates, M. (1984). *Please Understand Me: Character and Temperament Types.*
+- Lee, J. A. (1973). *The Colors of Love: An Exploration of the Ways of Loving.*
+- Chapman, G. D. (1992). *The Five Love Languages.*
 
 **Behavioral Science:**
-- Bowlby, J. (1969). Attachment and Loss: Vol. 1. Attachment. Basic Books.
-- Ainsworth, M. D. S., et al. (1978). Patterns of Attachment: A Psychological Study of the Strange Situation.
+- Bowlby, J. (1969). *Attachment and Loss: Vol. 1.* Basic Books.
+- Ainsworth, M. D. S., et al. (1978). *Patterns of Attachment.*
+- Jung, C. G. (1921). *Psychological Types.*
+- Marks, S. R., & Specht, R. D. (1988). *Patterns of Love.*
 
 **Symbolic Systems:**
-- Jung, C. G. (1921). Psychological Types.
-- Hand, R. (1981). Horoscope Symbols.
-- Schwartz, S. H. (1992). Universals in the Content and Structure of Values.
+- Hand, R. (1981). *Horoscope Symbols.*
+- Schwartz, S. H. (1992). Universals in the content and structure of values. *Advances in Experimental Social Psychology, 25*, 1–65.
 
-**LLM Grounding & Reasoning:**
-- Lewis, P., et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. arXiv:2005.11401.
-- Wei, J., et al. (2023). Emergent Abilities of Large Language Models. arXiv:2206.07682.
-- Touvron, H., et al. (2023). Llama 2: Open Foundation and Fine-Tuned Chat Models. arXiv:2307.09288.
+**LLM Grounding and Structured Generation:**
+- Lewis, P., et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. *NeurIPS 2020.* arXiv:2005.11401.
+- Wei, J., et al. (2022). Emergent abilities of large language models. *TMLR.* arXiv:2206.07682.
+- Gao, L., et al. (2023). PAL: Program-aided language models. *ICML 2023.* arXiv:2211.10435.
+- Chen, B., et al. (2023). ChatCoT: Tool-augmented chain-of-thought reasoning on structured knowledge. arXiv:2305.14323.
 
 ---
 
-## Contact & Citation
+## Citation
 
-**Citation:**
 ```bibtex
 @software{zodicogai2026,
-  title={ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks},
-  author={ZodicogAI Contributors},
-  url={https://github.com/VSSK007/ZodicogAI},
-  year={2026}
+  title   = {ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks},
+  author  = {Karthikeya, M. R.},
+  url     = {https://github.com/VSSK007/ZodicogAI},
+  year    = {2026},
+  note    = {Production system. Live at https://zodicogai.com}
 }
 ```
 
-**Contact:** kar1mr@zodicogai.com | [zodicogai.com](https://zodicogai.com)
-
-**Links:**
-- **Live App:** [zodicogai.com](https://zodicogai.com)
-- **Blog:** [zodicogai.com/blog](https://zodicogai.com/blog) — 12 zodiac + 16 MBTI + FAQ articles
-- **About:** [zodicogai.com/about](https://zodicogai.com/about) — Origin story, Zodicog meaning & AI = Astrological Intelligence
-- **Sitemap:** [zodicogai.com/sitemap.xml](https://zodicogai.com/sitemap.xml)
-- **GitHub:** [github.com/VSSK007/ZodicogAI](https://github.com/VSSK007/ZodicogAI)
+**Email:** kar1mr@zodicogai.com | **Live:** [zodicogai.com](https://zodicogai.com) | **GitHub:** [github.com/VSSK007/ZodicogAI](https://github.com/VSSK007/ZodicogAI)
 
 ---
 

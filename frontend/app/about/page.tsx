@@ -85,21 +85,39 @@ export default function AboutPage() {
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
             I realized that what was missing wasn't one tool — it was an entire
             framework. A system that could take everything I'd learned and make
-            it reproducible, auditable, and accessible. So I built ZodicogAI: a
-            hybrid engine that combines 10 independent behavioral dimensions
-            (zodiac, MBTI, numerology, love styles, love languages, attachment
-            theory, sexual archetypes, color harmony, emotional patterns, and
-            communication styles) into a coherent whole.
+            it reproducible, auditable, and accessible. So I built ZodicogAI:
+            a hybrid engine that synthesizes ten independent behavioral
+            dimensions into a coherent whole.
+          </p>
+          <div className="grid grid-cols-2 gap-2 my-4">
+            {[
+              ["✦", "Zodiac + Decan", "108 archetypal profiles"],
+              ["◈", "MBTI Cognition", "Function stack + behavioral vector"],
+              ["♥", "Emotional", "Attachment theory alignment"],
+              ["◉", "Romantic", "Polarity + passion dynamics"],
+              ["⚡", "Sextrology", "Sexual archetypes + erotic compatibility"],
+              ["♡", "Love Styles", "Lee's 6-style typology matrix"],
+              ["◆", "Love Languages", "Chapman's 5 channels aligned"],
+              ["∞", "Numerology", "Pythagorean life path resonance"],
+              ["◎", "Aura Colors", "HSL color harmony in 3D space"],
+              ["◐", "Full Intelligence", "10-dimension weighted synthesis"],
+            ].map(([icon, label, desc]) => (
+              <div key={label} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2.5">
+                <p className="text-xs font-semibold text-amber-300 mb-0.5">{icon} {label}</p>
+                <p className="text-[11px] text-zinc-500">{desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+            The architecture is precise: deterministic computation (zodiac
+            profiles, MBTI types, compatibility matrices, numerology, color
+            harmony) grounded in years of research, plus AI synthesis to
+            interpret and narrate those insights with warmth and specificity.
+            The LLM isn&apos;t guessing — it&apos;s interpreting structured
+            data I&apos;ve carefully engineered.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            The architecture is straightforward: deterministic computation
-            (zodiac profiles, MBTI types, compatibility matrices) grounded in
-            years of research, plus AI synthesis to interpret and narrate those
-            insights with warmth and specificity. The LLM isn't guessing — it's
-            interpreting structured data I've carefully engineered.
-          </p>
-          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            Beyond analysis, ZodicogAI now includes a{" "}
+            Beyond the engines, ZodicogAI includes a{" "}
             <span className="text-amber-300 font-medium">
               360-profile Celebrity Zodiac Database
             </span>{" "}
@@ -114,6 +132,40 @@ export default function AboutPage() {
               human connection deserves depth, not generic advice
             </span>
             .
+          </p>
+        </section>
+
+        {/* Section 2b: Zodicognac */}
+        <section>
+          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+            Zodicognac — The Oracle
+          </h2>
+          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+            Every serious system deserves a voice. Zodicognac is mine.
+          </p>
+          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+            Named as a blend of{" "}
+            <span className="text-amber-300 font-medium">Zodicog</span> and the
+            aged spirit{" "}
+            <span className="text-amber-300 font-medium">Armagnac</span> —
+            something rare, refined, and worth sitting with — Zodicognac is the
+            conversational oracle at the heart of ZodicogAI. Not a chatbot. Not
+            a generic assistant. A purpose-built intelligence that knows your
+            chart, remembers your session, and speaks with the directness of
+            someone who has studied human psychology for a long time.
+          </p>
+          <p className="text-zinc-300 text-sm leading-relaxed mb-3">
+            Ask it about your shadow. Ask it whether you&apos;re self-sabotaging.
+            Ask it whether you should reach out. It won&apos;t hedge. It won&apos;t
+            give you generic advice. And unlike any other AI I&apos;ve seen, it
+            actually knows the structural difference between an INTJ Scorpio
+            reaching out and an ENFP Sagittarius doing the same — because that
+            difference is real.
+          </p>
+          <p className="text-zinc-300 text-sm leading-relaxed">
+            Sessions are continuous — Zodicognac remembers everything you&apos;ve
+            said in a conversation. When you&apos;re done, export the full session
+            as a document. Some conversations are worth keeping.
           </p>
         </section>
 
@@ -255,44 +307,22 @@ export default function AboutPage() {
           </h2>
           <p className="text-xs text-zinc-500 mb-4">...and also these:</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
-              <p className="text-xs font-semibold text-zinc-400">Backend</p>
-              <p className="text-xs text-zinc-500 mt-1">
-                FastAPI · Python 3.10 · Pydantic v2
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
-              <p className="text-xs font-semibold text-zinc-400">Frontend</p>
-              <p className="text-xs text-zinc-500 mt-1">
-                Next.js 16 · React 19 · Tailwind CSS v4
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
-              <p className="text-xs font-semibold text-zinc-400">AI</p>
-              <p className="text-xs text-zinc-500 mt-1">
-                Gemini 2.5 Flash + 2.0 Lite
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
-              <p className="text-xs font-semibold text-zinc-400">Engines</p>
-              <p className="text-xs text-zinc-500 mt-1">
-                Zodiac, MBTI, Numerology, Love Languages, 360 Celebrities
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
-              <p className="text-xs font-semibold text-zinc-400">Analytics</p>
-              <p className="text-xs text-zinc-500 mt-1">
-                Google Analytics 4 · Search Console
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/8 bg-white/[0.03] p-3">
-              <p className="text-xs font-semibold text-zinc-400">
-                Visualization
-              </p>
-              <p className="text-xs text-zinc-500 mt-1">
-                Recharts · Framer Motion
-              </p>
-            </div>
+            {[
+              ["Backend", "FastAPI · Python 3.10 · Pydantic v2"],
+              ["Frontend", "Next.js 16 · React 19 · Tailwind CSS v4"],
+              ["LLM", "Gemini 2.5 Flash + 2.0 Flash Lite (fallback)"],
+              ["Analysis Engines", "Zodiac · MBTI · Emotional · Romantic · Sextrology · Love Styles · Love Languages · Numerology · Aura Colors · Full Relationship Intelligence"],
+              ["Personalities", "360 Celebrity Database · 16 MBTI Profiles · 12 Zodiac Articles"],
+              ["Oracle", "Zodicognac — session-aware conversational AI"],
+              ["Visualization", "Recharts · Framer Motion · Canvas 2D"],
+              ["Analytics", "Google Analytics 4 · Search Console"],
+              ["Deployment", "IONOS VPS · Nginx · PM2 · SSH"],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-lg border border-white/[0.08] bg-white/[0.03] p-3">
+                <p className="text-xs font-semibold text-zinc-400">{label}</p>
+                <p className="text-xs text-zinc-500 mt-1">{value}</p>
+              </div>
+            ))}
           </div>
         </section>
       </div>
