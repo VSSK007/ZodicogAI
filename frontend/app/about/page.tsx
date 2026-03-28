@@ -147,7 +147,7 @@ export default function AboutPage() {
             Named as a blend of{" "}
             <span className="text-amber-300 font-medium">Zodicog</span> and the
             aged spirit{" "}
-            <span className="text-amber-300 font-medium">Armagnac</span> —
+            <span className="text-amber-300 font-medium">Cognac</span> —
             something rare, refined, and worth sitting with — Zodicognac is the
             conversational oracle at the heart of ZodicogAI. Not a chatbot. Not
             a generic assistant. A purpose-built intelligence that knows your
