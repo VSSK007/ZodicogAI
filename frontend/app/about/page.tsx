@@ -144,15 +144,13 @@ export default function AboutPage() {
             Every serious system deserves a voice. Zodicognac is mine.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            Named as a blend of{" "}
-            <span className="text-amber-300 font-medium">Zodicog</span> and the
-            aged spirit{" "}
-            <span className="text-amber-300 font-medium">Cognac</span> —
-            something rare, refined, and worth sitting with — Zodicognac is the
-            conversational oracle at the heart of ZodicogAI. Not a chatbot. Not
-            a generic assistant. A purpose-built intelligence that knows your
-            chart, remembers your session, and speaks with the directness of
-            someone who has studied human psychology for a long time.
+            Zodicognac is a cosmic cognac — my own invention. A spirit distilled
+            from the stars, aged in the barrel of behavioral science, and poured
+            neat. Not a chatbot. Not a generic assistant. The conversational
+            oracle at the heart of ZodicogAI: a purpose-built intelligence that
+            knows your chart, remembers your session, and speaks with the
+            directness of someone who has studied human psychology for a long
+            time.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
             Ask it about your shadow. Ask it whether you&apos;re self-sabotaging.
