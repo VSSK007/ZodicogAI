@@ -109,7 +109,7 @@ User Profile(s) + Query
 ┌─────────────────────────────────────────────────────────┐
 │   Gemini 2.5 Flash — Primary (JSON schema output)       │
 │   └──> TTL-aware context cache (55-min proactive expiry)│
-│   └──> Exponential backoff → Gemini 2.0 Flash Lite      │
+│   └──> Exponential backoff → Gemini 2.5 Flash Lite      │
 │        (reactive fallback on 429 / 500 / timeout)       │
 └────────┬────────────────────────────────────────────────┘
          │
@@ -330,7 +330,7 @@ def handle_chat(message: str, person_a: dict, person_b: dict, history: list) -> 
 - **TTL management:** Proactive local expiry at 55 minutes (5-minute buffer before Gemini's 60-minute hard TTL). Cache is recreated on expiry rather than allowed to fail silently.
 - **Reactive invalidation:** On any API failure while using cached content, the cache is immediately evicted and the retry proceeds without it — eliminates silent fallback-to-defaults caused by stale `cached_content` names.
 
-**Fallback:** Gemini 2.0 Flash Lite with exponential backoff (1s → 2s → 4s)
+**Fallback:** Gemini 2.5 Flash Lite with exponential backoff (1s → 2s → 4s)
 
 ```python
 _CACHE_TTL_SECS = 3300  # 55 min

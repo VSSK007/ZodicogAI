@@ -38,7 +38,7 @@ if not _api_key:
 
 _client = genai.Client(api_key=_api_key)
 
-_MODELS      = ["gemini-2.5-flash", "gemini-2.0-flash-lite"]
+_MODELS      = ["gemini-2.5-flash", "gemini-2.5-flash-lite"]
 _MAX_RETRIES = 3
 _log         = logging.getLogger(__name__)
 
@@ -239,7 +239,7 @@ def _api_call(prompt: str, schema: type[BaseModel]) -> str:
     For the primary model (gemini-2.5-flash), attempts to use the cached
     static framework context — cutting token processing time and cost.
     Falls back to uncached calls if the cache is unavailable or the model
-    is the fallback (gemini-2.0-flash-lite doesn't support caching).
+    is the fallback (gemini-2.5-flash-lite doesn't support caching).
 
     Retries _MAX_RETRIES times per model with exponential back-off,
     then moves to the next model. Returns the raw response text.
@@ -368,7 +368,7 @@ def stream_gemini(prompt: str) -> Iterator[str]:
     Stream a Gemini response as text chunks.
 
     Uses generate_content_stream so that text is yielded incrementally
-    as each chunk arrives. Falls back to gemini-2.0-flash-lite if the
+    as each chunk arrives. Falls back to gemini-2.5-flash-lite if the
     primary model (gemini-2.5-flash) fails.
 
     Args:
