@@ -614,7 +614,7 @@ Every score is traceable to a specific function call in a specific engine file.
 ```bibtex
 @software{zodicogai2026,
   title   = {ZodicogAI: Hybrid Symbolic-Generative Compatibility Intelligence},
-  author  = {Karthikeya, M. R.},
+  author  = {Vannemreddy, Sri Sai Karthik},
   url     = {https://github.com/VSSK007/ZodicogAI},
   year    = {2026},
   note    = {Production system. Live at https://zodicogai.com}
