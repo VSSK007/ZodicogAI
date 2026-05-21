@@ -302,7 +302,7 @@ export default function AboutPage() {
             {[
               ["Backend", "FastAPI · Python 3.10 · Pydantic v2"],
               ["Frontend", "Next.js 16 · React 19 · Tailwind CSS v4"],
-              ["LLM", "Gemini 2.5 Flash + 2.0 Flash Lite (fallback)"],
+              ["LLM", "Gemini 2.5 Flash + 2.5 Flash Lite (fallback)"],
               ["Analysis Engines", "Zodiac · MBTI · Emotional · Romantic · Sextrology · Love Styles · Love Languages · Numerology · Aura Colors · Full Relationship Intelligence"],
               ["Personalities", "360 Celebrity Database · 16 MBTI Profiles · 12 Zodiac Articles"],
               ["Oracle", "Zodicognac — session-aware conversational AI"],
