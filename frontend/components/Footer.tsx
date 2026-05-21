@@ -16,7 +16,7 @@ function FooterInner() {
         <p className="text-xs text-zinc-600">
           <span className="text-zinc-500 font-medium">ZodicogAI</span>
           <span className="mx-2 text-zinc-700">·</span>
-          <span className="text-amber-700/70">The world&apos;s first Astrological Intelligence platform</span>
+          <span className="text-amber-700/70">Compatibility and relationship intelligence platform</span>
         </p>
         <div className="flex items-center gap-5 text-xs text-zinc-600">
           <a href="/about" className="hover:text-zinc-400 transition-colors">About</a>

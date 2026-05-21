@@ -125,7 +125,6 @@ export default function Navbar() {
             >
               <ZodicogMark size={18} />
               <span
-                title="AI = Astrological Intelligence"
                 className={`text-sm font-extrabold tracking-tight ${path === "/" ? "text-white" : "text-zinc-300 hover:text-white transition-colors"}`}
                 style={{ fontFamily: "var(--font-manrope)" }}
               >

@@ -103,7 +103,7 @@ function HomeContent() {
             className="text-amber-200/35 mt-3 text-sm tracking-[0.18em] uppercase"
             style={{ fontFamily: "var(--font-manrope)" }}
           >
-            Astrological Intelligence
+            Compatibility &amp; Relationship Intelligence
           </motion.p>
 
           {/* CTA buttons */}
@@ -288,7 +288,7 @@ function HomeContent() {
               className="text-zinc-500 text-sm tracking-[0.18em] uppercase mt-5"
               style={{ fontFamily: "var(--font-manrope)" }}
             >
-              Astrological Intelligence
+              Compatibility &amp; Relationship Intelligence
             </motion.p>
           )}
 

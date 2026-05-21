@@ -23,20 +23,20 @@ const dmSans = DM_Sans({
 
 export const metadata = {
   metadataBase: new URL("https://zodicogai.com"),
-  title: "ZodicogAI | The World's First Astrological Intelligence Platform",
-  description: "The world's first Astrological Intelligence platform. AI = Astrological Intelligence — not artificial. Deep compatibility insights combining zodiac, MBTI, numerology, love languages, and behavioral science.",
-  keywords: "astrological intelligence, zodiac compatibility, MBTI relationships, astrology AI, relationship analysis, love compatibility, aura reading, numerology, sextrology",
+  title: "ZodicogAI | Explainable Compatibility and Relationship Intelligence",
+  description: "ZodicogAI is a hybrid symbolic-generative system for compatibility, communication, and relationship intelligence — combining deterministic multi-framework profile modeling with grounded AI interpretation across zodiac, MBTI, numerology, attachment, love styles, and more.",
+  keywords: "compatibility intelligence, relationship intelligence, behavioral intelligence, zodiac compatibility, MBTI relationships, numerology, love languages, attachment styles, hybrid AI system",
   openGraph: {
-    title: "ZodicogAI | The World's First Astrological Intelligence Platform",
-    description: "The world's first Astrological Intelligence platform. AI = Astrological, not artificial. Zodiac × MBTI × numerology × behavioral science.",
+    title: "ZodicogAI | Explainable Compatibility and Relationship Intelligence",
+    description: "A hybrid symbolic-generative system combining zodiac, MBTI, numerology, attachment, and love styles with structured AI interpretation for grounded compatibility and communication insights.",
     url: "https://zodicogai.com",
     siteName: "ZodicogAI",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ZodicogAI | The World's First Astrological Intelligence Platform",
-    description: "The world's first Astrological Intelligence platform. AI = Astrological, not artificial.",
+    title: "ZodicogAI | Explainable Compatibility and Relationship Intelligence",
+    description: "Hybrid symbolic-generative compatibility intelligence — deterministic multi-framework profiling with grounded AI interpretation.",
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],

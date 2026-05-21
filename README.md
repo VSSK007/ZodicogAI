@@ -2,10 +2,10 @@
   <img src="assets/wordmark.png" alt="ZodicogAI" width="560" />
 </p>
 
-<h1 align="center">ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks</h1>
+<h1 align="center">ZodicogAI — Hybrid Symbolic-Generative Compatibility Intelligence</h1>
 
 <p align="center">
-  <strong>A hybrid symbolic-generative system that operationalises Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, chromatic resonance, and behavioral science — as deterministic computation, then uses structured LLM prompting to interpret and narrate the output.</strong>
+  <strong>ZodicogAI is a deployed hybrid symbolic-generative system for compatibility, communication, and relationship intelligence. It combines deterministic multi-framework profile computation across zodiac, MBTI, numerology, attachment, love styles, and related signals with schema-constrained LLM interpretation to generate grounded, explainable user-facing insights. Rather than relying on free-form generation, the system routes narrative output through pre-computed symbolic features and structured schemas.</strong>
 </p>
 
 <p align="center">
@@ -21,7 +21,7 @@
 
 ## Abstract
 
-This work presents **ZodicogAI**, a production system operating in the domain of Astrological Intelligence — the structured synthesis of zodiac archetypes, cognitive typology, numerology, and behavioral science into reproducible personality and compatibility models. The system addresses a fundamental limitation of general-purpose LLMs when applied to interpersonal reasoning: **the absence of grounded structural knowledge**. By decomposing personality into ten independent deterministic dimensions and routing LLM inference through schema-constrained prompt templates, ZodicogAI produces outputs that are simultaneously more specific, reproducible, and psychologically coherent than conventional retrieval-augmented or in-context approaches.
+This work presents **ZodicogAI**, a deployed hybrid symbolic-generative system for compatibility, communication, and relationship intelligence. The system addresses a fundamental limitation of general-purpose LLMs when applied to interpersonal reasoning: **the absence of grounded structural knowledge**. By decomposing personality into ten independent deterministic dimensions — spanning zodiac archetypes, MBTI cognition, attachment patterns, love styles, numerology, and related signal families — and routing LLM inference through schema-constrained prompt templates, ZodicogAI produces outputs that are more specific, reproducible, and structurally coherent than conventional retrieval-augmented or in-context approaches.
 
 Each numerical output is auditable and replicable. The LLM's role is **interpretation of pre-computed structural data**, not generative invention. This design choice eliminates the principal source of personality-context hallucination: competing ungrounded knowledge sources.
 
@@ -41,7 +41,7 @@ For years, I've been deeply invested in zodiac astrology, personality psychology
 
 I searched everywhere for a tool that could synthesize this knowledge — something that honored both the ancient wisdom of the zodiac and the empirical rigor of modern psychology. Something that integrated MBTI, numerology, love languages, and attachment theory into a coherent system. But everything I found was fragmented. No tool truly understood the intersection.
 
-So in 2026, I decided to build it myself. From scratch. The result is ZodicogAI — a system that treats **Astrological Intelligence** not as mysticism but as structured computation: every insight is traceable to a deterministic engine, every score is reproducible, and the LLM's role is interpretation rather than invention.
+So in 2026, I decided to build it myself. From scratch. The result is ZodicogAI — a system that treats multi-framework behavioral intelligence as structured computation: every insight is traceable to a deterministic engine, every score is reproducible, and the LLM's role is interpretation rather than invention.
 
 **The Problem:**
 
@@ -552,7 +552,7 @@ Evaluated on a validation set of 200 human-annotated relationship scenarios:
 
 **Zodicog** = **Zodiac** + **Cognition**
 
-A portmanteau encoding the core methodology: the intersection of ancient astrological archetypes with modern cognitive science. The **AI** in ZodicogAI stands for **Astrological Intelligence** — the domain this system operates in. The structured capacity to read patterns in personality, in archetypal correspondence, in numerological resonance, and synthesize them into specific, actionable insight.
+A portmanteau encoding the core methodology: the intersection of symbolic astrological archetypes with modern cognitive and behavioral science. The system integrates these not as competing belief systems but as complementary structured encoding schemes within a unified compatibility intelligence layer.
 
 The LLM synthesises. The deterministic engines ground. Neither operates alone.
 
@@ -613,7 +613,7 @@ Every score is traceable to a specific function call in a specific engine file.
 
 ```bibtex
 @software{zodicogai2026,
-  title   = {ZodicogAI: Grounding LLM Reasoning in Astrological Intelligence Frameworks},
+  title   = {ZodicogAI: Hybrid Symbolic-Generative Compatibility Intelligence},
   author  = {Karthikeya, M. R.},
   url     = {https://github.com/VSSK007/ZodicogAI},
   year    = {2026},

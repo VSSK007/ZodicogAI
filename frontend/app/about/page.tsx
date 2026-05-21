@@ -40,7 +40,7 @@ export default function AboutPage() {
           The Birth of Zodicog
         </h1>
         <p className="text-base text-amber-400 font-medium">
-          The world&apos;s first Astrological Intelligence platform.
+          A hybrid symbolic-generative system for compatibility, communication, and relationship intelligence.
         </p>
       </div>
 
@@ -51,29 +51,26 @@ export default function AboutPage() {
             My Journey
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            For years, I've been deeply invested in zodiac astrology,
-            personality psychology, and relationship dynamics. I've studied the
-            nuances of how a Scorpio ENFP moves through the world differently
-            than a Gemini INFP — the layers of mythology, behavioral patterns,
-            attachment styles, and sexual archetypes that make people truly
-            unique.
+            For years, I&apos;ve been interested in zodiac systems, personality
+            psychology, and relationship dynamics. I kept returning to the same
+            question: what would it look like to build a single system that
+            could integrate multiple frameworks of human behavior — zodiac,
+            MBTI, attachment, love languages, numerology — into one structured,
+            coherent model?
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            I searched endlessly for a tool that could synthesize all of this —
-            one that honored both the ancient wisdom of the zodiac and the
-            empirical rigor of modern psychology. Something that could layer
-            MBTI, numerology, love languages, and attachment theory into a
-            coherent whole. But every tool I found was fragmented: zodiac here,
-            MBTI there, relationship advice somewhere else. No AI truly
-            understood the intersection.
+            Every tool I found was fragmented. Some focused only on zodiac
+            archetypes. Others only on MBTI, or attachment styles, or love
+            languages. Very few tried to model how these frameworks interact —
+            and even fewer turned that structure into an explainable,
+            user-facing experience.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            So in 2026, I decided to build it myself. From scratch. Using years
-            of research, experimentation, and accumulated knowledge across
-            astrology, psychology, behavioral science, and AI. ZodicogAI is what
-            emerged — not a generic relationship app, but a direct reflection of
-            everything I've learned about how personality, mythology, and
-            neuroscience collide in human connection.
+            So in 2026, I built ZodicogAI. Not a generic relationship app, but
+            a hybrid symbolic-generative platform that models personality and
+            compatibility across ten structured dimensions simultaneously —
+            and uses AI only to interpret those pre-computed outputs, not to
+            invent them.
           </p>
         </section>
 
@@ -109,27 +106,27 @@ export default function AboutPage() {
             ))}
           </div>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            The architecture is precise: deterministic computation (zodiac
-            profiles, MBTI types, compatibility matrices, numerology, color
-            harmony) grounded in years of research, plus AI synthesis to
-            interpret and narrate those insights with warmth and specificity.
-            The LLM isn&apos;t guessing — it&apos;s interpreting structured
-            data I&apos;ve carefully engineered.
+            The architecture is deliberate: deterministic engines compute
+            structured outputs — archetypal profiles, compatibility matrices,
+            weighted feature scores. Large language models then interpret those
+            grounded outputs into narrative explanations. The model is not
+            inventing facts. It is translating pre-computed symbolic data into
+            readable insight.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            Beyond the engines, ZodicogAI includes a{" "}
+            Beyond the analysis engines, ZodicogAI includes a{" "}
             <span className="text-amber-300 font-medium">
-              360-profile Celebrity Zodiac Database
+              360-profile Celebrity Database
             </span>{" "}
-            — 30 celebrities per sign, each with a full astrological profile,
+            — 30 profiles per zodiac sign, each with a full behavioral profile,
             life path number, aura color, and Wikipedia context. Because the
-            best way to understand a sign is to see it embodied in people you
-            already know.
+            best way to understand an archetypal pattern is to see it embodied
+            in people you already know.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
             The core principle:{" "}
             <span className="text-amber-300">
-              human connection deserves depth, not generic advice
+              grounding before generation — structure first, narrative second
             </span>
             .
           </p>
@@ -204,24 +201,21 @@ export default function AboutPage() {
             neuroscience.
           </p>
 
-          {/* AI = Astrological Intelligence */}
           <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-5">
             <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">
-              And the AI in ZodicogAI?
+              The AI in ZodicogAI
             </p>
             <p className="text-2xl font-bold text-white mb-3">
-              Astrological Intelligence.
+              Behavioral Intelligence.
             </p>
             <p className="text-sm text-zinc-300 leading-relaxed">
-              Not artificial. Not algorithmic in the cold sense. The{" "}
+              The{" "}
               <span className="text-amber-300 font-medium">AI</span> in
-              ZodicogAI stands for{" "}
-              <span className="text-amber-300 font-semibold">
-                Astrological Intelligence
-              </span>{" "}
-              — the capacity to read patterns in the stars, in personality, in
-              human behaviour, and synthesize them into something meaningful.
-              Technology is just the medium. The intelligence is ancient.
+              ZodicogAI refers to the system&apos;s core function: integrating
+              multiple structured signal families — zodiac, MBTI, attachment,
+              numerology, love styles, and others — into a single interpretable
+              behavioral intelligence layer. Structured computation runs first.
+              Language models interpret second.
             </p>
           </div>
         </section>
@@ -245,13 +239,13 @@ export default function AboutPage() {
             </div>
             <div className="border-l-2 border-amber-500/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">
-                Determinism + Generosity
+                Grounding Before Generation
               </p>
               <p className="text-sm text-zinc-300">
-                Behind every insight is a deterministic engine: zodiac profiles
-                are computed, MBTI types are parsed, compatibility matrices are
-                fixed. Then AI enriches with narrative warmth, empathy, and
-                nuance. Math + poetry.
+                Behind every insight is a deterministic engine: profiles are
+                computed, compatibility matrices are fixed, feature scores are
+                explicit. Large language models then interpret that structure —
+                they don&apos;t invent it.
               </p>
             </div>
             <div className="border-l-2 border-amber-500/40 pl-4">
@@ -285,16 +279,16 @@ export default function AboutPage() {
             My Mission
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
-            To democratize behavioral intelligence. To give every person —
-            whether they're a relationship skeptic or a devoted astrology
-            enthusiast — access to deep, personalized, multi-dimensional
-            insights into themselves and their connections.
+            To make compatibility and behavioral intelligence more accessible,
+            interpretable, and usable. Not isolated scores or generic advice —
+            but a more coherent view of how multiple behavioral dimensions align,
+            conflict, or reinforce one another in real relationships.
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            In a world of surface-level dating apps and generic relationship
-            advice, I built ZodicogAI to answer: What if I could go deeper? What
-            if I honored both the mystery of the stars and the precision of
-            psychology?
+            ZodicogAI is an attempt to bring together symbolic frameworks,
+            personality models, and modern AI into a single grounded system —
+            one that gives people more depth and clarity in understanding
+            themselves and the people they care about.
           </p>
         </section>
 
