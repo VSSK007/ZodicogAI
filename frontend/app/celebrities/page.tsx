@@ -7,7 +7,7 @@ export const metadata = {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  Actor: "text-amber-400",
+  Actor: "text-gold-bright",
   Actress: "text-pink-400",
   Musician: "text-violet-400",
   Athlete: "text-green-400",
@@ -31,7 +31,7 @@ function categoryColor(cat: string) {
 
 export default function CelebritiesPage() {
   return (
-    <main className="min-h-screen bg-[#080810] text-white pt-20 pb-24">
+    <main className="min-h-screen text-white pt-20 pb-24">
       {/* Header */}
       <div className="max-w-6xl mx-auto px-6 mb-14 text-center">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">

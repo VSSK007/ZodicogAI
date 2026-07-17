@@ -56,14 +56,14 @@ export default function MobileChatSheet({
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 md:hidden h-[85vh] rounded-t-3xl bg-[#09091a] border-t border-white/[0.08] overflow-y-auto scrollbar-none"
+            className="fixed inset-x-0 bottom-0 z-50 md:hidden h-[85vh] rounded-t-3xl bg-surface-overlay border-t border-white/[0.08] overflow-y-auto scrollbar-none"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
           >
             {/* Drag handle */}
-            <div className="flex justify-center sticky top-0 pt-3 pb-1 bg-[#09091a]">
+            <div className="flex justify-center sticky top-0 pt-3 pb-1 bg-surface-overlay">
               <div className="w-10 h-1 rounded-full bg-white/[0.12]" />
             </div>
 

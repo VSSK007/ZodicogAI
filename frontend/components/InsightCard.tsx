@@ -108,7 +108,7 @@ async function captureInsightCard(
   const ctx = canvas.getContext("2d")!;
 
   // Background
-  ctx.fillStyle = "#080810";
+  ctx.fillStyle = "#0b0a14";
   ctx.fillRect(0, 0, W, H);
 
   // Amber radial glow
@@ -148,7 +148,7 @@ async function captureInsightCard(
 
   if (primary) {
     ctx.font = "bold 54px system-ui, sans-serif";
-    ctx.fillStyle = "#f59e0b";
+    ctx.fillStyle = "#d8a63c";
     ctx.textBaseline = "middle";
     ctx.fillText(primary, W / 2, y + 27);
     y += 80;
@@ -317,7 +317,7 @@ export default function InsightCard({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-      className="rounded-2xl border border-amber-500/25 bg-amber-500/[0.05] p-5 md:p-6 space-y-4"
+      className="rounded-2xl border border-gold/25 bg-gold/[0.05] p-5 md:p-6 space-y-4"
     >
       {/* Hook text — the viral hero */}
       <p className="text-xl md:text-2xl font-semibold text-white leading-snug tracking-tight">
@@ -331,11 +331,11 @@ export default function InsightCard({
             <span className="text-xs text-zinc-500 uppercase tracking-wider">
               {hookType ? `${hookType} match` : "confidence"}
             </span>
-            <span className="text-sm font-semibold text-amber-400">{Math.round(score)}%</span>
+            <span className="text-sm font-semibold text-gold-bright">{Math.round(score)}%</span>
           </div>
           <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-amber-400 rounded-full"
+              className="h-full bg-gold-bright rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${score}%` }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
@@ -363,7 +363,7 @@ export default function InsightCard({
         type="button"
         onClick={handleShare}
         disabled={state === "capturing"}
-        className="flex items-center gap-2 text-sm text-amber-500/80 hover:text-amber-400 transition-colors tap-highlight-none disabled:opacity-50"
+        className="flex items-center gap-2 text-sm text-gold/80 hover:text-gold-bright transition-colors tap-highlight-none disabled:opacity-50"
       >
         {state === "capturing" ? (
           <>

@@ -98,7 +98,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
             {data.famous.map(p => (
               <a key={p} href={`https://en.wikipedia.org/wiki/${p.replace(/\s+/g, "_")}`}
                 target="_blank" rel="noopener noreferrer"
-                className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-amber-200 transition-colors">
+                className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-gold/40 hover:text-gold-bright transition-colors">
                 {p}
               </a>
             ))}
@@ -107,10 +107,10 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
       </div>
 
       {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+      <div className="mt-12 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
         <p className="text-zinc-300 mb-4">Get your full {key} behavioral analysis combined with your zodiac sign</p>
         <Link href="/analyze/hybrid"
-          className="inline-block px-6 py-2.5 rounded-full bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors">
+          className="inline-block px-6 py-2.5 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
           Try Your Full Self Analysis →
         </Link>
       </div>
@@ -137,7 +137,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
 
 function Section({ title, text }: { title: string; text: string }) {
   return (
-    <div className="border-l-2 border-amber-500/40 pl-4">
+    <div className="border-l-2 border-gold/40 pl-4">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">{title}</h2>
       <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
     </div>

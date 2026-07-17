@@ -181,7 +181,7 @@ async function renderCelebCard(p: Props): Promise<string> {
   const ctx = canvas.getContext("2d")!;
 
   // ── Background ──
-  ctx.fillStyle = "#06060f";
+  ctx.fillStyle = "#0b0a14";
   ctx.fillRect(0, 0, W, H);
 
   // Radial glow — sign color at top-center

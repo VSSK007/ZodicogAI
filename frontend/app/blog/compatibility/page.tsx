@@ -39,7 +39,7 @@ export default function CompatibilityIndexPage() {
       </nav>
       <div className="mb-10">
         <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
           <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Compatibility Guides</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Compatibility Guides</h1>

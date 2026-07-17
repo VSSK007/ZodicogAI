@@ -72,7 +72,7 @@ export default function AttractionPage() {
   const an = result?.analysis;
 
   return (
-    <main className="min-h-screen bg-[#06060f] px-4 md:px-6 py-8 md:py-16">
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16">
       <div className="max-w-xl mx-auto space-y-8">
         {/* Header */}
         <div className="space-y-2">

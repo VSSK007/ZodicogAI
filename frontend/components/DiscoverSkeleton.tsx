@@ -15,7 +15,7 @@ export default function DiscoverSkeleton() {
       </div>
 
       {/* InsightCard skeleton */}
-      <div className="rounded-2xl border border-amber-500/10 bg-amber-500/[0.03] p-5 space-y-4">
+      <div className="rounded-2xl border border-gold/10 bg-gold/[0.03] p-5 space-y-4">
         <div className="h-5 w-3/4 rounded bg-white/[0.06]" />
         <div className="h-5 w-1/2 rounded bg-white/[0.04]" />
         <div className="space-y-1.5">

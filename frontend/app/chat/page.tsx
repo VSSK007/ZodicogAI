@@ -26,7 +26,7 @@ const INTENT_COLORS: Record<string, string> = {
   compatibility_question:    "bg-blue-500/20    text-blue-300",
   relationship_advice:       "bg-rose-500/20    text-rose-300",
   flirting_guidance:         "bg-pink-500/20    text-pink-300",
-  communication_help:        "bg-amber-500/20   text-amber-300",
+  communication_help:        "bg-gold/20   text-gold-bright",
   sextrology:                "bg-red-500/20     text-red-300",
   general_question:          "bg-zinc-700/60    text-zinc-300",
   signal_reading:            "bg-cyan-500/20    text-cyan-300",
@@ -86,14 +86,14 @@ function renderInline(text: string): React.ReactNode[] {
     if (linkMatch)
       return (
         <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
-          className="text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors">
+          className="text-gold-bright hover:text-gold-bright underline underline-offset-2 transition-colors">
           {linkMatch[1]}
         </a>
       );
     if (part.startsWith("http://") || part.startsWith("https://"))
       return (
         <a key={i} href={part} target="_blank" rel="noopener noreferrer"
-          className="text-amber-400 hover:text-amber-300 underline underline-offset-2 transition-colors break-all">
+          className="text-gold-bright hover:text-gold-bright underline underline-offset-2 transition-colors break-all">
           {part}
         </a>
       );
@@ -114,7 +114,7 @@ function BulletItem({ raw }: { raw: string }) {
   if (titleMatch) {
     return (
       <div className="flex gap-3 items-start py-1">
-        <span className="shrink-0 mt-1 w-1 h-1 rounded-full bg-amber-400/40" />
+        <span className="shrink-0 mt-1 w-1 h-1 rounded-full bg-gold-bright/40" />
         <div className="min-w-0">
           <span className="text-white font-semibold text-sm">{titleMatch[1]}</span>
           <span className="text-zinc-500 text-sm"> — </span>
@@ -140,7 +140,7 @@ function renderLines(lines: string[]) {
     if (/^\d+\.\s/.test(t))
       return (
         <div key={j} className="flex gap-3 items-start py-0.5">
-          <span className="shrink-0 text-amber-400/50 text-xs font-semibold mt-0.5 tabular-nums min-w-[1rem]">
+          <span className="shrink-0 text-gold-bright/50 text-xs font-semibold mt-0.5 tabular-nums min-w-[1rem]">
             {t.match(/^(\d+)\./)?.[1]}.
           </span>
           <span className="text-zinc-300 text-sm leading-relaxed">{renderInline(t.replace(/^\d+\.\s+/, ""))}</span>
@@ -170,7 +170,7 @@ function MarkdownText({ text }: { text: string }) {
         return (
           <div key={i} className="flex items-center gap-2 mt-2">
             <div className="h-px flex-1 bg-white/[0.06]" />
-            <span className="text-[10px] font-semibold tracking-widest uppercase text-amber-400/60 px-2">
+            <span className="text-[10px] font-semibold tracking-widest uppercase text-gold-bright/60 px-2">
               {ht}
             </span>
             <div className="h-px flex-1 bg-white/[0.06]" />
@@ -180,8 +180,8 @@ function MarkdownText({ text }: { text: string }) {
       return (
         <div key={i} className="rounded-xl border border-white/[0.08] overflow-hidden">
           <div className="px-4 py-2 bg-white/[0.03] border-b border-white/[0.05] flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-400/50 shrink-0" />
-            <span className="text-[10px] font-semibold tracking-widest uppercase text-amber-300/70">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-bright/50 shrink-0" />
+            <span className="text-[10px] font-semibold tracking-widest uppercase text-gold-bright/70">
               {ht}
             </span>
           </div>
@@ -227,6 +227,12 @@ export default function ChatPage() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  // Deep links from finished readings: /chat?ask=<question> prefills the input.
+  useEffect(() => {
+    const ask = new URLSearchParams(window.location.search).get("ask");
+    if (ask) setInput(ask);
+  }, []);
 
   function stop() {
     abortRef.current?.abort();
@@ -330,7 +336,7 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex h-[calc(100dvh-64px)] md:h-[calc(100vh-48px)] overflow-hidden bg-[#0a0a0a]">
+    <div className="flex h-[calc(100dvh-64px)] md:h-[calc(100vh-64px)] overflow-hidden">
 
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden md:block">
@@ -341,7 +347,7 @@ export default function ChatPage() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -288, opacity: 0 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="shrink-0 w-72 border-r border-white/[0.05] bg-[#0d0d0f] flex flex-col overflow-hidden"
+            className="shrink-0 w-72 border-r border-white/[0.05] bg-surface-overlay flex flex-col overflow-hidden"
           >
             <div className="p-5 space-y-4 overflow-y-auto flex-1">
               <div className="flex items-center gap-2 mb-2">
@@ -366,7 +372,7 @@ export default function ChatPage() {
                   setProfileError("");
                   setProfileSaved(true);
                 }}
-                className="w-full py-2 rounded-xl text-xs font-semibold transition-all duration-200 border bg-amber-500/[0.08] border-amber-500/25 text-amber-400 hover:bg-amber-500/[0.16] hover:border-amber-500/45"
+                className="w-full py-2 rounded-xl text-xs font-semibold transition-all duration-200 border bg-gold/[0.08] border-gold/25 text-gold-bright hover:bg-gold/[0.16] hover:border-gold/45"
               >
                 {profileSaved ? "✓ Profiles saved" : "Save Profiles"}
               </button>
@@ -411,7 +417,7 @@ export default function ChatPage() {
         {/* Header */}
         <div className="shrink-0 flex items-center justify-between px-6 py-3.5">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/[0.08] border border-amber-500/[0.16] flex items-center justify-center select-none">
+            <div className="w-7 h-7 rounded-lg bg-gold/[0.08] border border-gold/[0.16] flex items-center justify-center select-none">
               <ZodicognacMark size={18} active={true} />
             </div>
             <span className="text-sm font-semibold text-white tracking-tight">Zodicognac</span>
@@ -453,7 +459,7 @@ export default function ChatPage() {
                 >
                   {msg.role === "ai" ? (
                     <div className="flex gap-4 items-start">
-                      <div className="shrink-0 w-7 h-7 rounded-lg bg-amber-500/[0.08] border border-amber-500/[0.14] flex items-center justify-center select-none mt-0.5">
+                      <div className="shrink-0 w-7 h-7 rounded-lg bg-gold/[0.08] border border-gold/[0.14] flex items-center justify-center select-none mt-0.5">
                         <ZodicognacMark size={16} active />
                       </div>
                       <div className="flex-1 min-w-0 space-y-2.5">
@@ -494,7 +500,7 @@ export default function ChatPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="flex gap-4 items-start"
               >
-                <div className="shrink-0 w-7 h-7 rounded-lg bg-amber-500/[0.08] border border-amber-500/[0.14] flex items-center justify-center select-none mt-0.5">
+                <div className="shrink-0 w-7 h-7 rounded-lg bg-gold/[0.08] border border-gold/[0.14] flex items-center justify-center select-none mt-0.5">
                   <ZodicognacMark size={16} active />
                 </div>
                 <div className="flex gap-1.5 items-center pt-2">

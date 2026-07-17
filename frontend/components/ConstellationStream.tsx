@@ -44,7 +44,7 @@ function ConstellationIndicator({ active }: { active: boolean }) {
         <motion.circle
           key={i}
           cx={p.cx} cy={p.cy} r="1.2"
-          fill={active ? "#fbbf24" : "rgba(251,191,36,0.4)"}
+          fill={active ? "#edcb7e" : "rgba(251,191,36,0.4)"}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: i * 0.08, type: "spring", stiffness: 300 }}
@@ -59,9 +59,9 @@ function renderMarkdown(text: string): React.ReactNode[] {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\n)/g);
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**"))
-      return <strong key={i} className="text-amber-300 font-semibold">{part.slice(2, -2)}</strong>;
+      return <strong key={i} className="text-gold-bright font-semibold">{part.slice(2, -2)}</strong>;
     if (part.startsWith("*") && part.endsWith("*"))
-      return <em key={i} className="text-amber-200/80 italic">{part.slice(1, -1)}</em>;
+      return <em key={i} className="text-gold-bright/80 italic">{part.slice(1, -1)}</em>;
     if (part === "\n")
       return <br key={i} />;
     return <span key={i}>{part}</span>;
@@ -103,7 +103,7 @@ function StarCursor() {
         ],
       }}
       transition={{ duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
-      style={{ display: "inline-block", color: "#fbbf24", marginLeft: 2 }}
+      style={{ display: "inline-block", color: "#edcb7e", marginLeft: 2 }}
     >
       ✦
     </motion.span>
@@ -197,10 +197,10 @@ export default function ConstellationStream({
           )}
 
           {/* ── Header ──────────────────────────────────────────────── */}
-          <div className="relative flex items-center gap-3 px-5 pt-5 pb-3 border-b border-amber-500/10">
+          <div className="relative flex items-center gap-3 px-5 pt-5 pb-3 border-b border-gold/10">
             <ConstellationIndicator active={streaming} />
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-400/80">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-bright/80">
                 {streaming ? "Reading the stars…" : "Celestial Reading Complete"}
               </p>
               {!streaming && (
@@ -218,7 +218,7 @@ export default function ConstellationStream({
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
-                className="ml-auto text-[10px] px-2.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20"
+                className="ml-auto text-[10px] px-2.5 py-1 rounded-full bg-gold/10 text-gold-bright border border-gold/20"
               >
                 ✦ Done
               </motion.span>

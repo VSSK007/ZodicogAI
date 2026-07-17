@@ -27,7 +27,7 @@ export default function LoveLangIndexPage() {
       </nav>
       <div className="mb-10">
         <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
           <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Relationship Guides</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">The 5 Love Languages</h1>
@@ -36,10 +36,10 @@ export default function LoveLangIndexPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {LOVE_LANGS.map(l => (
           <Link key={l.slug} href={`/blog/love-languages/${l.slug}`}
-            className="rounded-xl border border-amber-500/20 bg-amber-500/[0.03] p-5 hover:bg-amber-500/[0.07] transition-colors group">
+            className="rounded-xl border border-gold/20 bg-gold/[0.03] p-5 hover:bg-gold/[0.07] transition-colors group">
             <div className="flex items-center gap-3 mb-2">
               <span className="text-2xl">{l.emoji}</span>
-              <span className="font-semibold text-sm group-hover:text-amber-300 transition-colors">{l.label}</span>
+              <span className="font-semibold text-sm group-hover:text-gold-bright transition-colors">{l.label}</span>
             </div>
             <p className="text-xs text-zinc-500">{l.desc}</p>
           </Link>

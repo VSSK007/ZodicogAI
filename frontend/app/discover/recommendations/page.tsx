@@ -76,7 +76,7 @@ export default function RecommendationsPage() {
   const an = result?.analysis;
 
   return (
-    <main className="min-h-screen bg-[#06060f] px-4 md:px-6 py-8 md:py-16">
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16">
       <div className="max-w-xl mx-auto space-y-8">
         {/* Header */}
         <div className="space-y-2">
@@ -154,8 +154,8 @@ export default function RecommendationsPage() {
                   genres: rd.movie_genres,
                   titles: rd.movie_titles,
                   prose: an.movie_prose,
-                  accent: "border-amber-500/20 bg-amber-500/[0.04]",
-                  dot: "bg-amber-400",
+                  accent: "border-gold/20 bg-gold/[0.04]",
+                  dot: "bg-gold-bright",
                 },
                 {
                   label: "Sneakers",

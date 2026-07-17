@@ -73,7 +73,7 @@ export function AuraPalette({
   const midHex = blendHex(colorA.hex, colorB.hex);
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#16162a] p-5 space-y-4">
+    <div className="rounded-2xl border border-white/[0.07] bg-[#14121f] p-5 space-y-4">
       <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Aura Palette</p>
 
       <div className="flex gap-3">

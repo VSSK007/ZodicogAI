@@ -31,7 +31,7 @@ export default function AboutPage() {
 
       <div className="mb-12">
         <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
           <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">
             My Story
           </span>
@@ -39,7 +39,7 @@ export default function AboutPage() {
         <h1 className="text-4xl font-bold tracking-tight mb-3">
           The Birth of Zodicog
         </h1>
-        <p className="text-base text-amber-400 font-medium">
+        <p className="text-base text-gold-bright font-medium">
           A hybrid symbolic-generative system for compatibility, communication, and relationship intelligence.
         </p>
       </div>
@@ -47,7 +47,7 @@ export default function AboutPage() {
       <div className="space-y-8">
         {/* Section 1: My Journey */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+          <h2 className="text-lg font-semibold mb-3 text-gold-bright">
             My Journey
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
@@ -76,7 +76,7 @@ export default function AboutPage() {
 
         {/* Section 2: The Vision */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+          <h2 className="text-lg font-semibold mb-3 text-gold-bright">
             The Vision
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
@@ -100,7 +100,7 @@ export default function AboutPage() {
               ["◐", "Full Intelligence", "10-dimension weighted synthesis"],
             ].map(([icon, label, desc]) => (
               <div key={label} className="rounded-lg border border-white/[0.06] bg-white/[0.02] p-2.5">
-                <p className="text-xs font-semibold text-amber-300 mb-0.5">{icon} {label}</p>
+                <p className="text-xs font-semibold text-gold-bright mb-0.5">{icon} {label}</p>
                 <p className="text-[11px] text-zinc-500">{desc}</p>
               </div>
             ))}
@@ -115,7 +115,7 @@ export default function AboutPage() {
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
             Beyond the analysis engines, ZodicogAI includes a{" "}
-            <span className="text-amber-300 font-medium">
+            <span className="text-gold-bright font-medium">
               360-profile Celebrity Database
             </span>{" "}
             — 30 profiles per zodiac sign, each with a full behavioral profile,
@@ -125,7 +125,7 @@ export default function AboutPage() {
           </p>
           <p className="text-zinc-300 text-sm leading-relaxed">
             The core principle:{" "}
-            <span className="text-amber-300">
+            <span className="text-gold-bright">
               grounding before generation — structure first, narrative second
             </span>
             .
@@ -134,7 +134,7 @@ export default function AboutPage() {
 
         {/* Section 2b: Zodicognac */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+          <h2 className="text-lg font-semibold mb-3 text-gold-bright">
             Zodicognac — The Oracle
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
@@ -166,16 +166,16 @@ export default function AboutPage() {
 
         {/* Section 3: What is Zodicog? */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+          <h2 className="text-lg font-semibold mb-3 text-gold-bright">
             What Does "Zodicog" Mean?
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-4">
-            <span className="text-amber-300 font-semibold">Zodicog</span> is a
+            <span className="text-gold-bright font-semibold">Zodicog</span> is a
             portmanteau of two foundational elements:
           </p>
           <div className="space-y-3 mb-4">
-            <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4">
-              <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">
+            <div className="rounded-xl border border-gold/20 bg-gold/[0.04] p-4">
+              <p className="text-xs font-semibold text-gold-bright uppercase tracking-wider mb-1">
                 Zodiac
               </p>
               <p className="text-sm text-zinc-300">
@@ -184,8 +184,8 @@ export default function AboutPage() {
                 personality.
               </p>
             </div>
-            <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-4">
-              <p className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-1">
+            <div className="rounded-xl border border-gold/20 bg-gold/[0.04] p-4">
+              <p className="text-xs font-semibold text-gold-bright uppercase tracking-wider mb-1">
                 Cognition
               </p>
               <p className="text-sm text-zinc-300">
@@ -196,13 +196,13 @@ export default function AboutPage() {
             </div>
           </div>
           <p className="text-zinc-300 text-sm leading-relaxed mb-8">
-            <span className="text-amber-300">Zodicog</span> = the intersection
+            <span className="text-gold-bright">Zodicog</span> = the intersection
             of ancient stars and modern psychology. Where mythology meets
             neuroscience.
           </p>
 
-          <div className="rounded-xl border border-amber-500/30 bg-amber-500/[0.06] p-5">
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-wider mb-2">
+          <div className="rounded-xl border border-gold/30 bg-gold/[0.06] p-5">
+            <p className="text-xs font-semibold text-gold-bright uppercase tracking-wider mb-2">
               The AI in ZodicogAI
             </p>
             <p className="text-2xl font-bold text-white mb-3">
@@ -210,7 +210,7 @@ export default function AboutPage() {
             </p>
             <p className="text-sm text-zinc-300 leading-relaxed">
               The{" "}
-              <span className="text-amber-300 font-medium">AI</span> in
+              <span className="text-gold-bright font-medium">AI</span> in
               ZodicogAI refers to the system&apos;s core function: integrating
               multiple structured signal families — zodiac, MBTI, attachment,
               numerology, love styles, and others — into a single interpretable
@@ -222,11 +222,11 @@ export default function AboutPage() {
 
         {/* Section 4: My Philosophy */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+          <h2 className="text-lg font-semibold mb-3 text-gold-bright">
             My Philosophy
           </h2>
           <div className="space-y-3">
-            <div className="border-l-2 border-amber-500/40 pl-4">
+            <div className="border-l-2 border-gold/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">
                 Respect Complexity
               </p>
@@ -237,7 +237,7 @@ export default function AboutPage() {
                 life numerology. I don't reduce — I integrate.
               </p>
             </div>
-            <div className="border-l-2 border-amber-500/40 pl-4">
+            <div className="border-l-2 border-gold/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">
                 Grounding Before Generation
               </p>
@@ -248,7 +248,7 @@ export default function AboutPage() {
                 they don&apos;t invent it.
               </p>
             </div>
-            <div className="border-l-2 border-amber-500/40 pl-4">
+            <div className="border-l-2 border-gold/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">
                 Transparency
               </p>
@@ -258,7 +258,7 @@ export default function AboutPage() {
                 You own your data; I own my methodology.
               </p>
             </div>
-            <div className="border-l-2 border-amber-500/40 pl-4">
+            <div className="border-l-2 border-gold/40 pl-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">
                 Connection Over Prediction
               </p>
@@ -275,7 +275,7 @@ export default function AboutPage() {
 
         {/* Section 5: The Mission */}
         <section>
-          <h2 className="text-lg font-semibold mb-3 text-amber-300">
+          <h2 className="text-lg font-semibold mb-3 text-gold-bright">
             My Mission
           </h2>
           <p className="text-zinc-300 text-sm leading-relaxed mb-3">
@@ -294,7 +294,7 @@ export default function AboutPage() {
 
         {/* Section 6: Built With */}
         <section>
-          <h2 className="text-lg font-semibold mb-1 text-amber-300">
+          <h2 className="text-lg font-semibold mb-1 text-gold-bright">
             Built with love, late nights, &amp; an unhealthy obsession with why people work the way they do <span className="text-rose-400/70">♡</span>
           </h2>
           <p className="text-xs text-zinc-500 mb-4">...and also these:</p>
@@ -320,20 +320,20 @@ export default function AboutPage() {
       </div>
 
       {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+      <div className="mt-12 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
         <p className="text-zinc-300 mb-4">
           Ready to explore your behavioral intelligence?
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link
             href="/analyze/hybrid"
-            className="px-5 py-2 rounded-full bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors"
+            className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors"
           >
             Start Self Analysis
           </Link>
           <Link
             href="/blog"
-            className="px-5 py-2 rounded-full border border-amber-500/30 text-amber-400 text-sm hover:bg-amber-500/10 transition-colors"
+            className="px-5 py-2 rounded-full border border-gold/30 text-gold-bright text-sm hover:bg-gold/10 transition-colors"
           >
             Read Blog
           </Link>

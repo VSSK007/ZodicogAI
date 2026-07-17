@@ -115,7 +115,7 @@ function drawBg(
   c1: string,
   c2?: string,
 ) {
-  ctx.fillStyle = "#06060f";
+  ctx.fillStyle = "#0b0a14";
   ctx.fillRect(0, 0, W, H);
 
   // Primary glow — top-center
@@ -415,7 +415,7 @@ function renderZodiac(ctx: CanvasRenderingContext2D, d: ZodiacShareData, font: s
 }
 
 function renderNumerology(ctx: CanvasRenderingContext2D, d: NumerologyShareData, font: string) {
-  drawBg(ctx, "#d97706");
+  drawBg(ctx, "#d8a63c");
 
   // Label
   ctx.save();
@@ -459,7 +459,7 @@ function renderNumerology(ctx: CanvasRenderingContext2D, d: NumerologyShareData,
 }
 
 function renderNumerologyPair(ctx: CanvasRenderingContext2D, d: NumerologyPairShareData, font: string) {
-  drawBg(ctx, "#b45309", "#4338ca");
+  drawBg(ctx, "#9c7a2e", "#8b7cf6");
 
   // Label
   ctx.save();
@@ -572,7 +572,7 @@ function renderColorSingle(ctx: CanvasRenderingContext2D, d: ColorSingleShareDat
 
 function renderColorPair(ctx: CanvasRenderingContext2D, d: ColorPairShareData, font: string) {
   // Custom split-glow background
-  ctx.fillStyle = "#06060f";
+  ctx.fillStyle = "#0b0a14";
   ctx.fillRect(0, 0, W, H);
 
   const gA = ctx.createRadialGradient(W * 0.16, H * 0.44, 0, W * 0.16, H * 0.44, H * 0.66);

@@ -39,7 +39,7 @@ export default function BlogIndexPage() {
     <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-5xl mx-auto">
       <div className="mb-10">
         <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
           <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Knowledge Base</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Guides & Articles</h1>
@@ -114,7 +114,7 @@ export default function BlogIndexPage() {
       <section>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-4">FAQ</h2>
         <Link href="/blog/faq"
-          className="block rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-5 hover:bg-amber-500/[0.07] transition-colors">
+          className="block rounded-xl border border-gold/20 bg-gold/[0.04] p-5 hover:bg-gold/[0.07] transition-colors">
           <p className="font-semibold text-sm text-white mb-1">Frequently Asked Questions</p>
           <p className="text-xs text-zinc-400">Answers about zodiac compatibility, MBTI, love languages, numerology, sextrology, and more →</p>
         </Link>

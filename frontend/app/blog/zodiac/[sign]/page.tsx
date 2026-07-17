@@ -177,7 +177,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
             <div className="flex flex-wrap gap-2">
               {article.best_matches.map(m => (
                 <Link key={m} href={`/blog/zodiac/${m.toLowerCase()}`}
-                  className="text-sm px-3 py-1.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 transition-colors">
+                  className="text-sm px-3 py-1.5 rounded-full border border-gold/30 bg-gold/10 text-gold-bright hover:bg-gold/20 transition-colors">
                   {m}
                 </Link>
               ))}
@@ -193,7 +193,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
                 const wikiUrl = `https://en.wikipedia.org/wiki/${celebName.replace(/\s+/g, "_")}`;
                 return (
                   <a key={p} href={wikiUrl} target="_blank" rel="noopener noreferrer"
-                    className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-amber-200 transition-colors">
+                    className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-gold/40 hover:text-gold-bright transition-colors">
                     {p}
                   </a>
                 );
@@ -206,10 +206,10 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
       )}
 
       {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+      <div className="mt-12 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
         <p className="text-zinc-300 mb-4">Get a personalized {name} analysis with your exact birth date</p>
         <Link href={`/analyze/zodiac?name=${name}&day=${meta.day}&month=${meta.month}`}
-          className="inline-block px-6 py-2.5 rounded-full bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors">
+          className="inline-block px-6 py-2.5 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
           Try Full {name} Analysis →
         </Link>
       </div>
@@ -232,7 +232,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
 
 function Section({ title, text }: { title: string; text: string }) {
   return (
-    <div className="border-l-2 border-amber-500/40 pl-4">
+    <div className="border-l-2 border-gold/40 pl-4">
       <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">{title}</h2>
       <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
     </div>

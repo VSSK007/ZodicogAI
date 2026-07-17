@@ -126,7 +126,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
   const wikiImage: string | null         = bioEntry?.wiki_image ?? null
 
   return (
-    <main className="min-h-screen bg-[#080810] text-white pt-20 pb-24">
+    <main className="min-h-screen text-white pt-20 pb-24">
       <div className="max-w-2xl mx-auto px-6">
 
         {/* Back link */}
@@ -249,7 +249,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
             <div className="flex flex-wrap justify-center gap-6">
               {lifePathNum !== null && (
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-full border border-amber-500/40 bg-amber-500/10 flex items-center justify-center text-sm font-bold text-amber-400">
+                  <div className="w-8 h-8 rounded-full border border-gold/40 bg-gold/10 flex items-center justify-center text-sm font-bold text-gold-bright">
                     {lifePathNum}
                   </div>
                   <div>
@@ -313,7 +313,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
             </Link>
             <Link
               href="/analyze/hybrid"
-              className="px-4 py-2 rounded-full text-sm font-medium border border-amber-500/30 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition-all"
+              className="px-4 py-2 rounded-full text-sm font-medium border border-gold/30 bg-gold/10 text-gold-bright hover:bg-gold/20 transition-all"
             >
               Full Hybrid Analysis
             </Link>

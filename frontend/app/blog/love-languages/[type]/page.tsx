@@ -92,10 +92,10 @@ export default async function LoveLangArticlePage({ params }: { params: Promise<
           <Section title="Compatibility with Other Languages" text={article.compatibility_notes} color={c} />
           <Section title="Growth Tips" text={article.growth_tips} color={c} />
 
-          <div className="mt-10 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
             <p className="text-zinc-300 mb-4 text-sm">Discover your love language through analysis</p>
             <Link href="/analyze/love-language"
-              className="px-5 py-2 rounded-full bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors">
+              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
               Find Your Love Language
             </Link>
           </div>

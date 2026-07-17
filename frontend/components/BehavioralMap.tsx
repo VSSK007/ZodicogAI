@@ -48,7 +48,7 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
   ];
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#16162a] p-5">
+    <div className="rounded-2xl border border-white/[0.07] bg-[#14121f] p-5">
       <h3 className="text-sm font-semibold text-zinc-300 mb-0.5">Behavioral Map</h3>
       <p className="text-xs text-zinc-500 mb-4">Dominance × Expressiveness</p>
 

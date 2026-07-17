@@ -19,7 +19,7 @@ interface Props {
   error: string | null;
 }
 
-const INPUT = "w-full bg-white/[0.04] border border-white/10 px-3 py-3 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-amber-500/40 transition-colors rounded-lg";
+const INPUT = "w-full bg-white/[0.04] border border-white/10 px-3 py-3 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-gold/40 transition-colors rounded-lg";
 
 export default function DiscoverForm({ onSubmit, loading, error }: Props) {
   const [name,     setName]     = useState("");
@@ -90,7 +90,7 @@ export default function DiscoverForm({ onSubmit, loading, error }: Props) {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 rounded-xl bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[48px]"
+        className="w-full py-3.5 rounded-xl bg-gold text-black font-semibold text-sm hover:bg-gold-bright disabled:opacity-50 disabled:cursor-not-allowed transition-colors min-h-[48px]"
       >
         {loading ? "Reading…" : "Reveal"}
       </button>

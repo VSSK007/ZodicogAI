@@ -8,7 +8,7 @@ interface Props {
 
 const STYLES: Record<string, { border: string; bg: string; text: string }> = {
   green:  { border: "border-green-500/30",  bg: "bg-green-500/5",  text: "text-green-400"  },
-  amber:  { border: "border-amber-500/30",  bg: "bg-amber-500/5",  text: "text-amber-400"  },
+  amber:  { border: "border-gold/30",  bg: "bg-gold/5",  text: "text-gold-bright"  },
   blue:   { border: "border-blue-500/30",   bg: "bg-blue-500/5",   text: "text-blue-400"   },
   indigo: { border: "border-indigo-500/30", bg: "bg-indigo-500/5", text: "text-indigo-400" },
   rose:   { border: "border-rose-500/30",   bg: "bg-rose-500/5",   text: "text-rose-400"   },
@@ -22,10 +22,10 @@ export default function MetricCard({ label, value, unit = "%", accent = "blue", 
   const isNum = typeof value === "number";
   // On mobile, "blue" accent becomes amber to match the golden mobile theme
   const mobileOverride = accent === "blue"
-    ? "border-amber-500/30 bg-amber-500/5 md:border-blue-500/30 md:bg-blue-500/5"
+    ? "border-gold/30 bg-gold/5 md:border-blue-500/30 md:bg-blue-500/5"
     : "";
   const mobileTextOverride = accent === "blue"
-    ? "text-amber-400 md:text-blue-400"
+    ? "text-gold-bright md:text-blue-400"
     : "";
   return (
     <div className={`rounded-xl border p-4 ${mobileOverride || `${s.border} ${s.bg}`}`}>

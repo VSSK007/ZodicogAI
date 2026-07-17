@@ -34,7 +34,7 @@ export default function NumerologyBlogIndexPage() {
       </nav>
       <div className="mb-10">
         <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
           <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Numerology Guides</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Life Path Numbers</h1>
@@ -46,8 +46,8 @@ export default function NumerologyBlogIndexPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {NUMBERS.filter(n => !n.master).map(n => (
             <Link key={n.n} href={`/blog/numerology/${n.n}`}
-              className="rounded-xl border border-amber-500/20 bg-amber-500/[0.03] p-4 hover:bg-amber-500/[0.07] transition-colors group">
-              <div className="text-3xl font-black text-amber-400 mb-1">{n.n}</div>
+              className="rounded-xl border border-gold/20 bg-gold/[0.03] p-4 hover:bg-gold/[0.07] transition-colors group">
+              <div className="text-3xl font-black text-gold-bright mb-1">{n.n}</div>
               <div className="font-semibold text-sm group-hover:text-white transition-colors">{n.label}</div>
               <div className="text-xs text-zinc-500 mt-0.5">{n.theme}</div>
             </Link>

@@ -9,8 +9,8 @@ const CARDS = [
     title: "Love Archetype",
     tagline: "Who you are in love — before you even realize it.",
     emoji: "🜂",
-    accent: "from-amber-500/10 to-amber-500/5",
-    border: "border-amber-500/25",
+    accent: "from-gold/10 to-gold/5",
+    border: "border-gold/25",
   },
   {
     href: "/discover/pattern",
@@ -40,7 +40,7 @@ const CARDS = [
 
 export default function DiscoverPage() {
   return (
-    <main className="min-h-screen bg-[#06060f] px-4 md:px-6 py-16 md:py-24">
+    <main className="min-h-screen px-4 md:px-6 py-16 md:py-24">
       <div className="max-w-2xl mx-auto space-y-10">
         {/* Header */}
         <motion.div
@@ -49,7 +49,7 @@ export default function DiscoverPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <p className="text-xs font-semibold text-amber-500/60 uppercase tracking-widest">Discover</p>
+          <p className="text-xs font-semibold text-gold/60 uppercase tracking-widest">Discover</p>
           <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
             Who are you, really?
           </h1>

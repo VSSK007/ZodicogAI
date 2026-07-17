@@ -42,13 +42,13 @@ interface FullResult {
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const STABILITY_COLOR: Record<string, string> = {
-  stable:   "#34a853",
+  stable:   "#2fbf71",
   moderate: "#fbbc04",
   volatile: "#ea4335",
 };
 
 const SIGNAL_STYLE: Record<string, string> = {
-  pursue:  "bg-[#34a853]/10 text-[#34a853] border-[#34a853]/25",
+  pursue:  "bg-[#2fbf71]/10 text-[#2fbf71] border-[#2fbf71]/25",
   caution: "bg-[#fbbc04]/10 text-[#fbbc04] border-[#fbbc04]/25",
   avoid:   "bg-[#ea4335]/10 text-[#ea4335] border-[#ea4335]/25",
 };
@@ -70,7 +70,7 @@ const DIM_COLORS: Record<string, string> = {
   Zodiac:          "#f472b6",
 };
 
-const CARD = "bg-[#16162a] border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
+const CARD = "bg-[#14121f] border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
 
 const SLIDE_LABELS = ["Overview", "Dimensions", "Love Intel", "Vectors", "Risk", "AI Reading"];
 
@@ -80,7 +80,7 @@ const SLIDE_LABELS = ["Overview", "Dimensions", "Love Intel", "Vectors", "Risk",
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
+      <div className="w-1.5 h-1.5 rounded-full bg-[#8b7cf6]" />
       <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
     </div>
   );
@@ -88,8 +88,8 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 
 function ScoreChip({ score }: { score: number }) {
   const cls =
-    score >= 80 ? "bg-[#34a853]/15 text-[#34a853] border-[#34a853]/30" :
-    score >= 65 ? "bg-[#4285f4]/15 text-[#4285f4] border-[#4285f4]/30" :
+    score >= 80 ? "bg-[#2fbf71]/15 text-[#2fbf71] border-[#2fbf71]/30" :
+    score >= 65 ? "bg-[#8b7cf6]/15 text-[#8b7cf6] border-[#8b7cf6]/30" :
     score >= 45 ? "bg-[#fbbc04]/15 text-[#fbbc04] border-[#fbbc04]/30" :
                   "bg-[#ea4335]/15 text-[#ea4335] border-[#ea4335]/30";
   return (
@@ -99,7 +99,7 @@ function ScoreChip({ score }: { score: number }) {
   );
 }
 
-function CardStripe({ color = "#4285f4" }: { color?: string }) {
+function CardStripe({ color = "#8b7cf6" }: { color?: string }) {
   return (
     <div
       className="h-0.5 rounded-t-2xl"
@@ -135,7 +135,7 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
       {/* Persona cards */}
       <div className="grid grid-cols-2 gap-3">
         {[
-          { label: names.a, sign: signA, mbti: a.mbti, color: "#4285f4" },
+          { label: names.a, sign: signA, mbti: a.mbti, color: "#8b7cf6" },
           { label: names.b, sign: signB, mbti: b.mbti, color: "#a78bfa" },
         ].map(({ label, sign, mbti, color }) => (
           <div key={label} className={CARD}>
@@ -159,7 +159,7 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
       <div className={CARD}>
         <CardStripe />
         <div className="p-6 flex flex-col sm:flex-row items-center gap-6">
-          <ScoreRing score={ri.overall_score} size={148} label="Overall" color="#4285f4" />
+          <ScoreRing score={ri.overall_score} size={148} label="Overall" color="#8b7cf6" />
           <div className="flex-1 space-y-4 w-full">
             <div>
               <Eyebrow>Prediction</Eyebrow>
@@ -368,7 +368,7 @@ function SlideRisk({ result }: { result: FullResult }) {
     <div className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
         <div className={CARD}>
-          <div className="h-0.5 bg-gradient-to-r from-[#34a853]/50 to-transparent" />
+          <div className="h-0.5 bg-gradient-to-r from-[#2fbf71]/50 to-transparent" />
           <div className="p-5">
             <Eyebrow>Strengths</Eyebrow>
             <ol className="space-y-2.5 mt-1">
@@ -380,7 +380,7 @@ function SlideRisk({ result }: { result: FullResult }) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.08 }}
                 >
-                  <span className="text-[#34a853] font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
+                  <span className="text-[#2fbf71] font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
                   <span className="text-zinc-300">{s}</span>
                 </motion.li>
               ))}
@@ -423,11 +423,11 @@ function SlideAI({ result }: { result: FullResult }) {
     <div className={CARD}>
       <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
         <div className="relative w-2 h-2 shrink-0">
-          <div className="absolute inset-0 rounded-full bg-[#4285f4] animate-ping opacity-60" />
-          <div className="w-2 h-2 rounded-full bg-[#4285f4]" />
+          <div className="absolute inset-0 rounded-full bg-[#8b7cf6] animate-ping opacity-60" />
+          <div className="w-2 h-2 rounded-full bg-[#8b7cf6]" />
         </div>
         <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-[#4285f4]/10 text-[#4285f4]/80 border border-[#4285f4]/20">
+        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-[#8b7cf6]/10 text-[#8b7cf6]/80 border border-[#8b7cf6]/20">
           Gemini 2.5 Flash
         </span>
       </div>
@@ -538,7 +538,7 @@ export default function DashboardPage() {
             transition={{ duration: 0.22 }}
             className="fixed left-1/2 -translate-x-1/2 z-30 top-2 md:top-[52px]"
           >
-            <div className="flex items-center gap-0.5 bg-[#0c0c1c]/90 backdrop-blur-xl border border-white/[0.08] rounded-[14px] px-1.5 py-1 shadow-xl max-w-[calc(100vw-24px)] md:max-w-none">
+            <div className="flex items-center gap-0.5 bg-surface-overlay/90 backdrop-blur-xl border border-white/[0.08] rounded-[14px] px-1.5 py-1 shadow-xl max-w-[calc(100vw-24px)] md:max-w-none">
               <button
                 onClick={() => goTo(activeSlide - 1)}
                 disabled={activeSlide === 0}
@@ -553,7 +553,7 @@ export default function DashboardPage() {
                     onClick={() => goTo(i)}
                     className={`px-2.5 md:px-3 py-1.5 rounded-[10px] text-xs font-medium transition-all whitespace-nowrap ${
                       activeSlide === i
-                        ? "bg-[#4285f4] text-white shadow-sm"
+                        ? "bg-[#8b7cf6] text-white shadow-sm"
                         : "text-zinc-500 hover:text-zinc-300"
                     }`}
                   >
@@ -578,7 +578,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-1.5 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#4285f4]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-[#8b7cf6]" />
             <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Relationship Intelligence</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-manrope)" }}>
@@ -656,7 +656,7 @@ export default function DashboardPage() {
                       onClick={() => goTo(i)}
                       className={`rounded-full transition-all duration-200 ${
                         activeSlide === i
-                          ? "w-5 h-1.5 bg-[#4285f4]"
+                          ? "w-5 h-1.5 bg-[#8b7cf6]"
                           : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
                       }`}
                     />

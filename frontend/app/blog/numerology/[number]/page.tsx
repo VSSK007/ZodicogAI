@@ -128,7 +128,7 @@ export default async function NumerologyLPPage({ params }: { params: Promise<{ n
                   return (
                     <a key={p} href={`https://en.wikipedia.org/wiki/${celebName.replace(/\s+/g, "_")}`}
                       target="_blank" rel="noopener noreferrer"
-                      className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-amber-500/40 hover:text-amber-200 transition-colors">
+                      className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-gold/40 hover:text-gold-bright transition-colors">
                       {p}
                     </a>
                   );
@@ -137,10 +137,10 @@ export default async function NumerologyLPPage({ params }: { params: Promise<{ n
             </div>
           )}
 
-          <div className="mt-10 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
             <p className="text-zinc-300 mb-4 text-sm">Calculate your exact life path number</p>
             <Link href="/analyze/numerology"
-              className="px-5 py-2 rounded-full bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors">
+              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
               Numerology Analysis
             </Link>
           </div>

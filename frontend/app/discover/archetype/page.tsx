@@ -74,11 +74,11 @@ export default function ArchetypePage() {
   const an = result?.analysis;
 
   return (
-    <main className="min-h-screen bg-[#06060f] px-4 md:px-6 py-8 md:py-16">
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16">
       <div className="max-w-xl mx-auto space-y-8">
         {/* Header */}
         <div className="space-y-2">
-          <p className="text-xs font-semibold text-amber-500/60 uppercase tracking-widest">Discover</p>
+          <p className="text-xs font-semibold text-gold/60 uppercase tracking-widest">Discover</p>
           <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Love Archetype</h1>
           <p className="text-zinc-400 text-sm leading-relaxed">
             Who you are in love — classified across 12 archetypes from your zodiac + MBTI.
@@ -112,7 +112,7 @@ export default function ArchetypePage() {
 
               {/* Identity pill */}
               <div className="flex flex-wrap gap-2 items-center">
-                <span className="px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-sm font-semibold">
+                <span className="px-3 py-1.5 rounded-full bg-gold/15 border border-gold/30 text-gold-bright text-sm font-semibold">
                   {ad.archetype}
                 </span>
                 <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.sign}</span>
@@ -161,12 +161,12 @@ export default function ArchetypePage() {
                       .map(([name, score]) => (
                         <div key={name} className="space-y-1">
                           <div className="flex justify-between text-xs">
-                            <span className={name === ad.archetype ? "text-amber-400 font-semibold" : "text-zinc-500"}>{name}</span>
+                            <span className={name === ad.archetype ? "text-gold-bright font-semibold" : "text-zinc-500"}>{name}</span>
                             <span className="text-zinc-600">{score.toFixed(0)}</span>
                           </div>
                           <div className="h-1 w-full bg-white/[0.05] rounded-full overflow-hidden">
                             <motion.div
-                              className={`h-full rounded-full ${name === ad.archetype ? "bg-amber-400" : "bg-white/20"}`}
+                              className={`h-full rounded-full ${name === ad.archetype ? "bg-gold-bright" : "bg-white/20"}`}
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min((score / 90) * 100, 100)}%` }}
                               transition={{ duration: 0.6, ease: "easeOut" }}
