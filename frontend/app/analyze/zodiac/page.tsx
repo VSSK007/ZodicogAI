@@ -102,7 +102,7 @@ const ALL_SIGN_SYMBOLS: Record<string, string> = {
   Libra:"♎", Scorpio:"♏", Sagittarius:"♐", Capricorn:"♑", Aquarius:"♒", Pisces:"♓",
 };
 
-const INPUT_SMALL = "bg-white/[0.04] md:bg-zinc-900 border border-amber-500/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-amber-500/50 md:focus:border-white/30 transition-colors font-[inherit]";
+const INPUT_SMALL = "bg-white/[0.04] md:bg-zinc-900 border border-gold/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/50 md:focus:border-white/30 transition-colors font-[inherit]";
 
 // ---------------------------------------------------------------------------
 // Section component
@@ -180,7 +180,7 @@ function ZodiacPageInner() {
       {showForm && (
         <div className="mb-10">
           <div className="flex items-center gap-1.5 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-amber-500 md:bg-[#4285f4]" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gold" />
             <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Analysis</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight">Zodiac Profile</h1>
@@ -203,15 +203,15 @@ function ZodiacPageInner() {
 
       {/* Input card */}
       {showForm && (
-        <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-amber-500/20 md:ring-white/10 space-y-3 mb-4">
-          <div className="flex gap-2 items-center border-b border-amber-500/20 md:border-white/10 pb-2.5">
+        <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-gold/20 md:ring-white/10 space-y-3 mb-4">
+          <div className="flex gap-2 items-center border-b border-gold/20 md:border-white/10 pb-2.5">
             <input
               className="flex-1 bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none"
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <div className="flex rounded-lg overflow-hidden border border-amber-500/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
+            <div className="flex rounded-lg overflow-hidden border border-gold/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
               {(["M", "F"] as const).map((g) => (
                 <button
                   key={g}
@@ -219,7 +219,7 @@ function ZodiacPageInner() {
                   onClick={() => setGender(g)}
                   className={`flex-1 py-1.5 transition-colors tap-highlight-none ${
                     gender === g
-                      ? "bg-amber-500 text-black"
+                      ? "bg-gold text-black"
                       : "bg-white/[0.04] md:bg-zinc-900 text-zinc-500 hover:text-white"
                   }`}
                 >
@@ -239,7 +239,7 @@ function ZodiacPageInner() {
       {showForm && (
         <button
           onClick={handleSubmit} disabled={loading}
-          className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px] mb-8"
+          className="w-full py-3.5 md:py-3 rounded-control text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px] mb-8"
         >
           {loading ? "Reading the stars…" : "Generate Zodiac Profile"}
         </button>

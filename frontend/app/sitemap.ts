@@ -12,7 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/analyze/zodiac`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/analyze/romantic`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/analyze/emotional`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${base}/analyze/relationship-intelligence`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${base}/dashboard`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/analyze/hybrid`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/sextrology`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/love-style`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },

@@ -57,7 +57,7 @@ const FAQS: { q: string; a: string; link?: { text: string; href: string } }[] = 
   {
     q: "What is synastry in astrology?",
     a: "Synastry is the comparison of two birth charts to assess relationship compatibility. It examines how the planets in one person's chart interact with the planets in another's. ZodicogAI's Full Relationship Intelligence report offers a 10-dimensional synastry analysis covering romantic compatibility, emotional bond, communication style, love language alignment, intimacy dynamics, and long-term potential.",
-    link: { text: "Run Full Synastry Report", href: "/analyze/relationship-intelligence" },
+    link: { text: "Run Full Synastry Report", href: "/dashboard" },
   },
   {
     q: "What is the rarest zodiac sign?",
@@ -105,7 +105,7 @@ export default function FaqPage() {
 
       <div className="mb-10">
         <div className="flex items-center gap-1.5 mb-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+          <div className="w-1.5 h-1.5 rounded-full bg-gold" />
           <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Frequently Asked</span>
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Questions & Answers</h1>
@@ -119,7 +119,7 @@ export default function FaqPage() {
             <p className="text-sm text-zinc-400 leading-relaxed">{a}</p>
             {link && (
               <Link href={link.href}
-                className="inline-block mt-3 text-xs text-amber-400 hover:text-amber-300 transition-colors">
+                className="inline-block mt-3 text-xs text-gold-bright hover:text-gold-bright transition-colors">
                 {link.text} →
               </Link>
             )}
@@ -128,13 +128,13 @@ export default function FaqPage() {
       </div>
 
       {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-6 text-center">
+      <div className="mt-12 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
         <p className="text-zinc-300 mb-4">Ready to explore your behavioral intelligence?</p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/analyze/hybrid" className="px-5 py-2 rounded-full bg-amber-500 text-black font-semibold text-sm hover:bg-amber-400 transition-colors">
+          <Link href="/analyze/hybrid" className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
             Self Analysis
           </Link>
-          <Link href="/analyze/romantic" className="px-5 py-2 rounded-full border border-amber-500/30 text-amber-400 text-sm hover:bg-amber-500/10 transition-colors">
+          <Link href="/analyze/romantic" className="px-5 py-2 rounded-full border border-gold/30 text-gold-bright text-sm hover:bg-gold/10 transition-colors">
             Compatibility
           </Link>
         </div>

@@ -9,6 +9,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // The full-report experience lives at /dashboard; the old analyze route
+      // was a second UI over the same endpoint.
+      {
+        source: "/analyze/relationship-intelligence",
+        destination: "/dashboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

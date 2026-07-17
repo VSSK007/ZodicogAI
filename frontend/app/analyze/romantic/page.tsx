@@ -51,7 +51,7 @@ function getSign(month: number, day: number): string {
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-amber-500 md:bg-[#4285f4]" />
+      <div className="w-1.5 h-1.5 rounded-full bg-gold" />
       <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
     </div>
   );
@@ -150,7 +150,7 @@ export default function RomanticPage() {
         {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
         <button
           onClick={handleStream} disabled={loading}
-          className="w-full py-3.5 md:py-3 rounded-full bg-white text-black font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
+          className="w-full py-3.5 md:py-3 rounded-control text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
         >
           {loading ? "Analyzing…" : "Analyze Romantic Compatibility"}
         </button>
@@ -214,7 +214,7 @@ export default function RomanticPage() {
               transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
               className={CARD}
             >
-              <div className="h-0.5 bg-gradient-to-r from-amber-500/50 md:from-[#4285f4]/50 via-amber-500/20 md:via-[#34a853]/30 to-transparent" />
+              <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
               <div className="p-4 md:p-6">
                 <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
                 <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
@@ -237,17 +237,17 @@ export default function RomanticPage() {
             >
               <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
                 <div className="relative w-2 h-2 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-amber-500 md:bg-[#4285f4] animate-ping opacity-60" />
-                  <div className="w-2 h-2 rounded-full bg-amber-500 md:bg-[#4285f4]" />
+                  <div className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
+                  <div className="w-2 h-2 rounded-full bg-accent" />
                 </div>
                 <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-amber-500 md:bg-amber-500/10 md:bg-[#4285f4]/10 text-amber-400/80 md:text-[#4285f4]/80 border border-amber-500/20 md:border-[#4285f4]/20">
+                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
                   Gemini 2.5 Flash
                 </span>
               </div>
               <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
-                  <div key={key} className="border-l-2 border-amber-500/40 md:border-rose-500/40 pl-4">
+                  <div key={key} className="border-l-2 border-gold/40 md:border-rose-500/40 pl-4">
                     <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
                     <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis?.[key])}</p>
                   </div>
