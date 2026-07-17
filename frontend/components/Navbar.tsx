@@ -136,7 +136,7 @@ export default function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.14 }}
-                className="absolute top-full left-0 w-[480px] rounded-b-card bg-surface-overlay/95 backdrop-blur-md border border-hairline border-t-0 shadow-panel z-50 p-3 flex gap-2"
+                className="absolute top-full left-0 w-[480px] rounded-b-card bg-surface-overlay border border-hairline border-t-0 shadow-panel z-50 p-3 flex gap-2"
               >
                 <AnalyzeColumn title="You" links={ANALYZE_YOU} path={path} onNavigate={() => setAnalyzeOpen(false)} />
                 <div className="w-px bg-hairline my-1" />

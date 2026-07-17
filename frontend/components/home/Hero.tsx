@@ -9,7 +9,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { EASE, EASE_SPRING, charReveal } from "@/lib/motion";
 import { Star4, Glyph } from "@/components/ui/glyphs";
 
-const GRAD_CHARS = "written in the stars.".split("");
+// Split into words (not raw characters) so the line only wraps between
+// words — a lone trailing "." or a mid-word break can't end up isolated.
+const GRAD_WORDS = "written in the stars.".split(" ");
 
 const DEMO_ROWS = [
   { label: "Zodiac polarity",      value: 91 },
@@ -110,13 +112,20 @@ export default function Hero() {
             <motion.span
               initial="hidden"
               animate="visible"
-              variants={{ visible: { transition: { staggerChildren: 0.025, delayChildren: 0.25 } } }}
+              variants={{ visible: { transition: { staggerChildren: 0.03, delayChildren: 0.25 } } }}
               className="text-gradient-accent"
             >
-              {GRAD_CHARS.map((char, i) => (
-                <motion.span key={i} className="inline-block" variants={charReveal}>
-                  {char === " " ? " " : char}
-                </motion.span>
+              {GRAD_WORDS.map((word, wi) => (
+                <span
+                  key={wi}
+                  className={`inline-block whitespace-nowrap ${wi < GRAD_WORDS.length - 1 ? "mr-[0.22em]" : ""}`}
+                >
+                  {word.split("").map((char, ci) => (
+                    <motion.span key={ci} className="inline-block" variants={charReveal}>
+                      {char}
+                    </motion.span>
+                  ))}
+                </span>
               ))}
             </motion.span>
           )}
