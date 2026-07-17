@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { Star4, ZODIAC_GLYPHS, Glyph } from "@/components/ui/glyphs";
 
 interface MobileMenuSheetProps {
   isOpen: boolean;
@@ -8,28 +9,37 @@ interface MobileMenuSheetProps {
 }
 
 /**
- * Bottom sheet menu for mobile "More" navigation.
- * Displays all analysis page links in a 3-column grid.
+ * Bottom sheet menu for mobile navigation.
+ * Mirrors the desktop IA: You / Together / Discover / Celebrities / More.
  */
 export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProps) {
-  const discoverLinks = [
-    { label: "✦ Love Archetype", href: "/discover/archetype" },
-    { label: "✦ Pattern",        href: "/discover/pattern" },
-    { label: "✦ Attraction",     href: "/discover/attraction" },
-    { label: "✦ Taste Profile",  href: "/discover/recommendations" },
-  ];
-
-  const analyzeLinks = [
-    { label: "Emotional", href: "/analyze/emotional" },
-    { label: "Romantic", href: "/analyze/romantic" },
-    { label: "Love Style", href: "/analyze/love-style" },
-    { label: "Love Language", href: "/analyze/love-language" },
-    { label: "Sextrology", href: "/analyze/sextrology" },
+  const youLinks = [
+    { label: "Behavioral Profile", href: "/analyze/hybrid" },
     { label: "Zodiac", href: "/analyze/zodiac" },
     { label: "Aura Colors", href: "/analyze/color" },
     { label: "Numerology", href: "/analyze/numerology" },
-    { label: "Full Intelligence", href: "/dashboard" },
   ];
+
+  const togetherLinks = [
+    { label: "Romantic", href: "/analyze/romantic" },
+    { label: "Emotional", href: "/analyze/emotional" },
+    { label: "Sextrology", href: "/analyze/sextrology" },
+    { label: "Love Style", href: "/analyze/love-style" },
+    { label: "Love Language", href: "/analyze/love-language" },
+    { label: "Full Report", href: "/dashboard" },
+  ];
+
+  const discoverLinks = [
+    { label: "Love Archetype", href: "/discover/archetype" },
+    { label: "Pattern", href: "/discover/pattern" },
+    { label: "Attraction", href: "/discover/attraction" },
+    { label: "Taste Profile", href: "/discover/recommendations" },
+  ];
+
+  const sectionLabel =
+    "flex items-center gap-1.5 font-display font-extrabold text-[10px] uppercase tracking-[0.22em] mb-2";
+  const tile =
+    "rounded-card bg-white/[0.04] border border-hairline p-3 text-center text-xs font-medium text-ink-secondary hover:bg-white/[0.08] hover:text-ink transition-all tap-highlight-none";
 
   return (
     <AnimatePresence>
@@ -46,7 +56,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
 
           {/* Sheet */}
           <motion.div
-            className="fixed inset-x-0 bottom-20 z-50 max-h-[75vh] rounded-t-3xl bg-[#0d0d1f] border-t border-white/[0.09] overflow-y-auto scrollbar-none"
+            className="fixed inset-x-0 bottom-20 z-50 max-h-[75vh] rounded-t-3xl bg-surface-overlay border-t border-hairline-strong overflow-y-auto scrollbar-none"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -57,16 +67,40 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
               <div className="w-10 h-1 rounded-full bg-white/[0.12]" />
             </div>
 
-            {/* Discover section */}
-            <div className="px-5 pb-1">
-              <p className="text-[10px] font-semibold text-amber-500/60 uppercase tracking-widest mb-2">Discover</p>
-              <div className="grid grid-cols-2 gap-2 mb-4">
+            {/* You */}
+            <div className="px-5 pb-4">
+              <p className={`${sectionLabel} text-ink-muted`}><Star4 size={9} className="text-gold" /> You</p>
+              <div className="grid grid-cols-2 gap-2">
+                {youLinks.map((link) => (
+                  <Link key={link.href} href={link.href} onClick={onClose} className={tile}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Together */}
+            <div className="px-5 pb-4">
+              <p className={`${sectionLabel} text-ink-muted`}><Star4 size={9} className="text-gold" /> Together</p>
+              <div className="grid grid-cols-3 gap-2">
+                {togetherLinks.map((link) => (
+                  <Link key={link.href} href={link.href} onClick={onClose} className={tile}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            {/* Discover */}
+            <div className="px-5 pb-4">
+              <p className={`${sectionLabel} text-gold/80`}><Star4 size={9} /> Discover</p>
+              <div className="grid grid-cols-2 gap-2">
                 {discoverLinks.map((link) => (
                   <Link
                     key={link.href}
                     href={link.href}
                     onClick={onClose}
-                    className="rounded-xl bg-amber-500/[0.07] border border-amber-500/20 p-3 text-center text-xs font-medium text-amber-300/80 hover:bg-amber-500/[0.12] hover:text-amber-300 transition-all tap-highlight-none"
+                    className="rounded-card bg-gold/[0.07] border border-gold/20 p-3 text-center text-xs font-medium text-gold-bright/80 hover:bg-gold/[0.12] hover:text-gold-bright transition-all tap-highlight-none"
                   >
                     {link.label}
                   </Link>
@@ -74,71 +108,51 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
               </div>
             </div>
 
-            {/* Celebrities */}
+            {/* Celebrities banner */}
             <div className="px-5 pb-4">
-              <p className="text-[10px] font-semibold text-yellow-400/60 uppercase tracking-widest mb-2">Celebrities</p>
               <Link
                 href="/celebrities"
                 onClick={onClose}
-                className="relative block rounded-2xl overflow-hidden tap-highlight-none active:scale-[0.98] transition-transform"
+                className="relative block rounded-card overflow-hidden border border-hairline-gold tap-highlight-none active:scale-[0.98] transition-transform"
                 style={{
-                  background: "linear-gradient(135deg, #92400e 0%, #78350f 40%, #1c1917 100%)",
-                  border: "1px solid rgba(251,191,36,0.25)",
-                  boxShadow: "0 0 24px rgba(251,191,36,0.08)",
+                  background: "linear-gradient(135deg, rgba(216,166,60,0.16) 0%, rgba(216,166,60,0.05) 45%, rgba(139,124,246,0.06) 100%)",
                 }}
               >
-                {/* Glow orb */}
-                <div className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none" style={{ background: "radial-gradient(circle, rgba(251,191,36,0.18) 0%, transparent 70%)" }} />
+                <div
+                  className="absolute -top-6 -right-6 w-28 h-28 rounded-full pointer-events-none"
+                  style={{ background: "radial-gradient(circle, rgba(237,203,126,0.18) 0%, transparent 70%)" }}
+                />
                 <div className="relative px-4 py-4 flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-bold text-yellow-100 mb-0.5">Zodiac Celebrities</p>
-                    <p className="text-[11px] text-yellow-200/50">360 profiles across all 12 signs</p>
-                    {/* Sign symbol strip */}
-                    <p className="text-[13px] mt-2 tracking-wide text-yellow-300/40 leading-none">♈♉♊♋♌♍♎♏♐♑♒♓</p>
+                    <p className="text-sm font-bold text-ink mb-0.5">Zodiac Celebrities</p>
+                    <p className="text-[11px] text-ink-muted">360 profiles across all 12 signs</p>
+                    <div className="flex gap-1.5 mt-2.5 text-gold/50">
+                      {ZODIAC_GLYPHS.slice(0, 6).map((g) => (
+                        <Glyph key={g} name={g} size={11} strokeWidth={1.8} />
+                      ))}
+                    </div>
                   </div>
-                  <div className="shrink-0 ml-3 w-12 h-12 rounded-full flex items-center justify-center" style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.3)" }}>
-                    <span className="text-2xl">⭐</span>
+                  <div className="shrink-0 ml-3 size-11 rounded-full flex items-center justify-center bg-gold/10 border border-hairline-gold text-gold-bright">
+                    <Star4 size={16} />
                   </div>
                 </div>
               </Link>
             </div>
 
-            {/* Analyze section */}
-            <div className="px-5 pb-1">
-              <p className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-2">Analyze</p>
-            </div>
-            <div className="grid grid-cols-3 gap-3 px-5 pb-4">
-              {analyzeLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={onClose}
-                  className="rounded-xl bg-white/[0.04] border border-white/[0.07] p-3 text-center text-xs font-medium text-white/80 hover:bg-white/[0.08] hover:text-white transition-all tap-highlight-none"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-
             {/* More */}
-            <div className="px-5 pb-1">
-              <p className="text-[10px] font-semibold text-zinc-600 uppercase tracking-widest mb-2">More</p>
-            </div>
-            <div className="grid grid-cols-3 gap-3 px-5 pb-12">
-              {[
-                { label: "Blog",  href: "/blog" },
-                { label: "About", href: "/about" },
-                { label: "FAQ",   href: "/blog/faq" },
-              ].map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={onClose}
-                  className="rounded-xl bg-white/[0.04] border border-white/[0.07] p-3 text-center text-xs font-medium text-zinc-400 hover:bg-white/[0.08] hover:text-zinc-200 transition-all tap-highlight-none"
-                >
-                  {link.label}
-                </Link>
-              ))}
+            <div className="px-5 pb-12">
+              <p className={`${sectionLabel} text-ink-faint`}><Star4 size={9} /> More</p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { label: "Blog", href: "/blog" },
+                  { label: "About", href: "/about" },
+                  { label: "FAQ", href: "/blog/faq" },
+                ].map((link) => (
+                  <Link key={link.href} href={link.href} onClick={onClose} className={tile}>
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
           </motion.div>
         </>

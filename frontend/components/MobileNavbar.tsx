@@ -87,7 +87,7 @@ export default function MobileNavbar() {
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Open menu"
-              className="w-12 h-12 rounded-full flex items-center justify-center tap-highlight-none active:scale-90 transition-transform bg-amber-500/10 border border-amber-500/25"
+              className="w-12 h-12 rounded-full flex items-center justify-center tap-highlight-none active:scale-90 transition-transform bg-gold/10 border border-gold/25"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(251,191,36,0.8)" strokeWidth="2" strokeLinecap="round">
                 <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
@@ -112,7 +112,7 @@ export default function MobileNavbar() {
               if (isHome) router.push("/?zn=1");
               else router.push("/chat");
             }}
-            className="w-14 h-14 rounded-full bg-amber-500/10 border border-amber-500/25 flex items-center justify-center tap-highlight-none"
+            className="w-14 h-14 rounded-full bg-gold/10 border border-gold/25 flex items-center justify-center tap-highlight-none"
             style={{ animation: "pulse-amber 3s ease-in-out infinite" }}
             aria-label="Open Zodicognac"
           >
