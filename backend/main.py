@@ -1,8 +1,9 @@
 import json
+import threading
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import StreamingResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 from datetime import datetime
 
 from models.schemas import (
@@ -81,12 +82,8 @@ usage_counter = {
 }
 
 
-@app.middleware("http")
-async def ai_budget_guard(request: Request, call_next):
-    """
-    Middleware to track and limit daily AI API calls.
-    Prevents overages on Gemini API usage.
-    """
+def _consume_ai_budget():
+    """Count one AI call against the daily budget; raise 429 when exhausted."""
     today = datetime.utcnow().date()
 
     # Reset counter when a new day starts
@@ -94,23 +91,57 @@ async def ai_budget_guard(request: Request, call_next):
         usage_counter["date"] = today
         usage_counter["count"] = 0
 
-    # Only guard AI-intensive endpoints
+    if usage_counter["count"] >= MAX_DAILY_AI_CALLS:
+        raise HTTPException(
+            status_code=429,
+            detail="Daily AI usage limit reached. Please try again tomorrow."
+        )
+
+    usage_counter["count"] += 1
+    print(f"[AI Budget] Calls today: {usage_counter['count']}/{MAX_DAILY_AI_CALLS}")
+
+
+@app.middleware("http")
+async def ai_budget_guard(request: Request, call_next):
+    """
+    Middleware to track and limit daily AI API calls.
+    Prevents overages on Gemini API usage.
+
+    /blog and /celebrities are guarded inside _cached_generate instead, so
+    cache hits there don't consume budget.
+    """
     if request.url.path.startswith("/chat") or request.url.path.startswith("/analyze") or request.url.path.startswith("/discover"):
-        # If limit reached, block request
-        if usage_counter["count"] >= MAX_DAILY_AI_CALLS:
-            raise HTTPException(
-                status_code=429,
-                detail="Daily AI usage limit reached. Please try again tomorrow."
-            )
-
-        # Count the request
-        usage_counter["count"] += 1
-
-        # Log usage to server console
-        print(f"[AI Budget] Calls today: {usage_counter['count']}/{MAX_DAILY_AI_CALLS}")
+        try:
+            _consume_ai_budget()
+        except HTTPException as exc:
+            # Raising inside Starlette middleware bypasses FastAPI's exception
+            # handlers, so return the 429 response directly.
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
     response = await call_next(request)
     return response
+
+
+# ---------------------------------------------------------------------------
+# Deterministic-content cache — blog articles and celebrity bios are the same
+# for every visitor, so each is generated at most once per process. Misses
+# consume AI budget; hits are free.
+# ---------------------------------------------------------------------------
+
+_content_cache: dict = {}
+_content_cache_lock = threading.Lock()
+
+
+def _cached_generate(key: str, producer):
+    with _content_cache_lock:
+        hit = _content_cache.get(key)
+    if hit is not None:
+        return hit
+    _consume_ai_budget()
+    result = producer()
+    with _content_cache_lock:
+        _content_cache[key] = result
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -398,26 +429,26 @@ _VALID_MBTI = {"INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","I
 def blog_love_language(slug: str):
     if slug not in _VALID_LOVE_LANGS:
         raise HTTPException(status_code=404, detail=f"Unknown love language: {slug}")
-    return _wrap(lambda: generate_love_lang_article(slug))
+    return _wrap(lambda: _cached_generate(f"love-language:{slug}", lambda: generate_love_lang_article(slug)))
 
 
 @app.get("/blog/love-style/{slug}")
 def blog_love_style(slug: str):
     if slug not in _VALID_LOVE_STYLES:
         raise HTTPException(status_code=404, detail=f"Unknown love style: {slug}")
-    return _wrap(lambda: generate_love_style_article(slug))
+    return _wrap(lambda: _cached_generate(f"love-style:{slug}", lambda: generate_love_style_article(slug)))
 
 
 @app.get("/blog/numerology/{number}")
 def blog_numerology_lp(number: str):
     if number not in _VALID_NUMEROLOGY:
         raise HTTPException(status_code=404, detail=f"Unknown life path number: {number}")
-    return _wrap(lambda: generate_numerology_lp_article(number))
+    return _wrap(lambda: _cached_generate(f"numerology:{number}", lambda: generate_numerology_lp_article(number)))
 
 
 @app.get("/blog/sextrology")
 def blog_sextrology_guide():
-    return _wrap(generate_sextrology_guide)
+    return _wrap(lambda: _cached_generate("sextrology-guide", generate_sextrology_guide))
 
 
 @app.get("/blog/compatibility/zodiac/{sign}")
@@ -425,7 +456,7 @@ def blog_zodiac_compat(sign: str):
     s = sign.lower()
     if s not in _VALID_ZODIAC:
         raise HTTPException(status_code=404, detail=f"Unknown sign: {sign}")
-    return _wrap(lambda: generate_zodiac_compat_article(s.capitalize()))
+    return _wrap(lambda: _cached_generate(f"zodiac-compat:{s}", lambda: generate_zodiac_compat_article(s.capitalize())))
 
 
 @app.get("/blog/compatibility/mbti/{mbti_type}")
@@ -433,7 +464,7 @@ def blog_mbti_compat(mbti_type: str):
     t = mbti_type.upper()
     if t not in _VALID_MBTI:
         raise HTTPException(status_code=404, detail=f"Unknown MBTI type: {mbti_type}")
-    return _wrap(lambda: generate_mbti_compat_article(t))
+    return _wrap(lambda: _cached_generate(f"mbti-compat:{t}", lambda: generate_mbti_compat_article(t)))
 
 
 # ---------------------------------------------------------------------------
@@ -454,12 +485,43 @@ def celebrity_profile(
     day: int,
     month: int,
 ):
-    def _run():
+    def _produce():
         num = get_numerology_profile(name, day, month)
         life_path = num["life_path_number"]
         result = generate_celebrity_bio(name, sign, born, nationality, category, life_path)
         return {"life_path": life_path, **result}
-    return _wrap(_run)
+    return _wrap(lambda: _cached_generate(f"celebrity:{slug}", _produce))
+
+
+# ---------------------------------------------------------------------------
+# Shareable results — persistence for /r/{id} permalinks (no AI cost)
+# ---------------------------------------------------------------------------
+
+from pydantic import BaseModel
+from results_store import save_result, load_result
+
+
+class SaveResultInput(BaseModel):
+    analysis_type: str
+    title: str = ""
+    payload: dict
+
+    model_config = {"str_max_length": 200_000}
+
+
+@app.post("/results")
+def create_shared_result(data: SaveResultInput):
+    if len(json.dumps(data.payload)) > 200_000:
+        raise HTTPException(status_code=413, detail="Result payload too large")
+    return _wrap(lambda: {"id": save_result(data.analysis_type, data.payload, data.title)})
+
+
+@app.get("/results/{result_id}")
+def get_shared_result(result_id: str):
+    result = load_result(result_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="Reading not found")
+    return result
 
 
 # ---------------------------------------------------------------------------

@@ -45,3 +45,5 @@ yarn-error.log*
 __pycache__/
 .pytest_cache/
 .coverage
+# Shareable-results store (runtime data)
+backend/results.db
