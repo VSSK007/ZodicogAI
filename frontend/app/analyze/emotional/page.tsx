@@ -172,7 +172,7 @@ export default function EmotionalPage() {
         {result && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-5">
 
-            <button onClick={() => { setResult(null); setStreamedText(""); setStreamScores(null); }} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+            <button onClick={() => { setResult(null); setStreamedText(""); setStreamScores(null); }} className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try another reading</button>
 
             {/* Score */}
             <motion.div

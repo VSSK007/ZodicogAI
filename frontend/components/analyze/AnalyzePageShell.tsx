@@ -102,7 +102,7 @@ export default function AnalyzePageShell({
             {onReset && (
               <button
                 onClick={onReset}
-                className="mt-8 inline-flex items-center gap-1.5 text-sm font-medium text-ink-muted hover:text-ink-secondary transition-colors tap-highlight-none"
+                className="mt-8 inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"
               >
                 <ChevronLeft className="size-4" aria-hidden="true" />
                 {resetLabel}
