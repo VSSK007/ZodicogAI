@@ -22,6 +22,7 @@ const TOP_LINKS = [
   { href: "/discover",    label: "Discover" },
   { href: "/celebrities", label: "Celebrities" },
   { href: "/blog",        label: "Blog" },
+  { href: "/about",       label: "About" },
 ];
 
 function RowIcon({ link }: { link: AnalyzeLink }) {
