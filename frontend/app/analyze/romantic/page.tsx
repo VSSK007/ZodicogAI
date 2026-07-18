@@ -11,7 +11,7 @@ import PersonForm from "@/components/PersonForm";
 import ConstellationStream from "@/components/ConstellationStream";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody } from "@/lib/api";
-import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
+import StreamPending from "@/components/analyze/StreamPending";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 
@@ -155,9 +155,12 @@ export default function RomanticPage() {
           {loading ? "Analyzing…" : "Analyze Romantic Compatibility"}
         </button>
 
-        {loading && !streamedText && <AnalyzeSkeleton variant="pair" />}
+        {loading && !streamedText && <StreamPending label="Reading your romantic polarity…" />}
+      </>)}
 
-        {/* Streaming section */}
+      {/* Streamed celestial reading — lives OUTSIDE the form/result swap so it
+          stays on screen when the scores arrive instead of vanishing. */}
+      {streamedText && (
         <div className="mb-4 md:mb-5">
           <ConstellationStream
             text={streamedText}
@@ -165,13 +168,13 @@ export default function RomanticPage() {
             visible={!!streamedText}
           />
         </div>
-      </>)}
+      )}
 
       <AnimatePresence>
         {result && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-5">
 
-            <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+            <button onClick={() => { setResult(null); setStreamedText(""); setStreamScores(null); }} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
 
             {/* Scores */}
             <motion.div

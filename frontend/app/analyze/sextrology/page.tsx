@@ -7,13 +7,10 @@ import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
-import ConstellationStream from "@/components/ConstellationStream";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
-
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 function getSign(month: number, day: number): string {
   const d = month * 100 + day;
@@ -173,12 +170,13 @@ export default function SextrologyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const [streaming, setStreaming] = useState(false);
-  const [streamedText, setStreamedText] = useState("");
-  const [streamScores, setStreamScores] = useState<SextrologyResult | null>(null);
   const [submittedAsPair, setSubmittedAsPair] = useState(false);
 
-  async function handleStream() {
+  // Both modes use the JSON endpoint: solo returns 9 structured fields,
+  // pair returns 5 engine scores + the full 7-field reading. (The old pair
+  // path streamed free prose from a prompt fed placeholder metrics, then
+  // discarded it when scores arrived — pairs never saw a real reading.)
+  async function handleSubmit() {
     const errA = validatePerson(a, "Person A");
     if (errA) return setError(errA);
     if (showB) {
@@ -187,74 +185,15 @@ export default function SextrologyPage() {
     }
     setLoading(true);
     setError("");
-    setStreamedText("");
-    setStreamScores(null);
     setResult(null);
     setSubmittedAsPair(showB);
 
-    // Solo mode: use regular endpoint to get all 9 structured fields
-    if (!showB) {
-      try {
-        const data = await apiFetch<SextrologyResult>("/analyze/sextrology", soloBody(a));
-        setResult(data);
-      } catch (e: unknown) {
-        setError((e as Error).message);
-      } finally {
-        setLoading(false);
-      }
-      return;
-    }
-
-    // Pair mode: use streaming for ConstellationStream animation
-    setStreaming(true);
     try {
-      const body = pairSexBody(a, b);
-      const response = await fetch(`${API}/analyze/sextrology/stream`, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server error ${response.status}`);
-      }
-
-      const reader = response.body!.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
-
-        for (const line of lines) {
-          if (!line.startsWith("data: ")) continue;
-          const raw = line.slice(6).trim();
-          if (!raw) continue;
-          try {
-            const parsed = JSON.parse(raw);
-            if ("chunk" in parsed) {
-              setLoading(false);  // reveal animation on first chunk
-              setStreamedText((prev) => prev + parsed.chunk);
-            }
-            if (parsed.error) { setError(parsed.error); setStreaming(false); setLoading(false); }
-            if (parsed.done === true) {
-              const scores: SextrologyResult = parsed;
-              setStreamScores(scores);
-              setResult(scores);
-              setStreaming(false);
-            }
-          } catch {
-            // ignore malformed SSE lines
-          }
-        }
-      }
+      const body = showB ? pairSexBody(a, b) : soloBody(a);
+      const data = await apiFetch<SextrologyResult>("/analyze/sextrology", body);
+      setResult(data);
     } catch (e: unknown) {
       setError((e as Error).message);
-      setStreaming(false);
     } finally {
       setLoading(false);
     }
@@ -277,7 +216,7 @@ export default function SextrologyPage() {
         </div>
 
         <button
-          onClick={() => { setShowB((v) => !v); setResult(null); setStreamedText(""); setStreamScores(null); }}
+          onClick={() => { setShowB((v) => !v); setResult(null); }}
           className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
         >
           {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for compatibility"}
@@ -286,22 +225,13 @@ export default function SextrologyPage() {
         {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
         <button
-          onClick={handleStream} disabled={loading}
+          onClick={handleSubmit} disabled={loading}
           className="w-full py-3.5 md:py-3 rounded-control text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
         >
           {loading ? "Analyzing…" : showB ? "Analyze Intimacy Compatibility" : "Reveal Your Sextrology Profile"}
         </button>
 
-        {loading && !streamedText && <AnalyzeSkeleton variant="pair" />}
-
-        {/* Streaming section */}
-        <div className="mb-4 md:mb-6">
-          <ConstellationStream
-            text={streamedText}
-            streaming={streaming}
-            visible={!!streamedText}
-          />
-        </div>
+        {loading && <AnalyzeSkeleton variant={showB ? "pair" : "solo"} />}
       </>)}
 
       <AnimatePresence>
@@ -361,8 +291,8 @@ export default function SextrologyPage() {
                   </div>
                 </motion.div>
 
-                {/* Pair — AI reading (hidden when ConstellationStream is active) */}
-                {!streamedText && result.analysis && (
+                {/* Pair — full sextrology reading (7 fields, same depth as solo) */}
+                {result.analysis && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: 0.3, ease: EASE }}

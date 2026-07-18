@@ -56,6 +56,7 @@ app = FastAPI()
 # CORS configuration — restrict to specific origins for security
 origins = [
     "http://localhost:3000",      # Local development
+    "http://127.0.0.1:3000",      # Local development (IP form)
     "https://zodicogai.com",      # Production
     "https://www.zodicogai.com",  # Production with www
 ]
