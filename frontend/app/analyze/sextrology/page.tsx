@@ -238,8 +238,6 @@ export default function SextrologyPage() {
         {result && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-6">
 
-            <button onClick={() => setResult(null)} className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try another reading</button>
-
             {(submittedAsPair || isPair(result)) ? (
               (() => { const pr = result as PairResult; return (
               <>
@@ -346,6 +344,7 @@ export default function SextrologyPage() {
               </>
             ); })())}
 
+            <div className="pt-2"><button onClick={() => setResult(null)} className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try another reading</button></div>
           </motion.div>
         )}
       </AnimatePresence>
