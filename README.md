@@ -404,9 +404,15 @@ backend/
 │   └── decan_engine.py              # 108 decan profiles + Hellenistic sub-rulers
 ├── models/
 │   └── schemas.py                   # All Pydantic v2 schemas (50+ dataclasses)
+├── results_store.py                 # SQLite store powering shareable /r/{id} readings
 └── scripts/
     └── generate_celeb_bios.py       # Batch Gemini generation for 360 celeb bios
 ```
+
+**Cost controls:** a global daily AI-call budget guards `/chat`, `/analyze`, and
+`/discover`; blog articles and celebrity bios are deterministic per slug, so they
+are generated at most once per process and served from an in-memory content
+cache — cache hits cost nothing and never touch the budget.
 
 **Key schema:**
 ```python
@@ -433,46 +439,69 @@ class RelationshipIntelligenceResult(BaseModel):
 ```
 frontend/
 ├── app/
-│   ├── page.tsx                     # Hero (ZodicogAI + Zodicognac dual-identity)
+│   ├── page.tsx                     # Flagship marketing page (hero, live-reading demo,
+│   │                                #   engine pipeline, showcase, Zodicognac band)
 │   ├── chat/page.tsx                # Zodicognac oracle (session-aware, abort, export)
-│   ├── dashboard/page.tsx           # Full synastry dashboard (6-slide carousel)
+│   ├── dashboard/page.tsx           # Full synastry report (6-slide carousel)
 │   ├── discover/page.tsx            # Single-profile identity discovery
+│   ├── r/[id]/page.tsx              # Shareable read-only reading permalinks
 │   ├── about/page.tsx               # Origin story + Zodicog etymology
-│   ├── analyze/                     # 10 analysis pages
+│   ├── analyze/                     # 9 analysis pages on a shared page shell
 │   │   ├── hybrid/                  # Self-analysis (zodiac + MBTI + traits)
-│   │   ├── emotional/               # Emotional compatibility
-│   │   ├── romantic/                # Romantic compatibility
-│   │   ├── sextrology/              # Sexual compatibility
+│   │   ├── emotional/               # Emotional compatibility (SSE streaming)
+│   │   ├── romantic/                # Romantic compatibility (SSE streaming)
+│   │   ├── sextrology/              # Sexual compatibility (solo or pair)
 │   │   ├── love-style/              # Love style alignment
 │   │   ├── love-language/           # Love language alignment
 │   │   ├── color/                   # Aura color analysis
 │   │   ├── numerology/              # Numerology (single + pair)
-│   │   ├── zodiac/                  # Zodiac deep-dive article
-│   │   └── relationship-intelligence/  # Full 10-dimension synastry
+│   │   └── zodiac/                  # Zodiac deep-dive article
+│   │                                #   (full synastry → /dashboard, 308 redirect)
 │   ├── celebrities/
-│   │   ├── page.tsx                 # 360 celebrity index
+│   │   ├── page.tsx                 # Searchable 360-celebrity explorer (sign filters)
 │   │   └── [slug]/page.tsx          # Static individual profiles (zero API cost)
 │   └── blog/
-│       ├── zodiac/[sign]/           # 12 zodiac articles (ISR, 24h revalidate)
+│       ├── zodiac/[sign]/           # 12 zodiac articles (ISR, 30d revalidate)
 │       ├── mbti/[type]/             # 16 MBTI type profiles (static)
 │       └── faq/                     # FAQ with JSON-LD FAQPage schema
 ├── components/
-│   ├── HybridForm.tsx               # Dual-input form with inline MBTI quiz
+│   ├── ui/                          # Design-system kit: Button, Card, Eyebrow,
+│   │                                #   SectionHeader, ErrorNotice, SimpleForm,
+│   │                                #   DualBar, hand-drawn zodiac glyph set
+│   ├── analyze/                     # AnalyzePageShell + ResultActions (share/history)
+│   ├── home/                        # Marketing-page sections
+│   ├── CosmicBackground.tsx         # Unified nebula + star field + drifting glyphs
+│   ├── CelebrityExplorer.tsx        # Client-side search + sign filtering (360 charts)
 │   ├── ShareImageButton.tsx         # Canvas 2D PNG share cards (analysis results)
 │   ├── ShareCelebButton.tsx         # Canvas 2D PNG share cards (celebrities)
 │   ├── InsightCard.tsx              # Discover identity card with canvas branding
 │   ├── ZodicogMark.tsx              # Z signet SVG (circle + crown jewel + Z path)
-│   ├── ZodicognacMark.tsx           # Diamond-frame variant (amber, Zodicognac identity)
+│   ├── ZodicognacMark.tsx           # Diamond-frame variant (gold, Zodicognac identity)
 │   ├── ScoreRing.tsx                # Circular percentage visualization
 │   ├── TraitRadar.tsx               # 5-axis radar chart (Recharts)
 │   └── BehavioralMap.tsx            # 2D MBTI cognitive function scatter
 └── lib/
     ├── api.ts                       # apiFetch wrapper + TypeScript interfaces
+    ├── analyses.ts                  # Single registry of all analysis links (nav + home)
+    ├── history.ts                   # Reading history (localStorage) + permalink save
+    ├── zodiac.ts                    # Canonical sign lookup + per-sign metadata
     ├── celebrities.ts               # 360 celebrity slug definitions
     ├── celeb-bios.json              # Pre-generated static bios (zero runtime cost)
     ├── mbti-data.ts                 # 16 MBTI type definitions
     └── motion.ts                    # Framer Motion easing presets
 ```
+
+**Design system — "The Observatory":** a Tailwind v4 `@theme` token layer
+(violet-black surface, ink hierarchy, violet primary accent, celestial-gold
+co-accent, hairline borders, glow recipes) drives every page. Data surfaces are
+framed as live readings — thin violet→gold score bars, tabular numerals, and a
+"Why:" explanation row — so the deterministic-engines-first pipeline is visible
+in the UI itself. Dark-only by design.
+
+**Shareable readings:** every finished analysis can be persisted (`POST /results`
+→ short id, SQLite) and revisited at `/r/{id}` — a read-only rendering of the
+stored payload with OpenGraph metadata — while a localStorage history surfaces
+each visitor's recent readings on the homepage. No accounts required.
 
 ---
 
@@ -498,8 +527,9 @@ frontend/
 |---|---|---|---|
 | Celebrity profiles | 360 | Static (build-time) | Manual re-generation |
 | MBTI type profiles | 16 | Static | Manual |
-| Zodiac sign articles | 12 | ISR (24h revalidate) | Auto-refreshed |
-| Analysis pages | 10 | Dynamic (client fetch) | Real-time |
+| Zodiac sign articles | 12 | ISR (30d revalidate) | Auto-refreshed |
+| Analysis pages | 9 | Dynamic (client fetch) | Real-time |
+| Shared readings (`/r/[id]`) | Unbounded | Dynamic (server fetch) | Created on demand |
 | FAQ page | 1 | Static + JSON-LD | Manual |
 
 **SEO infrastructure:** `sitemap.xml` covering 400+ URLs, per-page OpenGraph + Twitter card metadata, `FAQPage` JSON-LD schema, Google Search Console integration, Google Analytics 4.
