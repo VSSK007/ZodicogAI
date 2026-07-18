@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { MBTI_DATA, ALL_TYPES, ROLE_COLOR } from "@/lib/mbti-data";
 import { renderMd } from "@/lib/renderMd";
+import { Breadcrumb, AmbientGlow, ArticleSection, ChipColumns, CtaBand } from "@/components/blog/editorial";
 
 export async function generateStaticParams() {
   return ALL_TYPES.map((type) => ({ type: type.toLowerCase() }));
@@ -36,50 +37,44 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
   const color = ROLE_COLOR[data.role] ?? "#f59e0b";
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      {/* Breadcrumb */}
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{key}</span>
-      </nav>
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
+      <AmbientGlow hex={color} />
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { label: key }]} />
 
-      {/* Header */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center text-xl font-black"
-            style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
+      {/* Editorial header */}
+      <header className="mb-11">
+        <div className="flex items-center gap-5 mb-5">
+          <div className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card font-mono font-bold text-xl md:text-2xl"
+            style={{ background: `${color}14`, color, border: `1px solid ${color}38` }}>
             {key}
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{data.nickname}</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">{data.role} · {key}</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">{data.nickname}</h1>
+            <p className="text-ink-secondary mt-1.5">{data.role} <span className="text-ink-faint mx-1">·</span> {key}</p>
           </div>
         </div>
-        <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(data.description)}</p>
-      </div>
+        <p className="text-ink-secondary text-[16px] leading-[1.75] max-w-prose">{renderMd(data.description)}</p>
+      </header>
 
       <div className="space-y-8">
         {/* Strengths & Weaknesses */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ListCard title="Strengths" items={data.strengths} color="#22c55e" />
-          <ListCard title="Weaknesses" items={data.weaknesses} color="#f87171" />
-        </div>
+        <ChipColumns columns={[
+          { title: "Strengths", items: data.strengths, color: "#4ade80" },
+          { title: "Weaknesses", items: data.weaknesses, color: "#f87171" },
+        ]} />
 
         {/* In Love */}
-        <Section title="In Love" text={data.in_love} />
+        <ArticleSection title="In love" text={data.in_love} />
 
         {/* As a Friend */}
-        <Section title="As a Friend" text={data.as_a_friend} />
+        <ArticleSection title="As a friend" text={data.as_a_friend} />
 
         {/* Career */}
-        <Section title="Career & Fit" text={data.career} />
+        <ArticleSection title="Career & fit" text={data.career} />
 
         {/* Best Matches */}
-        <div className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Best MBTI Matches</h2>
+        <div className="rounded-card border border-hairline bg-white/[0.02] p-5">
+          <h2 className="font-display font-extrabold text-[12px] tracking-[0.18em] uppercase text-gold mb-3">Best MBTI matches</h2>
           <div className="flex flex-wrap gap-2">
             {data.best_matches.map(m => (
               <Link key={m} href={`/blog/mbti/${m.toLowerCase()}`}
@@ -92,13 +87,13 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
         </div>
 
         {/* Famous */}
-        <div className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous {key}s</h2>
+        <div className="rounded-card border border-hairline bg-white/[0.02] p-5">
+          <h2 className="font-display font-extrabold text-[12px] tracking-[0.18em] uppercase text-gold mb-3">Famous {key}s</h2>
           <div className="flex flex-wrap gap-2">
             {data.famous.map(p => (
               <a key={p} href={`https://en.wikipedia.org/wiki/${p.replace(/\s+/g, "_")}`}
                 target="_blank" rel="noopener noreferrer"
-                className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-gold/40 hover:text-gold-bright transition-colors">
+                className="text-sm px-3 py-1 rounded-full border border-hairline bg-white/5 text-ink-secondary hover:border-hairline-gold hover:text-gold-bright transition-colors">
                 {p}
               </a>
             ))}
@@ -106,18 +101,14 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-        <p className="text-zinc-300 mb-4">Get your full {key} behavioral analysis combined with your zodiac sign</p>
-        <Link href="/analyze/hybrid"
-          className="inline-block px-6 py-2.5 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-          Try Your Full Self Analysis →
-        </Link>
-      </div>
+      <CtaBand
+        text={`Get your full ${key} behavioral analysis combined with your zodiac sign`}
+        actions={[{ href: "/analyze/hybrid", label: "Try Your Full Self Analysis →", primary: true }]}
+      />
 
       {/* All types grid */}
       <div className="mt-10">
-        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-4">All 16 Types</p>
+        <p className="font-display font-extrabold text-[11px] tracking-[0.22em] uppercase text-ink-muted mb-4">All 16 types</p>
         <div className="grid grid-cols-4 gap-2">
           {ALL_TYPES.map(t => {
             const c = ROLE_COLOR[MBTI_DATA[t].role];
@@ -132,30 +123,5 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
         </div>
       </div>
     </main>
-  );
-}
-
-function Section({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="border-l-2 border-gold/40 pl-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">{title}</h2>
-      <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
-    </div>
-  );
-}
-
-function ListCard({ title, items, color }: { title: string; items: string[]; color: string }) {
-  return (
-    <div className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">{title}</h2>
-      <ul className="space-y-1.5">
-        {items.map(item => (
-          <li key={item} className="flex items-start gap-2 text-sm text-zinc-300">
-            <span style={{ color }} className="mt-0.5 shrink-0">✦</span>
-            {item}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }

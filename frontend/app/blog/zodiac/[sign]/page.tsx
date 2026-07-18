@@ -1,7 +1,17 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { renderMd } from "@/lib/renderMd";
+import { ZODIAC_COLORS } from "@/lib/colors";
+import { SIGN_COLOR } from "@/lib/celebrities";
+import { Glyph, type GlyphName } from "@/components/ui/glyphs";
+import {
+  Breadcrumb,
+  AmbientGlow,
+  ArticleSection,
+  PullQuote,
+  ChipColumns,
+  CtaBand,
+} from "@/components/blog/editorial";
 
 export const revalidate = 2592000; // revalidate every 30 days
 
@@ -100,157 +110,173 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
   const elColor  = ELEMENT_COLOR[meta.element]   ?? "#f59e0b";
   const modColor = MODALITY_COLOR[meta.modality] ?? "#a1a1aa";
 
-  return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      {/* Breadcrumb */}
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{name}</span>
-      </nav>
+  const signColor = SIGN_COLOR[key] ?? elColor;
+  const auraHex = ZODIAC_COLORS[name]?.hex ?? signColor;
+  const glyph = key as GlyphName;
 
-      {/* Header */}
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-5xl">{meta.symbol}</span>
+  const order = ALL_SIGNS;
+  const i = order.indexOf(key);
+  const prev = order[(i + order.length - 1) % order.length];
+  const next = order[(i + 1) % order.length];
+
+  const toc: { id: string; label: string }[] = [
+    { id: "overview", label: "Overview" },
+    { id: "personality", label: "Personality" },
+    ...(article?.modality_profile && article.modality_profile !== "—"
+      ? [{ id: "modality", label: `${meta.modality} energy` }]
+      : []),
+    { id: "strengths", label: "Strengths & weaknesses" },
+    { id: "highest", label: "Highest expression" },
+    { id: "shadow", label: "Shadow expression" },
+    { id: "love", label: "In love" },
+    { id: "friend", label: "As a friend" },
+    { id: "career", label: "Career & ambition" },
+    { id: "relating", label: "Tips for relating" },
+    { id: "matches", label: "Best matches" },
+    { id: "famous", label: `Famous ${name}s` },
+  ];
+
+  return (
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-5xl mx-auto">
+      <AmbientGlow hex={auraHex} />
+
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { label: name }]} />
+
+      {/* Editorial header */}
+      <header className="mb-10 md:mb-12">
+        <div className="flex items-center gap-5 mb-5">
+          <span
+            className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card border"
+            style={{ color: signColor, borderColor: `${signColor}40`, background: `${signColor}12` }}
+          >
+            <Glyph name={glyph} size={38} strokeWidth={1.4} />
+          </span>
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{name}</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">{meta.dates} · {meta.archetype}</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">
+              {name}
+            </h1>
+            <p className="text-ink-secondary mt-1.5">
+              {meta.archetype} <span className="text-ink-faint mx-1">·</span> {meta.dates}
+            </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 mb-4">
-          <span className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{meta.element}</span>
-          <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ background: `${modColor}18`, color: modColor, border: `1px solid ${modColor}40` }}>{meta.modality}</span>
-          <span className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{meta.ruling}</span>
-          <span className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300">{meta.polarity}</span>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-ink-muted mb-4">
+          <span>Ruled by <b className="text-ink-secondary font-medium">{meta.ruling}</b></span>
+          <span style={{ color: elColor }}>{meta.element}</span>
+          <span style={{ color: modColor }}>{meta.modality}</span>
+          <span>{meta.polarity}</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
           {meta.keywords.map(k => (
-            <span key={k} className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${elColor}18`, color: elColor, border: `1px solid ${elColor}30` }}>{k}</span>
+            <span key={k} className="text-xs px-2.5 py-1 rounded-full" style={{ background: `${elColor}14`, color: elColor, border: `1px solid ${elColor}2e` }}>{k}</span>
           ))}
         </div>
-      </div>
+      </header>
 
       {article ? (
-        <div className="space-y-8">
-          {/* Overview */}
-          <Section title="Overview" text={article.overview} />
+        <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_190px] lg:gap-12">
+          {/* Article body */}
+          <div className="max-w-prose space-y-9">
+            <ArticleSection id="overview" title="Overview" text={article.overview} />
+            <ArticleSection id="personality" title="Personality" text={article.personality} />
 
-          {/* Personality */}
-          <Section title="Personality" text={article.personality} />
+            {article.modality_profile && article.modality_profile !== "—" && (
+              <PullQuote id="modality" title={`${meta.modality} energy`} text={article.modality_profile} tone="violet" />
+            )}
 
-          {/* Modality Profile */}
-          {article.modality_profile && article.modality_profile !== "—" && (
-            <div className="rounded-xl border p-5" style={{ borderColor: `${modColor}30`, background: `${modColor}08` }}>
-              <h2 className="text-sm font-semibold uppercase tracking-wider mb-2" style={{ color: modColor }}>
-                {meta.modality} Sign
-              </h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.modality_profile)}</p>
+            <div id="strengths" className="scroll-mt-24">
+              <ChipColumns columns={[
+                { title: "Strengths", items: article.strengths, color: "#4ade80" },
+                { title: "Weaknesses", items: article.weaknesses, color: "#f87171" },
+              ]} />
             </div>
-          )}
 
-          {/* Strengths & Weaknesses */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <ListCard title="Strengths" items={article.strengths} color="#22c55e" />
-            <ListCard title="Weaknesses" items={article.weaknesses} color="#f87171" />
+            <PullQuote id="highest" title="Highest expression" text={article.highest_expression} tone="gold" />
+            <PullQuote id="shadow" title="Shadow expression" text={article.shadow_expression} tone="violet" />
+
+            <ArticleSection id="love" title="In love" text={article.in_love} />
+            <ArticleSection id="friend" title="As a friend" text={article.as_a_friend} />
+            <ArticleSection id="career" title="Career & ambition" text={article.career_and_ambition} />
+            <ArticleSection id="relating" title="Tips for relating" text={article.tips_for_relating} />
+
+            <ArticleSection id="matches" title="Best matches">
+              <div className="flex flex-wrap gap-2 mt-1">
+                {article.best_matches.map(m => (
+                  <Link
+                    key={m}
+                    href={`/blog/zodiac/${m.toLowerCase()}`}
+                    className="inline-flex items-center gap-2 rounded-full border border-hairline-gold bg-gold/10 px-3.5 py-1.5 text-sm text-gold-bright hover:bg-gold/20 transition-colors tap-highlight-none"
+                  >
+                    <Glyph name={m.toLowerCase() as GlyphName} size={13} strokeWidth={1.8} />
+                    {m}
+                  </Link>
+                ))}
+              </div>
+            </ArticleSection>
+
+            <ArticleSection id="famous" title={`Famous ${name} natives`}>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {article.famous_people.map(p => {
+                  const celebName = p.replace(/\s*\(.*?\)\s*/g, "").trim();
+                  const wikiUrl = `https://en.wikipedia.org/wiki/${celebName.replace(/\s+/g, "_")}`;
+                  return (
+                    <a key={p} href={wikiUrl} target="_blank" rel="noopener noreferrer"
+                      className="text-sm px-3 py-1 rounded-full border border-hairline bg-white/5 text-ink-secondary hover:border-hairline-gold hover:text-gold-bright transition-colors">
+                      {p}
+                    </a>
+                  );
+                })}
+              </div>
+            </ArticleSection>
           </div>
 
-          {/* Highest & Shadow */}
-          <Section title="Highest Expression" text={article.highest_expression} />
-          <Section title="Shadow Expression" text={article.shadow_expression} />
-
-          {/* In Love */}
-          <Section title="In Love" text={article.in_love} />
-
-          {/* As a Friend */}
-          <Section title="As a Friend" text={article.as_a_friend} />
-
-          {/* Career */}
-          <Section title="Career & Ambition" text={article.career_and_ambition} />
-
-          {/* Tips */}
-          <Section title="Tips for Relating" text={article.tips_for_relating} />
-
-          {/* Best Matches */}
-          <div className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Best Matches</h2>
-            <div className="flex flex-wrap gap-2">
-              {article.best_matches.map(m => (
-                <Link key={m} href={`/blog/zodiac/${m.toLowerCase()}`}
-                  className="text-sm px-3 py-1.5 rounded-full border border-gold/30 bg-gold/10 text-gold-bright hover:bg-gold/20 transition-colors">
-                  {m}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Famous People */}
-          <div className="rounded-xl border border-white/8 bg-white/[0.03] p-5">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous {name} Natives</h2>
-            <div className="flex flex-wrap gap-2">
-              {article.famous_people.map(p => {
-                const celebName = p.replace(/\s*\(.*?\)\s*/g, "").trim();
-                const wikiUrl = `https://en.wikipedia.org/wiki/${celebName.replace(/\s+/g, "_")}`;
-                return (
-                  <a key={p} href={wikiUrl} target="_blank" rel="noopener noreferrer"
-                    className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-gold/40 hover:text-gold-bright transition-colors">
-                    {p}
-                  </a>
-                );
-              })}
-            </div>
-          </div>
+          {/* TOC rail — desktop */}
+          <aside className="hidden lg:block">
+            <nav className="sticky top-24 border-l border-hairline pl-5">
+              <p className="font-display font-extrabold text-[10px] tracking-[0.22em] uppercase text-ink-muted mb-3">
+                In this profile
+              </p>
+              <ul className="space-y-2">
+                {toc.map(t => (
+                  <li key={t.id}>
+                    <a href={`#${t.id}`} className="text-[12.5px] text-ink-muted hover:text-gold-bright transition-colors">
+                      {t.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
         </div>
       ) : (
-        <div className="text-zinc-500 text-sm">Could not load article. Please try again later.</div>
+        <div className="text-ink-muted text-sm">Could not load article. Please try again later.</div>
       )}
 
-      {/* CTA */}
-      <div className="mt-12 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-        <p className="text-zinc-300 mb-4">Get a personalized {name} analysis with your exact birth date</p>
-        <Link href={`/analyze/zodiac?name=${name}&day=${meta.day}&month=${meta.month}`}
-          className="inline-block px-6 py-2.5 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-          Try Full {name} Analysis →
-        </Link>
-      </div>
+      <CtaBand
+        text={`Get a personalized ${name} analysis with your exact birth date`}
+        actions={[{ href: `/analyze/zodiac?name=${name}&day=${meta.day}&month=${meta.month}`, label: `Full ${name} reading →`, primary: true }]}
+      />
 
-      {/* Other signs */}
-      <div className="mt-10">
-        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-4">Other Signs</p>
-        <div className="flex flex-wrap gap-2">
-          {ALL_SIGNS.filter(s => s !== key).map(s => (
-            <Link key={s} href={`/blog/zodiac/${s}`}
-              className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-400 hover:text-white hover:border-white/20 transition-colors capitalize">
-              {SIGN_META[s].symbol} {s.charAt(0).toUpperCase() + s.slice(1)}
-            </Link>
-          ))}
-        </div>
-      </div>
-    </main>
-  );
-}
-
-function Section({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="border-l-2 border-gold/40 pl-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-1">{title}</h2>
-      <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
-    </div>
-  );
-}
-
-function ListCard({ title, items, color }: { title: string; items: string[]; color: string }) {
-  return (
-    <div className="rounded-xl border border-white/8 bg-white/[0.03] p-4">
-      <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">{title}</h2>
-      <ul className="space-y-1.5">
-        {items.map(item => (
-          <li key={item} className="flex items-start gap-2 text-sm text-zinc-300">
-            <span style={{ color }} className="mt-0.5 shrink-0">✦</span>
-            {renderMd(item)}
-          </li>
+      {/* Wheel navigation */}
+      <nav className="mt-10 grid grid-cols-2 gap-4">
+        {[{ s: prev, dir: "prev" }, { s: next, dir: "next" }].map(({ s, dir }) => (
+          <Link
+            key={s}
+            href={`/blog/zodiac/${s}`}
+            className={`group flex items-center gap-3 rounded-card border border-hairline bg-white/[0.02] px-4 py-3 transition-colors hover:border-hairline-accent tap-highlight-none ${dir === "next" ? "flex-row-reverse text-right justify-start" : ""}`}
+          >
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-hairline" style={{ color: SIGN_COLOR[s] }}>
+              <Glyph name={s as GlyphName} size={15} strokeWidth={1.8} />
+            </span>
+            <span>
+              <span className="block text-[10px] uppercase tracking-[0.18em] text-ink-muted">
+                {dir === "prev" ? "← Previous sign" : "Next sign →"}
+              </span>
+              <span className="block text-sm font-semibold text-ink capitalize">{s}</span>
+            </span>
+          </Link>
         ))}
-      </ul>
-    </div>
+      </nav>
+    </main>
   );
 }
