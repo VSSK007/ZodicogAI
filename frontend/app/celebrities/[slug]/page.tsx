@@ -10,6 +10,7 @@ import {
 import CELEB_BIOS from "@/lib/celeb-bios.json"
 import ShareCelebButton from "@/components/ShareCelebButton"
 import CelebEasterEgg from "@/components/CelebEasterEgg"
+import CelebrityMatch from "@/components/CelebrityMatch"
 
 export const revalidate = false  // fully static — data comes from celeb-bios.json
 
@@ -272,6 +273,13 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
               </div>
             </div>
           </div>
+
+          <CelebrityMatch
+            celebName={celeb.name}
+            celebSign={celeb.sign}
+            celebBirthDay={celeb.birthDay}
+            celebBirthMonth={celeb.birthMonth}
+          />
         </div>
 
         {/* Article sections */}
