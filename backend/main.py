@@ -48,7 +48,7 @@ from gemini_client import (
     generate_love_lang_article, generate_love_style_article,
     generate_numerology_lp_article, generate_sextrology_guide,
     generate_zodiac_compat_article, generate_mbti_compat_article,
-    generate_celebrity_bio,
+    generate_celebrity_bio, generate_daily_horoscope,
 )
 
 app = FastAPI()
@@ -76,11 +76,28 @@ app.add_middleware(
 
 MAX_DAILY_AI_CALLS = 3000
 
+# A single scraper or bot hammering the API could otherwise drain the entire
+# global daily budget before real visitors get a turn.
+MAX_DAILY_AI_CALLS_PER_IP = 40
+
 # Simple in-memory usage tracker (resets daily)
 usage_counter = {
     "date": datetime.utcnow().date(),
     "count": 0
 }
+
+# Per-IP counters — {ip: {"date": date, "count": int}}
+_ip_usage: dict = {}
+_ip_usage_lock = threading.Lock()
+_ip_sweep_counter = 0
+
+
+def _client_ip(request: Request) -> str:
+    """Best-effort real client IP, accounting for the Nginx reverse proxy."""
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
 
 
 def _consume_ai_budget():
@@ -102,17 +119,48 @@ def _consume_ai_budget():
     print(f"[AI Budget] Calls today: {usage_counter['count']}/{MAX_DAILY_AI_CALLS}")
 
 
+def _consume_ip_budget(ip: str):
+    """Count one AI call against this IP's daily budget; raise 429 when exhausted."""
+    global _ip_sweep_counter
+    today = datetime.utcnow().date()
+
+    with _ip_usage_lock:
+        # Opportunistically prune stale entries so the dict doesn't grow
+        # unbounded across many unique visitors over time.
+        _ip_sweep_counter += 1
+        if _ip_sweep_counter >= 500:
+            _ip_sweep_counter = 0
+            for stale_ip, entry in list(_ip_usage.items()):
+                if entry["date"] != today:
+                    del _ip_usage[stale_ip]
+
+        entry = _ip_usage.get(ip)
+        if entry is None or entry["date"] != today:
+            entry = {"date": today, "count": 0}
+
+        if entry["count"] >= MAX_DAILY_AI_CALLS_PER_IP:
+            raise HTTPException(
+                status_code=429,
+                detail="You've reached today's reading limit for this device. Please try again tomorrow."
+            )
+
+        entry["count"] += 1
+        _ip_usage[ip] = entry
+
+
 @app.middleware("http")
 async def ai_budget_guard(request: Request, call_next):
     """
     Middleware to track and limit daily AI API calls.
-    Prevents overages on Gemini API usage.
+    Prevents overages on Gemini API usage — both a global daily ceiling and
+    a per-IP ceiling so one visitor can't exhaust everyone else's budget.
 
     /blog and /celebrities are guarded inside _cached_generate instead, so
     cache hits there don't consume budget.
     """
     if request.url.path.startswith("/chat") or request.url.path.startswith("/analyze") or request.url.path.startswith("/discover"):
         try:
+            _consume_ip_budget(_client_ip(request))
             _consume_ai_budget()
         except HTTPException as exc:
             # Raising inside Starlette middleware bypasses FastAPI's exception
@@ -413,6 +461,42 @@ def discover_attraction(data: DiscoverInput):
 @app.post("/discover/recommendations")
 def discover_recommendations(data: DiscoverInput):
     return _wrap(lambda: run_analysis(RECOMMENDATION_ANALYSIS, _discover_person(data)))
+
+
+# ---------------------------------------------------------------------------
+# /horoscope endpoints — daily per-sign reading (deterministic scores + one
+# cached Gemini call per sign per day; cache key is date-scoped so it
+# naturally regenerates each day with no explicit invalidation logic).
+# ---------------------------------------------------------------------------
+
+from engines.horoscope_engine import compute_daily_scores, compute_lucky_number
+
+_VALID_HOROSCOPE_SIGNS = {"aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"}
+
+
+@app.get("/horoscope/{sign}")
+def horoscope(sign: str):
+    s = sign.lower()
+    if s not in _VALID_HOROSCOPE_SIGNS:
+        raise HTTPException(status_code=404, detail=f"Unknown sign: {sign}")
+
+    def _produce():
+        today = datetime.utcnow().date()
+        scores = compute_daily_scores(s, today)
+        lucky_number = compute_lucky_number(s, today)
+        # Avoid strftime's %-d/%#d day-of-month flags — not portable across
+        # Windows (where this runs in production) and POSIX.
+        date_label = f"{today.strftime('%B')} {today.day}, {today.year}"
+        result = generate_daily_horoscope(s.capitalize(), date_label, scores)
+        return {
+            "sign": s,
+            "date": today.isoformat(),
+            "lucky_number": lucky_number,
+            **result,
+        }
+
+    today_key = datetime.utcnow().date().isoformat()
+    return _wrap(lambda: _cached_generate(f"horoscope:{s}:{today_key}", _produce))
 
 
 # ---------------------------------------------------------------------------
