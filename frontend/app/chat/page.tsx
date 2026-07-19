@@ -6,17 +6,38 @@ import PersonForm from "@/components/PersonForm";
 import ZodicognacMark from "@/components/ZodicognacMark";
 import MobileChatSheet from "@/components/MobileChatSheet";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { PersonData, emptyPerson, validatePerson, toPerson, apiFetch } from "@/lib/api";
+import { API, PersonData, emptyPerson, validatePerson, toPerson } from "@/lib/api";
+import { trackZodicognacOpened } from "@/lib/analytics";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
-
-interface ChatResponse { intent: string; response: string; data: Record<string, unknown>; }
 
 interface Message {
   role: "user" | "ai";
   text: string;
   intent?: string;
   score?: { label: string; value: number } | null;
+  /** True while this AI message is still streaming in — shows a cursor. */
+  streaming?: boolean;
+}
+
+// ── Session persistence — survives a page refresh ───────────────────────────
+
+const STORAGE_KEY = "zodicog.chat.session";
+const WELCOME_TEXT =
+  "I'm Zodicognac. I've been studying people — how they attract, fight, fall apart, and fall back in — since before I had words for it. Ask me something real. Add your profiles in the sidebar and I'll ground everything in your actual signs and MBTI.";
+
+function loadSession(): Message[] {
+  if (typeof window === "undefined") return [{ role: "ai", text: WELCOME_TEXT }];
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {
+    // Corrupt or inaccessible storage — fall through to a fresh session.
+  }
+  return [{ role: "ai", text: WELCOME_TEXT }];
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -211,9 +232,7 @@ function MarkdownText({ text }: { text: string }) {
 
 export default function ChatPage() {
   const isMobile = useIsMobile();
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", text: "I'm Zodicognac. I've been studying people — how they attract, fight, fall apart, and fall back in — since before I had words for it. Ask me something real. Add your profiles in the sidebar and I'll ground everything in your actual signs and MBTI." },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(loadSession);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [showProfiles, setShowProfiles] = useState(false);
@@ -228,10 +247,21 @@ export default function ChatPage() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
+  // Persist the session so a refresh doesn't wipe the conversation.
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+    } catch {
+      // Storage full or unavailable — persistence is best-effort.
+    }
+  }, [messages]);
+
   // Deep links from finished readings: /chat?ask=<question> prefills the input.
   useEffect(() => {
     const ask = new URLSearchParams(window.location.search).get("ask");
     if (ask) setInput(ask);
+    trackZodicognacOpened(ask ? "reading_deep_link" : "direct");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function stop() {
@@ -259,9 +289,7 @@ export default function ChatPage() {
 
     // Reset session
     stop();
-    setMessages([
-      { role: "ai", text: "I'm Zodicognac. I've been studying people — how they attract, fight, fall apart, and fall back in — since before I had words for it. Ask me something real. Add your profiles in the sidebar and I'll ground everything in your actual signs and MBTI." },
-    ]);
+    setMessages([{ role: "ai", text: WELCOME_TEXT }]);
     setInput("");
   }
 
@@ -294,17 +322,28 @@ export default function ChatPage() {
     const ctrl = new AbortController();
     abortRef.current = ctrl;
 
+    // Send full session history (skip the static welcome message)
+    const history = messages
+      .filter((m) => m.role === "user" || (m.role === "ai" && m.text !== messages[0].text))
+      .map((m) => ({ role: m.role, text: m.text }));
+
+    const body: Record<string, unknown> = { message: msg, history };
+    if (profileA) body.person_a = profileA;
+    if (profileB) body.person_b = profileB;
+
+    let appendedPlaceholder = false;
+    let streamedText = "";
+
+    function updateLastAi(patch: Partial<Message>) {
+      setMessages((prev) => {
+        const next = [...prev];
+        next[next.length - 1] = { ...next[next.length - 1], ...patch };
+        return next;
+      });
+    }
+
     try {
-      // Send full session history (skip the static welcome message)
-      const history = messages
-        .filter((m) => m.role === "user" || (m.role === "ai" && m.text !== messages[0].text))
-        .map((m) => ({ role: m.role, text: m.text }));
-
-      const body: Record<string, unknown> = { message: msg, history };
-      if (profileA) body.person_a = profileA;
-      if (profileB) body.person_b = profileB;
-
-      const res = await fetch(`${(await import("@/lib/api")).API}/chat`, {
+      const res = await fetch(`${API}/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -314,17 +353,63 @@ export default function ChatPage() {
         const err = await res.json().catch(() => ({}));
         throw new Error((err as { detail?: string }).detail ?? `HTTP ${res.status}`);
       }
-      const data: ChatResponse = await res.json();
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", text: data.response, intent: data.intent, score: topScore(data.data) },
-      ]);
+
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const raw = line.slice(6).trim();
+          if (!raw) continue;
+          let parsed: { chunk?: string; error?: string; done?: boolean; intent?: string; data?: Record<string, unknown> };
+          try {
+            parsed = JSON.parse(raw);
+          } catch {
+            continue; // ignore a malformed SSE line, don't abort the whole stream
+          }
+
+          if (parsed.error) throw new Error(parsed.error);
+
+          if (typeof parsed.chunk === "string") {
+            streamedText += parsed.chunk;
+            if (!appendedPlaceholder) {
+              appendedPlaceholder = true;
+              setLoading(false); // reveal the message, hide the bouncing dots
+              setMessages((prev) => [...prev, { role: "ai", text: streamedText, streaming: true }]);
+            } else {
+              updateLastAi({ text: streamedText });
+            }
+          }
+
+          if (parsed.done) {
+            updateLastAi({
+              text: streamedText,
+              intent: parsed.intent,
+              score: topScore(parsed.data ?? {}),
+              streaming: false,
+            });
+          }
+        }
+      }
     } catch (e: unknown) {
-      if ((e as Error).name === "AbortError") return; // user stopped — no error message
-      setMessages((prev) => [
-        ...prev,
-        { role: "ai", text: `Sorry, something went wrong: ${(e as Error).message}` },
-      ]);
+      if ((e as Error).name === "AbortError") {
+        if (appendedPlaceholder) updateLastAi({ streaming: false });
+        return; // user stopped — no error message
+      }
+      const errorText = `Sorry, something went wrong: ${(e as Error).message}`;
+      if (appendedPlaceholder) {
+        updateLastAi({ text: errorText, streaming: false });
+      } else {
+        setMessages((prev) => [...prev, { role: "ai", text: errorText }]);
+      }
     } finally {
       abortRef.current = null;
       setLoading(false);
@@ -465,6 +550,12 @@ export default function ChatPage() {
                       <div className="flex-1 min-w-0 space-y-2.5">
                         <div className="text-sm text-zinc-300 leading-[1.75]">
                           <MarkdownText text={msg.text} />
+                          {msg.streaming && (
+                            <span
+                              className="inline-block w-[7px] h-[14px] bg-gold-bright rounded-[1px] align-[-2px] ml-0.5 motion-safe:animate-pulse"
+                              aria-hidden="true"
+                            />
+                          )}
                         </div>
                         {(msg.intent || msg.score) && (
                           <div className="flex items-center gap-1.5 flex-wrap">

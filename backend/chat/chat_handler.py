@@ -227,3 +227,40 @@ def handle_chat(message, person_a=None, person_b=None, history=None):
         "response": reply.response,
         "data": data,
     }
+
+
+# Every template's shared _SYSTEM prefix ends with an explicit
+# "respond ONLY as JSON" instruction, written for handle_chat's
+# schema-constrained call_gemini. Streaming has no schema constraint, so
+# left unchecked the model wraps its reply in ```json {"response": ...}```
+# markdown — this override cancels that instruction for the streamed
+# prompt only; handle_chat's own prompt (and its JSON requirement) is
+# untouched.
+_STREAM_FORMAT_OVERRIDE = (
+    "\n\nOVERRIDE — ignore any earlier instruction to respond as JSON. "
+    "Write your reply as plain markdown prose, exactly as described in the "
+    "FORMAT RULES above. Do not wrap it in a JSON object, a code fence, or "
+    "any other container — output only the reply itself, nothing else."
+)
+
+
+def prepare_chat_stream(message, person_a=None, person_b=None, history=None):
+    """
+    Everything handle_chat does except the final Gemini call: classify intent,
+    run the deterministic engines, and build the prompt. The caller streams
+    the returned prompt via gemini_client.stream_gemini and reports the
+    returned (intent, data) once the stream completes.
+    """
+    intent = classify_intent(message)
+    data = run_engines(intent, person_a, person_b)
+    history_block = _format_history(history)
+    prompt = build_chat_prompt(
+        intent=intent,
+        message=message,
+        person_a=person_a,
+        person_b=person_b,
+        engine_data=data,
+        history_block=history_block,
+    )
+    prompt += _STREAM_FORMAT_OVERRIDE
+    return intent, data, prompt

@@ -18,9 +18,8 @@ from models.schemas import (
     NumerologyInput,
     DiscoverInput,
 )
-from chat.chat_handler import handle_chat
+from chat.chat_handler import handle_chat, prepare_chat_stream
 from agent_controller import (
-    run,
     run_analysis,
     _run_engines_only,
     _build_result,
@@ -218,7 +217,7 @@ def _wrap(fn):
 
 
 # ---------------------------------------------------------------------------
-# Legacy endpoints (kept for backward compatibility with the existing frontend)
+# Health check
 # ---------------------------------------------------------------------------
 
 @app.get("/")
@@ -226,18 +225,8 @@ def root():
     return {"message": "ZodicogAI backend running"}
 
 
-@app.post("/hybrid-analysis")
-def hybrid_analysis(data: HybridInput):
-    return _wrap(lambda: run(HYBRID_ANALYSIS, data.model_dump()))
-
-
-@app.post("/compatibility")
-def compatibility(data: CompatibilityInput):
-    return _wrap(lambda: run(COMPATIBILITY_ANALYSIS, data.model_dump()))
-
-
 # ---------------------------------------------------------------------------
-# New /analyze/* endpoints
+# /analyze/* endpoints
 # ---------------------------------------------------------------------------
 
 @app.post("/analyze/hybrid")
@@ -621,3 +610,23 @@ def chat(data: ChatInput):
         history = [h.model_dump() for h in data.history]
         return handle_chat(data.message, a, b, history)
     return _wrap(_run)
+
+
+@app.post("/chat/stream")
+async def chat_stream(data: ChatInput):
+    """Stream a Zodicognac reply as SSE — same intent/engine pipeline as
+    /chat, but the reply text arrives token-by-token instead of all at once."""
+    a = data.person_a.model_dump() if data.person_a else None
+    b = data.person_b.model_dump() if data.person_b else None
+    history = [h.model_dump() for h in data.history]
+
+    def _gen():
+        try:
+            intent, engine_data, prompt = prepare_chat_stream(data.message, a, b, history)
+            for chunk_text in stream_gemini(prompt):
+                yield f"data: {json.dumps({'chunk': chunk_text})}\n\n"
+            yield f"data: {json.dumps({'done': True, 'intent': intent, 'data': engine_data})}\n\n"
+        except Exception as exc:
+            yield f"data: {json.dumps({'error': str(exc)})}\n\n"
+
+    return StreamingResponse(_gen(), media_type="text/event-stream")

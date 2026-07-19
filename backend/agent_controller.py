@@ -6,13 +6,12 @@ Architecture
   _ENGINE_REGISTRY   : maps engine name → adapter function (ctx → None)
   _PIPELINE_REGISTRY : maps analysis_type → ordered list of engine names
   run_analysis()     : builds ctx, runs the pipeline, calls Gemini, returns result
-  run()              : legacy shim kept for main.py backward compatibility
 
 Every adapter function receives a shared mutable context dict (ctx) and writes
 its output back into it. This lets later engines in the pipeline read the
 results of earlier ones without any explicit argument threading.
 
-main.py only calls run() or run_analysis() — it never touches engines directly.
+main.py only calls run_analysis() — it never touches engines directly.
 """
 
 import concurrent.futures
@@ -40,18 +39,15 @@ from engines.compatibility_engine import (
     modality_interaction,
     compute_zodiac_compatibility_score,
 )
-from engines.emotional_engine import compute_emotional_compatibility
-from engines.romantic_engine import compute_romantic_compatibility
-from engines.sextrology_engine import compute_sextrology
-
-# v2 modular engines
+# v2 modular engines (emotional/romantic/sextrology compatibility ride
+# through these wrappers, which call the v1 compute_* functions above
+# internally — the direct v1 imports are dead here on purpose)
 from core.engines import (
     EmotionalCompatibilityEngine,  EmotionalInput,
     RomanticCompatibilityEngine,   RomanticInput,
     SextrologyCompatibilityEngine, SextrologyInput,
 )
 from core.score_bundle import ScoreBundleBuilder
-from core.explainer import ExplanationContext, GeminiExplainer
 from engines.love_style_engine import compute_love_style_compatibility
 from engines.love_language_engine import compute_love_language_compatibility
 from engines.relationship_intelligence import compute_relationship_intelligence
@@ -70,7 +66,7 @@ from insight_engine import generate_hook
 from gemini_client import call_gemini, build_prompt
 from models.schemas import (
     HybridAnalysis, CompatibilityAnalysis, SextrologyAnalysis, SextrologySoloAnalysis,
-    RelationshipIntelligenceResult, ZodiacArticle,
+    ZodiacArticle,
     ColorSingleAnalysis, ColorPairAnalysis,
     NumerologySingleAnalysis, NumerologyPairAnalysis,
     ArchetypeAnalysis, PatternAnalysis, AttractionAnalysis, RecommendationAnalysis,
@@ -507,46 +503,6 @@ def run_analysis(
         _result_cache[cache_key] = result
 
     return result
-
-
-# ---------------------------------------------------------------------------
-# Legacy shim — kept so main.py does not need to change
-# ---------------------------------------------------------------------------
-
-def run(request_type: str, params: dict) -> dict:
-    """
-    Translate legacy (request_type, params) calls into run_analysis().
-    main.py calls this; it should never be called from new code.
-    """
-    if request_type == HYBRID_ANALYSIS:
-        return run_analysis(
-            HYBRID_ANALYSIS,
-            person_a_data={
-                "name":  params.get("name", "This person"),
-                "day":   params["day"],
-                "month": params["month"],
-                "mbti":  params["mbti"],
-            },
-        )
-
-    if request_type == COMPATIBILITY_ANALYSIS:
-        return run_analysis(
-            COMPATIBILITY_ANALYSIS,
-            person_a_data={
-                "name":  params.get("person_a_name", "Person A"),
-                "day":   params["person_a_day"],
-                "month": params["person_a_month"],
-                "mbti":  params["person_a_mbti"],
-            },
-            person_b_data={
-                "name":  params.get("person_b_name", "Person B"),
-                "day":   params["person_b_day"],
-                "month": params["person_b_month"],
-                "mbti":  params["person_b_mbti"],
-            },
-        )
-
-    raise ValueError(f"Unknown request type: '{request_type}'")
 
 
 # ---------------------------------------------------------------------------
