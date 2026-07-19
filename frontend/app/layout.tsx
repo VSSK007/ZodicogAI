@@ -35,6 +35,7 @@ export const metadata = {
   },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/pwa-icon-512", sizes: "512x512", type: "image/png" }],
   },
   other: {
     "google-site-verification": "ifMWF0ii4Xf5mX8CWKT3-Uh391y0cGWaGk5z86J4Goo",
