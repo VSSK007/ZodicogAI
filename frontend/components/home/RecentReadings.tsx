@@ -20,11 +20,18 @@ export default function RecentReadings() {
 
   return (
     <section className="max-w-6xl mx-auto px-6 pt-12">
-      <div className="flex items-center gap-2 mb-3 text-ink-muted">
-        <History className="size-3.5" aria-hidden="true" />
-        <span className="font-display font-extrabold text-[10.5px] tracking-[0.22em] uppercase">
-          Your recent readings
-        </span>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2 text-ink-muted">
+          <History className="size-3.5" aria-hidden="true" />
+          <span className="font-display font-extrabold text-[10.5px] tracking-[0.22em] uppercase">
+            Your recent readings
+          </span>
+        </div>
+        {entries.length > 5 && (
+          <Link href="/readings" className="text-xs font-semibold text-ink-muted hover:text-accent-bright transition-colors">
+            View all →
+          </Link>
+        )}
       </div>
       <div className="flex flex-wrap gap-2">
         {entries.slice(0, 5).map((e) => (
