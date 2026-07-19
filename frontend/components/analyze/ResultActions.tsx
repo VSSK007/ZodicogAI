@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Check, Link as LinkIcon } from "lucide-react";
 import ZodicognacMark from "@/components/ZodicognacMark";
 import { saveReading } from "@/lib/history";
+import { trackAnalysisCompleted, trackShareLinkCopied } from "@/lib/analytics";
 
 export default function ResultActions({
   analysisType,
@@ -29,6 +30,7 @@ export default function ResultActions({
   useEffect(() => {
     if (saved.current || !payload) return;
     saved.current = true;
+    trackAnalysisCompleted(analysisType);
     saveReading(analysisType, title, payload).then(setShareId);
   }, [analysisType, title, payload]);
 
@@ -37,6 +39,7 @@ export default function ResultActions({
     try {
       await navigator.clipboard.writeText(`${window.location.origin}/r/${shareId}`);
       setCopied(true);
+      trackShareLinkCopied(analysisType);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Clipboard unavailable — leave the button as-is.
