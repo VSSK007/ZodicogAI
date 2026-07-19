@@ -1,33 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { EASE } from "@/lib/motion";
-import ScoreRing from "@/components/ScoreRing";
-import MetricCard from "@/components/MetricCard";
-import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
+import TraitRadar from "@/components/TraitRadar";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
-import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
-
-function getSign(month: number, day: number): string {
-  const d = month * 100 + day;
-  if (d >= 321 && d <= 419) return "aries";
-  if (d >= 420 && d <= 520) return "taurus";
-  if (d >= 521 && d <= 620) return "gemini";
-  if (d >= 621 && d <= 722) return "cancer";
-  if (d >= 723 && d <= 822) return "leo";
-  if (d >= 823 && d <= 922) return "virgo";
-  if (d >= 923 && d <= 1022) return "libra";
-  if (d >= 1023 && d <= 1121) return "scorpio";
-  if (d >= 1122 && d <= 1221) return "sagittarius";
-  if (d >= 1222 || d <= 119) return "capricorn";
-  if (d >= 120 && d <= 218) return "aquarius";
-  return "pisces";
-}
+import { getSign } from "@/lib/zodiac";
+import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";
+import ResultActions from "@/components/analyze/ResultActions";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { AIHeader } from "@/components/ui/AIHeader";
+import { DualBar } from "@/components/ui/DualBar";
+import ScoreRing from "@/components/ScoreRing";
+import MetricCard from "@/components/MetricCard";
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
 
@@ -61,52 +49,6 @@ const LANG_LABELS: Record<string, string> = {
   physical_touch:       "Physical Touch",
 };
 
-const CARD = "bg-white/[0.03] ring-1 ring-white/10 rounded-2xl overflow-hidden";
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-      <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
-    </div>
-  );
-}
-
-function DualBar({ label, aVal, bVal, i }: { label: string; aVal: number; bVal: number; i: number }) {
-  return (
-    <motion.div
-      className="py-2.5 border-b border-white/[0.04] last:border-0 rounded-lg px-2 -mx-2"
-      whileHover={{ x: 4, backgroundColor: "rgba(255,255,255,0.02)" }}
-      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-    >
-      <div className="flex items-center justify-between text-xs mb-2">
-        <span className="text-zinc-300">{label}</span>
-        <span className="text-zinc-500 tabular-nums">{aVal.toFixed(0)} / {bVal.toFixed(0)}</span>
-      </div>
-      <div className="space-y-1">
-        <div className="relative h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-          <motion.div
-            className="absolute inset-y-0 left-0 rounded-full"
-            style={{ background: "#a78bfa" }}
-            initial={{ width: 0 }}
-            animate={{ width: `${aVal}%` }}
-            transition={{ duration: 0.7, delay: i * 0.07, ease: "easeOut" }}
-          />
-        </div>
-        <div className="relative h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-          <motion.div
-            className="absolute inset-y-0 left-0 rounded-full"
-            style={{ background: "#2dd4bf" }}
-            initial={{ width: 0 }}
-            animate={{ width: `${bVal}%` }}
-            transition={{ duration: 0.7, delay: i * 0.07 + 0.05, ease: "easeOut" }}
-          />
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
 export default function LoveLanguagePage() {
   const [a, setA] = useState<PersonData>(emptyPerson());
   const [b, setB] = useState<PersonData>(emptyPerson());
@@ -129,135 +71,101 @@ export default function LoveLanguagePage() {
   const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
 
   return (
-    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-4xl mx-auto">
-      <div className="mb-10">
-        <Eyebrow>Analysis</Eyebrow>
-        <h1 className="text-3xl font-bold tracking-tight">Love Language</h1>
-        <p className="text-zinc-500 mt-1 text-sm">Words, Acts, Gifts, Time, Touch alignment</p>
-      </div>
-
-      {!result && (<>
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <PersonForm label="Person A" value={a} onChange={setA} />
-          <PersonForm label="Person B" value={b} onChange={setB} />
-        </div>
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-        <button
-          onClick={handleSubmit} disabled={loading}
-          className="w-full py-3.5 md:py-3 rounded-control text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
-        >
-          {loading ? "Analyzing…" : "Analyze Love Languages"}
-        </button>
-
-        {loading && <AnalyzeSkeleton variant="pair" />}
-      </>)}
-
-      <AnimatePresence>
-        {result && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-5">
-
-            <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+    <AnalyzePageShell
+      eyebrow="Analysis"
+      title="Love Language"
+      description="Words, Acts, Gifts, Time, Touch alignment."
+      hasResult={!!result}
+      loading={loading}
+      skeletonVariant="pair"
+      error={error}
+      onRetry={handleSubmit}
+      onReset={() => setResult(null)}
+      form={
+        <>
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <PersonForm label="Person A" value={a} onChange={setA} />
+            <PersonForm label="Person B" value={b} onChange={setB} />
+          </div>
+          <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full">
+            {loading ? "Analyzing…" : "Analyze Love Languages"}
+          </Button>
+        </>
+      }
+      result={
+        result && (
+          <div className="space-y-4 md:space-y-5">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <ResultActions
+                analysisType="love_language_analysis"
+                title={`${names.a} × ${names.b} Love Language Match`}
+                payload={result}
+              />
+              <ShareImageButton data={{
+                type: "compat",
+                nameA: names.a, nameB: names.b,
+                signA: getSign(a.day, a.month), symbolA: SIGN_SYMBOL[getSign(a.day, a.month)] ?? "✦", colorA: SIGN_COLOR[getSign(a.day, a.month)] ?? "#f59e0b",
+                signB: getSign(b.day, b.month), symbolB: SIGN_SYMBOL[getSign(b.day, b.month)] ?? "✦", colorB: SIGN_COLOR[getSign(b.day, b.month)] ?? "#818cf8",
+                score: result.love_language_compatibility_score,
+              }} />
+            </div>
 
             {/* Score + primary languages */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: EASE }}
-              className={CARD}
-            >
-              <div className="h-0.5 bg-gradient-to-r from-[#14b8a6]/60 via-[#14b8a6]/20 to-transparent" />
-              <div className="p-5 md:p-8">
-                <div className="flex justify-end mb-4">
-                  <ShareImageButton data={{
-                    type: "compat",
-                    nameA: names.a, nameB: names.b,
-                    signA: getSign(a.month, a.day), symbolA: SIGN_SYMBOL[getSign(a.month, a.day)] ?? "✦", colorA: SIGN_COLOR[getSign(a.month, a.day)] ?? "#f59e0b",
-                    signB: getSign(b.month, b.day), symbolB: SIGN_SYMBOL[getSign(b.month, b.day)] ?? "✦", colorB: SIGN_COLOR[getSign(b.month, b.day)] ?? "#818cf8",
-                    score: result.love_language_compatibility_score,
-                  }} />
-                </div>
-                <div className="flex flex-col md:flex-row items-center gap-5 md:gap-8">
-                <ScoreRing score={result.love_language_compatibility_score} size={160} label="Language Alignment" color="#14b8a6" />
+            <Card className="p-5 md:p-8">
+              <div className="flex flex-col md:flex-row items-center gap-5 md:gap-8">
+                <ScoreRing score={result.love_language_compatibility_score} size={160} label="Language Alignment" color="var(--color-accent-bright)" />
                 <div className="grid grid-cols-2 gap-3 flex-1">
                   <MetricCard label={`${names.a} Primary`} value={result.a_love_language.primary_language.replace(/_/g, " ")} unit="" accent="teal" />
                   <MetricCard label={`${names.b} Primary`} value={result.b_love_language.primary_language.replace(/_/g, " ")} unit="" accent="teal" />
                 </div>
-                </div>
               </div>
-            </motion.div>
+            </Card>
 
             {/* Distribution */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
-              className={CARD}
-            >
-              <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
-              <div className="p-4 md:p-6">
-                <h2 className="text-sm font-semibold text-zinc-300 mb-1">Love Language Distribution</h2>
-                <div className="flex gap-4 mb-4 text-xs text-zinc-400">
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#a78bfa] inline-block" />{names.a}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-[#2dd4bf] inline-block" />{names.b}
-                  </span>
-                </div>
-                <div>
-                  {LANG_KEYS.map((k, i) => (
-                    <DualBar
-                      key={k}
-                      label={LANG_LABELS[k]}
-                      aVal={result.a_love_language[k]}
-                      bVal={result.b_love_language[k]}
-                      i={i}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Radar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
-              className={CARD}
-            >
-              <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
-              <div className="p-4 md:p-6">
-                <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
-                <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
-              </div>
-            </motion.div>
-
-            {/* AI Interpretation */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
-              className={CARD}
-            >
-              <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
-                <div className="relative w-2 h-2 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
-                  <div className="w-2 h-2 rounded-full bg-accent" />
-                </div>
-                <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
-                  Gemini 2.5 Flash
+            <Card className="p-4 md:p-6">
+              <h2 className="text-sm font-semibold text-ink-secondary mb-1">Love Language Distribution</h2>
+              <div className="flex gap-4 mb-4 text-xs text-ink-muted">
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-accent-bright inline-block" />{names.a}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="size-2 rounded-full bg-gold-bright inline-block" />{names.b}
                 </span>
               </div>
+              <div>
+                {LANG_KEYS.map((k, i) => (
+                  <DualBar
+                    key={k}
+                    label={LANG_LABELS[k]}
+                    aVal={result.a_love_language[k]}
+                    bVal={result.b_love_language[k]}
+                    i={i}
+                  />
+                ))}
+              </div>
+            </Card>
+
+            {/* Radar */}
+            <Card className="p-4 md:p-6">
+              <h2 className="text-sm font-semibold text-ink-secondary mb-4">Trait Comparison</h2>
+              <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
+            </Card>
+
+            {/* AI Interpretation */}
+            <Card>
+              <AIHeader />
               <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                 {(["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const).map((key) => (
-                  <div key={key} className="border-l-2 border-gold/40 md:border-teal-500/40 pl-4">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
+                  <div key={key} className="border-l-2 border-gold/40 pl-4">
+                    <p className="text-xs text-ink-muted uppercase tracking-wider mb-1">{key.replace(/_/g, " ")}</p>
+                    <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(result.analysis[key])}</p>
                   </div>
                 ))}
               </div>
-            </motion.div>
-
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
+            </Card>
+          </div>
+        )
+      }
+    />
   );
 }

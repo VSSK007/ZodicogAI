@@ -10,6 +10,7 @@ import PersonForm from "@/components/PersonForm";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import ShareImageButton from "@/components/ShareImageButton";
+import ResultActions from "@/components/analyze/ResultActions";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 
 function getSign(month: number, day: number): string {
@@ -249,7 +250,12 @@ export default function SextrologyPage() {
                 >
                   <div className="h-0.5 bg-gradient-to-r from-[#6366f1]/60 via-[#6366f1]/20 to-transparent" />
                   <div className="p-5 md:p-8">
-                    <div className="flex justify-end mb-4">
+                    <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+                      <ResultActions
+                        analysisType="sextrology_analysis"
+                        title={`${names.a} × ${names.b} Sextrology`}
+                        payload={pr}
+                      />
                       <ShareImageButton data={{
                         type: "compat",
                         nameA: names.a, nameB: names.b,
@@ -322,11 +328,16 @@ export default function SextrologyPage() {
                 >
                   <AIHeader />
                   <div className="p-4 md:p-6">
-                    <div className="flex items-center justify-between mb-5">
+                    <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
                       <h2 className="text-sm font-semibold text-zinc-300">Sextrology Profile</h2>
-                      <div className="flex gap-1.5">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <span className="text-[11px] px-2 py-0.5 rounded-full bg-gold/10 md:bg-indigo-500/10 text-gold-bright md:text-indigo-300 border border-gold/20 md:border-indigo-500/20">{sr.sign}</span>
                         <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 border border-white/[0.07]">{sr.mbti_type}</span>
+                        <ResultActions
+                          analysisType="sextrology_solo_analysis"
+                          title={`${sr.name}'s Sextrology Profile`}
+                          payload={sr}
+                        />
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 gap-5">

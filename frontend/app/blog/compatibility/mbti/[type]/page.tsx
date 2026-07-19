@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { MBTI_DATA, ALL_TYPES, ROLE_COLOR } from "@/lib/mbti-data";
-import { renderMd } from "@/lib/renderMd";
+import { Breadcrumb, AmbientGlow, ArticleSection, CtaBand } from "@/components/blog/editorial";
 
 export const revalidate = false;
 
@@ -43,83 +43,62 @@ export default async function MbtiCompatPage({ params }: { params: Promise<{ typ
   } catch {}
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <Link href="/blog/compatibility" className="hover:text-white transition-colors">Compatibility</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{key}</span>
-      </nav>
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
+      <AmbientGlow hex={color} />
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { href: "/blog/compatibility", label: "Compatibility" }, { label: key }]} />
 
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-14 h-14 rounded-xl flex items-center justify-center text-xl font-black"
-            style={{ background: `${color}18`, color, border: `1px solid ${color}30` }}>
+      <header className="mb-10">
+        <div className="flex items-center gap-5">
+          <div className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card font-mono font-bold text-xl md:text-2xl"
+            style={{ background: `${color}14`, color, border: `1px solid ${color}38` }}>
             {key}
           </div>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{key} Compatibility</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">{data.nickname} · {data.role}</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">{key} Compatibility</h1>
+            <p className="text-ink-secondary mt-1.5">{data.nickname} <span className="text-ink-faint mx-1">·</span> {data.role}</p>
           </div>
         </div>
-      </div>
+      </header>
 
       {article ? (
-        <div className="space-y-8">
-          {[["Overview", article.overview], ["Relationship Style", article.relationship_style]].map(([title, text]) => (
-            <section key={title as string}>
-              <h2 className="text-lg font-semibold mb-3" style={{ color }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
-            </section>
-          ))}
+        <div className="space-y-9">
+          <ArticleSection title="Overview" text={article.overview} />
+          <ArticleSection title="Relationship style" text={article.relationship_style} />
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-3">Best Matches</h2>
-              {(article.best_matches ?? []).map(m => (
-                <div key={m} className="flex gap-2 items-center text-sm text-zinc-300 mb-1.5">
+            <div className="rounded-card border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
+              <h2 className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] text-emerald-400 mb-3">Best Matches</h2>
+              {(article.best_matches ?? []).map((m) => (
+                <div key={m} className="flex gap-2 items-center text-sm text-ink-secondary mb-1.5">
                   <span className="text-emerald-500">✓</span>
-                  <Link href={`/blog/compatibility/mbti/${m.toLowerCase()}`} className="hover:text-white transition-colors font-mono">{m}</Link>
+                  <Link href={`/blog/compatibility/mbti/${m.toLowerCase()}`} className="hover:text-ink transition-colors font-mono">{m}</Link>
                 </div>
               ))}
             </div>
-            <div className="rounded-xl border border-red-500/20 bg-red-500/[0.04] p-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-red-400 mb-3">Challenging Matches</h2>
-              {(article.challenging_matches ?? []).map(m => (
-                <div key={m} className="flex gap-2 items-center text-sm text-zinc-300 mb-1.5">
+            <div className="rounded-card border border-red-500/20 bg-red-500/[0.04] p-4">
+              <h2 className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] text-red-400 mb-3">Challenging Matches</h2>
+              {(article.challenging_matches ?? []).map((m) => (
+                <div key={m} className="flex gap-2 items-center text-sm text-ink-secondary mb-1.5">
                   <span className="text-red-500">✗</span>
-                  <Link href={`/blog/compatibility/mbti/${m.toLowerCase()}`} className="hover:text-white transition-colors font-mono">{m}</Link>
+                  <Link href={`/blog/compatibility/mbti/${m.toLowerCase()}`} className="hover:text-ink transition-colors font-mono">{m}</Link>
                 </div>
               ))}
             </div>
           </div>
 
-          {[
-            ["What They Need", article.what_they_need],
-            ["Communication in Love", article.communication_in_love],
-            ["Dealbreakers", article.dealbreakers],
-            ["Growth in Relationships", article.growth_in_relationships],
-          ].map(([title, text]) => (
-            <section key={title as string}>
-              <h2 className="text-lg font-semibold mb-3" style={{ color }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
-            </section>
-          ))}
-
-          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-            <p className="text-zinc-300 mb-4 text-sm">Run a full compatibility analysis</p>
-            <Link href="/analyze/romantic"
-              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-              Compatibility Analysis
-            </Link>
-          </div>
+          <ArticleSection title="What they need" text={article.what_they_need} />
+          <ArticleSection title="Communication in love" text={article.communication_in_love} />
+          <ArticleSection title="Dealbreakers" text={article.dealbreakers} />
+          <ArticleSection title="Growth in relationships" text={article.growth_in_relationships} />
         </div>
       ) : (
-        <p className="text-zinc-500 text-sm">Article unavailable — please try again later.</p>
+        <p className="text-ink-muted text-sm">Article unavailable — please try again later.</p>
       )}
+
+      <CtaBand
+        text="Run a full compatibility analysis"
+        actions={[{ href: "/analyze/romantic", label: "Compatibility Analysis", primary: true }]}
+      />
     </main>
   );
 }

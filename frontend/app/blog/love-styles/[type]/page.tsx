@@ -1,17 +1,18 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { renderMd } from "@/lib/renderMd";
+import { Flame, Leaf, Scale, Dice5, Wind, Sparkles } from "lucide-react";
+import { Star4 } from "@/components/ui/glyphs";
+import { Breadcrumb, AmbientGlow, ArticleSection, CtaBand } from "@/components/blog/editorial";
 
 export const revalidate = false;
 
-const STYLES: Record<string, { label: string; emoji: string; color: string }> = {
-  eros:   { label: "Eros",   emoji: "🔥", color: "#f87171" },
-  storge: { label: "Storge", emoji: "🌿", color: "#34d399" },
-  pragma: { label: "Pragma", emoji: "⚖️", color: "#60a5fa" },
-  ludus:  { label: "Ludus",  emoji: "🎲", color: "#fbbf24" },
-  mania:  { label: "Mania",  emoji: "🌪", color: "#a78bfa" },
-  agape:  { label: "Agape",  emoji: "✨", color: "#fb923c" },
+const STYLES: Record<string, { label: string; icon: typeof Flame; color: string }> = {
+  eros:   { label: "Eros",   icon: Flame,    color: "#f87171" },
+  storge: { label: "Storge", icon: Leaf,     color: "#34d399" },
+  pragma: { label: "Pragma", icon: Scale,    color: "#60a5fa" },
+  ludus:  { label: "Ludus",  icon: Dice5,    color: "#edcb7e" },
+  mania:  { label: "Mania",  icon: Wind,     color: "#a78bfa" },
+  agape:  { label: "Agape",  icon: Sparkles, color: "#fb923c" },
 };
 
 export async function generateStaticParams() {
@@ -47,71 +48,57 @@ export default async function LoveStyleArticlePage({ params }: { params: Promise
   } catch {}
 
   const c = meta.color;
+  const Icon = meta.icon;
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <Link href="/blog/love-styles" className="hover:text-white transition-colors">Love Styles</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{meta.label}</span>
-      </nav>
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
+      <AmbientGlow hex={c} />
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { href: "/blog/love-styles", label: "Love Styles" }, { label: meta.label }]} />
 
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-5xl">{meta.emoji}</span>
+      <header className="mb-10">
+        <div className="flex items-center gap-5">
+          <span className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card border" style={{ color: c, borderColor: `${c}40`, background: `${c}12` }}>
+            <Icon className="size-8" />
+          </span>
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{meta.label}</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">Love Style</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">{meta.label}</h1>
+            <p className="text-ink-secondary mt-1.5">Love Style</p>
           </div>
         </div>
-      </div>
+      </header>
 
       {article ? (
-        <div className="space-y-8">
-          <section>
-            <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>Overview</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.overview)}</p>
-          </section>
+        <div className="space-y-9">
+          <ArticleSection title="Overview" text={article.overview} />
 
-          <div className="rounded-xl border bg-white/[0.02] p-5" style={{ borderColor: `${c}25` }}>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: c }}>Key Characteristics</h2>
+          <div className="rounded-card border p-5" style={{ borderColor: `${c}30`, background: `${c}0a` }}>
+            <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.18em] uppercase mb-3" style={{ color: c }}>
+              <Star4 size={9} />
+              Key characteristics
+            </p>
             <ul className="space-y-2">
               {(article.characteristics ?? []).map((s, i) => (
-                <li key={i} className="flex gap-2 text-sm text-zinc-300">
+                <li key={i} className="flex gap-2.5 text-[14.5px] text-ink-secondary leading-relaxed">
                   <span style={{ color: c }} className="shrink-0">→</span>{s}
                 </li>
               ))}
             </ul>
           </div>
 
-          {[
-            ["In Relationships", article.in_relationships],
-            ["Shadow Side", article.shadow_side],
-            ["Compatibility with Other Styles", article.compatibility],
-            ["Growth Path", article.growth_path],
-            ["How to Recognize This Style", article.recognizing_this_style],
-          ].map(([title, text]) => (
-            <section key={title as string}>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
-            </section>
-          ))}
-
-          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-            <p className="text-zinc-300 mb-4 text-sm">Discover your love style through analysis</p>
-            <Link href="/analyze/love-style"
-              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-              Find Your Love Style
-            </Link>
-          </div>
+          <ArticleSection title="In relationships" text={article.in_relationships} />
+          <ArticleSection title="Shadow side" text={article.shadow_side} />
+          <ArticleSection title="Compatibility with other styles" text={article.compatibility} />
+          <ArticleSection title="Growth path" text={article.growth_path} />
+          <ArticleSection title="How to recognize this style" text={article.recognizing_this_style} />
         </div>
       ) : (
-        <p className="text-zinc-500 text-sm">Article unavailable — please try again later.</p>
+        <p className="text-ink-muted text-sm">Article unavailable — please try again later.</p>
       )}
+
+      <CtaBand
+        text="Discover your love style through analysis"
+        actions={[{ href: "/analyze/love-style", label: "Find Your Love Style", primary: true }]}
+      />
     </main>
   );
 }

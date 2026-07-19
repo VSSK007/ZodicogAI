@@ -12,6 +12,7 @@ import ConstellationStream from "@/components/ConstellationStream";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody } from "@/lib/api";
 import StreamPending from "@/components/analyze/StreamPending";
+import ResultActions from "@/components/analyze/ResultActions";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 
@@ -182,7 +183,12 @@ export default function RomanticPage() {
             >
               <div className="h-0.5 bg-gradient-to-r from-[#f43f5e]/60 via-[#f43f5e]/20 to-transparent" />
               <div className="p-5 md:p-8">
-                <div className="flex justify-end mb-4">
+                <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+                  <ResultActions
+                    analysisType="romantic_compatibility"
+                    title={`${names.a} × ${names.b} Romantic Compatibility`}
+                    payload={result}
+                  />
                   <ShareImageButton data={{
                     type: "compat",
                     nameA: names.a, nameB: names.b,

@@ -11,6 +11,9 @@ import TraitRadar from "@/components/TraitRadar";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { ZODIAC_COLORS } from "@/lib/colors";
 import ShareImageButton from "@/components/ShareImageButton";
+import ResultActions from "@/components/analyze/ResultActions";
+import { SimpleForm, emptySimple, type SimplePersonState } from "@/components/ui/SimpleForm";
+import { Button } from "@/components/ui/Button";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -102,8 +105,6 @@ const ALL_SIGN_SYMBOLS: Record<string, string> = {
   Libra:"♎", Scorpio:"♏", Sagittarius:"♐", Capricorn:"♑", Aquarius:"♒", Pisces:"♓",
 };
 
-const INPUT_SMALL = "bg-white/[0.04] md:bg-zinc-900 border border-gold/20 md:border-white/10 px-3 py-3 md:py-2 rounded-lg text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/50 md:focus:border-white/30 transition-colors font-[inherit]";
-
 // ---------------------------------------------------------------------------
 // Section component
 // ---------------------------------------------------------------------------
@@ -124,10 +125,7 @@ function Section({ title, children, accent }: { title: string; children: React.R
 function ZodiacPageInner() {
   const searchParams = useSearchParams();
 
-  const [name, setName]     = useState("");
-  const [day, setDay]       = useState("");
-  const [month, setMonth]   = useState("");
-  const [gender, setGender] = useState<"M" | "F">("M");
+  const [person, setPerson] = useState<SimplePersonState>(emptySimple());
   const [result, setResult] = useState<ZodiacResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState("");
@@ -162,11 +160,11 @@ function ZodiacPageInner() {
   }, [paramName, paramDay, paramMonth]);
 
   async function handleSubmit() {
-    const d = Number(day), m = Number(month);
-    if (!name.trim())                          return setError("Enter a name.");
-    if (!day || d < 1 || d > 31)               return setError("Day must be 1–31.");
-    if (!month || m < 1 || m > 12)             return setError("Month must be 1–12.");
-    await fetchZodiac(name.trim(), d, m);
+    const d = Number(person.day), m = Number(person.month);
+    if (!person.name.trim())                   return setError("Enter a name.");
+    if (!person.day || d < 1 || d > 31)        return setError("Day must be 1–31.");
+    if (!person.month || m < 1 || m > 12)      return setError("Month must be 1–12.");
+    await fetchZodiac(person.name.trim(), d, m);
   }
 
   const z      = result?.zodiac_profile;
@@ -203,46 +201,16 @@ function ZodiacPageInner() {
 
       {/* Input card */}
       {showForm && (
-        <div className="bg-white/[0.03] p-5 rounded-2xl ring-1 ring-gold/20 md:ring-white/10 space-y-3 mb-4">
-          <div className="flex gap-2 items-center border-b border-gold/20 md:border-white/10 pb-2.5">
-            <input
-              className="flex-1 bg-transparent text-base font-medium placeholder:text-zinc-600 outline-none"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <div className="flex rounded-lg overflow-hidden border border-gold/25 md:border-white/[0.08] text-sm font-medium w-16 shrink-0">
-              {(["M", "F"] as const).map((g) => (
-                <button
-                  key={g}
-                  type="button"
-                  onClick={() => setGender(g)}
-                  className={`flex-1 py-1.5 transition-colors tap-highlight-none ${
-                    gender === g
-                      ? "bg-gold text-black"
-                      : "bg-white/[0.04] md:bg-zinc-900 text-zinc-500 hover:text-white"
-                  }`}
-                >
-                  {g === "M" ? "♂" : "♀"}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <input className={`w-20 md:w-16 ${INPUT_SMALL} text-center`} placeholder="Day" type="number" min={1} max={31} value={day} onChange={(e) => setDay(e.target.value)} />
-            <input className={`w-20 md:w-16 ${INPUT_SMALL} text-center`} placeholder="Mo" type="number" min={1} max={12} value={month} onChange={(e) => setMonth(e.target.value)} />
-          </div>
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+        <div className="mb-4">
+          <SimpleForm label="Name" value={person} onChange={setPerson} />
+          {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
         </div>
       )}
 
       {showForm && (
-        <button
-          onClick={handleSubmit} disabled={loading}
-          className="w-full py-3.5 md:py-3 rounded-control text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition min-h-[48px] mb-8"
-        >
+        <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full mb-8">
           {loading ? "Reading the stars…" : "Generate Zodiac Profile"}
-        </button>
+        </Button>
       )}
 
       {loading && <AnalyzeSkeleton variant="solo" />}
@@ -256,9 +224,12 @@ function ZodiacPageInner() {
             transition={{ duration: 0.35 }}
             className="space-y-8"
           >
-            <div className="flex items-center justify-between">
-              <button onClick={() => { setResult(null); setShowForm(true); }} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
-              <ShareImageButton data={{ type: "zodiac", name: result.name, sign: z.sign, symbol: meta.symbol, signColor: theme.accent, element: z.element, modality: z.modality }} />
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <button onClick={() => { setResult(null); setShowForm(true); }} className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try another reading</button>
+              <div className="flex items-center gap-2">
+                <ResultActions analysisType="zodiac_article" title={`${result.name}'s ${z.sign} Profile`} payload={result} />
+                <ShareImageButton data={{ type: "zodiac", name: result.name, sign: z.sign, symbol: meta.symbol, signColor: theme.accent, element: z.element, modality: z.modality }} />
+              </div>
             </div>
 
             {/* ── Hero ── */}

@@ -1,16 +1,17 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { renderMd } from "@/lib/renderMd";
+import { MessageCircle, Wrench, Gift, Clock, Hand } from "lucide-react";
+import { Star4 } from "@/components/ui/glyphs";
+import { Breadcrumb, AmbientGlow, ArticleSection, CtaBand } from "@/components/blog/editorial";
 
 export const revalidate = false;
 
-const LOVE_LANGS: Record<string, { label: string; emoji: string; color: string }> = {
-  "words-of-affirmation": { label: "Words of Affirmation", emoji: "💬", color: "#a78bfa" },
-  "acts-of-service":      { label: "Acts of Service",       emoji: "🛠", color: "#34d399" },
-  "receiving-gifts":      { label: "Receiving Gifts",       emoji: "🎁", color: "#f472b6" },
-  "quality-time":         { label: "Quality Time",          emoji: "⏳", color: "#60a5fa" },
-  "physical-touch":       { label: "Physical Touch",        emoji: "🤝", color: "#fb923c" },
+const LOVE_LANGS: Record<string, { label: string; icon: typeof MessageCircle; color: string }> = {
+  "words-of-affirmation": { label: "Words of Affirmation", icon: MessageCircle, color: "#a78bfa" },
+  "acts-of-service":      { label: "Acts of Service",       icon: Wrench,       color: "#34d399" },
+  "receiving-gifts":      { label: "Receiving Gifts",       icon: Gift,         color: "#f472b6" },
+  "quality-time":         { label: "Quality Time",          icon: Clock,        color: "#60a5fa" },
+  "physical-touch":       { label: "Physical Touch",        icon: Hand,         color: "#fb923c" },
 };
 
 export async function generateStaticParams() {
@@ -47,71 +48,58 @@ export default async function LoveLangArticlePage({ params }: { params: Promise<
   } catch {}
 
   const c = meta.color;
+  const Icon = meta.icon;
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <Link href="/blog/love-languages" className="hover:text-white transition-colors">Love Languages</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{meta.label}</span>
-      </nav>
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
+      <AmbientGlow hex={c} />
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { href: "/blog/love-languages", label: "Love Languages" }, { label: meta.label }]} />
 
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-5xl">{meta.emoji}</span>
+      <header className="mb-10">
+        <div className="flex items-center gap-5">
+          <span className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card border" style={{ color: c, borderColor: `${c}40`, background: `${c}12` }}>
+            <Icon className="size-8" />
+          </span>
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{meta.label}</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">Love Language</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">{meta.label}</h1>
+            <p className="text-ink-secondary mt-1.5">Love Language</p>
           </div>
         </div>
-      </div>
+      </header>
 
       {article ? (
-        <div className="space-y-8">
-          <Section title="Overview" text={article.overview} color={c} />
-          <Section title="How to Express It" text={article.how_to_express} color={c} />
-          <Section title="How to Receive It" text={article.how_to_receive} color={c} />
+        <div className="space-y-9">
+          <ArticleSection title="Overview" text={article.overview} />
+          <ArticleSection title="How to express it" text={article.how_to_express} />
+          <ArticleSection title="How to receive it" text={article.how_to_receive} />
 
-          <div className="rounded-xl border bg-white/[0.02] p-5" style={{ borderColor: `${c}25` }}>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: c }}>Signs You Need This</h2>
+          <div className="rounded-card border p-5" style={{ borderColor: `${c}30`, background: `${c}0a` }}>
+            <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.18em] uppercase mb-3" style={{ color: c }}>
+              <Star4 size={9} />
+              Signs you need this
+            </p>
             <ul className="space-y-2">
               {(article.signs_you_need_this ?? []).map((s, i) => (
-                <li key={i} className="flex gap-2 text-sm text-zinc-300">
+                <li key={i} className="flex gap-2.5 text-[14.5px] text-ink-secondary leading-relaxed">
                   <span style={{ color: c }} className="shrink-0 mt-0.5">✓</span>{s}
                 </li>
               ))}
             </ul>
           </div>
 
-          <Section title="Common Mistakes" text={article.common_mistakes} color={c} />
-          <Section title="In Relationships" text={article.in_relationships} color={c} />
-          <Section title="Compatibility with Other Languages" text={article.compatibility_notes} color={c} />
-          <Section title="Growth Tips" text={article.growth_tips} color={c} />
-
-          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-            <p className="text-zinc-300 mb-4 text-sm">Discover your love language through analysis</p>
-            <Link href="/analyze/love-language"
-              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-              Find Your Love Language
-            </Link>
-          </div>
+          <ArticleSection title="Common mistakes" text={article.common_mistakes} />
+          <ArticleSection title="In relationships" text={article.in_relationships} />
+          <ArticleSection title="Compatibility with other languages" text={article.compatibility_notes} />
+          <ArticleSection title="Growth tips" text={article.growth_tips} />
         </div>
       ) : (
-        <p className="text-zinc-500 text-sm">Article unavailable — please try again later.</p>
+        <p className="text-ink-muted text-sm">Article unavailable — please try again later.</p>
       )}
-    </main>
-  );
-}
 
-function Section({ title, text, color }: { title: string; text: string; color: string }) {
-  return (
-    <section>
-      <h2 className="text-lg font-semibold mb-3" style={{ color }}>{title}</h2>
-      <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text)}</p>
-    </section>
+      <CtaBand
+        text="Discover your love language through analysis"
+        actions={[{ href: "/analyze/love-language", label: "Find Your Love Language", primary: true }]}
+      />
+    </main>
   );
 }

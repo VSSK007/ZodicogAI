@@ -2,24 +2,26 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { renderMd } from "@/lib/renderMd";
+import { SIGN_COLOR } from "@/lib/celebrities";
+import { Glyph, type GlyphName } from "@/components/ui/glyphs";
+import { Breadcrumb, AmbientGlow, ArticleSection, CtaBand } from "@/components/blog/editorial";
 
 export const revalidate = false;
 
-const SIGN_META: Record<string, { symbol: string; element: string }> = {
-  aries:       { symbol: "♈", element: "Fire" },
-  taurus:      { symbol: "♉", element: "Earth" },
-  gemini:      { symbol: "♊", element: "Air" },
-  cancer:      { symbol: "♋", element: "Water" },
-  leo:         { symbol: "♌", element: "Fire" },
-  virgo:       { symbol: "♍", element: "Earth" },
-  libra:       { symbol: "♎", element: "Air" },
-  scorpio:     { symbol: "♏", element: "Water" },
-  sagittarius: { symbol: "♐", element: "Fire" },
-  capricorn:   { symbol: "♑", element: "Earth" },
-  aquarius:    { symbol: "♒", element: "Air" },
-  pisces:      { symbol: "♓", element: "Water" },
+const SIGN_META: Record<string, { element: string }> = {
+  aries:       { element: "Fire" },
+  taurus:      { element: "Earth" },
+  gemini:      { element: "Air" },
+  cancer:      { element: "Water" },
+  leo:         { element: "Fire" },
+  virgo:       { element: "Earth" },
+  libra:       { element: "Air" },
+  scorpio:     { element: "Water" },
+  sagittarius: { element: "Fire" },
+  capricorn:   { element: "Earth" },
+  aquarius:    { element: "Air" },
+  pisces:      { element: "Water" },
 };
-const EL_COLOR: Record<string, string> = { Fire: "#f59e0b", Earth: "#a3a37a", Air: "#7dd3fc", Water: "#818cf8" };
 
 export async function generateStaticParams() {
   return Object.keys(SIGN_META).map(sign => ({ sign }));
@@ -43,13 +45,16 @@ interface ZodiacCompatArticle {
   air_compatibility: string; water_compatibility: string; dealbreakers: string; what_they_need: string;
 }
 
+const EL_GLYPH: Record<string, GlyphName> = { Fire: "aries", Earth: "taurus", Air: "gemini", Water: "cancer" };
+const EL_COLOR: Record<string, string> = { Fire: "#f97316", Earth: "#10b981", Air: "#38bdf8", Water: "#6366f1" };
+
 export default async function ZodiacCompatPage({ params }: { params: Promise<{ sign: string }> }) {
   const { sign } = await params;
   const meta = SIGN_META[sign];
   if (!meta) notFound();
 
   const name = sign.charAt(0).toUpperCase() + sign.slice(1);
-  const c = EL_COLOR[meta.element];
+  const c = SIGN_COLOR[sign] ?? EL_COLOR[meta.element];
   const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
   let article: ZodiacCompatArticle | null = null;
   try {
@@ -58,98 +63,80 @@ export default async function ZodiacCompatPage({ params }: { params: Promise<{ s
   } catch {}
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <Link href="/blog/compatibility" className="hover:text-white transition-colors">Compatibility</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{name}</span>
-      </nav>
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
+      <AmbientGlow hex={c} />
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { href: "/blog/compatibility", label: "Compatibility" }, { label: name }]} />
 
-      <div className="mb-10">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-5xl">{meta.symbol}</span>
+      <header className="mb-10">
+        <div className="flex items-center gap-5">
+          <span className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card border" style={{ color: c, borderColor: `${c}40`, background: `${c}12` }}>
+            <Glyph name={sign as GlyphName} size={34} strokeWidth={1.4} />
+          </span>
           <div>
-            <h1 className="text-4xl font-bold tracking-tight">{name} Compatibility</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">{meta.element} Sign · Who {name} connects with</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">{name} Compatibility</h1>
+            <p className="text-ink-secondary mt-1.5">{meta.element} Sign <span className="text-ink-faint mx-1">·</span> Who {name} connects with</p>
           </div>
         </div>
-      </div>
+      </header>
 
       {article ? (
-        <div className="space-y-8">
-          {[
-            ["Overview", article.overview],
-            ["Relationship Style", article.relationship_style],
-          ].map(([title, text]) => (
-            <section key={title as string}>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
-            </section>
-          ))}
+        <div className="space-y-9">
+          <ArticleSection title="Overview" text={article.overview} />
+          <ArticleSection title="Relationship style" text={article.relationship_style} />
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-emerald-400 mb-3">Best Matches</h2>
-              {(article.best_matches ?? []).map(m => (
-                <div key={m} className="flex gap-2 items-center text-sm text-zinc-300 mb-1.5">
+            <div className="rounded-card border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
+              <h2 className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] text-emerald-400 mb-3">Best Matches</h2>
+              {(article.best_matches ?? []).map((m) => (
+                <div key={m} className="flex gap-2 items-center text-sm text-ink-secondary mb-1.5">
                   <span className="text-emerald-500">✓</span>
-                  <Link href={`/blog/compatibility/zodiac/${m.toLowerCase()}`} className="hover:text-white transition-colors">{m}</Link>
+                  <Link href={`/blog/compatibility/zodiac/${m.toLowerCase()}`} className="hover:text-ink transition-colors">{m}</Link>
                 </div>
               ))}
             </div>
-            <div className="rounded-xl border border-red-500/20 bg-red-500/[0.04] p-4">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-red-400 mb-3">Challenging Matches</h2>
-              {(article.challenging_matches ?? []).map(m => (
-                <div key={m} className="flex gap-2 items-center text-sm text-zinc-300 mb-1.5">
+            <div className="rounded-card border border-red-500/20 bg-red-500/[0.04] p-4">
+              <h2 className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] text-red-400 mb-3">Challenging Matches</h2>
+              {(article.challenging_matches ?? []).map((m) => (
+                <div key={m} className="flex gap-2 items-center text-sm text-ink-secondary mb-1.5">
                   <span className="text-red-500">✗</span>
-                  <Link href={`/blog/compatibility/zodiac/${m.toLowerCase()}`} className="hover:text-white transition-colors">{m}</Link>
+                  <Link href={`/blog/compatibility/zodiac/${m.toLowerCase()}`} className="hover:text-ink transition-colors">{m}</Link>
                 </div>
               ))}
             </div>
           </div>
 
-          <section>
-            <h2 className="text-lg font-semibold mb-4" style={{ color: c }}>By Element</h2>
-            <div className="space-y-4">
-              {[
-                ["🔥 Fire Signs", article.fire_compatibility, "#f59e0b"],
-                ["🌍 Earth Signs", article.earth_compatibility, "#a3a37a"],
-                ["💨 Air Signs", article.air_compatibility, "#7dd3fc"],
-                ["💧 Water Signs", article.water_compatibility, "#818cf8"],
-              ].map(([label, text, ec]) => (
-                <div key={label as string} className="border-l-2 pl-4" style={{ borderColor: `${ec}60` }}>
-                  <p className="text-xs font-semibold uppercase tracking-wider mb-1" style={{ color: ec as string }}>{label}</p>
-                  <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(text as string)}</p>
+          <ArticleSection title="By element">
+            <div className="space-y-4 mt-1">
+              {(
+                [
+                  ["Fire Signs", article.fire_compatibility, "Fire"],
+                  ["Earth Signs", article.earth_compatibility, "Earth"],
+                  ["Air Signs", article.air_compatibility, "Air"],
+                  ["Water Signs", article.water_compatibility, "Water"],
+                ] as [string, string, string][]
+              ).map(([label, text, el]) => (
+                <div key={label} className="flex items-start gap-3 border-l-2 pl-4" style={{ borderColor: `${EL_COLOR[el]}60` }}>
+                  <Glyph name={EL_GLYPH[el]} size={14} className="mt-1 shrink-0" style={{ color: EL_COLOR[el] }} />
+                  <div>
+                    <p className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] mb-1" style={{ color: EL_COLOR[el] }}>{label}</p>
+                    <p className="text-[14.5px] text-ink-secondary leading-relaxed">{renderMd(text)}</p>
+                  </div>
                 </div>
               ))}
             </div>
-          </section>
+          </ArticleSection>
 
-          {[
-            ["Dealbreakers", article.dealbreakers],
-            ["What They Need", article.what_they_need],
-          ].map(([title, text]) => (
-            <section key={title as string}>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
-            </section>
-          ))}
-
-          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-            <p className="text-zinc-300 mb-4 text-sm">Run a full compatibility analysis</p>
-            <Link href="/analyze/romantic"
-              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-              Compatibility Analysis
-            </Link>
-          </div>
+          <ArticleSection title="Dealbreakers" text={article.dealbreakers} />
+          <ArticleSection title="What they need" text={article.what_they_need} />
         </div>
       ) : (
-        <p className="text-zinc-500 text-sm">Article unavailable — please try again later.</p>
+        <p className="text-ink-muted text-sm">Article unavailable — please try again later.</p>
       )}
+
+      <CtaBand
+        text="Run a full compatibility analysis"
+        actions={[{ href: "/analyze/romantic", label: "Compatibility Analysis", primary: true }]}
+      />
     </main>
   );
 }

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import type { Metadata } from "next";
-import { renderMd } from "@/lib/renderMd";
+import { Star4 } from "@/components/ui/glyphs";
+import { Breadcrumb, AmbientGlow, ArticleSection, CtaBand } from "@/components/blog/editorial";
 
 export const revalidate = false;
 
@@ -55,99 +55,80 @@ export default async function NumerologyLPPage({ params }: { params: Promise<{ n
   } catch {}
 
   const isMaster = meta.master;
-  const c = isMaster ? "#a78bfa" : "#f59e0b";
+  const c = isMaster ? "#a78bfa" : "#edcb7e";
 
   return (
-    <main className="min-h-screen px-4 md:px-8 py-10 md:py-20 max-w-3xl mx-auto">
-      <nav className="text-xs text-zinc-500 mb-8 flex items-center gap-2">
-        <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <span>/</span>
-        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
-        <span>/</span>
-        <Link href="/blog/numerology" className="hover:text-white transition-colors">Numerology</Link>
-        <span>/</span>
-        <span className="text-zinc-300">{isMaster ? "Master Number" : "Life Path"} {number}</span>
-      </nav>
+    <main className="relative min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
+      <AmbientGlow hex={c} />
+      <Breadcrumb trail={[{ href: "/", label: "Home" }, { href: "/blog", label: "Almanac" }, { href: "/blog/numerology", label: "Numerology" }, { label: `${isMaster ? "Master Number" : "Life Path"} ${number}` }]} />
 
-      <div className="mb-10">
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-black"
-            style={{ background: `${c}18`, color: c, border: `1px solid ${c}30` }}>
+      <header className="mb-10">
+        <div className="flex items-center gap-5 mb-4">
+          <span className="flex size-16 md:size-20 shrink-0 items-center justify-center rounded-card border font-display font-extrabold text-2xl md:text-3xl" style={{ color: c, borderColor: `${c}40`, background: `${c}12` }}>
             {number}
-          </div>
+          </span>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{meta.label}</h1>
-            <p className="text-zinc-400 text-sm mt-0.5">{isMaster ? "Master Number" : "Life Path"} {number} · {meta.theme}</p>
+            <h1 className="font-display font-extrabold tracking-[-0.03em] text-4xl md:text-5xl leading-[1.05] text-ink">{meta.label}</h1>
+            <p className="text-ink-secondary mt-1.5">{isMaster ? "Master Number" : "Life Path"} {number} <span className="text-ink-faint mx-1">·</span> {meta.theme}</p>
           </div>
         </div>
         {isMaster && (
-          <div className="inline-block text-xs px-3 py-1 rounded-full border"
-            style={{ borderColor: `${c}40`, background: `${c}10`, color: c }}>
-            ✦ Master Number — amplified energy, higher calling
+          <div className="inline-flex items-center gap-2 text-xs px-3 py-1.5 rounded-full border" style={{ borderColor: `${c}40`, background: `${c}10`, color: c }}>
+            <Star4 size={9} />
+            Master Number — amplified energy, higher calling
           </div>
         )}
-      </div>
+      </header>
 
       {article ? (
-        <div className="space-y-8">
-          <section>
-            <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>Overview</h2>
-            <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(article.overview)}</p>
-          </section>
+        <div className="space-y-9">
+          <ArticleSection title="Overview" text={article.overview} />
 
-          <div className="rounded-xl border bg-white/[0.02] p-5" style={{ borderColor: `${c}25` }}>
-            <h2 className="text-sm font-semibold uppercase tracking-wider mb-3" style={{ color: c }}>Core Themes</h2>
+          <div className="rounded-card border p-5" style={{ borderColor: `${c}30`, background: `${c}0a` }}>
+            <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.18em] uppercase mb-3" style={{ color: c }}>
+              <Star4 size={9} />
+              Core themes
+            </p>
             <ul className="space-y-2">
               {(article.core_themes ?? []).map((t, i) => (
-                <li key={i} className="flex gap-2 text-sm text-zinc-300">
+                <li key={i} className="flex gap-2.5 text-[14.5px] text-ink-secondary leading-relaxed">
                   <span style={{ color: c }} className="shrink-0">→</span>{t}
                 </li>
               ))}
             </ul>
           </div>
 
-          {[
-            ["Personality", article.personality],
-            ["Love & Relationships", article.love_and_relationships],
-            ["Career & Purpose", article.career_and_purpose],
-            ["Shadow & Challenges", article.shadow_and_challenges],
-            ["Spiritual Meaning", article.spiritual_meaning],
-          ].map(([title, text]) => (
-            <section key={title as string}>
-              <h2 className="text-lg font-semibold mb-3" style={{ color: c }}>{title}</h2>
-              <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(text as string)}</p>
-            </section>
-          ))}
+          <ArticleSection title="Personality" text={article.personality} />
+          <ArticleSection title="Love & relationships" text={article.love_and_relationships} />
+          <ArticleSection title="Career & purpose" text={article.career_and_purpose} />
+          <ArticleSection title="Shadow & challenges" text={article.shadow_and_challenges} />
+          <ArticleSection title="Spiritual meaning" text={article.spiritual_meaning} />
 
           {article.famous_people?.length > 0 && (
-            <div className="rounded-xl border border-white/8 bg-white/[0.02] p-5">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-zinc-400 mb-3">Famous Life Path {number}s</h2>
-              <div className="flex flex-wrap gap-2">
-                {article.famous_people.map(p => {
+            <ArticleSection title={`Famous Life Path ${number}s`}>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {article.famous_people.map((p) => {
                   const celebName = p.replace(/\s*\(.*?\)\s*/g, "").trim();
                   return (
                     <a key={p} href={`https://en.wikipedia.org/wiki/${celebName.replace(/\s+/g, "_")}`}
                       target="_blank" rel="noopener noreferrer"
-                      className="text-sm px-3 py-1 rounded-full border border-white/10 bg-white/5 text-zinc-300 hover:border-gold/40 hover:text-gold-bright transition-colors">
+                      className="text-sm px-3 py-1 rounded-full border border-hairline bg-white/5 text-ink-secondary hover:border-hairline-gold hover:text-gold-bright transition-colors">
                       {p}
                     </a>
                   );
                 })}
               </div>
-            </div>
+            </ArticleSection>
           )}
-
-          <div className="mt-10 rounded-2xl border border-gold/20 bg-gold/[0.04] p-6 text-center">
-            <p className="text-zinc-300 mb-4 text-sm">Calculate your exact life path number</p>
-            <Link href="/analyze/numerology"
-              className="px-5 py-2 rounded-full bg-gold text-black font-semibold text-sm hover:bg-gold-bright transition-colors">
-              Numerology Analysis
-            </Link>
-          </div>
         </div>
       ) : (
-        <p className="text-zinc-500 text-sm">Article unavailable — please try again later.</p>
+        <p className="text-ink-muted text-sm">Article unavailable — please try again later.</p>
       )}
+
+      <CtaBand
+        text="Calculate your exact life path number"
+        actions={[{ href: "/analyze/numerology", label: "Numerology Analysis", primary: true }]}
+      />
     </main>
   );
 }

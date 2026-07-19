@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { EASE } from "@/lib/motion";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
-import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
+import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";
+import ResultActions from "@/components/analyze/ResultActions";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { AIHeader } from "@/components/ui/AIHeader";
 
 const MODALITY_COLOR: Record<string, string> = {
   Cardinal: "#ef4444", Fixed: "#22c55e", Mutable: "#818cf8",
@@ -46,17 +48,6 @@ interface HybridResult {
   };
 }
 
-const CARD = "bg-white/[0.03] ring-1 ring-white/10 rounded-2xl overflow-hidden";
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-      <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
-    </div>
-  );
-}
-
 export default function HybridPage() {
   const [person, setPerson] = useState<PersonData>(emptyPerson());
   const [result, setResult] = useState<HybridResult | null>(null);
@@ -69,7 +60,7 @@ export default function HybridPage() {
     setLoading(true);
     setError("");
     try {
-      setResult(await apiFetch<HybridResult>("/hybrid-analysis", {
+      setResult(await apiFetch<HybridResult>("/analyze/hybrid", {
         name: person.name.trim(),
         day: person.day,
         month: person.month,
@@ -87,121 +78,87 @@ export default function HybridPage() {
   const zodiac = result?.zodiac_profile;
   const mbtiProf = result?.mbti_profile;
   const analysis = result?.analysis;
+  const hasResult = !!(result && zodiac && mbtiProf && analysis);
 
   return (
-    <main className="min-h-screen px-4 md:px-6 py-8 md:py-16 max-w-4xl mx-auto">
-      <div className="mb-10">
-        <Eyebrow>Self Analysis</Eyebrow>
-        <h1 className="text-3xl font-bold tracking-tight">Behavioral Intelligence Profile</h1>
-        <p className="text-zinc-500 mt-1 text-sm">Zodiac + MBTI deep analysis</p>
-      </div>
-
-      {!result && (<>
-        <div className="mb-6">
-          <PersonForm label="Your Profile" value={person} onChange={setPerson} />
-        </div>
-        {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full py-3.5 md:py-3 rounded-control text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent font-semibold text-sm hover:opacity-90 disabled:opacity-40 transition mb-8 md:mb-12 min-h-[48px]"
-        >
-          {loading ? "Analyzing…" : "Analyze Your Profile"}
-        </button>
-
-        {loading && <AnalyzeSkeleton variant="solo" />}
-      </>)}
-
-      <AnimatePresence>
-        {result && zodiac && mbtiProf && analysis && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="space-y-4 md:space-y-5"
-          >
-            <button onClick={() => setResult(null)} className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>Try again</button>
+    <AnalyzePageShell
+      eyebrow="Self Analysis"
+      title="Behavioral Intelligence Profile"
+      description="Zodiac + MBTI deep analysis."
+      hasResult={hasResult}
+      loading={loading}
+      skeletonVariant="solo"
+      error={error}
+      onRetry={handleSubmit}
+      onReset={() => setResult(null)}
+      form={
+        <>
+          <div className="mb-6">
+            <PersonForm label="Your Profile" value={person} onChange={setPerson} />
+          </div>
+          <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full">
+            {loading ? "Analyzing…" : "Analyze Your Profile"}
+          </Button>
+        </>
+      }
+      result={
+        hasResult && result && zodiac && mbtiProf && analysis && (
+          <div className="space-y-4 md:space-y-5">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <ResultActions
+                analysisType="hybrid_analysis"
+                title={`${result.name || name}'s Behavioral Profile`}
+                payload={result}
+              />
+              <ShareImageButton data={{
+                type: "hybrid",
+                name: result.name || name,
+                sign: zodiac.sign,
+                symbol: SIGN_SYMBOL[zodiac.sign.toLowerCase()] ?? "✦",
+                signColor: SIGN_COLOR[zodiac.sign.toLowerCase()] ?? "#f59e0b",
+                mbtiType: mbtiProf.type,
+                modality: zodiac.modality,
+              }} />
+            </div>
 
             {/* Zodiac + MBTI Overview */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: EASE }}
-              className={CARD}
-            >
-              <div className="h-0.5 bg-gradient-to-r from-gold/60 via-gold/20 to-transparent" />
-              <div className="p-5 md:p-8">
-                {/* Share button */}
-                <div className="flex justify-end mb-4">
-                  <ShareImageButton data={{
-                    type: "hybrid",
-                    name: result.name || name,
-                    sign: zodiac.sign,
-                    symbol: SIGN_SYMBOL[zodiac.sign.toLowerCase()] ?? "✦",
-                    signColor: SIGN_COLOR[zodiac.sign.toLowerCase()] ?? "#f59e0b",
-                    mbtiType: mbtiProf.type,
-                    modality: zodiac.modality,
-                  }} />
+            <Card className="p-5 md:p-8">
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                  <p className="text-xs text-ink-muted uppercase tracking-wider mb-2">Zodiac</p>
+                  <p className="text-2xl font-bold text-gold-bright">{zodiac.sign}</p>
+                  <p className="text-xs text-ink-secondary mt-1">
+                    {zodiac.element} · <span style={{ color: MODALITY_COLOR[zodiac.modality] ?? "#a1a1aa" }}>{zodiac.modality}</span>
+                  </p>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Zodiac</p>
-                    <p className="text-2xl font-bold text-gold-bright">{zodiac.sign}</p>
-                    <p className="text-xs text-zinc-400 mt-1">
-                      {zodiac.element} · <span style={{ color: MODALITY_COLOR[zodiac.modality] ?? "#a1a1aa" }}>{zodiac.modality}</span>
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">MBTI Type</p>
-                    <p className="text-2xl font-bold text-blue-300">{mbtiProf.type}</p>
-                    <p className="text-xs text-zinc-400 mt-1">{mbtiProf.role_group}</p>
-                  </div>
+                <div>
+                  <p className="text-xs text-ink-muted uppercase tracking-wider mb-2">MBTI Type</p>
+                  <p className="text-2xl font-bold text-accent-bright">{mbtiProf.type}</p>
+                  <p className="text-xs text-ink-secondary mt-1">{mbtiProf.role_group}</p>
                 </div>
-                {mbtiProf.cognitive_stack && (
-                  <div>
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-2">Cognitive Stack</p>
-                    <p className="text-sm text-zinc-300">{mbtiProf.cognitive_stack}</p>
-                  </div>
-                )}
               </div>
-            </motion.div>
+              {mbtiProf.cognitive_stack && (
+                <div>
+                  <p className="text-xs text-ink-muted uppercase tracking-wider mb-2">Cognitive Stack</p>
+                  <p className="text-sm text-ink-secondary">{mbtiProf.cognitive_stack}</p>
+                </div>
+              )}
+            </Card>
 
             {/* Trait Radar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
-              className={CARD}
-            >
-              <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
-              <div className="p-4 md:p-6">
-                <h2 className="text-sm font-semibold text-zinc-300 mb-4">Behavioral Trait Profile</h2>
-                <TraitRadar
-                  a={zodiac.trait_vector}
-                  b={undefined}
-                  nameA={name}
-                  nameB={undefined}
-                />
-              </div>
-            </motion.div>
+            <Card className="p-4 md:p-6">
+              <h2 className="text-sm font-semibold text-ink-secondary mb-4">Behavioral Trait Profile</h2>
+              <TraitRadar
+                a={zodiac.trait_vector}
+                b={undefined}
+                nameA={name}
+                nameB={undefined}
+              />
+            </Card>
 
             {/* AI Interpretation */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
-              className={CARD}
-            >
-              <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
-                <div className="relative w-2 h-2 shrink-0">
-                  <div className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
-                  <div className="w-2 h-2 rounded-full bg-accent" />
-                </div>
-                <span className="text-xs font-semibold text-zinc-300 tracking-wide">Behavioral Analysis</span>
-                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
-                  Gemini 2.5 Flash
-                </span>
-              </div>
+            <Card>
+              <AIHeader label="Behavioral Analysis" />
               <div className="p-4 md:p-6 space-y-4 md:space-y-5">
                 {(
                   [
@@ -214,46 +171,41 @@ export default function HybridPage() {
                   ] as [keyof typeof analysis, string][]
                 ).map(([key, label]) => (
                   <div key={key} className="border-l-2 border-gold/40 pl-4">
-                    <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
-                    <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(analysis[key] as string)}</p>
+                    <p className="text-xs text-ink-muted uppercase tracking-wider mb-1">{label}</p>
+                    <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(analysis[key] as string)}</p>
                   </div>
                 ))}
               </div>
-            </motion.div>
+            </Card>
 
             {/* Strengths + Growth Edges */}
             {(analysis.strengths?.length > 0 || analysis.growth_edges?.length > 0) && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
-                className="grid md:grid-cols-2 gap-4"
-              >
-                <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="rounded-card border border-emerald-500/20 bg-emerald-500/5 p-5">
                   <p className="text-xs text-emerald-400 uppercase tracking-wider mb-3">Strengths</p>
                   <ul className="space-y-1.5">
                     {(analysis.strengths ?? []).map((s, i) => (
-                      <li key={i} className="text-sm text-zinc-300 flex gap-2">
+                      <li key={i} className="text-sm text-ink-secondary flex gap-2">
                         <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>{renderMd(s)}
                       </li>
                     ))}
                   </ul>
                 </div>
-                <div className="rounded-2xl border border-gold/20 bg-gold/5 p-5">
+                <div className="rounded-card border border-hairline-gold bg-gold/5 p-5">
                   <p className="text-xs text-gold-bright uppercase tracking-wider mb-3">Growth Edges</p>
                   <ul className="space-y-1.5">
                     {(analysis.growth_edges ?? []).map((s, i) => (
-                      <li key={i} className="text-sm text-zinc-300 flex gap-2">
+                      <li key={i} className="text-sm text-ink-secondary flex gap-2">
                         <span className="text-gold mt-0.5 shrink-0">→</span>{renderMd(s)}
                       </li>
                     ))}
                   </ul>
                 </div>
-              </motion.div>
+              </div>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
+          </div>
+        )
+      }
+    />
   );
 }
