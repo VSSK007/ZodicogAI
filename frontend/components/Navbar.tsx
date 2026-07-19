@@ -19,6 +19,7 @@ import { Glyph } from "@/components/ui/glyphs";
 import { ANALYZE_YOU, ANALYZE_TOGETHER, type AnalyzeLink } from "@/lib/analyses";
 
 const TOP_LINKS = [
+  { href: "/horoscope",   label: "Horoscope" },
   { href: "/discover",    label: "Discover" },
   { href: "/celebrities", label: "Celebrities" },
   { href: "/blog",        label: "Blog" },

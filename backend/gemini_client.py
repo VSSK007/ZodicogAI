@@ -1482,7 +1482,7 @@ Required JSON:
 from models.schemas import (
     LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
     SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
-    CelebrityArticle,
+    CelebrityArticle, HoroscopeArticle,
 )
 
 
@@ -1508,6 +1508,32 @@ def generate_sextrology_guide() -> dict:
     prompt = _prompt_sextrology_guide()
     result = call_gemini(prompt, SextrologyGuideArticle)
     return {"article": result.model_dump()}
+
+
+def _prompt_horoscope(sign: str, date_label: str, scores: dict) -> str:
+    return (
+        f"You are writing today's horoscope for {sign} ({date_label}).\n\n"
+        f"Today's computed energy scores (0-100, already final — do not restate the raw "
+        f"numbers as a list, just be true to them in tone):\n"
+        f"  Love:   {scores['love']}\n"
+        f"  Career: {scores['career']}\n"
+        f"  Energy: {scores['energy']}\n"
+        f"  Luck:   {scores['luck']}\n"
+        f"  Overall: {scores['overall']}\n\n"
+        f"Write:\n"
+        f"1. reading — a warm, specific 2-3 sentence horoscope for {sign} today, grounded "
+        f"in the scores above (a high love score reads differently than a low one).\n"
+        f"2. focus_area — the single dimension (love, career, energy, or luck) most worth "
+        f"{sign}'s attention today, in 3-6 words.\n"
+        f"3. advice — one concrete, actionable sentence for how to use today well.\n\n"
+        f"Do not mention that scores were provided. Speak directly to the reader. No hedging."
+    )
+
+
+def generate_daily_horoscope(sign: str, date_label: str, scores: dict) -> dict:
+    prompt = _prompt_horoscope(sign, date_label, scores)
+    result = call_gemini(prompt, HoroscopeArticle)
+    return {"sign": sign, "scores": scores, "article": result.model_dump()}
 
 
 def generate_zodiac_compat_article(sign: str) -> dict:

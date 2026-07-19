@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: base, lastModified: now, changeFrequency: "daily", priority: 1.0 },
+    { url: `${base}/horoscope`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
     { url: `${base}/analyze/zodiac`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/analyze/romantic`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
     { url: `${base}/analyze/emotional`, lastModified: now, changeFrequency: "weekly", priority: 0.9 },
@@ -25,5 +26,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     ...SIGNS.map(s => ({ url: `${base}/blog/zodiac/${s}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.8 })),
     ...MBTI_TYPES.map(t => ({ url: `${base}/blog/mbti/${t}`, lastModified: now, changeFrequency: "monthly" as const, priority: 0.7 })),
+    ...SIGNS.map(s => ({ url: `${base}/horoscope/${s}`, lastModified: now, changeFrequency: "daily" as const, priority: 0.8 })),
   ];
 }

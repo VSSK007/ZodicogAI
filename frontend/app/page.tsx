@@ -12,6 +12,7 @@ import ZodicognacMark from "@/components/ZodicognacMark";
 import { EASE_SPRING } from "@/lib/motion";
 import Hero from "@/components/home/Hero";
 import StatsStrip from "@/components/home/StatsStrip";
+import HoroscopeBand from "@/components/home/HoroscopeBand";
 import HowItWorks from "@/components/home/HowItWorks";
 import AnalysisShowcase from "@/components/home/AnalysisShowcase";
 import LiveTeaser from "@/components/home/LiveTeaser";
@@ -104,6 +105,7 @@ export default function Home() {
       <Hero />
       <RecentReadings />
       <StatsStrip />
+      <HoroscopeBand />
       <HowItWorks />
       <AnalysisShowcase />
       <LiveTeaser />

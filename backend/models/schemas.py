@@ -421,3 +421,8 @@ class CelebrityArticle(BaseModel):
     love_style: str = "—"
     compatibility_note: str = "—"
     fun_fact: str = "—"
+
+class HoroscopeArticle(BaseModel):
+    reading: str = "—"
+    focus_area: str = "—"
+    advice: str = "—"
