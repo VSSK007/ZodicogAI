@@ -9,6 +9,7 @@ import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";
 import ResultActions from "@/components/analyze/ResultActions";
+import ResultReveal from "@/components/analyze/ResultReveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { AIHeader } from "@/components/ui/AIHeader";
@@ -103,7 +104,7 @@ export default function HybridPage() {
       }
       result={
         hasResult && result && zodiac && mbtiProf && analysis && (
-          <div className="space-y-4 md:space-y-5">
+          <ResultReveal className="space-y-4 md:space-y-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <ResultActions
                 analysisType="hybrid_analysis"
@@ -203,7 +204,7 @@ export default function HybridPage() {
                 </div>
               </div>
             )}
-          </div>
+          </ResultReveal>
         )
       }
     />

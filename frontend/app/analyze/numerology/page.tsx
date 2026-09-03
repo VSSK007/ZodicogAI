@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { AIHeader } from "@/components/ui/AIHeader";
 import { Card } from "@/components/ui/Card";
 import ResultActions from "@/components/analyze/ResultActions";
+import ResultReveal from "@/components/analyze/ResultReveal";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -261,7 +262,7 @@ export default function NumerologyPage() {
       }
       result={
         result && (
-          <div className="space-y-4 md:space-y-8">
+          <ResultReveal className="space-y-4 md:space-y-8">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <ResultActions
                 analysisType={isPair(result) ? "numerology_pair_analysis" : "numerology_analysis"}
@@ -376,7 +377,7 @@ export default function NumerologyPage() {
                 </Card>
               </>
             )}
-          </div>
+          </ResultReveal>
         )
       }
     />

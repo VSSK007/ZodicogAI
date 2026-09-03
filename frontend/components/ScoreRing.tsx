@@ -1,6 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useMotionValue, animate } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface Props {
   score: number;
@@ -9,6 +10,8 @@ interface Props {
   color?: string;
   strokeWidth?: number;
 }
+
+const RING_DURATION = 1.4;
 
 export default function ScoreRing({
   score,
@@ -22,6 +25,23 @@ export default function ScoreRing({
   const circumference = 2 * Math.PI * radius;
   const clamped = Math.min(Math.max(Number(score) || 0, 0), 100);
   const offset = circumference - (clamped / 100) * circumference;
+
+  // Count the number up in sync with the ring sweep, rather than snapping
+  // straight to the final value.
+  const [displayed, setDisplayed] = useState(0);
+  const count = useMotionValue(0);
+
+  useEffect(() => {
+    setDisplayed(0);
+    count.set(0);
+    const controls = animate(count, clamped, {
+      duration: RING_DURATION,
+      ease: "easeOut",
+      onUpdate: (v) => setDisplayed(v),
+    });
+    return () => controls.stop();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clamped]);
 
   return (
     <div className="flex flex-col items-center gap-3 w-full">
@@ -43,7 +63,7 @@ export default function ScoreRing({
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.4, ease: "easeOut" }}
+          transition={{ duration: RING_DURATION, ease: "easeOut" }}
           transform={`rotate(-90 ${center} ${center})`}
         />
         {/* Score label */}
@@ -55,7 +75,7 @@ export default function ScoreRing({
           fontWeight="800"
           fontFamily="var(--font-manrope), inherit"
         >
-          {clamped.toFixed(1)}
+          {displayed.toFixed(1)}
         </text>
         <text
           x={center} y={center + size * 0.13}

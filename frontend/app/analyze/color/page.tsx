@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { AIHeader } from "@/components/ui/AIHeader";
 import { Card } from "@/components/ui/Card";
 import ResultActions from "@/components/analyze/ResultActions";
+import ResultReveal from "@/components/analyze/ResultReveal";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -221,7 +222,7 @@ export default function ColorPage() {
         }
         result={
           result && (
-            <div className="space-y-4 md:space-y-6">
+            <ResultReveal className="space-y-4 md:space-y-6">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <ResultActions
                   analysisType={isPair(result) ? "color_pair_analysis" : "color_analysis"}
@@ -244,7 +245,7 @@ export default function ColorPage() {
                       <ColorSwatch swatch={result.b_color} label={result.b_name} size="large" />
                     </div>
                     {/* Power color pills */}
-                    <div className="grid grid-cols-2 gap-3 pt-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                       {[
                         { label: result.a_name, name: result.a_color.power_name, hex: result.a_color.power_hex, yr: result.a_color.power_2026 },
                         { label: result.b_name, name: result.b_color.power_name, hex: result.b_color.power_hex, yr: result.b_color.power_2026 },
@@ -296,7 +297,7 @@ export default function ColorPage() {
                   </Card>
 
                   {/* Power color + 2026 row */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {/* Classic power color */}
                     <Card className="p-5 space-y-3">
                       <p className="text-xs text-ink-muted uppercase tracking-wider">Classic Power Color</p>
@@ -346,7 +347,7 @@ export default function ColorPage() {
                   </Card>
                 </>
               )}
-            </div>
+            </ResultReveal>
           )
         }
       />

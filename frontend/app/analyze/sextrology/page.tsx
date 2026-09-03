@@ -274,7 +274,7 @@ export default function SextrologyPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
-                  className="grid grid-cols-2 gap-2 md:gap-3"
+                  className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-2 md:gap-3"
                 >
                   <MetricCard label="Intensity Alignment"        value={pr.intimacy_intensity_alignment}          accent="indigo" />
                   <MetricCard label="Pacing Alignment"           value={pr.intimacy_pacing_alignment}             accent="indigo" />

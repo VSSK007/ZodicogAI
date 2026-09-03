@@ -10,6 +10,7 @@ import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 import { getSign } from "@/lib/zodiac";
 import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";
 import ResultActions from "@/components/analyze/ResultActions";
+import ResultReveal from "@/components/analyze/ResultReveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { AIHeader } from "@/components/ui/AIHeader";
@@ -94,7 +95,7 @@ export default function LoveLanguagePage() {
       }
       result={
         result && (
-          <div className="space-y-4 md:space-y-5">
+          <ResultReveal className="space-y-4 md:space-y-5">
             <div className="flex items-center justify-between gap-3 flex-wrap">
               <ResultActions
                 analysisType="love_language_analysis"
@@ -114,7 +115,7 @@ export default function LoveLanguagePage() {
             <Card className="p-5 md:p-8">
               <div className="flex flex-col md:flex-row items-center gap-5 md:gap-8">
                 <ScoreRing score={result.love_language_compatibility_score} size={160} label="Language Alignment" color="var(--color-accent-bright)" />
-                <div className="grid grid-cols-2 gap-3 flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 w-full">
                   <MetricCard label={`${names.a} Primary`} value={result.a_love_language.primary_language.replace(/_/g, " ")} unit="" accent="teal" />
                   <MetricCard label={`${names.b} Primary`} value={result.b_love_language.primary_language.replace(/_/g, " ")} unit="" accent="teal" />
                 </div>
@@ -163,7 +164,7 @@ export default function LoveLanguagePage() {
                 ))}
               </div>
             </Card>
-          </div>
+          </ResultReveal>
         )
       }
     />
