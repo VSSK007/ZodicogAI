@@ -6,6 +6,7 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import MotionProvider from "@/components/MotionProvider";
+import CommandPalette from "@/components/CommandPalette";
 import PageTransition from "@/components/PageTransition";
 import Footer from "@/components/Footer";
 import CosmicBackground from "@/components/CosmicBackground";
@@ -53,11 +54,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${GeistSans.className} ${GeistMono.variable} ${manrope.variable}`}>
       <body className="bg-surface text-ink antialiased">
         <MotionProvider>
+        <CommandPalette />
 
         <CosmicBackground />
 
         {/* Desktop navbar — hidden on mobile */}
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <Navbar />
         </div>
 
@@ -68,7 +70,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="flex flex-col min-h-screen">
           <div className="flex-1">
             <PageTransition>
-              <div className="pt-0 md:pt-16 pb-24 md:pb-0">{children}</div>
+              <div className="pt-0 lg:pt-16 pb-24 lg:pb-0">{children}</div>
             </PageTransition>
           </div>
 

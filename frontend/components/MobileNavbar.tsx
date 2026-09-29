@@ -74,7 +74,7 @@ export default function MobileNavbar() {
     <>
       <MobileMenuSheet isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
     <nav
-      className="mobile-fab md:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center justify-center"
+      className="mobile-fab lg:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center justify-center"
       style={{ bottom: "calc(0.5rem + var(--safe-area-bottom))" }}
     >
       <div className="relative flex items-center justify-center">

@@ -17,6 +17,8 @@ import { ChevronDown } from "lucide-react";
 import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
 import ProfileLink from "./ProfileLink";
+import { openCommandPalette } from "./CommandPalette";
+import { Search } from "lucide-react";
 import { Glyph } from "@/components/ui/glyphs";
 import { ANALYZE_YOU, ANALYZE_TOGETHER, type AnalyzeLink } from "@/lib/analyses";
 
@@ -161,6 +163,22 @@ export default function Navbar() {
 
         {/* Right section */}
         <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            onClick={openCommandPalette}
+            aria-label="Search (Ctrl K)"
+            className="hidden xl:flex items-center gap-2 rounded-control border border-hairline px-2.5 py-1.5 text-xs text-ink-muted hover:text-ink-secondary hover:border-hairline-strong transition-colors tap-highlight-none"
+          >
+            <Search className="size-3.5" aria-hidden="true" />
+            Search
+            <kbd className="font-mono text-micro border border-hairline rounded px-1">⌘K</kbd>
+          </button>
+          <button
+            onClick={openCommandPalette}
+            aria-label="Search"
+            className="xl:hidden size-8 rounded-full border border-hairline flex items-center justify-center text-ink-muted hover:text-ink transition-colors tap-highlight-none"
+          >
+            <Search className="size-4" aria-hidden="true" />
+          </button>
           <ProfileLink active={path === "/profile"} />
           {/* Zodicognac — gold sub-brand pill; on the homepage it plays the ?zn=1 ritual first */}
           <motion.div

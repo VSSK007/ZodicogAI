@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Star4, ZODIAC_GLYPHS, Glyph } from "@/components/ui/glyphs";
+import { Search } from "lucide-react";
+import { openCommandPalette } from "@/components/CommandPalette";
 
 interface MobileMenuSheetProps {
   isOpen: boolean;
@@ -65,6 +67,17 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
             {/* Drag handle */}
             <div className="flex justify-center pt-3 pb-2">
               <div className="w-10 h-1 rounded-full bg-white/[0.12]" />
+            </div>
+
+            {/* Search */}
+            <div className="px-5 pb-4">
+              <button
+                onClick={() => { onClose(); setTimeout(openCommandPalette, 150); }}
+                className="w-full flex items-center gap-2.5 rounded-card border border-hairline bg-white/[0.04] px-3.5 py-3 text-sm text-ink-muted tap-highlight-none"
+              >
+                <Search className="size-4" aria-hidden="true" />
+                Search analyses, signs, celebrities…
+              </button>
             </div>
 
             {/* You */}
