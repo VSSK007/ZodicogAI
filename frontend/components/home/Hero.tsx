@@ -113,18 +113,17 @@ export default function Hero() {
               initial="hidden"
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.03, delayChildren: 0.25 } } }}
-              className="text-gradient-accent"
             >
               {GRAD_WORDS.map((word, wi) => (
                 <span
                   key={wi}
                   className={`inline-block whitespace-nowrap ${wi < GRAD_WORDS.length - 1 ? "mr-[0.22em]" : ""}`}
                 >
-                  {word.split("").map((char, ci) => (
-                    <motion.span key={ci} className="inline-block" variants={charReveal}>
-                      {char}
-                    </motion.span>
-                  ))}
+                  {/* Animate the word, gradient the text inside it: background-clip:text
+                      drops wrapped lines when transformed descendants sit under it. */}
+                  <motion.span className="inline-block" variants={charReveal}>
+                    <span className="text-gradient-accent">{word}</span>
+                  </motion.span>
                 </span>
               ))}
             </motion.span>

@@ -26,6 +26,13 @@ const STORAGE_KEY = "zodicog.chat.session";
 const WELCOME_TEXT =
   "I'm Zodicognac. I've been studying people — how they attract, fight, fall apart, and fall back in — since before I had words for it. Ask me something real. Add your profiles in the sidebar and I'll ground everything in your actual signs and MBTI.";
 
+const STARTERS = [
+  "Why do Scorpios fall so hard for Leos?",
+  "How do I know if they're actually interested?",
+  "What's my attachment style?",
+  "Plan a first date that fits an INFJ",
+];
+
 function loadSession(): Message[] {
   if (typeof window === "undefined") return [{ role: "ai", text: WELCOME_TEXT }];
   try {
@@ -266,6 +273,13 @@ export default function ChatPage() {
 
   function stop() {
     abortRef.current?.abort();
+  }
+
+  function newChat() {
+    abortRef.current?.abort();
+    setLoading(false);
+    setMessages([{ role: "ai", text: WELCOME_TEXT }]);
+    setInput("");
   }
 
   function endSession() {
@@ -512,6 +526,14 @@ export default function ChatPage() {
           <div className="flex items-center gap-2">
             {messages.length > 1 && (
               <button
+                onClick={newChat}
+                className="text-xs px-3 py-1.5 rounded-full border border-white/[0.07] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12] transition-all duration-200"
+              >
+                New chat
+              </button>
+            )}
+            {messages.length > 1 && (
+              <button
                 onClick={endSession}
                 className="text-xs px-3 py-1.5 rounded-full border border-red-500/20 text-red-400/70 hover:text-red-400 hover:border-red-500/40 transition-all duration-200"
               >
@@ -584,6 +606,21 @@ export default function ChatPage() {
               ))}
             </AnimatePresence>
 
+            {/* Empty state — starter prompts until the first question */}
+            {messages.length === 1 && !loading && (
+              <div className="flex flex-wrap gap-2 pl-11">
+                {STARTERS.map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => setInput(q)}
+                    className="text-xs px-3 py-1.5 rounded-full border border-gold/20 text-gold-bright/80 hover:text-gold-bright hover:border-hairline-gold hover:bg-gold/[0.05] transition-colors"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Loading */}
             {loading && (
               <motion.div
@@ -594,16 +631,9 @@ export default function ChatPage() {
                 <div className="shrink-0 w-7 h-7 rounded-lg bg-gold/[0.08] border border-gold/[0.14] flex items-center justify-center select-none mt-0.5">
                   <ZodicognacMark size={16} active />
                 </div>
-                <div className="flex gap-1.5 items-center pt-2">
-                  {[0, 1, 2].map((j) => (
-                    <motion.span
-                      key={j}
-                      className="w-1.5 h-1.5 rounded-full bg-zinc-600 block"
-                      animate={{ opacity: [0.3, 1, 0.3], y: [0, -4, 0] }}
-                      transition={{ duration: 1.1, delay: j * 0.16, repeat: Infinity }}
-                    />
-                  ))}
-                </div>
+                <p className="text-shimmer text-[13px] pt-1.5" role="status">
+                  Zodicognac is reading your chart…
+                </p>
               </motion.div>
             )}
             <div ref={bottomRef} />

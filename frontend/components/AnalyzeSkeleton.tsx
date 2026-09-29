@@ -1,13 +1,18 @@
 "use client";
 
+import ConstellationLoader from "@/components/ConstellationLoader";
+
 /**
- * Pulsing skeleton loader for /analyze result pages.
+ * Loader for /analyze result pages: the constellation drawing on top, a
+ * pulsing skeleton of the coming layout beneath it.
  * variant="pair"  — score ring + metrics + radar + AI text (emotional, romantic, etc.)
  * variant="solo"  — text cards only (hybrid, zodiac, color, numerology)
  */
 export default function AnalyzeSkeleton({ variant = "pair" }: { variant?: "pair" | "solo" }) {
   return (
-    <div className="space-y-4 md:space-y-5 animate-pulse">
+    <div className="space-y-4 md:space-y-5">
+      <ConstellationLoader />
+      <div className="space-y-4 md:space-y-5 animate-pulse">
 
       {variant === "pair" && (
         <>
@@ -57,6 +62,7 @@ export default function AnalyzeSkeleton({ variant = "pair" }: { variant?: "pair"
         </div>
       </div>
 
+      </div>
     </div>
   );
 }

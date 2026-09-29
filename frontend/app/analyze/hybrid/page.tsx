@@ -9,6 +9,7 @@ import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";
 import ResultActions from "@/components/analyze/ResultActions";
+import { SignWatermark } from "@/components/ui/SignWatermark";
 import ResultReveal from "@/components/analyze/ResultReveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -123,8 +124,9 @@ export default function HybridPage() {
             </div>
 
             {/* Zodiac + MBTI Overview */}
-            <Card className="p-5 md:p-8">
-              <div className="grid grid-cols-2 gap-4 mb-6">
+            <Card className="p-5 md:p-8 relative overflow-hidden">
+              <SignWatermark sign={zodiac.sign} />
+              <div className="relative grid grid-cols-2 gap-4 mb-6">
                 <div>
                   <p className="text-xs text-ink-muted uppercase tracking-wider mb-2">Zodiac</p>
                   <p className="text-2xl font-bold text-gold-bright">{zodiac.sign}</p>
