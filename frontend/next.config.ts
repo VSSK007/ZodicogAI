@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // React <ViewTransition>: page cross-fades and shared-element morphs.
+    viewTransition: true,
+  },
   images: {
     remotePatterns: [
       {

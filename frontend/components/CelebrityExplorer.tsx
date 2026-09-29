@@ -6,6 +6,7 @@
  */
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { Search } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Glyph, Star4, type GlyphName } from "@/components/ui/glyphs";
@@ -49,17 +50,21 @@ function CelebCard({ celeb }: { celeb: Celebrity }) {
       className="group relative rounded-card bg-white/[0.03] border border-hairline p-4 transition-all duration-200 hover:border-hairline-accent hover:bg-white/[0.05] hover:-translate-y-0.5 tap-highlight-none overflow-hidden"
     >
       {/* Sign glyph watermark */}
-      <span
-        className="absolute -top-1.5 -right-1.5 opacity-[0.16] transition-opacity duration-200 group-hover:opacity-40"
-        style={{ color }}
-        aria-hidden="true"
-      >
-        <Glyph name={celeb.sign as GlyphName} size={44} strokeWidth={1.2} />
-      </span>
+      <ViewTransition name={`celeb-glyph-${celeb.slug}`} share="morph">
+        <span
+          className="absolute -top-1.5 -right-1.5 opacity-[0.16] transition-opacity duration-200 group-hover:opacity-40"
+          style={{ color }}
+          aria-hidden="true"
+        >
+          <Glyph name={celeb.sign as GlyphName} size={44} strokeWidth={1.2} />
+        </span>
+      </ViewTransition>
 
-      <p className="relative font-display font-extrabold text-sm tracking-[-0.01em] text-ink leading-snug pr-6">
-        {celeb.name}
-      </p>
+      <ViewTransition name={`celeb-name-${celeb.slug}`} share="morph">
+        <p className="relative font-display font-extrabold text-sm tracking-[-0.01em] text-ink leading-snug pr-6 w-fit">
+          {celeb.name}
+        </p>
+      </ViewTransition>
       <p className={`relative text-xs mt-1.5 font-medium ${categoryColor(celeb.category)}`}>
         {celeb.category}
       </p>

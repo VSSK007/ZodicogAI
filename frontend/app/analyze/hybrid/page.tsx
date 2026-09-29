@@ -5,7 +5,7 @@ import { useState } from "react";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
-import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
+import { validatePerson, apiFetch } from "@/lib/api";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
 import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";

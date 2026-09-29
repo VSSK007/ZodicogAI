@@ -112,6 +112,24 @@ html {
   }
 }
 
+/* ── View transitions (React <ViewTransition>, Next experimental.viewTransition) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-fast);
+  animation-timing-function: var(--ease-standard);
+}
+::view-transition-group(*) {
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-standard);
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* ── Legacy tokens — DEPRECATED, kept only until remaining consumers migrate
    to the @theme tokens above. Do not use in new code.                       */
 :root {

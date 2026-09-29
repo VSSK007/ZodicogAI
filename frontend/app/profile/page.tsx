@@ -4,7 +4,7 @@
  * /profile — set up "me" once. The saved profile pre-fills Person A on every
  * analysis form, on this device only (localStorage; no account).
  */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { Check, Trash2 } from "lucide-react";
 import PersonForm from "@/components/PersonForm";
@@ -18,14 +18,10 @@ import { clearProfile, saveProfile, useProfile } from "@/lib/profile";
 
 export default function ProfilePage() {
   const saved = useProfile();
-  const [person, setPerson] = useState<PersonData>(emptyPerson());
-  const [touched, setTouched] = useState(false);
+  const [edited, setEdited] = useState<PersonData | null>(null);
+  const person = edited ?? saved ?? emptyPerson();
   const [error, setError] = useState("");
   const [justSaved, setJustSaved] = useState(false);
-
-  useEffect(() => {
-    if (saved && !touched) setPerson(saved);
-  }, [saved, touched]);
 
   function save() {
     const err = validatePerson(person, "Your profile");
@@ -68,7 +64,7 @@ export default function ProfilePage() {
       <PersonForm
         label="You"
         value={person}
-        onChange={(p) => { setTouched(true); setPerson(p); }}
+        onChange={setEdited}
       />
 
       {error && <p className="mt-3 text-sm text-danger">{error}</p>}
@@ -79,7 +75,7 @@ export default function ProfilePage() {
         </Button>
         {saved && (
           <button
-            onClick={() => { clearProfile(); setPerson(emptyPerson()); setTouched(true); }}
+            onClick={() => { clearProfile(); setEdited(emptyPerson()); }}
             className="inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink-secondary transition-colors"
           >
             <Trash2 className="size-4" aria-hidden="true" /> Forget me

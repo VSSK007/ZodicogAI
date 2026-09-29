@@ -4,7 +4,7 @@
  * The visitor's saved profile — entered once, pre-filled into "Person A" on
  * every analysis form. Lives in localStorage only (no account required).
  */
-import { useCallback, useEffect, useSyncExternalStore, useState } from "react";
+import { useCallback, useMemo, useSyncExternalStore, useState } from "react";
 import { emptyPerson, type PersonData } from "@/lib/api";
 import { emptySimple, type SimplePersonState } from "@/components/ui/SimpleForm";
 
@@ -73,45 +73,31 @@ export function useProfile(): PersonData | null {
 }
 
 /**
- * Person A state, pre-filled from the saved profile the first time it's
- * available — but never overwriting anything the visitor has already typed.
+ * Person A state: what the visitor has typed if anything, otherwise the saved
+ * profile, otherwise empty. Derived rather than synced, so a profile that
+ * loads late never overwrites typing and there is no effect to cascade renders.
  */
 export function usePrefilledPerson(): [PersonData, (p: PersonData) => void] {
   const profile = useProfile();
-  const [person, setPerson] = useState<PersonData>(emptyPerson());
-  const [touched, setTouched] = useState(false);
-
-  useEffect(() => {
-    if (profile && !touched) setPerson(profile);
-  }, [profile, touched]);
-
-  const set = useCallback((p: PersonData) => {
-    setTouched(true);
-    setPerson(p);
-  }, []);
-  return [person, set];
+  const [edited, setEdited] = useState<PersonData | null>(null);
+  const set = useCallback((p: PersonData) => setEdited(p), []);
+  return [edited ?? profile ?? emptyPerson(), set];
 }
 
 /** Same as usePrefilledPerson, for the name/day/month-only SimpleForm shape. */
 export function usePrefilledSimple(): [SimplePersonState, (p: SimplePersonState) => void] {
   const profile = useProfile();
-  const [person, setPerson] = useState<SimplePersonState>(emptySimple());
-  const [touched, setTouched] = useState(false);
-
-  useEffect(() => {
-    if (profile && !touched) {
-      setPerson({
+  const [edited, setEdited] = useState<SimplePersonState | null>(null);
+  const set = useCallback((p: SimplePersonState) => setEdited(p), []);
+  const fromProfile = useMemo<SimplePersonState | null>(
+    () =>
+      profile && {
         name: profile.name,
         day: profile.day ? String(profile.day) : "",
         month: profile.month ? String(profile.month) : "",
         gender: profile.gender,
-      });
-    }
-  }, [profile, touched]);
-
-  const set = useCallback((p: SimplePersonState) => {
-    setTouched(true);
-    setPerson(p);
-  }, []);
-  return [person, set];
+      },
+    [profile],
+  );
+  return [edited ?? fromProfile ?? emptySimple(), set];
 }

@@ -34,6 +34,10 @@ export default function ResultActions({
   const [shareId, setShareId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const saved = useRef(false);
+  const onSavedRef = useRef(onSaved);
+  useEffect(() => {
+    onSavedRef.current = onSaved;
+  });
 
   useEffect(() => {
     setCurrentSigilSeed(title);
@@ -45,7 +49,7 @@ export default function ResultActions({
     trackAnalysisCompleted(analysisType);
     saveReading(analysisType, title, payload).then((id) => {
       setShareId(id);
-      onSaved?.(id);
+      onSavedRef.current?.(id);
     });
   }, [analysisType, title, payload]);
 

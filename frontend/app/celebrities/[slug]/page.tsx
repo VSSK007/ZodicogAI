@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -148,6 +149,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         >
           {/* Avatar — centered circle with sign-color glow */}
           <div className="flex flex-col items-center mb-6">
+            <ViewTransition name={`celeb-glyph-${celeb.slug}`} share="morph">
             <div className="relative">
               {wikiImage ? (
                 <div
@@ -187,13 +189,16 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                 {symbol}
               </div>
             </div>
+            </ViewTransition>
           </div>
 
           {/* Name — centered */}
           <div className="text-center">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
-              {celeb.name}
-            </h1>
+            <ViewTransition name={`celeb-name-${celeb.slug}`} share="morph">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-3 w-fit mx-auto">
+                {celeb.name}
+              </h1>
+            </ViewTransition>
 
             {/* Meta pills — centered */}
             <div className="flex flex-wrap justify-center gap-2 mb-5">

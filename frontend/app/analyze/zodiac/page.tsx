@@ -14,7 +14,7 @@ import RevealOnScroll from "@/components/RevealOnScroll";
 import { ZODIAC_COLORS } from "@/lib/colors";
 import ShareImageButton from "@/components/ShareImageButton";
 import ResultActions from "@/components/analyze/ResultActions";
-import { SimpleForm, emptySimple, type SimplePersonState } from "@/components/ui/SimpleForm";
+import { SimpleForm } from "@/components/ui/SimpleForm";
 import { Button } from "@/components/ui/Button";
 
 // ---------------------------------------------------------------------------

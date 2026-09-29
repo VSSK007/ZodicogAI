@@ -5,9 +5,9 @@ import { Manrope } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
+import { ViewTransition } from "react";
 import MotionProvider from "@/components/MotionProvider";
 import CommandPalette from "@/components/CommandPalette";
-import PageTransition from "@/components/PageTransition";
 import Footer from "@/components/Footer";
 import CosmicBackground from "@/components/CosmicBackground";
 
@@ -69,9 +69,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Flex wrapper ensures footer always stays below content */}
         <div className="flex flex-col min-h-screen">
           <div className="flex-1">
-            <PageTransition>
+            <ViewTransition>
               <div className="pt-0 lg:pt-16 pb-24 lg:pb-0">{children}</div>
-            </PageTransition>
+            </ViewTransition>
           </div>
 
         <Footer />

@@ -50,7 +50,7 @@ export default function ZodicognacBand() {
               </div>
               <div className="p-5">
                 <p className="text-sm text-ink-muted mb-3">
-                  You asked — <b className="text-ink-secondary font-semibold">"Why do I keep falling for Scorpios?"</b>
+                  You asked — <b className="text-ink-secondary font-semibold">&ldquo;Why do I keep falling for Scorpios?&rdquo;</b>
                 </p>
                 <p className="text-sm text-ink leading-relaxed">
                   Because your chart rewards intensity. Your emotional engine rates depth

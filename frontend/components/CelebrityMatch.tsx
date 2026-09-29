@@ -12,7 +12,7 @@ import { usePrefilledSimple } from "@/lib/profile";
 import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { apiFetch } from "@/lib/api";
-import { SimpleForm, emptySimple, validateSimple, type SimplePersonState } from "@/components/ui/SimpleForm";
+import { SimpleForm, validateSimple } from "@/components/ui/SimpleForm";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { AIHeader } from "@/components/ui/AIHeader";
