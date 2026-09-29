@@ -96,16 +96,16 @@ export default function MbtiQuiz({ onResult, onClose }: Props) {
       className="rounded-2xl bg-white/[0.03] ring-1 ring-white/10 p-5 space-y-5"
     >
       <div className="flex items-center justify-between">
-        <p className="text-sm font-semibold text-zinc-200">Quick MBTI Finder</p>
-        <button onClick={onClose} className="text-zinc-500 hover:text-white text-xs transition">✕ Close</button>
+        <p className="text-sm font-semibold text-ink">Quick MBTI Finder</p>
+        <button onClick={onClose} className="text-ink-muted hover:text-white text-xs transition">✕ Close</button>
       </div>
-      <p className="text-xs text-zinc-500">Answer all 8 questions — pick whichever option feels most natural to you.</p>
+      <p className="text-xs text-ink-muted">Answer all 8 questions — pick whichever option feels most natural to you.</p>
 
       <div className="space-y-4">
         {QUIZ_QUESTIONS.map((q, i) => (
           <div key={i} className="space-y-1.5">
-            <p className="text-xs font-medium text-zinc-300">
-              <span className="text-zinc-600 mr-1.5">{i + 1}.</span>{q.question}
+            <p className="text-xs font-medium text-ink-secondary">
+              <span className="text-ink-muted mr-1.5">{i + 1}.</span>{q.question}
             </p>
             <div className="grid grid-cols-1 gap-1.5">
               {(["a", "b"] as const).map((choice) => {
@@ -118,7 +118,7 @@ export default function MbtiQuiz({ onResult, onClose }: Props) {
                     className={`text-left text-xs px-3 py-2.5 md:py-2 rounded-lg border transition-all tap-highlight-none ${
                       selected
                         ? "border-white/40 bg-white/10 text-white"
-                        : "border-white/[0.08] bg-white/[0.03] text-zinc-400 hover:border-white/20 hover:text-zinc-200"
+                        : "border-white/[0.08] bg-white/[0.03] text-ink-secondary hover:border-white/20 hover:text-ink"
                     }`}
                   >
                     {opt.label}
@@ -132,7 +132,7 @@ export default function MbtiQuiz({ onResult, onClose }: Props) {
 
       {complete && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-3 pt-1">
-          <span className="text-sm text-zinc-400">Your likely type:</span>
+          <span className="text-sm text-ink-secondary">Your likely type:</span>
           <span className="text-white font-semibold text-base tracking-widest">{computeMbti(answers)}</span>
           <button
             onClick={useResult}
@@ -144,7 +144,7 @@ export default function MbtiQuiz({ onResult, onClose }: Props) {
       )}
 
       {!complete && (
-        <p className="text-xs text-zinc-600">{answered} / {QUIZ_QUESTIONS.length} answered</p>
+        <p className="text-xs text-ink-muted">{answered} / {QUIZ_QUESTIONS.length} answered</p>
       )}
     </motion.div>
   );

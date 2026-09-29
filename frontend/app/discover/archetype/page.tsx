@@ -81,7 +81,7 @@ export default function ArchetypePage() {
         <div className="space-y-2">
           <p className="text-xs font-semibold text-gold/60 uppercase tracking-widest">Discover</p>
           <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Love Archetype</h1>
-          <p className="text-zinc-400 text-sm leading-relaxed">
+          <p className="text-ink-secondary text-sm leading-relaxed">
             Who you are in love — classified across 12 archetypes from your zodiac + MBTI.
           </p>
         </div>
@@ -105,7 +105,7 @@ export default function ArchetypePage() {
               {/* Reset */}
               <button
                 onClick={() => setResult(null)}
-                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-ink-muted hover:text-ink-secondary transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
                 Try again
@@ -116,12 +116,12 @@ export default function ArchetypePage() {
                 <span className="px-3 py-1.5 rounded-full bg-gold/15 border border-gold/30 text-gold-bright text-sm font-semibold">
                   {ad.archetype}
                 </span>
-                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.sign}</span>
-                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.mbti_type}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-ink-secondary text-xs">{result.sign}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-ink-secondary text-xs">{result.mbti_type}</span>
               </div>
 
               {/* Tagline */}
-              <p className="text-base text-zinc-300 font-medium italic">&ldquo;{ad.archetype_tagline}&rdquo;</p>
+              <p className="text-base text-ink-secondary font-medium italic">&ldquo;{ad.archetype_tagline}&rdquo;</p>
 
               {/* Insight card (viral hook) */}
               <InsightCard
@@ -143,8 +143,8 @@ export default function ArchetypePage() {
               ] as const).map(({ key, label }) => (
                 <RevealOnScroll key={key}>
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 space-y-2">
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{label}</p>
-                    <div className="text-sm text-zinc-300 leading-relaxed space-y-2">
+                    <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">{label}</p>
+                    <div className="text-sm text-ink-secondary leading-relaxed space-y-2">
                       {renderMd(an[key] ?? "")}
                     </div>
                   </div>
@@ -154,7 +154,7 @@ export default function ArchetypePage() {
               {/* Archetype scores breakdown */}
               <RevealOnScroll>
                 <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 space-y-3">
-                  <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Archetype Scores</p>
+                  <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">Archetype Scores</p>
                   <div className="space-y-2">
                     {Object.entries(ad.scores)
                       .sort(([, a], [, b]) => b - a)
@@ -162,8 +162,8 @@ export default function ArchetypePage() {
                       .map(([name, score]) => (
                         <div key={name} className="space-y-1">
                           <div className="flex justify-between text-xs">
-                            <span className={name === ad.archetype ? "text-gold-bright font-semibold" : "text-zinc-500"}>{name}</span>
-                            <span className="text-zinc-600">{score.toFixed(0)}</span>
+                            <span className={name === ad.archetype ? "text-gold-bright font-semibold" : "text-ink-muted"}>{name}</span>
+                            <span className="text-ink-muted">{score.toFixed(0)}</span>
                           </div>
                           <div className="h-1 w-full bg-white/[0.05] rounded-full overflow-hidden">
                             <motion.div

@@ -82,7 +82,7 @@ export default function RecommendationsPage() {
         <div className="space-y-2">
           <p className="text-xs font-semibold text-sky-400/60 uppercase tracking-widest">Discover</p>
           <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Taste Profile</h1>
-          <p className="text-zinc-400 text-sm leading-relaxed">
+          <p className="text-ink-secondary text-sm leading-relaxed">
             Games, movies, sneakers — your personality decoded through what you love.
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function RecommendationsPage() {
               {/* Reset */}
               <button
                 onClick={() => setResult(null)}
-                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-ink-muted hover:text-ink-secondary transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
                 Try again
@@ -114,8 +114,8 @@ export default function RecommendationsPage() {
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2 items-center">
-                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.sign}</span>
-                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.mbti_type}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-ink-secondary text-xs">{result.sign}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-ink-secondary text-xs">{result.mbti_type}</span>
               </div>
 
               {/* Insight card */}
@@ -130,8 +130,8 @@ export default function RecommendationsPage() {
               {/* Taste profile prose */}
               <RevealOnScroll>
                 <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 space-y-2">
-                  <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Your Taste Profile</p>
-                  <div className="text-sm text-zinc-300 leading-relaxed space-y-2">
+                  <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">Your Taste Profile</p>
+                  <div className="text-sm text-ink-secondary leading-relaxed space-y-2">
                     {renderMd(an.taste_profile ?? "")}
                   </div>
                 </div>
@@ -169,13 +169,13 @@ export default function RecommendationsPage() {
               ].map(({ label, profile, genres, titles, prose, accent, dot }) => (
                 <RevealOnScroll key={label}>
                   <div className={`rounded-2xl border ${accent} p-5 space-y-3`}>
-                    <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">{label}</p>
+                    <p className="text-xs font-semibold text-ink-secondary uppercase tracking-wider">{label}</p>
                     <p className="text-sm text-white font-medium">{profile}</p>
 
                     {/* Genre/brand pills */}
                     <div className="flex flex-wrap gap-1.5">
                       {genres.map((g) => (
-                        <span key={g} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.07] text-xs text-zinc-400">
+                        <span key={g} className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/[0.07] text-xs text-ink-secondary">
                           <span className={`w-1.5 h-1.5 rounded-full ${dot} shrink-0`} />
                           {g}
                         </span>
@@ -186,13 +186,13 @@ export default function RecommendationsPage() {
                     {titles.length > 0 && (
                       <div className="space-y-0.5">
                         {titles.map((t) => (
-                          <p key={t} className="text-xs text-zinc-500">— {t}</p>
+                          <p key={t} className="text-xs text-ink-muted">— {t}</p>
                         ))}
                       </div>
                     )}
 
                     {/* Prose */}
-                    <div className="text-sm text-zinc-400 leading-relaxed pt-1 border-t border-white/[0.05] space-y-1">
+                    <div className="text-sm text-ink-secondary leading-relaxed pt-1 border-t border-white/[0.05] space-y-1">
                       {renderMd(prose ?? "")}
                     </div>
                   </div>

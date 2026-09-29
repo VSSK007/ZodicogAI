@@ -7,7 +7,7 @@ import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
 import ShareImageButton from "@/components/ShareImageButton";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
-import { getSign } from "@/lib/zodiac";
+import { getSignKey } from "@/lib/zodiac";
 import AnalyzePageShell from "@/components/analyze/AnalyzePageShell";
 import ResultActions from "@/components/analyze/ResultActions";
 import ResultReveal from "@/components/analyze/ResultReveal";
@@ -106,16 +106,16 @@ export default function LoveLanguagePage() {
               <ShareImageButton data={{
                 type: "compat",
                 nameA: names.a, nameB: names.b,
-                signA: getSign(a.day, a.month), symbolA: SIGN_SYMBOL[getSign(a.day, a.month)] ?? "✦", colorA: SIGN_COLOR[getSign(a.day, a.month)] ?? "#f59e0b",
-                signB: getSign(b.day, b.month), symbolB: SIGN_SYMBOL[getSign(b.day, b.month)] ?? "✦", colorB: SIGN_COLOR[getSign(b.day, b.month)] ?? "#818cf8",
+                signA: getSignKey(a.day, a.month), symbolA: SIGN_SYMBOL[getSignKey(a.day, a.month)] ?? "✦", colorA: SIGN_COLOR[getSignKey(a.day, a.month)] ?? "#f59e0b",
+                signB: getSignKey(b.day, b.month), symbolB: SIGN_SYMBOL[getSignKey(b.day, b.month)] ?? "✦", colorB: SIGN_COLOR[getSignKey(b.day, b.month)] ?? "#818cf8",
                 score: result.love_language_compatibility_score,
               }} />
             </div>
 
             {/* Score + primary languages */}
             <Card className="p-5 md:p-8 relative overflow-hidden">
-              <SignWatermark sign={getSign(a.day, a.month)} side="left" />
-              <SignWatermark sign={getSign(b.day, b.month)} side="right" />
+              <SignWatermark sign={getSignKey(a.day, a.month)} side="left" />
+              <SignWatermark sign={getSignKey(b.day, b.month)} side="right" />
               <div className="relative flex flex-col md:flex-row items-center gap-5 md:gap-8">
                 <ScoreRing score={result.love_language_compatibility_score} size={160} label="Language Alignment" color="var(--color-accent-bright)" />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 flex-1 w-full">

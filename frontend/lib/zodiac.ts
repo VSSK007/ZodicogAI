@@ -8,6 +8,11 @@ import type { GlyphName } from "@/components/ui/glyphs";
 /** Canonical sign-from-date lookup (re-exported from lib/colors so there is one implementation). */
 export const getSign = getZodiacSign;
 
+/** Lowercase sign key ("scorpio") — the form SIGN_SYMBOL / SIGN_COLOR are keyed by. */
+export function getSignKey(day: number, month: number): string {
+  return getZodiacSign(day, month).toLowerCase();
+}
+
 export interface SignMeta {
   glyph: GlyphName;
   element: "Fire" | "Earth" | "Air" | "Water";

@@ -329,7 +329,7 @@ export default function InsightCard({
       {score !== undefined && (
         <div className="space-y-1.5">
           <div className="flex justify-between items-center">
-            <span className="text-xs text-zinc-500 uppercase tracking-wider">
+            <span className="text-xs text-ink-muted uppercase tracking-wider">
               {hookType ? `${hookType} match` : "confidence"}
             </span>
             <span className="text-sm font-semibold text-gold-bright">{Math.round(score)}%</span>
@@ -351,7 +351,7 @@ export default function InsightCard({
           {tags.map((tag) => (
             <span
               key={tag}
-              className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/[0.06] border border-white/[0.08] text-zinc-400"
+              className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/[0.06] border border-white/[0.08] text-ink-secondary"
             >
               {tag}
             </span>

@@ -4,6 +4,7 @@ import { DUR, EASE } from "@/lib/motion";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PersonForm from "@/components/PersonForm";
+import MarkdownText from "@/components/ui/Markdown";
 import ZodicognacMark from "@/components/ZodicognacMark";
 import MobileChatSheet from "@/components/MobileChatSheet";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -51,17 +52,17 @@ function loadSession(): Message[] {
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 const INTENT_COLORS: Record<string, string> = {
-  personality_analysis:      "bg-purple-500/20  text-purple-300",
-  compatibility_question:    "bg-blue-500/20    text-blue-300",
+  personality_analysis:      "bg-accent/20  text-accent-bright",
+  compatibility_question:    "bg-accent/20    text-accent-bright",
   relationship_advice:       "bg-rose-500/20    text-rose-300",
   flirting_guidance:         "bg-pink-500/20    text-pink-300",
   communication_help:        "bg-gold/20   text-gold-bright",
   sextrology:                "bg-red-500/20     text-red-300",
-  general_question:          "bg-zinc-700/60    text-zinc-300",
+  general_question:          "bg-white/10    text-ink-secondary",
   signal_reading:            "bg-cyan-500/20    text-cyan-300",
   first_date_coaching:       "bg-emerald-500/20 text-emerald-300",
   red_flags_green_flags:     "bg-orange-500/20  text-orange-300",
-  getting_them_back:         "bg-violet-500/20  text-violet-300",
+  getting_them_back:         "bg-accent/20  text-accent-bright",
   attachment_style_coaching: "bg-sky-500/20     text-sky-300",
   commitment_progression:    "bg-teal-500/20    text-teal-300",
 };
@@ -99,141 +100,6 @@ function topScore(data: Record<string, unknown>): { label: string; value: number
 
 function formatIntent(intent: string) {
   return intent.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-// ── Markdown renderer ─────────────────────────────────────────────────────────
-
-function renderInline(text: string): React.ReactNode[] {
-  // Split on **bold**, *italic*, [text](url) links, and bare https:// URLs
-  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\([^)]+\)|https?:\/\/[^\s)]+)/);
-  return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**"))
-      return <strong key={i} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
-    if (part.startsWith("*") && part.endsWith("*"))
-      return <em key={i} className="italic">{part.slice(1, -1)}</em>;
-    const linkMatch = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-    if (linkMatch)
-      return (
-        <a key={i} href={linkMatch[2]} target="_blank" rel="noopener noreferrer"
-          className="text-gold-bright hover:text-gold-bright underline underline-offset-2 transition-colors">
-          {linkMatch[1]}
-        </a>
-      );
-    if (part.startsWith("http://") || part.startsWith("https://"))
-      return (
-        <a key={i} href={part} target="_blank" rel="noopener noreferrer"
-          className="text-gold-bright hover:text-gold-bright underline underline-offset-2 transition-colors break-all">
-          {part}
-        </a>
-      );
-    return part;
-  });
-}
-
-function isHeading(line: string) {
-  return /^#{2,4}\s/.test(line.trim());
-}
-function headingText(line: string) {
-  return line.trim().replace(/^#{2,4}\s+/, "");
-}
-
-function BulletItem({ raw }: { raw: string }) {
-  // "**Title** — description" or "**Title**: description" → title card
-  const titleMatch = raw.match(/^\*\*([^*]+)\*\*\s*[-—–:]\s*([\s\S]*)/);
-  if (titleMatch) {
-    return (
-      <div className="flex gap-3 items-start py-1">
-        <span className="shrink-0 mt-1 w-1 h-1 rounded-full bg-gold-bright/40" />
-        <div className="min-w-0">
-          <span className="text-white font-semibold text-sm">{titleMatch[1]}</span>
-          <span className="text-zinc-500 text-sm"> — </span>
-          <span className="text-zinc-400 text-sm leading-relaxed">{renderInline(titleMatch[2])}</span>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="flex gap-3 items-start py-0.5">
-      <span className="shrink-0 mt-[7px] w-1 h-1 rounded-full bg-white/20" />
-      <span className="text-zinc-300 text-sm leading-relaxed">{renderInline(raw)}</span>
-    </div>
-  );
-}
-
-function renderLines(lines: string[]) {
-  return lines.map((line, j) => {
-    const t = line.trim();
-    if (!t) return null;
-    if (/^[-*•]\s/.test(t))
-      return <BulletItem key={j} raw={t.replace(/^[-*•]\s+/, "")} />;
-    if (/^\d+\.\s/.test(t))
-      return (
-        <div key={j} className="flex gap-3 items-start py-0.5">
-          <span className="shrink-0 text-gold-bright/50 text-xs font-semibold mt-0.5 tabular-nums min-w-[1rem]">
-            {t.match(/^(\d+)\./)?.[1]}.
-          </span>
-          <span className="text-zinc-300 text-sm leading-relaxed">{renderInline(t.replace(/^\d+\.\s+/, ""))}</span>
-        </div>
-      );
-    return <p key={j} className="text-zinc-300 text-sm leading-[1.8]">{renderInline(t)}</p>;
-  });
-}
-
-function MarkdownText({ text }: { text: string }) {
-  const normalised = text
-    .replace(/([^\n])(#{2,4}\s)/g, "$1\n\n$2")   // heading inline after text → break before
-    .replace(/\n(#{2,4}\s)/g, "\n\n$1")           // single newline before heading → double
-    .replace(/(#{2,4}\s[^\n]+)\n(?!\n)/g, "$1\n\n"); // single newline after heading → double
-  const blocks = normalised.split(/\n\n+/);
-
-  const rendered = blocks.map((block, i) => {
-    const lines = block.split("\n").filter((l) => l.trim());
-    if (lines.length === 0) return null;
-
-    // Section card: heading + content below it
-    if (isHeading(lines[0])) {
-      const ht = headingText(lines[0]);
-      const rest = lines.slice(1);
-      if (rest.length === 0) {
-        // Heading only — standalone label
-        return (
-          <div key={i} className="flex items-center gap-2 mt-2">
-            <div className="h-px flex-1 bg-white/[0.06]" />
-            <span className="text-micro font-semibold tracking-widest uppercase text-gold-bright/60 px-2">
-              {ht}
-            </span>
-            <div className="h-px flex-1 bg-white/[0.06]" />
-          </div>
-        );
-      }
-      return (
-        <div key={i} className="rounded-xl border border-white/[0.08] overflow-hidden">
-          <div className="px-4 py-2 bg-white/[0.03] border-b border-white/[0.05] flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold-bright/50 shrink-0" />
-            <span className="text-micro font-semibold tracking-widest uppercase text-gold-bright/70">
-              {ht}
-            </span>
-          </div>
-          <div className="px-4 py-3 space-y-1.5">{renderLines(rest)}</div>
-        </div>
-      );
-    }
-
-    // Pure list
-    const isList = lines.every((l) => /^[-*•]\s/.test(l.trim()) || /^\d+\.\s/.test(l.trim()));
-    if (isList) {
-      return <div key={i} className="space-y-1.5 pl-1">{renderLines(lines)}</div>;
-    }
-
-    // Plain paragraphs
-    if (lines.length > 1) {
-      return <div key={i} className="space-y-2">{renderLines(lines)}</div>;
-    }
-
-    return <p key={i} className="text-zinc-300 text-sm leading-[1.8]">{renderInline(lines[0])}</p>;
-  });
-
-  return <div className="space-y-3">{rendered}</div>;
 }
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -452,7 +318,7 @@ export default function ChatPage() {
             <div className="p-5 space-y-4 overflow-y-auto flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <ZodicognacMark size={16} active />
-                <p className="text-micro font-semibold text-zinc-500 uppercase tracking-widest">Profiles</p>
+                <p className="text-micro font-semibold text-ink-muted uppercase tracking-widest">Profiles</p>
               </div>
               <PersonForm label="Person A" value={personA} onChange={(v) => { setPersonA(v); setProfileSaved(false); }} compact />
               <PersonForm label="Person B" value={personB} onChange={(v) => { setPersonB(v); setProfileSaved(false); }} compact />
@@ -476,7 +342,7 @@ export default function ChatPage() {
               >
                 {profileSaved ? "✓ Profiles saved" : "Save Profiles"}
               </button>
-              <p className="text-micro text-zinc-700 leading-relaxed">
+              <p className="text-micro text-ink-faint leading-relaxed">
                 Optional — grounds every answer in specific zodiac & MBTI data.
               </p>
             </div>
@@ -521,14 +387,14 @@ export default function ChatPage() {
               <ZodicognacMark size={18} active={true} />
             </div>
             <span className="text-sm font-semibold text-white tracking-tight">Zodicognac</span>
-            <span className="text-zinc-700 text-xs select-none">·</span>
-            <span className="text-micro text-zinc-600">No filter. All insight.</span>
+            <span className="text-ink-faint text-xs select-none">·</span>
+            <span className="text-micro text-ink-muted">No filter. All insight.</span>
           </div>
           <div className="flex items-center gap-2">
             {messages.length > 1 && (
               <button
                 onClick={newChat}
-                className="text-xs px-3 py-1.5 rounded-full border border-white/[0.07] text-zinc-500 hover:text-zinc-300 hover:border-white/[0.12] transition-all duration-200"
+                className="text-xs px-3 py-1.5 rounded-full border border-white/[0.07] text-ink-muted hover:text-ink-secondary hover:border-white/[0.12] transition-all duration-200"
               >
                 New chat
               </button>
@@ -545,8 +411,8 @@ export default function ChatPage() {
               onClick={() => setShowProfiles((v) => !v)}
               className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-200 ${
                 showProfiles
-                  ? "bg-white/[0.06] border-white/[0.12] text-zinc-300"
-                  : "border-white/[0.07] text-zinc-600 hover:text-zinc-300 hover:border-white/[0.12]"
+                  ? "bg-white/[0.06] border-white/[0.12] text-ink-secondary"
+                  : "border-white/[0.07] text-ink-muted hover:text-ink-secondary hover:border-white/[0.12]"
               }`}
             >
               {showProfiles ? "Close" : "Profiles"}
@@ -571,7 +437,7 @@ export default function ChatPage() {
                         <ZodicognacMark size={16} active />
                       </div>
                       <div className="flex-1 min-w-0 space-y-2.5">
-                        <div className="text-sm text-zinc-300 leading-[1.75]">
+                        <div className="text-sm text-ink-secondary leading-[1.75]">
                           <MarkdownText text={msg.text} />
                           {msg.streaming && (
                             <span
@@ -588,7 +454,7 @@ export default function ChatPage() {
                               </span>
                             )}
                             {msg.score && (
-                              <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.04] text-zinc-600 border border-white/[0.06] font-medium">
+                              <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.04] text-ink-muted border border-white/[0.06] font-medium">
                                 {msg.score.label} {msg.score.value.toFixed(1)}%
                               </span>
                             )}
@@ -598,7 +464,7 @@ export default function ChatPage() {
                     </div>
                   ) : (
                     <div className="flex justify-end">
-                      <div className="max-w-[82%] md:max-w-[72%] bg-[#18181c] border border-white/[0.08] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-zinc-200 leading-relaxed">
+                      <div className="max-w-[82%] md:max-w-[72%] bg-surface-raised border border-white/[0.08] rounded-2xl rounded-br-sm px-4 py-2.5 text-sm text-ink leading-relaxed">
                         {msg.text}
                       </div>
                     </div>
@@ -644,19 +510,19 @@ export default function ChatPage() {
         {/* Composer */}
         <div className="shrink-0 px-5 py-5">
           <div className="max-w-[720px] mx-auto">
-            <div className="relative rounded-2xl bg-[#111114] border border-white/[0.09] focus-within:border-white/[0.17] transition-colors shadow-xl shadow-black/50">
+            <div className="relative rounded-2xl bg-surface-raised border border-white/[0.09] focus-within:border-white/[0.17] transition-colors shadow-xl shadow-black/50">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKey}
                 rows={1}
                 placeholder="Ask about personalities, compatibility, attraction, intimacy…"
-                className="w-full resize-none bg-transparent px-5 pt-4 pb-12 text-sm text-white placeholder-zinc-600 focus:outline-none leading-relaxed max-h-44 overflow-y-auto"
+                className="w-full resize-none bg-transparent px-5 pt-4 pb-12 text-sm text-white placeholder-ink-faint focus:outline-none leading-relaxed max-h-44 overflow-y-auto"
                 style={{ scrollbarWidth: "none" }}
               />
               <div className="absolute bottom-3 right-3 flex items-center gap-2">
                 {!loading && (
-                  <span className="text-micro text-zinc-700 hidden sm:block">⏎ send</span>
+                  <span className="text-micro text-ink-faint hidden sm:block">⏎ send</span>
                 )}
                 {loading ? (
                   <button
@@ -672,7 +538,7 @@ export default function ChatPage() {
                   <button
                     onClick={send}
                     disabled={!input.trim()}
-                    className="w-8 h-8 rounded-xl bg-white/[0.07] border border-white/[0.1] text-zinc-400 flex items-center justify-center hover:bg-white/[0.12] hover:text-white hover:border-white/[0.18] active:scale-95 disabled:opacity-20 transition-all"
+                    className="w-8 h-8 rounded-xl bg-white/[0.07] border border-white/[0.1] text-ink-secondary flex items-center justify-center hover:bg-white/[0.12] hover:text-white hover:border-white/[0.18] active:scale-95 disabled:opacity-20 transition-all"
                   >
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                       <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

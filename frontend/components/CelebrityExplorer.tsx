@@ -21,9 +21,9 @@ import {
 const CATEGORY_COLORS: Record<string, string> = {
   Actor: "text-gold-bright",
   Actress: "text-pink-400",
-  Musician: "text-violet-400",
+  Musician: "text-accent-bright",
   Athlete: "text-green-400",
-  Entrepreneur: "text-blue-400",
+  Entrepreneur: "text-accent-bright",
   Politician: "text-red-400",
   Director: "text-orange-400",
   Artist: "text-yellow-400",

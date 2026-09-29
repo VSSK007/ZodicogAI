@@ -78,7 +78,7 @@ export default function AttractionPage() {
         <div className="space-y-2">
           <p className="text-xs font-semibold text-rose-400/60 uppercase tracking-widest">Discover</p>
           <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Attraction Archetype</h1>
-          <p className="text-zinc-400 text-sm leading-relaxed">
+          <p className="text-ink-secondary text-sm leading-relaxed">
             What draws you in — and what it reveals about you.
           </p>
         </div>
@@ -102,7 +102,7 @@ export default function AttractionPage() {
               {/* Reset */}
               <button
                 onClick={() => setResult(null)}
-                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-ink-muted hover:text-ink-secondary transition-colors"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
                 Try again
@@ -113,12 +113,12 @@ export default function AttractionPage() {
                 <span className="px-3 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-sm font-semibold">
                   {ad.attraction_archetype}
                 </span>
-                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.sign}</span>
-                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-zinc-400 text-xs">{result.mbti_type}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-ink-secondary text-xs">{result.sign}</span>
+                <span className="px-2.5 py-1 rounded-full bg-white/[0.05] border border-white/[0.08] text-ink-secondary text-xs">{result.mbti_type}</span>
               </div>
 
               {/* Core insight */}
-              <p className="text-sm text-zinc-400 leading-relaxed italic">{ad.insight}</p>
+              <p className="text-sm text-ink-secondary leading-relaxed italic">{ad.insight}</p>
 
               {/* Insight card */}
               <InsightCard
@@ -137,18 +137,18 @@ export default function AttractionPage() {
                     <p className="text-xs font-semibold text-rose-400/70 uppercase tracking-wider">Drawn To</p>
                     <ul className="space-y-1">
                       {ad.pull_traits.map((t) => (
-                        <li key={t} className="text-xs text-zinc-300 flex items-center gap-1.5">
+                        <li key={t} className="text-xs text-ink-secondary flex items-center gap-1.5">
                           <span className="text-rose-400 shrink-0">+</span>{t}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div className="rounded-xl border border-white/[0.07] bg-white/[0.03] p-4 space-y-2">
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Avoids</p>
+                    <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">Avoids</p>
                     <ul className="space-y-1">
                       {ad.avoidance_traits.map((t) => (
-                        <li key={t} className="text-xs text-zinc-500 flex items-center gap-1.5">
-                          <span className="text-zinc-600 shrink-0">−</span>{t}
+                        <li key={t} className="text-xs text-ink-muted flex items-center gap-1.5">
+                          <span className="text-ink-muted shrink-0">−</span>{t}
                         </li>
                       ))}
                     </ul>
@@ -166,8 +166,8 @@ export default function AttractionPage() {
               ] as const).map(({ key, label }) => (
                 <RevealOnScroll key={key}>
                   <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] p-5 space-y-2">
-                    <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">{label}</p>
-                    <div className="text-sm text-zinc-300 leading-relaxed space-y-2">
+                    <p className="text-xs font-semibold text-ink-muted uppercase tracking-wider">{label}</p>
+                    <div className="text-sm text-ink-secondary leading-relaxed space-y-2">
                       {renderMd(an[key] ?? "")}
                     </div>
                   </div>

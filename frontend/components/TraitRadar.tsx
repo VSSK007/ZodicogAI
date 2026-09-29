@@ -39,8 +39,8 @@ interface TooltipItem {
 function CustomTooltip({ active, payload }: { active?: boolean; payload?: TooltipItem[] }) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="bg-[#1e1e35] border border-white/[0.08] rounded-xl px-3 py-2 text-xs shadow-lg">
-      <p className="text-zinc-400 font-medium mb-1">{payload[0]?.payload?.trait}</p>
+    <div className="bg-surface-overlay border border-white/[0.08] rounded-xl px-3 py-2 text-xs shadow-lg">
+      <p className="text-ink-secondary font-medium mb-1">{payload[0]?.payload?.trait}</p>
       {payload.map((p) => (
         <p key={p.name} style={{ color: p.color }} className="font-semibold">
           {p.name}: {Number(p.value).toFixed(1)} / 10
@@ -52,7 +52,7 @@ function CustomTooltip({ active, payload }: { active?: boolean; payload?: Toolti
 
 export default function TraitRadar({ a, b, nameA = "Person A", nameB = "Person B" }: Props) {
   if (!a && !b) {
-    return <div className="text-zinc-500 text-sm">Trait data unavailable</div>;
+    return <div className="text-ink-muted text-sm">Trait data unavailable</div>;
   }
 
   const data = [
@@ -70,11 +70,11 @@ export default function TraitRadar({ a, b, nameA = "Person A", nameB = "Person B
       {/* Legend */}
       {showLegend && (
         <div className="flex gap-5 mb-4 justify-center">
-          <span className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <span className="flex items-center gap-1.5 text-xs text-ink-secondary">
             <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLOR_A }} />
             {nameA}
           </span>
-          <span className="flex items-center gap-1.5 text-xs text-zinc-400">
+          <span className="flex items-center gap-1.5 text-xs text-ink-secondary">
             <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: COLOR_B }} />
             {nameB}
           </span>

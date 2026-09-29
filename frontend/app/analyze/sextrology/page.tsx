@@ -4,6 +4,8 @@ import { DUR } from "@/lib/motion";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/lib/motion";
+import { renderMd } from "@/lib/renderMd";
+import { getSignKey } from "@/lib/zodiac";
 import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
 import TraitRadar from "@/components/TraitRadar";
@@ -13,22 +15,6 @@ import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import ShareImageButton from "@/components/ShareImageButton";
 import ResultActions from "@/components/analyze/ResultActions";
 import { SIGN_SYMBOL, SIGN_COLOR } from "@/lib/celebrities";
-
-function getSign(month: number, day: number): string {
-  const d = month * 100 + day;
-  if (d >= 321 && d <= 419) return "aries";
-  if (d >= 420 && d <= 520) return "taurus";
-  if (d >= 521 && d <= 620) return "gemini";
-  if (d >= 621 && d <= 722) return "cancer";
-  if (d >= 723 && d <= 822) return "leo";
-  if (d >= 823 && d <= 922) return "virgo";
-  if (d >= 923 && d <= 1022) return "libra";
-  if (d >= 1023 && d <= 1121) return "scorpio";
-  if (d >= 1122 && d <= 1221) return "sagittarius";
-  if (d >= 1222 || d <= 119) return "capricorn";
-  if (d >= 120 && d <= 218) return "aquarius";
-  return "pisces";
-}
 
 interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
 
@@ -108,21 +94,11 @@ function pairSexBody(a: PersonData, b: PersonData) {
 
 const CARD = "bg-white/[0.03] ring-1 ring-white/10 rounded-2xl overflow-hidden";
 
-function renderMd(text: string): React.ReactNode[] {
-  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*)/g).map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**"))
-      return <strong key={i} className="text-white font-semibold">{part.slice(2, -2)}</strong>;
-    if (part.startsWith("*") && part.endsWith("*"))
-      return <em key={i}>{part.slice(1, -1)}</em>;
-    return part;
-  });
-}
-
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
       <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
+      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-ink-muted">{children}</span>
     </div>
   );
 }
@@ -134,7 +110,7 @@ function AIHeader() {
         <div className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
         <div className="w-2 h-2 rounded-full bg-accent" />
       </div>
-      <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
+      <span className="text-xs font-semibold text-ink-secondary tracking-wide">AI Interpretation</span>
       <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
         Gemini 2.5 Flash
       </span>
@@ -208,7 +184,7 @@ export default function SextrologyPage() {
       <div className="mb-10">
         <Eyebrow>Analysis</Eyebrow>
         <h1 className="text-3xl font-bold tracking-tight">Sextrology</h1>
-        <p className="text-zinc-500 mt-1 text-sm">Intimacy dynamics — sexual character, fantasies, kinks, and erotic compatibility</p>
+        <p className="text-ink-muted mt-1 text-sm">Intimacy dynamics — sexual character, fantasies, kinks, and erotic compatibility</p>
       </div>
 
       {!result && (<>
@@ -219,7 +195,7 @@ export default function SextrologyPage() {
 
         <button
           onClick={() => { setShowB((v) => !v); setResult(null); }}
-          className="text-xs text-zinc-500 hover:text-zinc-300 transition mb-6 underline underline-offset-2"
+          className="text-xs text-ink-muted hover:text-ink-secondary transition mb-6 underline underline-offset-2"
         >
           {showB ? "− Remove Person B (solo reading)" : "+ Add Person B for compatibility"}
         </button>
@@ -260,8 +236,8 @@ export default function SextrologyPage() {
                       <ShareImageButton data={{
                         type: "compat",
                         nameA: names.a, nameB: names.b,
-                        signA: getSign(a.month, a.day), symbolA: SIGN_SYMBOL[getSign(a.month, a.day)] ?? "✦", colorA: SIGN_COLOR[getSign(a.month, a.day)] ?? "#f59e0b",
-                        signB: getSign(b.month, b.day), symbolB: SIGN_SYMBOL[getSign(b.month, b.day)] ?? "✦", colorB: SIGN_COLOR[getSign(b.month, b.day)] ?? "#818cf8",
+                        signA: getSignKey(a.day, a.month), symbolA: SIGN_SYMBOL[getSignKey(a.day, a.month)] ?? "✦", colorA: SIGN_COLOR[getSignKey(a.day, a.month)] ?? "#f59e0b",
+                        signB: getSignKey(b.day, b.month), symbolB: SIGN_SYMBOL[getSignKey(b.day, b.month)] ?? "✦", colorB: SIGN_COLOR[getSignKey(b.day, b.month)] ?? "#818cf8",
                         score: pr.sexual_compatibility_score,
                       }} />
                     </div>
@@ -291,7 +267,7 @@ export default function SextrologyPage() {
                 >
                   <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
                   <div className="p-4 md:p-6">
-                    <h2 className="text-sm font-semibold text-zinc-300 mb-4">Trait Comparison</h2>
+                    <h2 className="text-sm font-semibold text-ink-secondary mb-4">Trait Comparison</h2>
                     <TraitRadar a={pr.a_traits} b={pr.b_traits} nameA={names.a} nameB={names.b} />
                   </div>
                 </motion.div>
@@ -305,13 +281,13 @@ export default function SextrologyPage() {
                 >
                   <AIHeader />
                   <div className="p-4 md:p-6 space-y-4 md:space-y-5">
-                    <h2 className="text-sm font-semibold text-zinc-300">Sextrology Reading</h2>
+                    <h2 className="text-sm font-semibold text-ink-secondary">Sextrology Reading</h2>
                     {PAIR_FIELDS.map(({ key, label, icon }) => (
-                      <div key={key} className="border-l-2 border-gold/40 md:border-indigo-500/40 pl-4">
-                        <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
+                      <div key={key} className="border-l-2 border-gold/40 pl-4">
+                        <p className="text-xs text-ink-secondary uppercase tracking-wider mb-1">
                           <span className="mr-1.5">{icon}</span>{label}
                         </p>
-                        <p className="text-sm text-zinc-300 leading-relaxed">{renderMd((pr.analysis as unknown as Record<string,string>)?.[key] ?? "")}</p>
+                        <p className="text-sm text-ink-secondary leading-relaxed">{renderMd((pr.analysis as unknown as Record<string,string>)?.[key] ?? "")}</p>
                       </div>
                     ))}
                   </div>
@@ -330,10 +306,10 @@ export default function SextrologyPage() {
                   <AIHeader />
                   <div className="p-4 md:p-6">
                     <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
-                      <h2 className="text-sm font-semibold text-zinc-300">Sextrology Profile</h2>
+                      <h2 className="text-sm font-semibold text-ink-secondary">Sextrology Profile</h2>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-micro px-2 py-0.5 rounded-full bg-gold/10 md:bg-indigo-500/10 text-gold-bright md:text-indigo-300 border border-gold/20 md:border-indigo-500/20">{sr.sign}</span>
-                        <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 border border-white/[0.07]">{sr.mbti_type}</span>
+                        <span className="text-micro px-2 py-0.5 rounded-full bg-gold/10 text-gold-bright border border-gold/20">{sr.sign}</span>
+                        <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.05] text-ink-secondary border border-white/[0.07]">{sr.mbti_type}</span>
                         <ResultActions
                           analysisType="sextrology_solo_analysis"
                           title={`${sr.name}'s Sextrology Profile`}
@@ -343,11 +319,11 @@ export default function SextrologyPage() {
                     </div>
                     <div className="grid md:grid-cols-2 gap-5">
                       {SOLO_FIELDS.map(({ key, label, icon }) => (
-                        <div key={key} className="border-l-2 border-gold/40 md:border-indigo-500/40 pl-4">
-                          <p className="text-xs text-zinc-400 uppercase tracking-wider mb-1">
+                        <div key={key} className="border-l-2 border-gold/40 pl-4">
+                          <p className="text-xs text-ink-secondary uppercase tracking-wider mb-1">
                             <span className="mr-1.5">{icon}</span>{label}
                           </p>
-                          <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(sr.analysis?.[key] ?? "")}</p>
+                          <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(sr.analysis?.[key] ?? "")}</p>
                         </div>
                       ))}
                     </div>

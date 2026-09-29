@@ -90,7 +90,7 @@ export default function ScoreRing({
         </text>
       </svg>
       {label && (
-        <p className="text-sm text-zinc-400 text-center font-medium">{label}</p>
+        <p className="text-sm text-ink-secondary text-center font-medium">{label}</p>
       )}
     </div>
   );

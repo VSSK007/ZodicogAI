@@ -49,9 +49,9 @@ const STABILITY_COLOR: Record<string, string> = {
 };
 
 const SIGNAL_STYLE: Record<string, string> = {
-  pursue:  "bg-[#2fbf71]/10 text-[#2fbf71] border-[#2fbf71]/25",
-  caution: "bg-[#fbbc04]/10 text-[#fbbc04] border-[#fbbc04]/25",
-  avoid:   "bg-[#ea4335]/10 text-[#ea4335] border-[#ea4335]/25",
+  pursue:  "bg-success/10 text-success border-success/25",
+  caution: "bg-warning/10 text-warning border-warning/25",
+  avoid:   "bg-danger/10 text-danger border-danger/25",
 };
 
 const SIGNAL_LABEL: Record<string, string> = {
@@ -71,7 +71,7 @@ const DIM_COLORS: Record<string, string> = {
   Zodiac:          "#f472b6",
 };
 
-const CARD = "bg-[#14121f] border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
+const CARD = "bg-surface-raised border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
 
 const SLIDE_LABELS = ["Overview", "Dimensions", "Love Intel", "Vectors", "Risk", "AI Reading"];
 
@@ -81,18 +81,18 @@ const SLIDE_LABELS = ["Overview", "Dimensions", "Love Intel", "Vectors", "Risk",
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-[#8b7cf6]" />
-      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
+      <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-ink-muted">{children}</span>
     </div>
   );
 }
 
 function ScoreChip({ score }: { score: number }) {
   const cls =
-    score >= 80 ? "bg-[#2fbf71]/15 text-[#2fbf71] border-[#2fbf71]/30" :
-    score >= 65 ? "bg-[#8b7cf6]/15 text-[#8b7cf6] border-[#8b7cf6]/30" :
-    score >= 45 ? "bg-[#fbbc04]/15 text-[#fbbc04] border-[#fbbc04]/30" :
-                  "bg-[#ea4335]/15 text-[#ea4335] border-[#ea4335]/30";
+    score >= 80 ? "bg-success/15 text-success border-success/30" :
+    score >= 65 ? "bg-accent/15 text-accent border-accent/30" :
+    score >= 45 ? "bg-warning/15 text-warning border-warning/30" :
+                  "bg-danger/15 text-danger border-danger/30";
   return (
     <span className={`text-xs px-2 py-0.5 rounded-full font-semibold tabular-nums border ${cls}`}>
       {score.toFixed(0)}
@@ -144,9 +144,9 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
             <div className="p-4">
               <p className="font-semibold text-white text-sm">{label}</p>
               <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className="text-xs text-zinc-500">{sign}</span>
+                <span className="text-xs text-ink-muted">{sign}</span>
                 {mbti && (
-                  <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 font-mono">
+                  <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.06] text-ink-secondary font-mono">
                     {mbti}
                   </span>
                 )}
@@ -168,20 +168,20 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
                 <span className="text-lg font-bold" style={{ color: STABILITY_COLOR[ri.stability_prediction] }}>
                   {ri.stability_prediction.charAt(0).toUpperCase() + ri.stability_prediction.slice(1)}
                 </span>
-                <span className="text-zinc-600 text-sm">stability</span>
+                <span className="text-ink-muted text-sm">stability</span>
                 <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${SIGNAL_STYLE[nc.pursue_signal]}`}>
                   {SIGNAL_LABEL[nc.pursue_signal]}
                 </span>
               </div>
             </div>
             <div>
-              <div className="flex justify-between text-xs text-zinc-600 mb-1.5">
+              <div className="flex justify-between text-xs text-ink-muted mb-1.5">
                 <span>Conflict Probability</span>
                 <span>{ri.conflict_probability.toFixed(0)}%</span>
               </div>
               <div className="h-[2px] bg-white/[0.05] rounded-full overflow-hidden">
                 <motion.div
-                  className="h-full rounded-full bg-[#ea4335]/60"
+                  className="h-full rounded-full bg-danger/60"
                   initial={{ width: 0 }}
                   animate={{ width: `${ri.conflict_probability}%` }}
                   transition={{ duration: DUR.base, delay: 0.2 }}
@@ -203,7 +203,7 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
             <div className="p-4">
               <Eyebrow>{label}</Eyebrow>
               <p className="text-base font-bold" style={{ color: color || "white" }}>{value}</p>
-              {sub && <p className="text-micro text-zinc-600 mt-0.5">{sub}</p>}
+              {sub && <p className="text-micro text-ink-muted mt-0.5">{sub}</p>}
             </div>
           </div>
         ))}
@@ -222,7 +222,7 @@ function SlideDimensions({ result }: { result: FullResult }) {
         <CardStripe />
         <div className="p-6">
           <Eyebrow>Compatibility Breakdown</Eyebrow>
-          <h2 className="text-sm font-semibold text-zinc-300 mb-5">Eight Dimensions</h2>
+          <h2 className="text-sm font-semibold text-ink-secondary mb-5">Eight Dimensions</h2>
           <div>
             {dims(result).map((d, i) => (
               <motion.div
@@ -232,7 +232,7 @@ function SlideDimensions({ result }: { result: FullResult }) {
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: DUR.fast, delay: i * 0.06 }}
               >
-                <div className="w-28 text-sm text-zinc-400 flex-shrink-0">{d.name}</div>
+                <div className="w-28 text-sm text-ink-secondary flex-shrink-0">{d.name}</div>
                 <div className="flex-1 h-[2px] bg-white/[0.05] rounded-full overflow-hidden">
                   <motion.div
                     className="h-full rounded-full"
@@ -256,7 +256,7 @@ function SlideDimensions({ result }: { result: FullResult }) {
           <div className="flex items-center justify-between mb-4">
             <div>
               <Eyebrow>Numerology</Eyebrow>
-              <h2 className="text-sm font-semibold text-zinc-300">Number Compatibility</h2>
+              <h2 className="text-sm font-semibold text-ink-secondary">Number Compatibility</h2>
             </div>
             <span className={`text-xs px-3 py-1 rounded-full font-semibold border ${SIGNAL_STYLE[nc.pursue_signal]}`}>
               {nc.compatibility_score.toFixed(0)}%
@@ -269,9 +269,9 @@ function SlideDimensions({ result }: { result: FullResult }) {
               { label: "Cross-Pair", value: nc.cross_score },
             ].map(({ label, value }) => (
               <div key={label} className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3">
-                <p className="text-micro text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
-                <p className="text-2xl font-extrabold text-zinc-200 tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
-                  {value.toFixed(0)}<span className="text-xs text-zinc-600 ml-0.5">%</span>
+                <p className="text-micro text-ink-muted uppercase tracking-wider mb-1">{label}</p>
+                <p className="text-2xl font-extrabold text-ink tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
+                  {value.toFixed(0)}<span className="text-xs text-ink-muted ml-0.5">%</span>
                 </p>
               </div>
             ))}
@@ -302,7 +302,7 @@ function SlideLoveIntel({ result, a, b }: { result: FullResult; a: PersonData; b
             <div className="p-4">
               <Eyebrow>{label}</Eyebrow>
               <p className="text-3xl font-extrabold tabular-nums" style={{ color, fontFamily: "var(--font-manrope)" }}>
-                {score.toFixed(0)}<span className="text-sm text-zinc-600 ml-0.5">%</span>
+                {score.toFixed(0)}<span className="text-sm text-ink-muted ml-0.5">%</span>
               </p>
               <div className="h-[2px] bg-white/[0.05] rounded-full overflow-hidden mt-2">
                 <motion.div
@@ -333,7 +333,7 @@ function SlideLoveIntel({ result, a, b }: { result: FullResult; a: PersonData; b
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.07 }}
           >
-            <p className="text-micro text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
+            <p className="text-micro text-ink-muted uppercase tracking-wider mb-1">{label}</p>
             <p className="text-sm font-semibold capitalize" style={{ color }}>{val}</p>
           </motion.div>
         ))}
@@ -352,7 +352,7 @@ function SlideVectors({ result, a, b }: { result: FullResult; a: PersonData; b: 
         <CardStripe color="#60a5fa" />
         <div className="p-6">
           <Eyebrow>Trait Vectors</Eyebrow>
-          <h2 className="text-sm font-semibold text-zinc-300 mb-4">Behavioral Comparison</h2>
+          <h2 className="text-sm font-semibold text-ink-secondary mb-4">Behavioral Comparison</h2>
           <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
         </div>
       </div>
@@ -369,7 +369,7 @@ function SlideRisk({ result }: { result: FullResult }) {
     <div className="space-y-4">
       <div className="grid md:grid-cols-2 gap-4">
         <div className={CARD}>
-          <div className="h-0.5 bg-gradient-to-r from-[#2fbf71]/50 to-transparent" />
+          <div className="h-0.5 bg-gradient-to-r from-success/50 to-transparent" />
           <div className="p-5">
             <Eyebrow>Strengths</Eyebrow>
             <ol className="space-y-2.5 mt-1">
@@ -381,8 +381,8 @@ function SlideRisk({ result }: { result: FullResult }) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.08 }}
                 >
-                  <span className="text-[#2fbf71] font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
-                  <span className="text-zinc-300">{s}</span>
+                  <span className="text-success font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
+                  <span className="text-ink-secondary">{s}</span>
                 </motion.li>
               ))}
             </ol>
@@ -390,7 +390,7 @@ function SlideRisk({ result }: { result: FullResult }) {
         </div>
 
         <div className={CARD}>
-          <div className="h-0.5 bg-gradient-to-r from-[#ea4335]/50 to-transparent" />
+          <div className="h-0.5 bg-gradient-to-r from-danger/50 to-transparent" />
           <div className="p-5">
             <Eyebrow>Risk Areas</Eyebrow>
             <ol className="space-y-2.5 mt-1">
@@ -402,8 +402,8 @@ function SlideRisk({ result }: { result: FullResult }) {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.08 }}
                 >
-                  <span className="text-[#ea4335] font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
-                  <span className="text-zinc-300">{r}</span>
+                  <span className="text-danger font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
+                  <span className="text-ink-secondary">{r}</span>
                 </motion.li>
               ))}
             </ol>
@@ -424,18 +424,18 @@ function SlideAI({ result }: { result: FullResult }) {
     <div className={CARD}>
       <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
         <div className="relative w-2 h-2 shrink-0">
-          <div className="absolute inset-0 rounded-full bg-[#8b7cf6] animate-ping opacity-60" />
-          <div className="w-2 h-2 rounded-full bg-[#8b7cf6]" />
+          <div className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
+          <div className="w-2 h-2 rounded-full bg-accent" />
         </div>
-        <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-        <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-[#8b7cf6]/10 text-[#8b7cf6]/80 border border-[#8b7cf6]/20">
+        <span className="text-xs font-semibold text-ink-secondary tracking-wide">AI Interpretation</span>
+        <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-accent/10 text-accent/80 border border-accent/20">
           Gemini 2.5 Flash
         </span>
       </div>
       {allDash ? (
         <div className="p-8 flex flex-col items-center gap-3 text-center">
-          <p className="text-zinc-500 text-sm">AI interpretation unavailable — the model timed out or was rate-limited.</p>
-          <p className="text-zinc-600 text-xs">Run the report again to retry.</p>
+          <p className="text-ink-muted text-sm">AI interpretation unavailable — the model timed out or was rate-limited.</p>
+          <p className="text-ink-muted text-xs">Run the report again to retry.</p>
         </div>
       ) : (
         <div className="p-6 grid md:grid-cols-2 gap-6">
@@ -446,10 +446,10 @@ function SlideAI({ result }: { result: FullResult }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
-              <p className="text-micro text-zinc-600 uppercase tracking-[0.1em] font-semibold mb-2">
+              <p className="text-micro text-ink-muted uppercase tracking-[0.1em] font-semibold mb-2">
                 {key.replace(/_/g, " ")}
               </p>
-              <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
+              <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(result.analysis[key])}</p>
             </motion.div>
           ))}
         </div>
@@ -543,7 +543,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => goTo(activeSlide - 1)}
                 disabled={activeSlide === 0}
-                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-zinc-400 hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
+                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-ink-secondary hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
               >
                 ‹
               </button>
@@ -554,8 +554,8 @@ export default function DashboardPage() {
                     onClick={() => goTo(i)}
                     className={`px-2.5 md:px-3 py-1.5 rounded-[10px] text-xs font-medium transition-all whitespace-nowrap ${
                       activeSlide === i
-                        ? "bg-[#8b7cf6] text-white shadow-sm"
-                        : "text-zinc-500 hover:text-zinc-300"
+                        ? "bg-accent text-white shadow-sm"
+                        : "text-ink-muted hover:text-ink-secondary"
                     }`}
                   >
                     {label}
@@ -565,11 +565,11 @@ export default function DashboardPage() {
               <button
                 onClick={() => goTo(activeSlide + 1)}
                 disabled={activeSlide === 5}
-                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-zinc-400 hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
+                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-ink-secondary hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
               >
                 ›
               </button>
-              <span className="text-micro text-zinc-600 ml-1 tabular-nums pr-1 shrink-0">{activeSlide + 1}/6</span>
+              <span className="text-micro text-ink-muted ml-1 tabular-nums pr-1 shrink-0">{activeSlide + 1}/6</span>
             </div>
           </motion.div>
         )}
@@ -579,13 +579,13 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-1.5 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#8b7cf6]" />
-            <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">Relationship Intelligence</span>
+            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="text-micro font-semibold tracking-[0.13em] uppercase text-ink-muted">Relationship Intelligence</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-manrope)" }}>
             Synastry
           </h1>
-          <p className="text-zinc-500 mt-1 text-sm">Full read — 8 dimensions + AI interpretation</p>
+          <p className="text-ink-muted mt-1 text-sm">Full read — 8 dimensions + AI interpretation</p>
         </div>
 
         {/* Input forms — hidden once result is shown */}
@@ -617,7 +617,7 @@ export default function DashboardPage() {
             >
               <button
                 onClick={() => setResult(null)}
-                className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-300 transition-colors mb-4"
+                className="flex items-center gap-1.5 text-xs text-ink-muted hover:text-ink-secondary transition-colors mb-4"
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
                 Try again
@@ -657,7 +657,7 @@ export default function DashboardPage() {
                       onClick={() => goTo(i)}
                       className={`rounded-full transition-all duration-200 ${
                         activeSlide === i
-                          ? "w-5 h-1.5 bg-[#8b7cf6]"
+                          ? "w-5 h-1.5 bg-accent"
                           : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
                       }`}
                     />

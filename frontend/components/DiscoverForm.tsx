@@ -19,7 +19,7 @@ interface Props {
   error: string | null;
 }
 
-const INPUT = "w-full bg-white/[0.04] border border-white/10 px-3 py-3 text-white text-sm placeholder-zinc-600 focus:outline-none focus:border-gold/40 transition-colors rounded-lg";
+const INPUT = "w-full bg-white/[0.04] border border-white/10 px-3 py-3 text-white text-sm placeholder-ink-faint focus:outline-none focus:border-gold/40 transition-colors rounded-lg";
 
 export default function DiscoverForm({ onSubmit, loading, error }: Props) {
   const [name,     setName]     = useState("");
@@ -74,7 +74,7 @@ export default function DiscoverForm({ onSubmit, loading, error }: Props) {
       <button
         type="button"
         onClick={() => setShowQuiz((v) => !v)}
-        className="text-micro text-zinc-500 hover:text-zinc-300 transition pl-1"
+        className="text-micro text-ink-muted hover:text-ink-secondary transition pl-1"
       >
         {showQuiz ? "▲ Hide quiz" : "▾ Don't know your type? Take a quick quiz"}
       </button>

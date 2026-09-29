@@ -18,8 +18,8 @@ const CARDS = [
     title: "Relationship Pattern",
     tagline: "The pattern you keep repeating — and why.",
     emoji: "↺",
-    accent: "from-violet-500/10 to-violet-500/5",
-    border: "border-violet-500/25",
+    accent: "from-accent/10 to-accent/5",
+    border: "border-accent/25",
   },
   {
     href: "/discover/attraction",
@@ -54,7 +54,7 @@ export default function DiscoverPage() {
           <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
             Who are you, really?
           </h1>
-          <p className="text-zinc-400 text-base leading-relaxed">
+          <p className="text-ink-secondary text-base leading-relaxed">
             Identity readings built from your zodiac and MBTI.
             Each one is a different angle on the same truth.
           </p>
@@ -79,10 +79,10 @@ export default function DiscoverPage() {
                   </span>
                   <div className="space-y-1 min-w-0">
                     <p className="text-white font-semibold text-base">{card.title}</p>
-                    <p className="text-zinc-400 text-sm leading-relaxed">{card.tagline}</p>
+                    <p className="text-ink-secondary text-sm leading-relaxed">{card.tagline}</p>
                   </div>
                   <svg
-                    className="shrink-0 mt-0.5 text-zinc-600 group-hover:text-zinc-400 transition-colors"
+                    className="shrink-0 mt-0.5 text-ink-muted group-hover:text-ink-secondary transition-colors"
                     width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
                   >

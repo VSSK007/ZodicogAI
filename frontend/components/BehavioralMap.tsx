@@ -49,9 +49,9 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
   ];
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#14121f] p-5">
-      <h3 className="text-sm font-semibold text-zinc-300 mb-0.5">Behavioral Map</h3>
-      <p className="text-xs text-zinc-500 mb-4">Dominance × Expressiveness</p>
+    <div className="rounded-2xl border border-white/[0.07] bg-surface-raised p-5">
+      <h3 className="text-sm font-semibold text-ink-secondary mb-0.5">Behavioral Map</h3>
+      <p className="text-xs text-ink-muted mb-4">Dominance × Expressiveness</p>
 
       {/* Mobile: CSS quadrant map — hidden on desktop */}
       <div className="md:hidden relative h-52 rounded-xl bg-white/[0.03] border border-white/[0.05] overflow-hidden">
@@ -96,13 +96,13 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
         )}
 
         {/* Legend below chart */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-4 text-micro text-zinc-500">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-4 text-micro text-ink-muted">
           <span>
             <span className="inline-block w-2 h-2 rounded-full bg-white mr-1" />
             {nameA}
           </span>
           <span>
-            <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1" />
+            <span className="inline-block w-2 h-2 rounded-full bg-accent mr-1" />
             {nameB}
           </span>
         </div>
@@ -133,7 +133,7 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
                 if (!payload?.length) return null;
                 const d = payload[0].payload;
                 return (
-                  <div className="bg-[#1e1e35] border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-white">
+                  <div className="bg-surface-overlay border border-white/[0.08] rounded-lg px-3 py-2 text-xs text-white">
                     <p className="font-semibold mb-1">{d.label}</p>
                     <p>Dominance: {d.x} / 10</p>
                     <p>Expressiveness: {d.y} / 10</p>
@@ -148,20 +148,20 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
         {/* Quadrant labels as a 2×2 grid below the chart */}
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 px-2">
           <div className="text-left">
-            <span className="text-micro text-zinc-600 uppercase tracking-widest">↑ Low Dom · High Exp</span>
+            <span className="text-micro text-ink-muted uppercase tracking-widest">↑ Low Dom · High Exp</span>
             <span className="ml-2 text-micro font-medium text-white/20">Empathic</span>
           </div>
           <div className="text-right">
             <span className="text-micro font-medium text-white/20">Dominant</span>
-            <span className="ml-2 text-micro text-zinc-600 uppercase tracking-widest">High Dom · High Exp ↑</span>
+            <span className="ml-2 text-micro text-ink-muted uppercase tracking-widest">High Dom · High Exp ↑</span>
           </div>
           <div className="text-left">
-            <span className="text-micro text-zinc-600 uppercase tracking-widest">↓ Low Dom · Low Exp</span>
+            <span className="text-micro text-ink-muted uppercase tracking-widest">↓ Low Dom · Low Exp</span>
             <span className="ml-2 text-micro font-medium text-white/20">Reserved</span>
           </div>
           <div className="text-right">
             <span className="text-micro font-medium text-white/20">Assertive</span>
-            <span className="ml-2 text-micro text-zinc-600 uppercase tracking-widest">High Dom · Low Exp ↓</span>
+            <span className="ml-2 text-micro text-ink-muted uppercase tracking-widest">High Dom · Low Exp ↓</span>
           </div>
         </div>
       </div>

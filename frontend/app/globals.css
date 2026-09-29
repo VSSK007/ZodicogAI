@@ -34,6 +34,11 @@
   --color-gold-soft:         rgba(216, 166, 60, 0.14);
   --color-gold-ink:          #14100a; /* text on gold fills */
 
+  /* Semantic status colours */
+  --color-danger:            #ea4335;
+  --color-success:           #2fbf71;
+  --color-warning:           #fbbc04;
+
   /* Type scale — micro / xs / sm / base cover all UI text; display sizes
      stay on Tailwind's 2xl+ steps. No arbitrary text-[Npx] values. */
   --text-micro:              0.6875rem; /* 11px — labels, chips, eyebrows */

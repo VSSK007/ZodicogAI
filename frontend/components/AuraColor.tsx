@@ -14,7 +14,7 @@ export function AuraChip({ sign }: AuraChipProps) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: c.hex }} />
-      <span className="text-xs text-zinc-400">{c.name}</span>
+      <span className="text-xs text-ink-secondary">{c.name}</span>
     </span>
   );
 }
@@ -36,13 +36,13 @@ function Swatch({ color, label, sub }: { color: ColorProfile; label: string; sub
   return (
     <div className="flex-1 flex flex-col gap-2">
       <div className="h-16 rounded-xl" style={{ backgroundColor: color.hex }} />
-      <p className="text-micro font-medium text-zinc-300 truncate">{label}</p>
-      {sub && <p className="text-micro text-zinc-600">{sub}</p>}
+      <p className="text-micro font-medium text-ink-secondary truncate">{label}</p>
+      {sub && <p className="text-micro text-ink-muted">{sub}</p>}
       <div className="flex flex-wrap gap-1">
         {color.keywords.map((kw) => (
           <span
             key={kw}
-            className="text-micro px-1.5 py-0.5 rounded-full bg-[#0d0d1a] text-zinc-500 border border-white/[0.07]"
+            className="text-micro px-1.5 py-0.5 rounded-full bg-[#0d0d1a] text-ink-muted border border-white/[0.07]"
           >
             {kw}
           </span>
@@ -56,8 +56,8 @@ function BlendSwatch({ hex, label }: { hex: string; label: string }) {
   return (
     <div className="flex-1 flex flex-col gap-2 items-center">
       <div className="w-full h-16 rounded-xl" style={{ backgroundColor: hex }} />
-      <p className="text-micro font-medium text-zinc-300">{label}</p>
-      <p className="text-micro text-zinc-600 font-mono">{hex}</p>
+      <p className="text-micro font-medium text-ink-secondary">{label}</p>
+      <p className="text-micro text-ink-muted font-mono">{hex}</p>
     </div>
   );
 }
@@ -73,8 +73,8 @@ export function AuraPalette({
   const midHex = blendHex(colorA.hex, colorB.hex);
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-[#14121f] p-5 space-y-4">
-      <p className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Aura Palette</p>
+    <div className="rounded-2xl border border-white/[0.07] bg-surface-raised p-5 space-y-4">
+      <p className="text-xs font-semibold text-ink-secondary uppercase tracking-wider">Aura Palette</p>
 
       <div className="flex gap-3">
         <Swatch color={colorA} label={nameA} sub={colorA.name} />

@@ -99,8 +99,8 @@ const AURA_COLOR: Record<string, string> = {
 function Section({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="rounded-xl bg-white/[0.03] border border-white/[0.07] p-5">
-      <p className="text-xs font-semibold tracking-widest uppercase text-zinc-500 mb-2">{label}</p>
-      <div className="text-zinc-300 text-sm leading-relaxed">{children}</div>
+      <p className="text-xs font-semibold tracking-widest uppercase text-ink-muted mb-2">{label}</p>
+      <div className="text-ink-secondary text-sm leading-relaxed">{children}</div>
     </div>
   )
 }
@@ -133,7 +133,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         {/* Back link */}
         <Link
           href="/celebrities"
-          className="inline-flex items-center gap-2 text-sm text-zinc-500 hover:text-zinc-300 transition-colors mb-8"
+          className="inline-flex items-center gap-2 text-sm text-ink-muted hover:text-ink-secondary transition-colors mb-8"
         >
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
             <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -211,13 +211,13 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                   {modality}
                 </span>
               )}
-              <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-400">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-ink-secondary">
                 {celeb.category}
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-400">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-ink-secondary">
                 {celeb.nationality}
               </span>
-              <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-500">
+              <span className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-ink-muted">
                 Born {celeb.born}
               </span>
               {wikiUrl && (
@@ -225,7 +225,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                   href={wikiUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
+                  className="text-xs px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-ink-muted hover:text-ink-secondary hover:border-white/20 transition-colors"
                 >
                   Wikipedia ↗
                 </a>
@@ -254,8 +254,8 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                     {lifePathNum}
                   </div>
                   <div>
-                    <p className="text-micro text-zinc-600 uppercase tracking-widest">Life Path</p>
-                    <p className="text-xs text-zinc-300 font-medium">{lifePathNum}</p>
+                    <p className="text-micro text-ink-muted uppercase tracking-widest">Life Path</p>
+                    <p className="text-xs text-ink-secondary font-medium">{lifePathNum}</p>
                   </div>
                 </div>
               )}
@@ -267,8 +267,8 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: auraColor }} />
                 </div>
                 <div>
-                  <p className="text-micro text-zinc-600 uppercase tracking-widest">Aura</p>
-                  <p className="text-xs text-zinc-300 font-medium">{auraName}</p>
+                  <p className="text-micro text-ink-muted uppercase tracking-widest">Aura</p>
+                  <p className="text-xs text-ink-secondary font-medium">{auraName}</p>
                 </div>
               </div>
             </div>
@@ -303,19 +303,19 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
           </div>
         ) : (
           <div className="rounded-xl bg-white/[0.03] border border-white/[0.07] p-8 text-center">
-            <p className="text-zinc-500 text-sm">Profile unavailable — please try again later.</p>
+            <p className="text-ink-muted text-sm">Profile unavailable — please try again later.</p>
           </div>
         )}
 
         {/* CTA */}
         <div className="mt-10 rounded-xl bg-white/[0.03] border border-white/[0.07] p-6 text-center">
-          <p className="text-zinc-400 text-sm mb-4">
+          <p className="text-ink-secondary text-sm mb-4">
             Curious about your own {signLabel} energy? Run a personalised analysis.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
               href="/analyze/zodiac"
-              className="px-4 py-2 rounded-full text-sm font-medium border border-white/10 bg-white/5 text-zinc-300 hover:bg-white/10 hover:text-white transition-all"
+              className="px-4 py-2 rounded-full text-sm font-medium border border-white/10 bg-white/5 text-ink-secondary hover:bg-white/10 hover:text-white transition-all"
             >
               Zodiac Analysis
             </Link>
@@ -332,7 +332,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
         <div className="mt-6 text-center">
           <Link
             href={`/celebrities#${celeb.sign}`}
-            className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors"
+            className="text-xs text-ink-muted hover:text-ink-secondary transition-colors"
           >
             View all {signLabel} celebrities →
           </Link>

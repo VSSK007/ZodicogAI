@@ -98,7 +98,7 @@ const ELEMENT_THEME: Record<string, { accent: string; bg: string; border: string
   Fire:  { accent: "#f97316", bg: "bg-orange-500/8",  border: "border-orange-500/20", text: "text-orange-400", badge: "bg-orange-500/15 text-orange-300 border-orange-500/30" },
   Earth: { accent: "#10b981", bg: "bg-emerald-500/8", border: "border-emerald-500/20",text: "text-emerald-400",badge: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30"},
   Air:   { accent: "#38bdf8", bg: "bg-sky-500/8",     border: "border-sky-500/20",    text: "text-sky-400",    badge: "bg-sky-500/15 text-sky-300 border-sky-500/30"          },
-  Water: { accent: "#6366f1", bg: "bg-indigo-500/8",  border: "border-indigo-500/20", text: "text-indigo-400", badge: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30" },
+  Water: { accent: "#6366f1", bg: "bg-accent/8",  border: "border-accent/20", text: "text-accent-bright", badge: "bg-accent/15 text-accent-bright border-accent/30" },
 };
 
 const ALL_SIGN_SYMBOLS: Record<string, string> = {
@@ -180,10 +180,10 @@ function ZodiacPageInner() {
         <div className="mb-10">
           <div className="flex items-center gap-1.5 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-            <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">Analysis</span>
+            <span className="text-micro font-semibold tracking-[0.13em] uppercase text-ink-muted">Analysis</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight">Zodiac Profile</h1>
-          <p className="text-zinc-500 mt-1 text-sm">Enter a birthday — get a deep astrological read of the sign.</p>
+          <p className="text-ink-muted mt-1 text-sm">Enter a birthday — get a deep astrological read of the sign.</p>
         </div>
       )}
 
@@ -193,7 +193,7 @@ function ZodiacPageInner() {
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Zodiac Profile</h1>
           <button
             onClick={() => setShowForm(true)}
-            className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-zinc-400 hover:text-white transition-colors"
+            className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-ink-secondary hover:text-white transition-colors"
           >
             + New search
           </button>
@@ -242,10 +242,10 @@ function ZodiacPageInner() {
                   {meta.symbol}
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-500 uppercase tracking-widest mb-1">{result.name}&rsquo;s Sun Sign</p>
+                  <p className="text-xs text-ink-muted uppercase tracking-widest mb-1">{result.name}&rsquo;s Sun Sign</p>
                   <h2 className="text-3xl md:text-4xl font-bold tracking-tight leading-none" style={{ color: theme.accent }}>{z.sign}</h2>
-                  <p className="text-zinc-400 text-sm mt-1 italic">{meta.archetype}</p>
-                  <p className="text-zinc-600 text-xs mt-0.5">{meta.dates}</p>
+                  <p className="text-ink-secondary text-sm mt-1 italic">{meta.archetype}</p>
+                  <p className="text-ink-muted text-xs mt-0.5">{meta.dates}</p>
                 </div>
               </div>
 
@@ -258,8 +258,8 @@ function ZodiacPageInner() {
                   { label: "Polarity", value: meta.polarity === "Yang" ? "Yang ☀" : "Yin ☽" },
                 ].map(({ label, value }) => (
                   <div key={label} className="px-5 py-3">
-                    <p className="text-micro text-zinc-600 uppercase tracking-widest mb-0.5">{label}</p>
-                    <p className="text-sm font-medium text-zinc-200">{value}</p>
+                    <p className="text-micro text-ink-muted uppercase tracking-widest mb-0.5">{label}</p>
+                    <p className="text-sm font-medium text-ink">{value}</p>
                   </div>
                 ))}
               </div>
@@ -269,12 +269,12 @@ function ZodiacPageInner() {
                 const ac = ZODIAC_COLORS[z.sign];
                 return ac ? (
                   <div className="px-8 py-3 border-b border-white/8 flex items-center gap-3">
-                    <span className="text-micro text-zinc-600 uppercase tracking-widest shrink-0">Aura Color</span>
+                    <span className="text-micro text-ink-muted uppercase tracking-widest shrink-0">Aura Color</span>
                     <div className="w-4 h-4 rounded-md shrink-0" style={{ backgroundColor: ac.hex }} />
-                    <span className="text-sm font-medium text-zinc-200">{ac.name}</span>
+                    <span className="text-sm font-medium text-ink">{ac.name}</span>
                     <div className="flex flex-wrap gap-1 ml-1">
                       {ac.keywords.map((kw) => (
-                        <span key={kw} className="text-micro px-2 py-0.5 rounded-full bg-white/5 text-zinc-500 border border-white/8">{kw}</span>
+                        <span key={kw} className="text-micro px-2 py-0.5 rounded-full bg-white/5 text-ink-muted border border-white/8">{kw}</span>
                       ))}
                     </div>
                   </div>
@@ -292,27 +292,27 @@ function ZodiacPageInner() {
               {z.decan && (
                 <div className="px-8 py-5 border-b border-white/8 space-y-3">
                   <div className="flex items-center gap-3 flex-wrap">
-                    <span className="text-micro text-zinc-600 uppercase tracking-widest shrink-0">Decan</span>
-                    <span className="text-sm font-semibold text-zinc-200">
+                    <span className="text-micro text-ink-muted uppercase tracking-widest shrink-0">Decan</span>
+                    <span className="text-sm font-semibold text-ink">
                       {z.sign} Decan {z.decan.number} ({z.decan.sub_sign})
                     </span>
-                    <span className="text-micro px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-zinc-500">
+                    <span className="text-micro px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-ink-muted">
                       Sub-ruler: {z.decan.sub_ruler}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {z.decan.keywords.map((t) => (
-                      <span key={t} className="text-micro px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-zinc-400">{t}</span>
+                      <span key={t} className="text-micro px-2 py-0.5 rounded-full bg-white/5 border border-white/8 text-ink-secondary">{t}</span>
                     ))}
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
                     <div className="rounded-lg bg-white/[0.02] border border-white/8 p-3">
-                      <p className="text-micro uppercase tracking-widest text-zinc-600 mb-1">Overview</p>
-                      <p className="text-xs text-zinc-300 leading-relaxed">{renderMd(z.decan.description_short)}</p>
+                      <p className="text-micro uppercase tracking-widest text-ink-muted mb-1">Overview</p>
+                      <p className="text-xs text-ink-secondary leading-relaxed">{renderMd(z.decan.description_short)}</p>
                     </div>
                     <div className="rounded-lg bg-white/[0.02] border border-white/8 p-3">
-                      <p className="text-micro uppercase tracking-widest text-zinc-600 mb-1">In Depth</p>
-                      <p className="text-xs text-zinc-300 leading-relaxed">{renderMd(z.decan.description_rich)}</p>
+                      <p className="text-micro uppercase tracking-widest text-ink-muted mb-1">In Depth</p>
+                      <p className="text-xs text-ink-secondary leading-relaxed">{renderMd(z.decan.description_rich)}</p>
                     </div>
                   </div>
                 </div>
@@ -320,7 +320,7 @@ function ZodiacPageInner() {
 
               {/* Overview */}
               <div className="px-8 py-6">
-                <p className="text-zinc-300 leading-relaxed text-sm">{renderMd(art.overview)}</p>
+                <p className="text-ink-secondary leading-relaxed text-sm">{renderMd(art.overview)}</p>
               </div>
             </div>
             </RevealOnScroll>
@@ -328,14 +328,14 @@ function ZodiacPageInner() {
             {/* ── The Symbol & Mythology ── */}
             <RevealOnScroll>
               <Section title="The Symbol & Mythology" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.the_symbol)}</p>
+                <p className="text-ink-secondary text-sm leading-relaxed">{renderMd(art.the_symbol)}</p>
               </Section>
             </RevealOnScroll>
 
             {/* ── Personality ── */}
             <RevealOnScroll>
               <Section title="Personality" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.personality)}</p>
+                <p className="text-ink-secondary text-sm leading-relaxed">{renderMd(art.personality)}</p>
                 <div className="pt-2">
                   <TraitRadar a={z.trait_vector} nameA={result.name || z.sign} />
                 </div>
@@ -347,11 +347,11 @@ function ZodiacPageInner() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className={`rounded-2xl border ${theme.border} ${theme.bg} p-5`}>
                   <p className={`text-xs uppercase tracking-widest mb-2 font-semibold ${theme.text}`}>✦ Highest Expression</p>
-                  <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(art.highest_expression)}</p>
+                  <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(art.highest_expression)}</p>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-xs uppercase tracking-widest mb-2 font-semibold text-zinc-500">☽ Shadow Expression</p>
-                  <p className="text-sm text-zinc-400 leading-relaxed">{renderMd(art.shadow_expression)}</p>
+                  <p className="text-xs uppercase tracking-widest mb-2 font-semibold text-ink-muted">☽ Shadow Expression</p>
+                  <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(art.shadow_expression)}</p>
                 </div>
               </div>
             </RevealOnScroll>
@@ -363,18 +363,18 @@ function ZodiacPageInner() {
                   <p className={`text-xs uppercase tracking-widest mb-3 font-semibold ${theme.text}`}>Strengths</p>
                   <ul className="space-y-2">
                     {art.strengths.map((s) => (
-                      <li key={s} className="flex items-center gap-2 text-sm text-zinc-300">
+                      <li key={s} className="flex items-center gap-2 text-sm text-ink-secondary">
                         <span style={{ color: theme.accent }}>✓</span>{renderMd(s)}
                       </li>
                     ))}
                   </ul>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                  <p className="text-xs uppercase tracking-widest mb-3 font-semibold text-zinc-500">Challenges</p>
+                  <p className="text-xs uppercase tracking-widest mb-3 font-semibold text-ink-muted">Challenges</p>
                   <ul className="space-y-2">
                     {art.weaknesses.map((w) => (
-                      <li key={w} className="flex items-center gap-2 text-sm text-zinc-400">
-                        <span className="text-zinc-600">→</span>{renderMd(w)}
+                      <li key={w} className="flex items-center gap-2 text-sm text-ink-secondary">
+                        <span className="text-ink-muted">→</span>{renderMd(w)}
                       </li>
                     ))}
                   </ul>
@@ -385,21 +385,21 @@ function ZodiacPageInner() {
             {/* ── In Love ── */}
             <RevealOnScroll>
               <Section title="In Love & Relationships" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.in_love)}</p>
+                <p className="text-ink-secondary text-sm leading-relaxed">{renderMd(art.in_love)}</p>
               </Section>
             </RevealOnScroll>
 
             {/* ── As a Friend ── */}
             <RevealOnScroll>
               <Section title="As a Friend" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.as_a_friend)}</p>
+                <p className="text-ink-secondary text-sm leading-relaxed">{renderMd(art.as_a_friend)}</p>
               </Section>
             </RevealOnScroll>
 
             {/* ── Career ── */}
             <RevealOnScroll>
               <Section title="Career & Ambition" accent={theme.accent}>
-                <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.career_and_ambition)}</p>
+                <p className="text-ink-secondary text-sm leading-relaxed">{renderMd(art.career_and_ambition)}</p>
               </Section>
             </RevealOnScroll>
 
@@ -407,7 +407,7 @@ function ZodiacPageInner() {
             <RevealOnScroll>
               <Section title={`How to Relate to a ${z.sign}`} accent={theme.accent}>
                 <div className={`rounded-xl border ${theme.border} ${theme.bg} p-4`}>
-                  <p className="text-zinc-300 text-sm leading-relaxed">{renderMd(art.tips_for_relating)}</p>
+                  <p className="text-ink-secondary text-sm leading-relaxed">{renderMd(art.tips_for_relating)}</p>
                 </div>
               </Section>
             </RevealOnScroll>
@@ -423,9 +423,9 @@ function ZodiacPageInner() {
                         <span className="text-lg leading-none" style={{ color: theme.accent }}>
                           {ALL_SIGN_SYMBOLS[sign] ?? "★"}
                         </span>
-                        <span className="text-sm font-medium text-zinc-200">{sign}</span>
+                        <span className="text-sm font-medium text-ink">{sign}</span>
                         {dates && (
-                          <span className="text-micro text-zinc-500 ml-1">↗</span>
+                          <span className="text-micro text-ink-muted ml-1">↗</span>
                         )}
                       </div>
                     );
@@ -441,7 +441,7 @@ function ZodiacPageInner() {
                     );
                   })}
                 </div>
-                <p className="text-xs text-zinc-600 mt-1">Click a sign to explore its full profile.</p>
+                <p className="text-xs text-ink-muted mt-1">Click a sign to explore its full profile.</p>
               </Section>
             </RevealOnScroll>
 
@@ -451,7 +451,7 @@ function ZodiacPageInner() {
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {art.famous_people.map((person) => (
                     <div key={person} className="rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2">
-                      <p className="text-xs text-zinc-300 leading-snug">{person}</p>
+                      <p className="text-xs text-ink-secondary leading-snug">{person}</p>
                     </div>
                   ))}
                 </div>

@@ -3,6 +3,7 @@
 import { DUR } from "@/lib/motion";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { renderMd } from "@/lib/renderMd";
 
 // ── Static star positions for the card background ─────────────────────────────
 const STARS = Array.from({ length: 28 }, (_, i) => ({
@@ -55,20 +56,6 @@ function ConstellationIndicator({ active }: { active: boolean }) {
   );
 }
 
-// ── Inline markdown renderer — bold, italic, line breaks ─────────────────────
-function renderMarkdown(text: string): React.ReactNode[] {
-  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|\n)/g);
-  return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**"))
-      return <strong key={i} className="text-gold-bright font-semibold">{part.slice(2, -2)}</strong>;
-    if (part.startsWith("*") && part.endsWith("*"))
-      return <em key={i} className="text-gold-bright/80 italic">{part.slice(1, -1)}</em>;
-    if (part === "\n")
-      return <br key={i} />;
-    return <span key={i}>{part}</span>;
-  });
-}
-
 // ── Chunk — a single streamed text segment with glow reveal ───────────────────
 function GlowChunk({ text, index }: { text: string; index: number }) {
   return (
@@ -85,7 +72,7 @@ function GlowChunk({ text, index }: { text: string; index: number }) {
       transition={{ duration: DUR.slow, ease: "easeOut" }}
       style={{ display: "inline" }}
     >
-      {renderMarkdown(text)}
+      {renderMd(text, { tone: "gold", breaks: true })}
     </motion.span>
   );
 }
@@ -208,7 +195,7 @@ export default function ConstellationStream({
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-micro text-zinc-600 mt-0.5"
+                  className="text-micro text-ink-muted mt-0.5"
                 >
                   ✦ Powered by ZodicogAI behavioral engines
                 </motion.p>
@@ -229,7 +216,7 @@ export default function ConstellationStream({
           {/* ── Streamed text ────────────────────────────────────────── */}
           <div className="relative px-5 pt-4 pb-5">
             <p
-              className="text-sm leading-relaxed text-zinc-200"
+              className="text-sm leading-relaxed text-ink"
               style={{ fontFamily: "inherit" }}
             >
               {chunks.map((chunk, i) => (
