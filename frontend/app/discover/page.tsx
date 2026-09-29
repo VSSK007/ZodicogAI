@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -47,7 +48,7 @@ export default function DiscoverPage() {
           className="space-y-3"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: DUR.base }}
         >
           <p className="text-xs font-semibold text-gold/60 uppercase tracking-widest">Discover</p>
           <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
@@ -66,7 +67,7 @@ export default function DiscoverPage() {
               key={card.href}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.1 + i * 0.07 }}
+              transition={{ duration: DUR.base, delay: 0.1 + i * 0.07 }}
             >
               <Link
                 href={card.href}

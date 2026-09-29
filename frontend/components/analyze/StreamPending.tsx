@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * StreamPending — minimal wait state for SSE pages, shown between submitting
  * and the first streamed chunk. Visually continuous with ConstellationStream
@@ -15,7 +16,7 @@ export default function StreamPending({ label = "Consulting the stars…" }: { l
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: DUR.fast }}
       className="rounded-card border border-hairline bg-white/[0.02] px-5 py-6 flex items-center gap-3.5"
     >
       <motion.span

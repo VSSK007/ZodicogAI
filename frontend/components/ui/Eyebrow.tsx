@@ -17,7 +17,7 @@ export function Eyebrow({
 }) {
   return (
     <div
-      className={`flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase ${
+      className={`flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase ${
         gold ? "text-gold" : "text-accent-bright"
       } ${className}`}
     >

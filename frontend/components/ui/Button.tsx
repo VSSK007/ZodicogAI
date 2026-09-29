@@ -35,9 +35,9 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 const SIZES: Record<Size, string> = {
-  sm: "text-[13px] px-4 py-2 min-h-[36px]",
+  sm: "text-sm px-4 py-2 min-h-[36px]",
   md: "text-sm px-5 py-2.5 min-h-[44px]",
-  lg: "text-[15px] px-7 py-3 min-h-[50px]",
+  lg: "text-base px-7 py-3 min-h-[50px]",
 };
 
 type StyleProps = {

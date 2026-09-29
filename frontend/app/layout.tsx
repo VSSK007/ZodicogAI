@@ -5,6 +5,7 @@ import { Manrope } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
+import MotionProvider from "@/components/MotionProvider";
 import PageTransition from "@/components/PageTransition";
 import Footer from "@/components/Footer";
 import CosmicBackground from "@/components/CosmicBackground";
@@ -51,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${GeistSans.className} ${GeistMono.variable} ${manrope.variable}`}>
       <body className="bg-surface text-ink antialiased">
+        <MotionProvider>
 
         <CosmicBackground />
 
@@ -72,6 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <Footer />
         </div>{/* end flex wrapper */}
+        </MotionProvider>
       </body>
       <GoogleAnalytics gaId="G-HY2R286L2X" />
     </html>

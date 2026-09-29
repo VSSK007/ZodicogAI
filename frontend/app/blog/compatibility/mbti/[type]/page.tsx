@@ -67,7 +67,7 @@ export default async function MbtiCompatPage({ params }: { params: Promise<{ typ
 
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-card border border-emerald-500/20 bg-emerald-500/[0.04] p-4">
-              <h2 className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] text-emerald-400 mb-3">Best Matches</h2>
+              <h2 className="font-display font-extrabold text-micro uppercase tracking-[0.16em] text-emerald-400 mb-3">Best Matches</h2>
               {(article.best_matches ?? []).map((m) => (
                 <div key={m} className="flex gap-2 items-center text-sm text-ink-secondary mb-1.5">
                   <span className="text-emerald-500">✓</span>
@@ -76,7 +76,7 @@ export default async function MbtiCompatPage({ params }: { params: Promise<{ typ
               ))}
             </div>
             <div className="rounded-card border border-red-500/20 bg-red-500/[0.04] p-4">
-              <h2 className="font-display font-extrabold text-[11px] uppercase tracking-[0.16em] text-red-400 mb-3">Challenging Matches</h2>
+              <h2 className="font-display font-extrabold text-micro uppercase tracking-[0.16em] text-red-400 mb-3">Challenging Matches</h2>
               {(article.challenging_matches ?? []).map((m) => (
                 <div key={m} className="flex gap-2 items-center text-sm text-ink-secondary mb-1.5">
                   <span className="text-red-500">✗</span>

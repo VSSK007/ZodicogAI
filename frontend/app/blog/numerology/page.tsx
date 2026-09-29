@@ -28,7 +28,7 @@ const NUMBERS = [
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-4 flex items-center gap-3.5">
-      <span className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-ink-muted">
+      <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-ink-muted">
         <Star4 size={9} className="text-gold" />
         {children}
       </span>
@@ -59,8 +59,8 @@ export default function NumerologyBlogIndexPage() {
               className="group rounded-card border border-hairline bg-white/[0.02] p-4 transition-all duration-200 hover:border-hairline-gold hover:-translate-y-0.5 tap-highlight-none"
             >
               <div className="font-display font-extrabold text-3xl text-gold-bright mb-1">{n.n}</div>
-              <div className="text-[13.5px] font-semibold text-ink group-hover:text-gold-bright transition-colors">{n.label}</div>
-              <div className="text-[11.5px] text-ink-muted mt-0.5">{n.theme}</div>
+              <div className="text-sm font-semibold text-ink group-hover:text-gold-bright transition-colors">{n.label}</div>
+              <div className="text-micro text-ink-muted mt-0.5">{n.theme}</div>
             </Link>
           ))}
         </div>
@@ -76,8 +76,8 @@ export default function NumerologyBlogIndexPage() {
               className="group rounded-card border border-hairline-accent bg-accent/[0.05] p-4 transition-all duration-200 hover:-translate-y-0.5 tap-highlight-none"
             >
               <div className="font-display font-extrabold text-3xl text-accent-bright mb-1">{n.n}</div>
-              <div className="text-[13.5px] font-semibold text-ink group-hover:text-accent-bright transition-colors">{n.label}</div>
-              <div className="text-[11.5px] text-ink-muted mt-0.5">{n.theme}</div>
+              <div className="text-sm font-semibold text-ink group-hover:text-accent-bright transition-colors">{n.label}</div>
+              <div className="text-micro text-ink-muted mt-0.5">{n.theme}</div>
             </Link>
           ))}
         </div>

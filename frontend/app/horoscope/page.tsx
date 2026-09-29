@@ -74,7 +74,7 @@ export default async function HoroscopeIndexPage() {
               </span>
 
               <div className="relative flex items-center justify-between mb-3">
-                <p className="font-display font-extrabold text-[16px] tracking-[-0.01em] text-ink">{sign}</p>
+                <p className="font-display font-extrabold text-base tracking-[-0.01em] text-ink">{sign}</p>
                 {result && (
                   <span className="font-mono text-lg font-bold text-gold-bright tabular-nums">
                     {result.scores.overall}
@@ -83,11 +83,11 @@ export default async function HoroscopeIndexPage() {
               </div>
 
               {result ? (
-                <p className="relative text-[13px] text-ink-secondary leading-relaxed line-clamp-3">
+                <p className="relative text-sm text-ink-secondary leading-relaxed line-clamp-3">
                   {result.article.reading}
                 </p>
               ) : (
-                <p className="relative text-[13px] text-ink-muted italic">Reading unavailable — try again shortly.</p>
+                <p className="relative text-sm text-ink-muted italic">Reading unavailable — try again shortly.</p>
               )}
             </Link>
           );

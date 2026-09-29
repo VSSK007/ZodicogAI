@@ -254,7 +254,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                     {lifePathNum}
                   </div>
                   <div>
-                    <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Life Path</p>
+                    <p className="text-micro text-zinc-600 uppercase tracking-widest">Life Path</p>
                     <p className="text-xs text-zinc-300 font-medium">{lifePathNum}</p>
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: auraColor }} />
                 </div>
                 <div>
-                  <p className="text-[10px] text-zinc-600 uppercase tracking-widest">Aura</p>
+                  <p className="text-micro text-zinc-600 uppercase tracking-widest">Aura</p>
                   <p className="text-xs text-zinc-300 font-medium">{auraName}</p>
                 </div>
               </div>

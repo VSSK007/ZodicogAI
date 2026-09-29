@@ -25,7 +25,7 @@ export const metadata: Metadata = {
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-5 flex items-center gap-3.5">
-      <span className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-ink-muted">
+      <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-ink-muted">
         <Star4 size={9} className="text-gold" />
         {children}
       </span>
@@ -105,7 +105,7 @@ export default function AboutPage() {
         {/* The journey */}
         <section>
           <SectionLabel>The journey</SectionLabel>
-          <div className="space-y-4 text-[16px] leading-[1.75] text-ink-secondary max-w-prose">
+          <div className="space-y-4 text-base leading-[1.75] text-ink-secondary max-w-prose">
             <p>
               For years, I&apos;ve been interested in zodiac systems, personality
               psychology, and relationship dynamics. I kept returning to the same
@@ -152,9 +152,9 @@ export default function AboutPage() {
               { n: "03", title: "AI interprets", body: "Gemini writes the reading from your exact scores — grounded, reproducible." },
             ].map((s) => (
               <div key={s.n} className="rounded-card border border-hairline bg-white/[0.02] p-5">
-                <p className="font-mono text-[11px] text-gold">{s.n}</p>
-                <p className="mt-2 font-display font-extrabold text-[15px] tracking-[-0.01em] text-ink">{s.title}</p>
-                <p className="mt-1.5 text-[13.5px] text-ink-secondary leading-relaxed">{s.body}</p>
+                <p className="font-mono text-micro text-gold">{s.n}</p>
+                <p className="mt-2 font-display font-extrabold text-base tracking-[-0.01em] text-ink">{s.title}</p>
+                <p className="mt-1.5 text-sm text-ink-secondary leading-relaxed">{s.body}</p>
               </div>
             ))}
           </div>
@@ -167,14 +167,14 @@ export default function AboutPage() {
                   {d.icon}
                 </span>
                 <span>
-                  <span className="block text-[13px] font-semibold text-ink leading-tight">{d.label}</span>
-                  <span className="block text-[11.5px] text-ink-muted mt-0.5">{d.desc}</span>
+                  <span className="block text-sm font-semibold text-ink leading-tight">{d.label}</span>
+                  <span className="block text-micro text-ink-muted mt-0.5">{d.desc}</span>
                 </span>
               </div>
             ))}
           </div>
 
-          <p className="mt-5 text-[15px] leading-[1.7] text-ink-secondary max-w-prose">
+          <p className="mt-5 text-base leading-[1.7] text-ink-secondary max-w-prose">
             Beyond the analysis engines, ZodicogAI includes a{" "}
             <span className="text-gold-bright font-medium">360-profile Celebrity Database</span>{" "}
             — 30 profiles per zodiac sign, each with a full behavioral profile, life
@@ -196,11 +196,11 @@ export default function AboutPage() {
           >
             <div className="flex items-center gap-2.5 mb-4">
               <ZodicognacMark size={20} active />
-              <span className="font-display font-extrabold text-[12px] tracking-[0.22em] uppercase text-gold">
+              <span className="font-display font-extrabold text-xs tracking-[0.22em] uppercase text-gold">
                 Every serious system deserves a voice
               </span>
             </div>
-            <div className="space-y-4 text-[15px] leading-[1.7] text-ink-secondary">
+            <div className="space-y-4 text-base leading-[1.7] text-ink-secondary">
               <p>
                 Zodicognac is a cosmic cognac — my own invention. A spirit distilled
                 from the stars, aged in the barrel of behavioral science, and poured
@@ -258,15 +258,15 @@ export default function AboutPage() {
 
           <div className="grid md:grid-cols-2 gap-3">
             <div className="rounded-card border border-hairline-gold bg-gold/[0.04] p-5">
-              <p className="font-display font-extrabold text-[11px] tracking-[0.2em] uppercase text-gold-bright mb-1.5">Zodiac</p>
-              <p className="text-[14px] text-ink-secondary leading-relaxed">
+              <p className="font-display font-extrabold text-micro tracking-[0.2em] uppercase text-gold-bright mb-1.5">Zodiac</p>
+              <p className="text-sm text-ink-secondary leading-relaxed">
                 The ancient 12-sign system encoding 4 elements, 3 modalities, and 12
                 archetypal energies. The mythological layer of personality.
               </p>
             </div>
             <div className="rounded-card border border-hairline-accent bg-accent/[0.05] p-5">
-              <p className="font-display font-extrabold text-[11px] tracking-[0.2em] uppercase text-accent-bright mb-1.5">Cognition</p>
-              <p className="text-[14px] text-ink-secondary leading-relaxed">
+              <p className="font-display font-extrabold text-micro tracking-[0.2em] uppercase text-accent-bright mb-1.5">Cognition</p>
+              <p className="text-sm text-ink-secondary leading-relaxed">
                 The psychological and neurological basis of how humans think, feel,
                 perceive, and decide. The scientific layer. How minds work.
               </p>
@@ -274,11 +274,11 @@ export default function AboutPage() {
           </div>
 
           <div className="mt-4 rounded-card border border-hairline bg-white/[0.02] p-5">
-            <p className="font-display font-extrabold text-[11px] tracking-[0.2em] uppercase text-ink-muted mb-1.5">
+            <p className="font-display font-extrabold text-micro tracking-[0.2em] uppercase text-ink-muted mb-1.5">
               The AI in ZodicogAI
             </p>
             <p className="font-display font-extrabold text-xl text-ink mb-2">Behavioral Intelligence.</p>
-            <p className="text-[14px] text-ink-secondary leading-relaxed">
+            <p className="text-sm text-ink-secondary leading-relaxed">
               Integrating multiple structured signal families — zodiac, MBTI,
               attachment, numerology, love styles, and others — into a single
               interpretable behavioral intelligence layer. Structured computation
@@ -293,11 +293,11 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-3">
             {PHILOSOPHY.map((p) => (
               <div key={p.title} className="rounded-card border border-hairline bg-white/[0.02] p-5">
-                <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.16em] uppercase text-gold-bright mb-2">
+                <p className="flex items-center gap-2 font-display font-extrabold text-xs tracking-[0.16em] uppercase text-gold-bright mb-2">
                   <Star4 size={9} />
                   {p.title}
                 </p>
-                <p className="text-[14px] text-ink-secondary leading-relaxed">{p.body}</p>
+                <p className="text-sm text-ink-secondary leading-relaxed">{p.body}</p>
               </div>
             ))}
           </div>
@@ -306,7 +306,7 @@ export default function AboutPage() {
         {/* Mission */}
         <section>
           <SectionLabel>The mission</SectionLabel>
-          <div className="space-y-4 text-[16px] leading-[1.75] text-ink-secondary max-w-prose">
+          <div className="space-y-4 text-base leading-[1.75] text-ink-secondary max-w-prose">
             <p>
               To make compatibility and behavioral intelligence more accessible,
               interpretable, and usable. Not isolated scores or generic advice — but
@@ -325,17 +325,17 @@ export default function AboutPage() {
         {/* Built with */}
         <section>
           <SectionLabel>Built with</SectionLabel>
-          <p className="text-[15px] text-ink-secondary mb-5">
+          <p className="text-base text-ink-secondary mb-5">
             Love, late nights, and an unhealthy obsession with why people work the
             way they do <span className="text-rose-400/70">♡</span> — and also these:
           </p>
           <div className="rounded-card border border-hairline bg-white/[0.02] divide-y divide-white/[0.05]">
             {STACK.map(([label, value]) => (
               <div key={label} className="flex items-baseline gap-4 px-5 py-3">
-                <span className="w-28 shrink-0 font-display font-extrabold text-[10.5px] tracking-[0.16em] uppercase text-ink-muted">
+                <span className="w-28 shrink-0 font-display font-extrabold text-micro tracking-[0.16em] uppercase text-ink-muted">
                   {label}
                 </span>
-                <span className="font-mono text-[12.5px] text-ink-secondary">{value}</span>
+                <span className="font-mono text-xs text-ink-secondary">{value}</span>
               </div>
             ))}
           </div>

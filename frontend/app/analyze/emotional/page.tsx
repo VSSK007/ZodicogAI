@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/lib/motion";
@@ -51,7 +52,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
       <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-      <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
+      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
     </div>
   );
 }
@@ -171,12 +172,12 @@ export default function EmotionalPage() {
 
       <AnimatePresence>
         {result && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-5">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: DUR.fast }} className="space-y-4 md:space-y-5">
 
             {/* Score */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: EASE }}
+              transition={{ duration: DUR.base, ease: EASE }}
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-[#a855f7]/60 via-[#a855f7]/20 to-transparent" />
@@ -204,7 +205,7 @@ export default function EmotionalPage() {
             {/* Metrics */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
+              transition={{ duration: DUR.base, delay: 0.1, ease: EASE }}
               className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3"
             >
               <MetricCard label="Expression Similarity"   value={result.emotional_expression_similarity}   accent="purple" />
@@ -215,7 +216,7 @@ export default function EmotionalPage() {
             {/* Radar */}
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
+              transition={{ duration: DUR.base, delay: 0.2, ease: EASE }}
               className={CARD}
             >
               <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
@@ -229,7 +230,7 @@ export default function EmotionalPage() {
             {!streamedText && result.analysis && (
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
+              transition={{ duration: DUR.base, delay: 0.3, ease: EASE }}
               className={CARD}
             >
               <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
@@ -238,7 +239,7 @@ export default function EmotionalPage() {
                   <div className="w-2 h-2 rounded-full bg-accent" />
                 </div>
                 <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-                <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
+                <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
                   Gemini 2.5 Flash
                 </span>
               </div>

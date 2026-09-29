@@ -36,13 +36,13 @@ function Swatch({ color, label, sub }: { color: ColorProfile; label: string; sub
   return (
     <div className="flex-1 flex flex-col gap-2">
       <div className="h-16 rounded-xl" style={{ backgroundColor: color.hex }} />
-      <p className="text-[11px] font-medium text-zinc-300 truncate">{label}</p>
-      {sub && <p className="text-[10px] text-zinc-600">{sub}</p>}
+      <p className="text-micro font-medium text-zinc-300 truncate">{label}</p>
+      {sub && <p className="text-micro text-zinc-600">{sub}</p>}
       <div className="flex flex-wrap gap-1">
         {color.keywords.map((kw) => (
           <span
             key={kw}
-            className="text-[9px] px-1.5 py-0.5 rounded-full bg-[#0d0d1a] text-zinc-500 border border-white/[0.07]"
+            className="text-micro px-1.5 py-0.5 rounded-full bg-[#0d0d1a] text-zinc-500 border border-white/[0.07]"
           >
             {kw}
           </span>
@@ -56,8 +56,8 @@ function BlendSwatch({ hex, label }: { hex: string; label: string }) {
   return (
     <div className="flex-1 flex flex-col gap-2 items-center">
       <div className="w-full h-16 rounded-xl" style={{ backgroundColor: hex }} />
-      <p className="text-[11px] font-medium text-zinc-300">{label}</p>
-      <p className="text-[10px] text-zinc-600 font-mono">{hex}</p>
+      <p className="text-micro font-medium text-zinc-300">{label}</p>
+      <p className="text-micro text-zinc-600 font-mono">{hex}</p>
     </div>
   );
 }

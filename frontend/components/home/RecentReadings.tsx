@@ -23,7 +23,7 @@ export default function RecentReadings() {
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-ink-muted">
           <History className="size-3.5" aria-hidden="true" />
-          <span className="font-display font-extrabold text-[10.5px] tracking-[0.22em] uppercase">
+          <span className="font-display font-extrabold text-micro tracking-[0.22em] uppercase">
             Your recent readings
           </span>
         </div>
@@ -38,10 +38,10 @@ export default function RecentReadings() {
           <Link
             key={e.id}
             href={`/r/${e.id}`}
-            className="inline-flex items-center gap-2 rounded-full border border-hairline bg-white/[0.03] px-4 py-2 text-[13px] font-medium text-ink-secondary hover:text-ink hover:border-hairline-accent transition-colors tap-highlight-none"
+            className="inline-flex items-center gap-2 rounded-full border border-hairline bg-white/[0.03] px-4 py-2 text-sm font-medium text-ink-secondary hover:text-ink hover:border-hairline-accent transition-colors tap-highlight-none"
           >
             {e.title}
-            <span className="text-[11px] text-ink-faint">
+            <span className="text-micro text-ink-faint">
               {new Date(e.date).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
             </span>
           </Link>

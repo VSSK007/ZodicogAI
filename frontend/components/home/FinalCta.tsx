@@ -15,7 +15,7 @@ export default function FinalCta() {
         </h2>
         <Link
           href="/analyze/hybrid"
-          className="mt-9 inline-flex items-center justify-center rounded-control px-8 py-3 min-h-[50px] text-[15px] font-semibold text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent hover:brightness-110 transition-all duration-200 tap-highlight-none active:scale-[0.98]"
+          className="mt-9 inline-flex items-center justify-center rounded-control px-8 py-3 min-h-[50px] text-base font-semibold text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent hover:brightness-110 transition-all duration-200 tap-highlight-none active:scale-[0.98]"
         >
           Get your reading
         </Link>

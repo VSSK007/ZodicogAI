@@ -72,13 +72,13 @@ export default async function LoveStyleArticlePage({ params }: { params: Promise
           <ArticleSection title="Overview" text={article.overview} />
 
           <div className="rounded-card border p-5" style={{ borderColor: `${c}30`, background: `${c}0a` }}>
-            <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.18em] uppercase mb-3" style={{ color: c }}>
+            <p className="flex items-center gap-2 font-display font-extrabold text-xs tracking-[0.18em] uppercase mb-3" style={{ color: c }}>
               <Star4 size={9} />
               Key characteristics
             </p>
             <ul className="space-y-2">
               {(article.characteristics ?? []).map((s, i) => (
-                <li key={i} className="flex gap-2.5 text-[14.5px] text-ink-secondary leading-relaxed">
+                <li key={i} className="flex gap-2.5 text-sm text-ink-secondary leading-relaxed">
                   <span style={{ color: c }} className="shrink-0">→</span>{s}
                 </li>
               ))}

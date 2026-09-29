@@ -74,7 +74,7 @@ export default function DiscoverForm({ onSubmit, loading, error }: Props) {
       <button
         type="button"
         onClick={() => setShowQuiz((v) => !v)}
-        className="text-[11px] text-zinc-500 hover:text-zinc-300 transition pl-1"
+        className="text-micro text-zinc-500 hover:text-zinc-300 transition pl-1"
       >
         {showQuiz ? "▲ Hide quiz" : "▾ Don't know your type? Take a quick quiz"}
       </button>

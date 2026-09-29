@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 
@@ -11,7 +12,7 @@ interface Props {
   strokeWidth?: number;
 }
 
-const RING_DURATION = 1.4;
+const RING_DURATION = DUR.slow;
 
 export default function ScoreRing({
   score,
@@ -36,7 +37,7 @@ export default function ScoreRing({
     count.set(0);
     const controls = animate(count, clamped, {
       duration: RING_DURATION,
-      ease: "easeOut",
+      ease: EASE,
       onUpdate: (v) => setDisplayed(v),
     });
     return () => controls.stop();
@@ -63,7 +64,7 @@ export default function ScoreRing({
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: RING_DURATION, ease: "easeOut" }}
+          transition={{ duration: RING_DURATION, ease: EASE }}
           transform={`rotate(-90 ${center} ${center})`}
         />
         {/* Score label */}
@@ -74,6 +75,7 @@ export default function ScoreRing({
           fontSize={size * 0.18}
           fontWeight="800"
           fontFamily="var(--font-manrope), inherit"
+          style={{ fontVariantNumeric: "tabular-nums" }}
         >
           {displayed.toFixed(1)}
         </text>

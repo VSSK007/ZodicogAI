@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { EASE } from "@/lib/motion";
@@ -16,7 +17,7 @@ export default function PageTransition({ children }: { children: React.ReactNode
       key={pathname}
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.38, ease: EASE }}
+      transition={{ duration: DUR.base, ease: EASE }}
     >
       {children}
     </motion.div>

@@ -52,12 +52,12 @@ export function ArticleSection({
 }) {
   return (
     <section id={id} className="scroll-mt-24">
-      <h2 className="flex items-center gap-2.5 font-display font-extrabold text-[13px] tracking-[0.18em] uppercase text-gold mb-3">
+      <h2 className="flex items-center gap-2.5 font-display font-extrabold text-sm tracking-[0.18em] uppercase text-gold mb-3">
         <Star4 size={10} />
         {title}
       </h2>
       {text && (
-        <p className="text-ink-secondary text-[16px] leading-[1.75]">{renderMd(text)}</p>
+        <p className="text-ink-secondary text-base leading-[1.75]">{renderMd(text)}</p>
       )}
       {children}
     </section>
@@ -81,10 +81,10 @@ export function PullQuote({
   const label = tone === "gold" ? "text-gold-bright" : "text-accent-bright";
   return (
     <section id={id} className={`scroll-mt-24 rounded-card border ${border} ${bg} p-6 md:p-7`}>
-      <p className={`font-display font-extrabold text-[12px] tracking-[0.18em] uppercase ${label} mb-2.5`}>
+      <p className={`font-display font-extrabold text-xs tracking-[0.18em] uppercase ${label} mb-2.5`}>
         {title}
       </p>
-      <p className="text-ink text-[16.5px] leading-[1.7]">{renderMd(text)}</p>
+      <p className="text-ink text-base leading-[1.7]">{renderMd(text)}</p>
     </section>
   );
 }
@@ -99,12 +99,12 @@ export function ChipColumns({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {columns.map((col) => (
         <div key={col.title} className="rounded-card border border-hairline bg-white/[0.02] p-5">
-          <p className="font-display font-extrabold text-[11px] tracking-[0.18em] uppercase mb-3" style={{ color: col.color }}>
+          <p className="font-display font-extrabold text-micro tracking-[0.18em] uppercase mb-3" style={{ color: col.color }}>
             {col.title}
           </p>
           <ul className="space-y-2">
             {col.items.map((item) => (
-              <li key={item} className="flex items-start gap-2.5 text-[14.5px] text-ink-secondary leading-relaxed">
+              <li key={item} className="flex items-start gap-2.5 text-sm text-ink-secondary leading-relaxed">
                 <Star4 size={8} className="mt-[7px] shrink-0" style={{ color: col.color }} />
                 <span>{renderMd(item)}</span>
               </li>

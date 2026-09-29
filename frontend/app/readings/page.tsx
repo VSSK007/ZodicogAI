@@ -89,7 +89,7 @@ export default function ReadingsPage() {
               className="group flex items-center justify-between gap-4 rounded-card border border-hairline bg-white/[0.02] px-5 py-4 transition-colors hover:border-hairline-accent tap-highlight-none"
             >
               <div className="min-w-0">
-                <p className="font-display font-extrabold text-[15px] tracking-[-0.01em] text-ink truncate">
+                <p className="font-display font-extrabold text-base tracking-[-0.01em] text-ink truncate">
                   {e.title}
                 </p>
                 <p className="text-xs text-ink-muted mt-0.5">

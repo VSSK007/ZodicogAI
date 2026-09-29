@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * CelebEasterEgg — a hidden "concert visual" for two chart pages.
  *
@@ -206,7 +207,7 @@ function EggScene({ theme, onClose }: { theme: EggTheme; onClose: () => void }) 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.35 }}
+      transition={{ duration: DUR.base }}
       onClick={onClose}
       role="button"
       aria-label={`${theme.artist} easter egg — click to dismiss`}
@@ -228,8 +229,8 @@ function EggScene({ theme, onClose }: { theme: EggTheme; onClose: () => void }) 
         <motion.p
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="text-[11px] tracking-[0.55em] uppercase font-semibold"
+          transition={{ delay: 0.25, duration: DUR.base, ease: [0.16, 1, 0.3, 1] }}
+          className="text-micro tracking-[0.55em] uppercase font-semibold"
           style={{ color: `${theme.taglineColor}99`, fontFamily: "'Gilroy', sans-serif" }}
         >
           {theme.artist}
@@ -239,7 +240,7 @@ function EggScene({ theme, onClose }: { theme: EggTheme; onClose: () => void }) 
         <motion.h2
           initial={reduced ? false : { opacity: 0, letterSpacing: "0.55em", filter: "blur(10px)" }}
           animate={{ opacity: 1, letterSpacing: "0.14em", filter: "blur(0px)" }}
-          transition={{ delay: 0.35, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ delay: 0.35, duration: DUR.slow, ease: [0.16, 1, 0.3, 1] }}
           className="text-[13vw] md:text-[7.5rem] leading-none whitespace-nowrap"
           style={{
             fontFamily: "'Gilroy', sans-serif",
@@ -261,12 +262,12 @@ function EggScene({ theme, onClose }: { theme: EggTheme; onClose: () => void }) 
         <motion.div
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.15, duration: 0.7 }}
+          transition={{ delay: 1.15, duration: DUR.base }}
           className="flex items-center gap-4"
         >
           <span className="h-px w-10 md:w-16" style={{ background: `linear-gradient(to left, ${theme.taglineColor}66, transparent)` }} />
           <span
-            className="text-[10px] md:text-[11px] tracking-[0.45em] uppercase"
+            className="text-micro md:text-micro tracking-[0.45em] uppercase"
             style={{ color: theme.taglineColor, fontFamily: "'Gilroy', sans-serif", fontWeight: 300 }}
           >
             {theme.tagline}

@@ -52,7 +52,7 @@ const GUIDES = [
 function SectionLabel({ id, children }: { id?: string; children: React.ReactNode }) {
   return (
     <div id={id} className="scroll-mt-28 mb-5 flex items-center gap-3.5">
-      <span className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-ink-muted">
+      <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-ink-muted">
         <Star4 size={9} className="text-gold" />
         {children}
       </span>
@@ -110,12 +110,12 @@ export default function BlogIndexPage() {
                 >
                   <Glyph name={s.slug} size={52} strokeWidth={1.2} />
                 </span>
-                <p className="relative font-display font-extrabold text-[15.5px] tracking-[-0.01em] text-ink">
+                <p className="relative font-display font-extrabold text-base tracking-[-0.01em] text-ink">
                   {s.name}
                 </p>
-                <p className="relative text-[11px] text-ink-muted mt-1">{s.dates}</p>
+                <p className="relative text-micro text-ink-muted mt-1">{s.dates}</p>
                 <span
-                  className="relative inline-block mt-2.5 text-[10px] font-semibold px-2 py-0.5 rounded-full"
+                  className="relative inline-block mt-2.5 text-micro font-semibold px-2 py-0.5 rounded-full"
                   style={{ background: `${c}16`, color: c, border: `1px solid ${c}30` }}
                 >
                   {s.element}
@@ -151,7 +151,7 @@ export default function BlogIndexPage() {
                 <p className="text-xs text-ink-secondary mt-0.5 group-hover:text-ink transition-colors">
                   {d.nickname}
                 </p>
-                <p className="text-[10px] text-ink-muted mt-1">{d.role}</p>
+                <p className="text-micro text-ink-muted mt-1">{d.role}</p>
               </Link>
             );
           })}
@@ -172,10 +172,10 @@ export default function BlogIndexPage() {
                 {g.icon}
               </span>
               <span>
-                <span className="block font-display font-extrabold text-[15px] tracking-[-0.01em] text-ink">
+                <span className="block font-display font-extrabold text-base tracking-[-0.01em] text-ink">
                   {g.title}
                 </span>
-                <span className="mt-1 block text-[13px] text-ink-secondary leading-relaxed">{g.desc}</span>
+                <span className="mt-1 block text-sm text-ink-secondary leading-relaxed">{g.desc}</span>
               </span>
             </Link>
           ))}
@@ -189,10 +189,10 @@ export default function BlogIndexPage() {
           href="/blog/faq"
           className="group block rounded-card border border-hairline-gold bg-gold/[0.04] p-6 transition-colors hover:bg-gold/[0.07] tap-highlight-none"
         >
-          <p className="font-display font-extrabold text-[16px] tracking-[-0.01em] text-ink mb-1">
+          <p className="font-display font-extrabold text-base tracking-[-0.01em] text-ink mb-1">
             Frequently asked questions
           </p>
-          <p className="text-[13.5px] text-ink-secondary">
+          <p className="text-sm text-ink-secondary">
             How the engines score, what the frameworks mean, and what happens to your
             data — answered plainly <span aria-hidden="true">→</span>
           </p>

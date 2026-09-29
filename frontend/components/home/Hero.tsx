@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * Homepage hero — copy + CTAs on the left, a "Live reading" demo panel on the
  * right (real components, sample data — the honest product screenshot).
@@ -27,16 +28,16 @@ function LiveReadingPanel() {
     <motion.div
       initial={reduced ? false : { opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.35, ease: EASE }}
+      transition={{ duration: DUR.base, delay: 0.35, ease: EASE }}
       className="rounded-card border border-hairline-accent bg-gradient-to-b from-white/[0.05] to-white/[0.02] shadow-panel overflow-hidden"
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4.5 py-3 border-b border-hairline">
-        <span className="flex items-center gap-2 font-display font-extrabold text-[10.5px] tracking-[0.2em] uppercase text-ink-muted">
+        <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.2em] uppercase text-ink-muted">
           <Star4 size={10} className="text-accent" />
           Live reading
         </span>
-        <span className="flex items-center gap-1.5 text-[12.5px] font-medium text-ink-secondary">
+        <span className="flex items-center gap-1.5 text-xs font-medium text-ink-secondary">
           <Glyph name="scorpio" size={13} className="text-gold-bright" />
           Maya
           <span className="text-ink-faint mx-0.5">×</span>
@@ -56,7 +57,7 @@ function LiveReadingPanel() {
                 style={{ background: "linear-gradient(90deg, var(--color-accent), var(--color-gold-bright))" }}
                 initial={reduced ? { width: `${row.value}%` } : { width: 0 }}
                 animate={{ width: `${row.value}%` }}
-                transition={{ duration: 0.8, delay: 0.7 + i * 0.09, ease: EASE }}
+                transition={{ duration: DUR.base, delay: 0.7 + i * 0.09, ease: EASE }}
               />
             </div>
             <span className="text-right font-mono text-xs text-gold-bright tabular-nums">{row.value}</span>
@@ -66,12 +67,12 @@ function LiveReadingPanel() {
         {/* Verdict */}
         <div className="mt-1 pt-4 border-t border-hairline flex items-center justify-between">
           <div>
-            <p className="font-display font-extrabold text-[10px] tracking-[0.22em] uppercase text-ink-muted">Overall</p>
+            <p className="font-display font-extrabold text-micro tracking-[0.22em] uppercase text-ink-muted">Overall</p>
             <p className="font-display font-extrabold text-[32px] tracking-[-0.03em] leading-tight text-ink">
-              87<span className="text-[15px] text-ink-muted font-semibold">/100</span>
+              87<span className="text-base text-ink-muted font-semibold">/100</span>
             </p>
           </div>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline-gold bg-gold-soft px-3 py-1.5 font-display font-extrabold text-[10.5px] tracking-[0.16em] uppercase text-gold-bright">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-hairline-gold bg-gold-soft px-3 py-1.5 font-display font-extrabold text-micro tracking-[0.16em] uppercase text-gold-bright">
             <Star4 size={9} />
             Strong match
           </span>
@@ -95,8 +96,8 @@ export default function Hero() {
         <motion.div
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: EASE }}
-          className="inline-flex items-center gap-2 rounded-full border border-hairline-accent bg-accent-soft/40 px-3.5 py-1.5 text-[12.5px] font-medium text-accent-bright mb-7"
+          transition={{ duration: DUR.base, ease: EASE }}
+          className="inline-flex items-center gap-2 rounded-full border border-hairline-accent bg-accent-soft/40 px-3.5 py-1.5 text-xs font-medium text-accent-bright mb-7"
         >
           <Star4 size={10} className="text-gold-bright" />
           18 deterministic engines · zero guesswork
@@ -134,8 +135,8 @@ export default function Hero() {
         <motion.p
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.5, ease: EASE }}
-          className="mt-6 text-ink-secondary text-[16.5px] leading-relaxed max-w-[480px]"
+          transition={{ duration: DUR.base, delay: 0.5, ease: EASE }}
+          className="mt-6 text-ink-secondary text-base leading-relaxed max-w-[480px]"
         >
           ZodicogAI scores every framework — zodiac, MBTI, love styles, numerology —
           with deterministic engines, then has AI explain the result. Every claim
@@ -146,18 +147,18 @@ export default function Hero() {
         <motion.div
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.62, ease: EASE_SPRING }}
+          transition={{ duration: DUR.base, delay: 0.62, ease: EASE_SPRING }}
           className="mt-9 flex flex-col sm:flex-row gap-3"
         >
           <Link
             href="/analyze/hybrid"
-            className="inline-flex items-center justify-center rounded-control px-7 py-3 min-h-[50px] text-[15px] font-semibold text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent hover:brightness-110 transition-all duration-200 tap-highlight-none active:scale-[0.98]"
+            className="inline-flex items-center justify-center rounded-control px-7 py-3 min-h-[50px] text-base font-semibold text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent hover:brightness-110 transition-all duration-200 tap-highlight-none active:scale-[0.98]"
           >
             Get your reading
           </Link>
           <Link
             href="/analyze/romantic"
-            className="inline-flex items-center justify-center gap-1.5 rounded-control px-7 py-3 min-h-[50px] text-[15px] font-semibold text-ink-secondary border border-hairline hover:text-ink hover:border-hairline-strong transition-all duration-200 tap-highlight-none active:scale-[0.98]"
+            className="inline-flex items-center justify-center gap-1.5 rounded-control px-7 py-3 min-h-[50px] text-base font-semibold text-ink-secondary border border-hairline hover:text-ink hover:border-hairline-strong transition-all duration-200 tap-highlight-none active:scale-[0.98]"
           >
             Check compatibility →
           </Link>
@@ -166,8 +167,8 @@ export default function Hero() {
         <motion.p
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.85 }}
-          className="mt-4.5 text-[13px] text-ink-muted"
+          transition={{ duration: DUR.base, delay: 0.85 }}
+          className="mt-4.5 text-sm text-ink-muted"
         >
           No sign-up · results in seconds · free
         </motion.p>

@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -37,7 +38,7 @@ function ConstellationIndicator({ active }: { active: boolean }) {
           strokeWidth="0.6"
           initial={{ pathLength: 0, opacity: 0 }}
           animate={{ pathLength: active ? 1 : 0.3, opacity: active ? 1 : 0.4 }}
-          transition={{ duration: 0.8, delay: i * 0.1, ease: "easeOut" }}
+          transition={{ duration: DUR.base, delay: i * 0.1, ease: "easeOut" }}
         />
       ))}
       {pts.map((p, i) => (
@@ -81,7 +82,7 @@ function GlowChunk({ text, index }: { text: string; index: number }) {
           "0 0 0px rgba(251,191,36,0)",
         ],
       }}
-      transition={{ duration: 1.2, ease: "easeOut" }}
+      transition={{ duration: DUR.slow, ease: "easeOut" }}
       style={{ display: "inline" }}
     >
       {renderMarkdown(text)}
@@ -154,7 +155,7 @@ export default function ConstellationStream({
           initial={{ opacity: 0, y: 12, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -8, scale: 0.97 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+          transition={{ duration: DUR.base, ease: "easeOut" }}
           className="relative rounded-2xl overflow-hidden"
           style={{
             background: "linear-gradient(135deg, rgba(6,6,21,0.97) 0%, rgba(12,8,28,0.97) 100%)",
@@ -200,14 +201,14 @@ export default function ConstellationStream({
           <div className="relative flex items-center gap-3 px-5 pt-5 pb-3 border-b border-gold/10">
             <ConstellationIndicator active={streaming} />
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-gold-bright/80">
+              <p className="text-micro font-semibold uppercase tracking-[0.14em] text-gold-bright/80">
                 {streaming ? "Reading the stars…" : "Celestial Reading Complete"}
               </p>
               {!streaming && (
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-[10px] text-zinc-600 mt-0.5"
+                  className="text-micro text-zinc-600 mt-0.5"
                 >
                   ✦ Powered by ZodicogAI behavioral engines
                 </motion.p>
@@ -218,7 +219,7 @@ export default function ConstellationStream({
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, type: "spring" }}
-                className="ml-auto text-[10px] px-2.5 py-1 rounded-full bg-gold/10 text-gold-bright border border-gold/20"
+                className="ml-auto text-micro px-2.5 py-1 rounded-full bg-gold/10 text-gold-bright border border-gold/20"
               >
                 ✦ Done
               </motion.span>

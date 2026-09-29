@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * LiveTeaser — "What's your sign really like?" Pick a birth date and get an
  * instant, fully client-side sign read (zero AI cost), with a CTA into the
@@ -75,7 +76,7 @@ export default function LiveTeaser() {
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.35, ease: EASE }}
+                  transition={{ duration: DUR.base, ease: EASE }}
                   className="w-full rounded-card border border-hairline-accent bg-gradient-to-b from-white/[0.05] to-white/[0.02] p-6"
                 >
                   <div className="flex items-center gap-4">
@@ -93,7 +94,7 @@ export default function LiveTeaser() {
                   </div>
                   <ul className="mt-4 space-y-2">
                     {meta.traits.map((t) => (
-                      <li key={t} className="flex items-start gap-2 text-[13.5px] text-ink-secondary leading-relaxed">
+                      <li key={t} className="flex items-start gap-2 text-sm text-ink-secondary leading-relaxed">
                         <Star4 size={9} className="text-gold mt-1.5 shrink-0" />
                         {t}
                       </li>

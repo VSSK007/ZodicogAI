@@ -160,7 +160,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[12.5px] text-ink-muted mb-4">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-ink-muted mb-4">
           <span>Ruled by <b className="text-ink-secondary font-medium">{meta.ruling}</b></span>
           <span style={{ color: elColor }}>{meta.element}</span>
           <span style={{ color: modColor }}>{meta.modality}</span>
@@ -233,13 +233,13 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
           {/* TOC rail — desktop */}
           <aside className="hidden lg:block">
             <nav className="sticky top-24 border-l border-hairline pl-5">
-              <p className="font-display font-extrabold text-[10px] tracking-[0.22em] uppercase text-ink-muted mb-3">
+              <p className="font-display font-extrabold text-micro tracking-[0.22em] uppercase text-ink-muted mb-3">
                 In this profile
               </p>
               <ul className="space-y-2">
                 {toc.map(t => (
                   <li key={t.id}>
-                    <a href={`#${t.id}`} className="text-[12.5px] text-ink-muted hover:text-gold-bright transition-colors">
+                    <a href={`#${t.id}`} className="text-xs text-ink-muted hover:text-gold-bright transition-colors">
                       {t.label}
                     </a>
                   </li>
@@ -269,7 +269,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
               <Glyph name={s as GlyphName} size={15} strokeWidth={1.8} />
             </span>
             <span>
-              <span className="block text-[10px] uppercase tracking-[0.18em] text-ink-muted">
+              <span className="block text-micro uppercase tracking-[0.18em] text-ink-muted">
                 {dir === "prev" ? "← Previous sign" : "Next sign →"}
               </span>
               <span className="block text-sm font-semibold text-ink capitalize">{s}</span>

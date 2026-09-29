@@ -30,7 +30,7 @@ const SIGNS: { slug: GlyphName; name: string; element: string }[] = [
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <div className="mb-4 flex items-center gap-3.5">
-      <span className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-ink-muted">
+      <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-ink-muted">
         <Star4 size={9} className="text-gold" />
         {children}
       </span>
@@ -65,8 +65,8 @@ export default function CompatibilityIndexPage() {
                 <span className="absolute -top-2 -right-2 opacity-[0.16] transition-opacity duration-200 group-hover:opacity-40" style={{ color: c }} aria-hidden="true">
                   <Glyph name={s.slug} size={44} strokeWidth={1.2} />
                 </span>
-                <p className="relative font-display font-extrabold text-[15px] tracking-[-0.01em] text-ink">{s.name}</p>
-                <span className="relative inline-block mt-2 text-[10px] font-semibold px-2 py-0.5 rounded-full" style={{ background: `${c}16`, color: c, border: `1px solid ${c}30` }}>
+                <p className="relative font-display font-extrabold text-base tracking-[-0.01em] text-ink">{s.name}</p>
+                <span className="relative inline-block mt-2 text-micro font-semibold px-2 py-0.5 rounded-full" style={{ background: `${c}16`, color: c, border: `1px solid ${c}30` }}>
                   {s.element}
                 </span>
               </Link>

@@ -53,7 +53,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
             <p className="text-ink-secondary mt-1.5">{data.role} <span className="text-ink-faint mx-1">·</span> {key}</p>
           </div>
         </div>
-        <p className="text-ink-secondary text-[16px] leading-[1.75] max-w-prose">{renderMd(data.description)}</p>
+        <p className="text-ink-secondary text-base leading-[1.75] max-w-prose">{renderMd(data.description)}</p>
       </header>
 
       <div className="space-y-8">
@@ -74,7 +74,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
 
         {/* Best Matches */}
         <div className="rounded-card border border-hairline bg-white/[0.02] p-5">
-          <h2 className="font-display font-extrabold text-[12px] tracking-[0.18em] uppercase text-gold mb-3">Best MBTI matches</h2>
+          <h2 className="font-display font-extrabold text-xs tracking-[0.18em] uppercase text-gold mb-3">Best MBTI matches</h2>
           <div className="flex flex-wrap gap-2">
             {data.best_matches.map(m => (
               <Link key={m} href={`/blog/mbti/${m.toLowerCase()}`}
@@ -88,7 +88,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
 
         {/* Famous */}
         <div className="rounded-card border border-hairline bg-white/[0.02] p-5">
-          <h2 className="font-display font-extrabold text-[12px] tracking-[0.18em] uppercase text-gold mb-3">Famous {key}s</h2>
+          <h2 className="font-display font-extrabold text-xs tracking-[0.18em] uppercase text-gold mb-3">Famous {key}s</h2>
           <div className="flex flex-wrap gap-2">
             {data.famous.map(p => (
               <a key={p} href={`https://en.wikipedia.org/wiki/${p.replace(/\s+/g, "_")}`}
@@ -108,7 +108,7 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
 
       {/* All types grid */}
       <div className="mt-10">
-        <p className="font-display font-extrabold text-[11px] tracking-[0.22em] uppercase text-ink-muted mb-4">All 16 types</p>
+        <p className="font-display font-extrabold text-micro tracking-[0.22em] uppercase text-ink-muted mb-4">All 16 types</p>
         <div className="grid grid-cols-4 gap-2">
           {ALL_TYPES.map(t => {
             const c = ROLE_COLOR[MBTI_DATA[t].role];

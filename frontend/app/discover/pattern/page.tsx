@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
@@ -129,7 +130,7 @@ export default function PatternPage() {
                     className="h-full bg-violet-400 rounded-full"
                     initial={{ width: 0 }}
                     animate={{ width: `${pd.pattern_score}%` }}
-                    transition={{ duration: 0.8, ease: "easeOut", delay: 0.15 }}
+                    transition={{ duration: DUR.base, ease: EASE, delay: 0.15 }}
                   />
                 </div>
               </div>

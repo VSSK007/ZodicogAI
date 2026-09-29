@@ -22,7 +22,7 @@ export default function StatsStrip() {
             <p className="font-display font-extrabold text-[26px] md:text-[28px] tracking-[-0.02em] text-gold-bright">
               {s.value}
             </p>
-            <p className="text-[11px] tracking-[0.16em] uppercase font-semibold text-ink-muted mt-0.5">
+            <p className="text-micro tracking-[0.16em] uppercase font-semibold text-ink-muted mt-0.5">
               {s.label}
             </p>
           </div>

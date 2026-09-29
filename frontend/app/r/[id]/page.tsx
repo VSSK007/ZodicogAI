@@ -114,7 +114,7 @@ function Value({ k, v, depth = 0 }: { k: string; v: unknown; depth?: number }) {
     if (entries.length === 0) return null;
     return (
       <div className="rounded-card border border-hairline bg-white/[0.02] p-5 space-y-4">
-        <p className="font-display font-extrabold text-[11px] tracking-[0.2em] uppercase text-gold">
+        <p className="font-display font-extrabold text-micro tracking-[0.2em] uppercase text-gold">
           {labelize(k)}
         </p>
         {entries.map(([ck, cv]) => (
@@ -142,7 +142,7 @@ export default async function SharedReadingPage(
   return (
     <main className="min-h-screen px-4 md:px-6 py-10 md:py-16 max-w-3xl mx-auto">
       <header className="mb-9">
-        <div className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-gold">
+        <div className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-gold">
           <Star4 size={11} />
           Shared reading
         </div>

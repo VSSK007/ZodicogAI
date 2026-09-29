@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -316,7 +317,7 @@ export default function InsightCard({
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: DUR.base, ease: [0.22, 1, 0.36, 1] }}
       className="rounded-2xl border border-gold/25 bg-gold/[0.05] p-5 md:p-6 space-y-4"
     >
       {/* Hook text — the viral hero */}
@@ -338,7 +339,7 @@ export default function InsightCard({
               className="h-full bg-gold-bright rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${score}%` }}
-              transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+              transition={{ duration: DUR.base, ease: EASE, delay: 0.2 }}
             />
           </div>
         </div>

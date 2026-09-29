@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { apiFetch } from "@/lib/api";
@@ -90,11 +91,11 @@ function NumberBadge({ value, label }: { value: number; label: string }) {
         className="size-16 rounded-card bg-gold/10 border border-hairline-gold flex items-center justify-center"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.4 }}
+        transition={{ duration: DUR.base }}
       >
         <span className="font-display text-2xl font-extrabold text-gold-bright">{value}</span>
       </motion.div>
-      <span className="text-[10px] text-ink-muted uppercase tracking-wider text-center">{label}</span>
+      <span className="text-micro text-ink-muted uppercase tracking-wider text-center">{label}</span>
     </div>
   );
 }
@@ -121,7 +122,7 @@ function ScoreBar({ label, value, delay = 0 }: { label: string; value: number; d
           style={{ background: "linear-gradient(90deg, var(--color-accent), var(--color-gold-bright))" }}
           initial={{ width: 0 }}
           animate={{ width: `${value}%` }}
-          transition={{ duration: 0.7, delay, ease: "easeOut" }}
+          transition={{ duration: DUR.base, delay, ease: EASE }}
         />
       </div>
     </div>
@@ -173,18 +174,18 @@ function ProfileCard({ profile, name }: { profile: NumerologyProfile; name: stri
         </div>
       </div>
       <div>
-        <p className="text-[10px] text-ink-faint uppercase tracking-wider mb-1.5">Strengths</p>
+        <p className="text-micro text-ink-faint uppercase tracking-wider mb-1.5">Strengths</p>
         <div className="flex flex-wrap gap-1.5">
           {profile.strengths.map((s) => (
-            <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-white/8 text-ink-secondary border border-hairline">{s}</span>
+            <span key={s} className="text-micro px-2 py-0.5 rounded-full bg-white/8 text-ink-secondary border border-hairline">{s}</span>
           ))}
         </div>
       </div>
       <div>
-        <p className="text-[10px] text-ink-faint uppercase tracking-wider mb-1.5">Challenges</p>
+        <p className="text-micro text-ink-faint uppercase tracking-wider mb-1.5">Challenges</p>
         <div className="flex flex-wrap gap-1.5">
           {profile.challenges.map((c) => (
-            <span key={c} className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-300/80 border border-red-500/20">{c}</span>
+            <span key={c} className="text-micro px-2 py-0.5 rounded-full bg-red-500/10 text-red-300/80 border border-red-500/20">{c}</span>
           ))}
         </div>
       </div>
@@ -297,7 +298,7 @@ export default function NumerologyPage() {
                   </div>
                   {/* Overall score large display */}
                   <div className="flex items-baseline gap-2">
-                    <span className="font-display text-5xl font-extrabold tracking-[-0.03em] text-ink">
+                    <span className="font-display text-5xl font-extrabold tabular-nums tracking-[-0.03em] text-ink">
                       {result.compatibility.compatibility_score.toFixed(0)}
                     </span>
                     <span className="text-xl text-ink-muted">%</span>
@@ -349,18 +350,18 @@ export default function NumerologyPage() {
 
                   <div className="grid grid-cols-2 gap-4 mt-5">
                     <div>
-                      <p className="text-[10px] text-ink-faint uppercase tracking-wider mb-2">Strengths</p>
+                      <p className="text-micro text-ink-faint uppercase tracking-wider mb-2">Strengths</p>
                       <div className="flex flex-wrap gap-1.5">
                         {result.numerology.strengths.map((s) => (
-                          <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-white/8 text-ink-secondary border border-hairline">{s}</span>
+                          <span key={s} className="text-micro px-2 py-0.5 rounded-full bg-white/8 text-ink-secondary border border-hairline">{s}</span>
                         ))}
                       </div>
                     </div>
                     <div>
-                      <p className="text-[10px] text-ink-faint uppercase tracking-wider mb-2">Challenges</p>
+                      <p className="text-micro text-ink-faint uppercase tracking-wider mb-2">Challenges</p>
                       <div className="flex flex-wrap gap-1.5">
                         {result.numerology.challenges.map((c) => (
-                          <span key={c} className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/10 text-red-300/80 border border-red-500/20">{c}</span>
+                          <span key={c} className="text-micro px-2 py-0.5 rounded-full bg-red-500/10 text-red-300/80 border border-red-500/20">{c}</span>
                         ))}
                       </div>
                     </div>

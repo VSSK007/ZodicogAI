@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 /**
  * DualBar — two-person score distribution row (CSS/Framer bars, no Recharts).
  * Extracted from the previously-duplicated copies in analyze/love-style and
@@ -41,7 +42,7 @@ export function DualBar({
             style={{ background: aColor }}
             initial={{ width: 0 }}
             animate={{ width: `${aVal}%` }}
-            transition={{ duration: 0.7, delay: i * 0.06, ease: "easeOut" }}
+            transition={{ duration: DUR.base, delay: i * 0.06, ease: EASE }}
           />
         </div>
         <div className="relative h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
@@ -50,7 +51,7 @@ export function DualBar({
             style={{ background: bColor }}
             initial={{ width: 0 }}
             animate={{ width: `${bVal}%` }}
-            transition={{ duration: 0.7, delay: i * 0.06 + 0.05, ease: "easeOut" }}
+            transition={{ duration: DUR.base, delay: i * 0.06 + 0.05, ease: EASE }}
           />
         </div>
       </div>

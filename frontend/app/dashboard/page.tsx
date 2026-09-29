@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoreRing from "@/components/ScoreRing";
@@ -81,7 +82,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
       <div className="w-1.5 h-1.5 rounded-full bg-[#8b7cf6]" />
-      <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
+      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
     </div>
   );
 }
@@ -145,7 +146,7 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
               <div className="flex items-center gap-2 mt-1 flex-wrap">
                 <span className="text-xs text-zinc-500">{sign}</span>
                 {mbti && (
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 font-mono">
+                  <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.06] text-zinc-400 font-mono">
                     {mbti}
                   </span>
                 )}
@@ -183,7 +184,7 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
                   className="h-full rounded-full bg-[#ea4335]/60"
                   initial={{ width: 0 }}
                   animate={{ width: `${ri.conflict_probability}%` }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
+                  transition={{ duration: DUR.base, delay: 0.2 }}
                 />
               </div>
             </div>
@@ -202,7 +203,7 @@ function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b:
             <div className="p-4">
               <Eyebrow>{label}</Eyebrow>
               <p className="text-base font-bold" style={{ color: color || "white" }}>{value}</p>
-              {sub && <p className="text-[11px] text-zinc-600 mt-0.5">{sub}</p>}
+              {sub && <p className="text-micro text-zinc-600 mt-0.5">{sub}</p>}
             </div>
           </div>
         ))}
@@ -229,7 +230,7 @@ function SlideDimensions({ result }: { result: FullResult }) {
                 className="flex items-center gap-4 py-3 border-b border-white/[0.04] last:border-0"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.06 }}
+                transition={{ duration: DUR.fast, delay: i * 0.06 }}
               >
                 <div className="w-28 text-sm text-zinc-400 flex-shrink-0">{d.name}</div>
                 <div className="flex-1 h-[2px] bg-white/[0.05] rounded-full overflow-hidden">
@@ -238,7 +239,7 @@ function SlideDimensions({ result }: { result: FullResult }) {
                     style={{ background: DIM_COLORS[d.name] }}
                     initial={{ width: 0 }}
                     animate={{ width: `${d.score}%` }}
-                    transition={{ duration: 0.7, delay: i * 0.07 }}
+                    transition={{ duration: DUR.base, delay: i * 0.07 }}
                   />
                 </div>
                 <ScoreChip score={d.score} />
@@ -268,7 +269,7 @@ function SlideDimensions({ result }: { result: FullResult }) {
               { label: "Cross-Pair", value: nc.cross_score },
             ].map(({ label, value }) => (
               <div key={label} className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3">
-                <p className="text-[10px] text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
+                <p className="text-micro text-zinc-600 uppercase tracking-wider mb-1">{label}</p>
                 <p className="text-2xl font-extrabold text-zinc-200 tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
                   {value.toFixed(0)}<span className="text-xs text-zinc-600 ml-0.5">%</span>
                 </p>
@@ -309,7 +310,7 @@ function SlideLoveIntel({ result, a, b }: { result: FullResult; a: PersonData; b
                   style={{ background: color }}
                   initial={{ width: 0 }}
                   animate={{ width: `${score}%` }}
-                  transition={{ duration: 0.7, delay: 0.1 }}
+                  transition={{ duration: DUR.base, delay: 0.1 }}
                 />
               </div>
             </div>
@@ -332,7 +333,7 @@ function SlideLoveIntel({ result, a, b }: { result: FullResult; a: PersonData; b
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.07 }}
           >
-            <p className="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
+            <p className="text-micro text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
             <p className="text-sm font-semibold capitalize" style={{ color }}>{val}</p>
           </motion.div>
         ))}
@@ -427,7 +428,7 @@ function SlideAI({ result }: { result: FullResult }) {
           <div className="w-2 h-2 rounded-full bg-[#8b7cf6]" />
         </div>
         <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-[#8b7cf6]/10 text-[#8b7cf6]/80 border border-[#8b7cf6]/20">
+        <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-[#8b7cf6]/10 text-[#8b7cf6]/80 border border-[#8b7cf6]/20">
           Gemini 2.5 Flash
         </span>
       </div>
@@ -445,7 +446,7 @@ function SlideAI({ result }: { result: FullResult }) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
             >
-              <p className="text-[10px] text-zinc-600 uppercase tracking-[0.1em] font-semibold mb-2">
+              <p className="text-micro text-zinc-600 uppercase tracking-[0.1em] font-semibold mb-2">
                 {key.replace(/_/g, " ")}
               </p>
               <p className="text-sm text-zinc-300 leading-relaxed">{renderMd(result.analysis[key])}</p>
@@ -535,7 +536,7 @@ export default function DashboardPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.22 }}
+            transition={{ duration: DUR.fast }}
             className="fixed left-1/2 -translate-x-1/2 z-30 top-2 md:top-[52px]"
           >
             <div className="flex items-center gap-0.5 bg-surface-overlay/90 backdrop-blur-xl border border-white/[0.08] rounded-[14px] px-1.5 py-1 shadow-xl max-w-[calc(100vw-24px)] md:max-w-none">
@@ -568,7 +569,7 @@ export default function DashboardPage() {
               >
                 ›
               </button>
-              <span className="text-[10px] text-zinc-600 ml-1 tabular-nums pr-1 shrink-0">{activeSlide + 1}/6</span>
+              <span className="text-micro text-zinc-600 ml-1 tabular-nums pr-1 shrink-0">{activeSlide + 1}/6</span>
             </div>
           </motion.div>
         )}
@@ -579,7 +580,7 @@ export default function DashboardPage() {
         <div className="mb-8">
           <div className="flex items-center gap-1.5 mb-2">
             <div className="w-1.5 h-1.5 rounded-full bg-[#8b7cf6]" />
-            <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">Relationship Intelligence</span>
+            <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">Relationship Intelligence</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-manrope)" }}>
             Synastry
@@ -611,7 +612,7 @@ export default function DashboardPage() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: DUR.fast }}
               className="pt-10 md:pt-12"
             >
               <button
@@ -642,7 +643,7 @@ export default function DashboardPage() {
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    transition={{ duration: DUR.fast, ease: [0.25, 0.46, 0.45, 0.94] }}
                   >
                     {renderSlide(activeSlide)}
                   </motion.div>

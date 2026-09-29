@@ -92,23 +92,23 @@ export default async function HoroscopeDetailPage({ params }: { params: Promise<
         <div className="space-y-8">
           {/* Reading */}
           <div className="rounded-card border border-hairline-gold bg-gold/[0.04] p-6">
-            <p className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.2em] uppercase text-gold-bright mb-3">
+            <p className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.2em] uppercase text-gold-bright mb-3">
               <Star4 size={9} />
               Today&apos;s reading
             </p>
-            <p className="text-[16px] text-ink leading-[1.75]">{renderMd(result.article.reading)}</p>
+            <p className="text-base text-ink leading-[1.75]">{renderMd(result.article.reading)}</p>
           </div>
 
           {/* Scores */}
           <div className="rounded-card border border-hairline bg-white/[0.02] p-6">
             <div className="flex items-center justify-between mb-5">
-              <p className="font-display font-extrabold text-[11px] tracking-[0.2em] uppercase text-ink-muted">Today&apos;s energy</p>
+              <p className="font-display font-extrabold text-micro tracking-[0.2em] uppercase text-ink-muted">Today&apos;s energy</p>
               <span className="font-display font-extrabold text-2xl text-gold-bright">{result.scores.overall}<span className="text-sm text-ink-muted font-semibold">/100</span></span>
             </div>
             <div className="space-y-3.5">
               {SCORE_ROWS.map((row) => (
                 <div key={row.key} className="grid grid-cols-[80px_1fr_34px] items-center gap-3">
-                  <span className="text-[13px] font-medium text-ink-secondary">{row.label}</span>
+                  <span className="text-sm font-medium text-ink-secondary">{row.label}</span>
                   <div className="h-[6px] rounded-full bg-white/[0.06] overflow-hidden">
                     <div
                       className="h-full rounded-full"
@@ -124,11 +124,11 @@ export default async function HoroscopeDetailPage({ params }: { params: Promise<
           {/* Focus + advice + lucky number */}
           <div className="grid md:grid-cols-3 gap-3.5">
             <div className="rounded-card border border-hairline bg-white/[0.02] p-4">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-ink-muted mb-1.5">Focus area</p>
+              <p className="text-micro uppercase tracking-[0.16em] text-ink-muted mb-1.5">Focus area</p>
               <p className="text-sm font-semibold text-ink">{result.article.focus_area}</p>
             </div>
             <div className="rounded-card border border-hairline bg-white/[0.02] p-4 md:col-span-2">
-              <p className="text-[11px] uppercase tracking-[0.16em] text-ink-muted mb-1.5">Today&apos;s advice</p>
+              <p className="text-micro uppercase tracking-[0.16em] text-ink-muted mb-1.5">Today&apos;s advice</p>
               <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(result.article.advice)}</p>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default async function HoroscopeDetailPage({ params }: { params: Promise<
               <Glyph name={s as GlyphName} size={15} strokeWidth={1.8} />
             </span>
             <span>
-              <span className="block text-[10px] uppercase tracking-[0.18em] text-ink-muted">
+              <span className="block text-micro uppercase tracking-[0.18em] text-ink-muted">
                 {dir === "prev" ? "← Previous sign" : "Next sign →"}
               </span>
               <span className="block text-sm font-semibold text-ink capitalize">{s}</span>

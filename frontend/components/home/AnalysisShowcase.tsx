@@ -18,7 +18,7 @@ function Tile({ link }: { link: AnalyzeLink }) {
         {link.glyph ? <Glyph name={link.glyph} size={16} /> : link.icon ? <link.icon className="size-4" /> : null}
       </span>
       <span className="flex items-center justify-between">
-        <span className="font-display font-extrabold text-[15.5px] tracking-[-0.01em] text-ink">
+        <span className="font-display font-extrabold text-base tracking-[-0.01em] text-ink">
           {link.label}
         </span>
         <span
@@ -28,7 +28,7 @@ function Tile({ link }: { link: AnalyzeLink }) {
           →
         </span>
       </span>
-      <span className="mt-1.5 block text-[13px] text-ink-secondary leading-relaxed">{link.desc}</span>
+      <span className="mt-1.5 block text-sm text-ink-secondary leading-relaxed">{link.desc}</span>
     </Link>
   );
 }
@@ -37,7 +37,7 @@ function Group({ title, links }: { title: string; links: AnalyzeLink[] }) {
   return (
     <>
       <div className="mt-10 mb-4 flex items-center gap-3.5">
-        <span className="font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-ink-muted">
+        <span className="font-display font-extrabold text-micro tracking-[0.24em] uppercase text-ink-muted">
           {title}
         </span>
         <span className="flex-1 h-px bg-hairline" aria-hidden="true" />

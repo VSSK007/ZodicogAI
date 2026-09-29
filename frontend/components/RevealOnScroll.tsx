@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * RevealOnScroll
  * Wraps children in a motion.div that fades + slides up when it enters
@@ -52,7 +53,7 @@ export default function RevealOnScroll({
       initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once, margin }}
-      transition={{ duration: 0.6, delay, ease: EASE }}
+      transition={{ duration: DUR.base, delay, ease: EASE }}
     >
       {children}
     </motion.div>

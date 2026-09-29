@@ -114,7 +114,7 @@ export default function CelebrityMatch({
     <Card variant={result ? "featured" : "default"} className="mt-6 p-6">
       {!result ? (
         <>
-          <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.18em] uppercase text-gold-bright mb-4">
+          <p className="flex items-center gap-2 font-display font-extrabold text-xs tracking-[0.18em] uppercase text-gold-bright mb-4">
             <Star4 size={9} />
             Check your match with {celebName}
           </p>
@@ -157,7 +157,7 @@ export default function CelebrityMatch({
           <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <p className="text-xs text-ink-muted uppercase tracking-wider">Match score</p>
-              <p className="font-display text-5xl font-extrabold tracking-[-0.03em] text-ink">
+              <p className="font-display text-5xl font-extrabold tabular-nums tracking-[-0.03em] text-ink">
                 {result.compatibility.compatibility_score.toFixed(0)}
                 <span className="text-lg text-ink-muted">/100</span>
               </p>

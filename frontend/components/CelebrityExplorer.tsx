@@ -57,13 +57,13 @@ function CelebCard({ celeb }: { celeb: Celebrity }) {
         <Glyph name={celeb.sign as GlyphName} size={44} strokeWidth={1.2} />
       </span>
 
-      <p className="relative font-display font-extrabold text-[14.5px] tracking-[-0.01em] text-ink leading-snug pr-6">
+      <p className="relative font-display font-extrabold text-sm tracking-[-0.01em] text-ink leading-snug pr-6">
         {celeb.name}
       </p>
       <p className={`relative text-xs mt-1.5 font-medium ${categoryColor(celeb.category)}`}>
         {celeb.category}
       </p>
-      <p className="relative text-[11px] text-ink-muted mt-0.5 truncate">
+      <p className="relative text-micro text-ink-muted mt-0.5 truncate">
         {SIGN_LABEL[celeb.sign]} · {celeb.nationality}
       </p>
     </Link>
@@ -200,7 +200,7 @@ export default function CelebrityExplorer() {
                     <h2 className="font-display font-extrabold text-lg tracking-[-0.02em]" style={{ color }}>
                       {SIGN_LABEL[s]}
                     </h2>
-                    <p className="text-[11px] text-ink-muted">{celebs.length} celebrities</p>
+                    <p className="text-micro text-ink-muted">{celebs.length} celebrities</p>
                   </div>
                   <div
                     className="flex-1 h-px ml-2"

@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * Desktop navigation. (Mobile nav lives in MobileNavbar + MobileMenuSheet —
  * layout.tsx renders this component inside a `hidden md:block` wrapper.)
@@ -51,7 +52,7 @@ function AnalyzeColumn({
 }) {
   return (
     <div className="flex-1 min-w-0">
-      <p className="px-3 pb-1.5 font-display font-extrabold text-[10px] tracking-[0.22em] uppercase text-ink-muted">
+      <p className="px-3 pb-1.5 font-display font-extrabold text-micro tracking-[0.22em] uppercase text-ink-muted">
         {title}
       </p>
       {links.map((link) => (
@@ -67,7 +68,7 @@ function AnalyzeColumn({
         >
           <RowIcon link={link} />
           <span className="min-w-0">
-            <span className="block text-[13.5px] font-semibold text-ink leading-tight">{link.label}</span>
+            <span className="block text-sm font-semibold text-ink leading-tight">{link.label}</span>
             <span className="block text-xs text-ink-muted truncate">{link.desc}</span>
           </span>
         </Link>
@@ -100,11 +101,11 @@ export default function Navbar() {
           <motion.div
             className="flex items-center gap-2.5"
             whileHover={{ opacity: 0.8 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: DUR.fast }}
           >
             <ZodicogMark size={22} />
             <span
-              className="text-[15px] font-extrabold tracking-tight text-ink"
+              className="text-base font-extrabold tracking-tight text-ink"
               style={{ fontFamily: "var(--font-manrope)" }}
             >
               Zodicog<span className="text-accent-bright">AI</span>
@@ -137,7 +138,7 @@ export default function Navbar() {
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.14 }}
+                transition={{ duration: DUR.fast }}
                 className="absolute top-full left-0 w-[480px] rounded-b-card bg-surface-overlay border border-hairline border-t-0 shadow-panel z-50 p-3 flex gap-2"
               >
                 <AnalyzeColumn title="You" links={ANALYZE_YOU} path={path} onNavigate={() => setAnalyzeOpen(false)} />
@@ -163,7 +164,7 @@ export default function Navbar() {
           <motion.div
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.14, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: DUR.fast, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <Link
               href="/chat"

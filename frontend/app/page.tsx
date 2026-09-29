@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 /**
  * Homepage — the flagship marketing page.
  * Sections live in components/home/*. The ?zn=1 Zodicognac ritual overlay
@@ -37,14 +38,14 @@ function ZodicognacRitual() {
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: [0, 1, 0.6, 1, 0.7, 1] }}
-          transition={{ duration: 5, times: [0, 0.2, 0.4, 0.6, 0.8, 1] }}
+          transition={{ duration: DUR.slow, times: [0, 0.2, 0.4, 0.6, 0.8, 1] }}
         />
       )}
 
       <motion.div
         initial={reduced ? false : { opacity: 0, scale: 0.82 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.55, ease: EASE_SPRING }}
+        transition={{ duration: DUR.base, ease: EASE_SPRING }}
         className="flex flex-col items-center gap-5"
       >
         <ZodicognacMark size={56} active />

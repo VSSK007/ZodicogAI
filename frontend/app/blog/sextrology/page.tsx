@@ -49,7 +49,7 @@ export default async function SextrologyGuidePage() {
 
           {article.the_6_dimensions?.length > 0 && (
             <div className="rounded-card border border-hairline-gold bg-gold/[0.04] p-5">
-              <p className="flex items-center gap-2 font-display font-extrabold text-[12px] tracking-[0.18em] uppercase text-gold-bright mb-4">
+              <p className="flex items-center gap-2 font-display font-extrabold text-xs tracking-[0.18em] uppercase text-gold-bright mb-4">
                 <Star4 size={9} />
                 The 6 dimensions
               </p>
@@ -59,7 +59,7 @@ export default async function SextrologyGuidePage() {
                     <span className="text-gold-bright shrink-0 font-mono font-bold">{i + 1}.</span>
                     <div>
                       <span className="text-sm font-semibold text-ink">{DIMENSIONS[i]}</span>
-                      <p className="text-[13px] text-ink-secondary mt-0.5 leading-relaxed">{dim}</p>
+                      <p className="text-sm text-ink-secondary mt-0.5 leading-relaxed">{dim}</p>
                     </div>
                   </div>
                 ))}
@@ -71,7 +71,7 @@ export default async function SextrologyGuidePage() {
 
           {article.faq?.length > 0 && (
             <div>
-              <h2 className="flex items-center gap-2.5 font-display font-extrabold text-[13px] tracking-[0.18em] uppercase text-gold mb-4">
+              <h2 className="flex items-center gap-2.5 font-display font-extrabold text-sm tracking-[0.18em] uppercase text-gold mb-4">
                 <Star4 size={10} />
                 FAQ
               </h2>

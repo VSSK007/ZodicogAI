@@ -70,14 +70,14 @@ export default function TeaserRows() {
                 <Glyph name={c.sign as GlyphName} size={14} />
               </span>
               <span>
-                <span className="block text-[13px] font-semibold text-ink leading-tight">{c.name}</span>
-                <span className="block text-[11px] text-ink-muted">{SIGN_LABEL[c.sign]}</span>
+                <span className="block text-sm font-semibold text-ink leading-tight">{c.name}</span>
+                <span className="block text-micro text-ink-muted">{SIGN_LABEL[c.sign]}</span>
               </span>
             </Link>
           ))}
           <Link
             href="/celebrities"
-            className="flex items-center rounded-full border border-hairline px-4.5 py-2 text-[13px] font-semibold text-ink-secondary hover:text-accent-bright hover:border-hairline-accent transition-colors tap-highlight-none"
+            className="flex items-center rounded-full border border-hairline px-4.5 py-2 text-sm font-semibold text-ink-secondary hover:text-accent-bright hover:border-hairline-accent transition-colors tap-highlight-none"
           >
             All 360 →
           </Link>
@@ -91,11 +91,11 @@ export default function TeaserRows() {
               href={card.href}
               className="group block h-full rounded-card border border-hairline bg-white/[0.03] p-5 transition-all duration-200 hover:border-hairline-accent hover:-translate-y-0.5 tap-highlight-none"
             >
-              <span className="flex items-center justify-between font-display font-extrabold text-[15px] tracking-[-0.01em] text-ink">
+              <span className="flex items-center justify-between font-display font-extrabold text-base tracking-[-0.01em] text-ink">
                 {card.title}
                 <span className="text-ink-faint transition-all group-hover:text-accent-bright group-hover:translate-x-0.5" aria-hidden="true">→</span>
               </span>
-              <span className="mt-1.5 block text-[13px] text-ink-secondary leading-relaxed">{card.desc}</span>
+              <span className="mt-1.5 block text-sm text-ink-secondary leading-relaxed">{card.desc}</span>
             </Link>
           </RevealOnScroll>
         ))}

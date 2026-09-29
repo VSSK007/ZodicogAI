@@ -42,8 +42,8 @@ export default function LoveStyleIndexPage() {
               <s.icon className="size-[18px]" />
             </span>
             <span>
-              <span className="block font-display font-extrabold text-[15px] tracking-[-0.01em]" style={{ color: s.color }}>{s.label}</span>
-              <span className="mt-1 block text-[13px] text-ink-secondary leading-relaxed">{s.desc}</span>
+              <span className="block font-display font-extrabold text-base tracking-[-0.01em]" style={{ color: s.color }}>{s.label}</span>
+              <span className="mt-1 block text-sm text-ink-secondary leading-relaxed">{s.desc}</span>
             </span>
           </Link>
         ))}

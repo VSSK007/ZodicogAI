@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import PersonForm from "@/components/PersonForm";
@@ -198,7 +199,7 @@ function MarkdownText({ text }: { text: string }) {
         return (
           <div key={i} className="flex items-center gap-2 mt-2">
             <div className="h-px flex-1 bg-white/[0.06]" />
-            <span className="text-[10px] font-semibold tracking-widest uppercase text-gold-bright/60 px-2">
+            <span className="text-micro font-semibold tracking-widest uppercase text-gold-bright/60 px-2">
               {ht}
             </span>
             <div className="h-px flex-1 bg-white/[0.06]" />
@@ -209,7 +210,7 @@ function MarkdownText({ text }: { text: string }) {
         <div key={i} className="rounded-xl border border-white/[0.08] overflow-hidden">
           <div className="px-4 py-2 bg-white/[0.03] border-b border-white/[0.05] flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-gold-bright/50 shrink-0" />
-            <span className="text-[10px] font-semibold tracking-widest uppercase text-gold-bright/70">
+            <span className="text-micro font-semibold tracking-widest uppercase text-gold-bright/70">
               {ht}
             </span>
           </div>
@@ -445,13 +446,13 @@ export default function ChatPage() {
             initial={{ x: -288, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -288, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: DUR.fast, ease: [0.16, 1, 0.3, 1] }}
             className="shrink-0 w-72 border-r border-white/[0.05] bg-surface-overlay flex flex-col overflow-hidden"
           >
             <div className="p-5 space-y-4 overflow-y-auto flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <ZodicognacMark size={16} active />
-                <p className="text-[11px] font-semibold text-zinc-500 uppercase tracking-widest">Profiles</p>
+                <p className="text-micro font-semibold text-zinc-500 uppercase tracking-widest">Profiles</p>
               </div>
               <PersonForm label="Person A" value={personA} onChange={(v) => { setPersonA(v); setProfileSaved(false); }} compact />
               <PersonForm label="Person B" value={personB} onChange={(v) => { setPersonB(v); setProfileSaved(false); }} compact />
@@ -475,7 +476,7 @@ export default function ChatPage() {
               >
                 {profileSaved ? "✓ Profiles saved" : "Save Profiles"}
               </button>
-              <p className="text-[11px] text-zinc-700 leading-relaxed">
+              <p className="text-micro text-zinc-700 leading-relaxed">
                 Optional — grounds every answer in specific zodiac & MBTI data.
               </p>
             </div>
@@ -521,7 +522,7 @@ export default function ChatPage() {
             </div>
             <span className="text-sm font-semibold text-white tracking-tight">Zodicognac</span>
             <span className="text-zinc-700 text-xs select-none">·</span>
-            <span className="text-[11px] text-zinc-600">No filter. All insight.</span>
+            <span className="text-micro text-zinc-600">No filter. All insight.</span>
           </div>
           <div className="flex items-center gap-2">
             {messages.length > 1 && (
@@ -562,7 +563,7 @@ export default function ChatPage() {
                   key={i}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  transition={{ duration: DUR.fast, ease: EASE }}
                 >
                   {msg.role === "ai" ? (
                     <div className="flex gap-4 items-start">
@@ -582,12 +583,12 @@ export default function ChatPage() {
                         {(msg.intent || msg.score) && (
                           <div className="flex items-center gap-1.5 flex-wrap">
                             {msg.intent && (
-                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${INTENT_COLORS[msg.intent] ?? INTENT_COLORS.general_question}`}>
+                              <span className={`text-micro px-2 py-0.5 rounded-full font-medium ${INTENT_COLORS[msg.intent] ?? INTENT_COLORS.general_question}`}>
                                 {INTENT_LABELS[msg.intent] ?? formatIntent(msg.intent)}
                               </span>
                             )}
                             {msg.score && (
-                              <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/[0.04] text-zinc-600 border border-white/[0.06] font-medium">
+                              <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.04] text-zinc-600 border border-white/[0.06] font-medium">
                                 {msg.score.label} {msg.score.value.toFixed(1)}%
                               </span>
                             )}
@@ -631,7 +632,7 @@ export default function ChatPage() {
                 <div className="shrink-0 w-7 h-7 rounded-lg bg-gold/[0.08] border border-gold/[0.14] flex items-center justify-center select-none mt-0.5">
                   <ZodicognacMark size={16} active />
                 </div>
-                <p className="text-shimmer text-[13px] pt-1.5" role="status">
+                <p className="text-shimmer text-sm pt-1.5" role="status">
                   Zodicognac is reading your chart…
                 </p>
               </motion.div>
@@ -655,7 +656,7 @@ export default function ChatPage() {
               />
               <div className="absolute bottom-3 right-3 flex items-center gap-2">
                 {!loading && (
-                  <span className="text-[10px] text-zinc-700 hidden sm:block">⏎ send</span>
+                  <span className="text-micro text-zinc-700 hidden sm:block">⏎ send</span>
                 )}
                 {loading ? (
                   <button

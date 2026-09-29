@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import { motion } from "framer-motion";
 import {
   ScatterChart, Scatter, XAxis, YAxis, CartesianGrid,
@@ -59,10 +60,10 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
         <div className="absolute inset-y-0 left-1/2 w-px bg-white/[0.07]" />
 
         {/* Corner labels */}
-        <span className="absolute top-2 left-2 text-[9px] text-white/20 uppercase tracking-widest">Empathic</span>
-        <span className="absolute top-2 right-2 text-[9px] text-white/20 uppercase tracking-widest text-right">Dominant</span>
-        <span className="absolute bottom-2 left-2 text-[9px] text-white/20 uppercase tracking-widest">Reserved</span>
-        <span className="absolute bottom-2 right-2 text-[9px] text-white/20 uppercase tracking-widest text-right">Assertive</span>
+        <span className="absolute top-2 left-2 text-micro text-white/20 uppercase tracking-widest">Empathic</span>
+        <span className="absolute top-2 right-2 text-micro text-white/20 uppercase tracking-widest text-right">Dominant</span>
+        <span className="absolute bottom-2 left-2 text-micro text-white/20 uppercase tracking-widest">Reserved</span>
+        <span className="absolute bottom-2 right-2 text-micro text-white/20 uppercase tracking-widest text-right">Assertive</span>
 
         {/* Person A dot — white */}
         {aTraits && (
@@ -75,7 +76,7 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 0.85 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: DUR.base }}
           />
         )}
 
@@ -90,12 +91,12 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 0.85 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+            transition={{ duration: DUR.base, delay: 0.1 }}
           />
         )}
 
         {/* Legend below chart */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-4 text-[9px] text-zinc-500">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-4 text-micro text-zinc-500">
           <span>
             <span className="inline-block w-2 h-2 rounded-full bg-white mr-1" />
             {nameA}
@@ -147,20 +148,20 @@ export default function BehavioralMap({ nameA = "Person A", nameB = "Person B", 
         {/* Quadrant labels as a 2×2 grid below the chart */}
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 px-2">
           <div className="text-left">
-            <span className="text-[10px] text-zinc-600 uppercase tracking-widest">↑ Low Dom · High Exp</span>
-            <span className="ml-2 text-[10px] font-medium text-white/20">Empathic</span>
+            <span className="text-micro text-zinc-600 uppercase tracking-widest">↑ Low Dom · High Exp</span>
+            <span className="ml-2 text-micro font-medium text-white/20">Empathic</span>
           </div>
           <div className="text-right">
-            <span className="text-[10px] font-medium text-white/20">Dominant</span>
-            <span className="ml-2 text-[10px] text-zinc-600 uppercase tracking-widest">High Dom · High Exp ↑</span>
+            <span className="text-micro font-medium text-white/20">Dominant</span>
+            <span className="ml-2 text-micro text-zinc-600 uppercase tracking-widest">High Dom · High Exp ↑</span>
           </div>
           <div className="text-left">
-            <span className="text-[10px] text-zinc-600 uppercase tracking-widest">↓ Low Dom · Low Exp</span>
-            <span className="ml-2 text-[10px] font-medium text-white/20">Reserved</span>
+            <span className="text-micro text-zinc-600 uppercase tracking-widest">↓ Low Dom · Low Exp</span>
+            <span className="ml-2 text-micro font-medium text-white/20">Reserved</span>
           </div>
           <div className="text-right">
-            <span className="text-[10px] font-medium text-white/20">Assertive</span>
-            <span className="ml-2 text-[10px] text-zinc-600 uppercase tracking-widest">High Dom · Low Exp ↓</span>
+            <span className="text-micro font-medium text-white/20">Assertive</span>
+            <span className="ml-2 text-micro text-zinc-600 uppercase tracking-widest">High Dom · Low Exp ↓</span>
           </div>
         </div>
       </div>

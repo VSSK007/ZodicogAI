@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
@@ -86,7 +87,7 @@ function ColorSwatch({
         style={{ backgroundColor: swatch.hex }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: DUR.base }}
       >
         <span className="text-xs font-mono font-semibold text-black/60 bg-white/30 px-2 py-0.5 rounded-full backdrop-blur-sm">
           {swatch.hex}
@@ -98,7 +99,7 @@ function ColorSwatch({
         {swatch.keywords && (
           <div className="flex flex-wrap gap-1 mt-1.5">
             {swatch.keywords.map((kw) => (
-              <span key={kw} className="text-[10px] px-2 py-0.5 rounded-full bg-white/8 text-ink-secondary border border-hairline">
+              <span key={kw} className="text-micro px-2 py-0.5 rounded-full bg-white/8 text-ink-secondary border border-hairline">
                 {kw}
               </span>
             ))}
@@ -173,7 +174,7 @@ export default function ColorPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 2, ease: "easeInOut" }}
+            transition={{ duration: DUR.slow, ease: "easeInOut" }}
             className="fixed inset-0 pointer-events-none"
             style={{
               zIndex: -15,
@@ -251,12 +252,12 @@ export default function ColorPage() {
                         { label: result.b_name, name: result.b_color.power_name, hex: result.b_color.power_hex, yr: result.b_color.power_2026 },
                       ].map((p) => (
                         <div key={p.label} className="rounded-control border border-hairline bg-white/[0.03] p-3 space-y-2">
-                          <p className="text-[10px] text-ink-muted uppercase tracking-wider">{p.label} — Power</p>
+                          <p className="text-micro text-ink-muted uppercase tracking-wider">{p.label} — Power</p>
                           <div className="flex items-center gap-2">
                             <div className="size-5 rounded-full shrink-0" style={{ backgroundColor: p.hex }} />
                             <span className="text-xs text-ink-secondary font-medium">{p.name}</span>
                           </div>
-                          <span className="inline-block text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold-bright border border-hairline-gold">
+                          <span className="inline-block text-micro px-2 py-0.5 rounded-full bg-gold/10 text-gold-bright border border-hairline-gold">
                             2026: {p.yr}
                           </span>
                         </div>
@@ -313,7 +314,7 @@ export default function ColorPage() {
                     <Card variant="gold" className="p-5 space-y-3 flex flex-col justify-between">
                       <div>
                         <div className="flex items-center gap-2 mb-3">
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/15 text-gold-bright border border-hairline-gold font-medium uppercase tracking-wider">2026 Cosmic</span>
+                          <span className="text-micro px-2 py-0.5 rounded-full bg-gold/15 text-gold-bright border border-hairline-gold font-medium uppercase tracking-wider">2026 Cosmic</span>
                         </div>
                         <p className="text-xs text-ink-muted uppercase tracking-wider mb-1">This Year&apos;s Power Color</p>
                         <p className="text-2xl font-bold text-gold-bright tracking-tight leading-tight">

@@ -38,11 +38,11 @@ export default function HowItWorks() {
         {STEPS.map((step, i) => (
           <RevealOnScroll key={step.n} delay={i * 0.08} className="relative">
             <Card className="p-6 h-full">
-              <p className="font-mono text-[11px] text-gold">{step.n}</p>
-              <h3 className="mt-2.5 mb-2 font-display font-extrabold text-[17px] tracking-[-0.02em] text-ink">
+              <p className="font-mono text-micro text-gold">{step.n}</p>
+              <h3 className="mt-2.5 mb-2 font-display font-extrabold text-base tracking-[-0.02em] text-ink">
                 {step.title}
               </h3>
-              <p className="text-[13.5px] text-ink-secondary leading-relaxed">{step.body}</p>
+              <p className="text-sm text-ink-secondary leading-relaxed">{step.body}</p>
             </Card>
             {i < STEPS.length - 1 && (
               <span

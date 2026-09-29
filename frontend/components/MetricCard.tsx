@@ -30,7 +30,7 @@ export default function MetricCard({ label, value, unit = "%", accent = "blue", 
   return (
     <div className={`rounded-xl border p-4 ${mobileOverride || `${s.border} ${s.bg}`}`}>
       <p className="text-xs text-zinc-500 uppercase tracking-wider mb-1">{label}</p>
-      <p className={`text-2xl font-bold ${mobileTextOverride || s.text}`}>
+      <p className={`text-2xl font-bold tabular-nums ${mobileTextOverride || s.text}`}>
         {isNum ? `${value.toFixed(1)}${unit}` : value}
       </p>
       {sub && <p className="text-xs text-zinc-500 mt-1">{sub}</p>}

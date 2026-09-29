@@ -87,7 +87,7 @@ export default function PersonForm({ label, value, onChange }: Props) {
         <button
           type="button"
           onClick={() => setShowQuiz((v) => !v)}
-          className="text-[11px] text-zinc-500 hover:text-zinc-300 transition text-left pl-1 tap-highlight-none"
+          className="text-micro text-zinc-500 hover:text-zinc-300 transition text-left pl-1 tap-highlight-none"
         >
           {showQuiz ? "▲ Hide quiz" : "▾ Don't know your MBTI? Take a quick quiz"}
         </button>

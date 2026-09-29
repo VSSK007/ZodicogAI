@@ -19,7 +19,7 @@ export default function ZodicognacBand() {
         >
           {/* Copy */}
           <div className="p-8 md:p-12">
-            <div className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-gold mb-4">
+            <div className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-gold mb-4">
               <ZodicognacMark size={13} active />
               Zodicognac
             </div>
@@ -42,17 +42,17 @@ export default function ZodicognacBand() {
           <div className="px-6 pb-6 md:p-8">
             <div className="rounded-card border border-hairline bg-surface/75">
               <div className="flex items-center justify-between px-4 py-3 border-b border-hairline">
-                <span className="flex items-center gap-2 font-display font-extrabold text-[10.5px] tracking-[0.2em] uppercase text-gold">
+                <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.2em] uppercase text-gold">
                   <ZodicognacMark size={11} active />
                   Private session
                 </span>
-                <span className="text-[11px] text-ink-muted">your chart · in context</span>
+                <span className="text-micro text-ink-muted">your chart · in context</span>
               </div>
               <div className="p-5">
-                <p className="text-[13px] text-ink-muted mb-3">
+                <p className="text-sm text-ink-muted mb-3">
                   You asked — <b className="text-ink-secondary font-semibold">"Why do I keep falling for Scorpios?"</b>
                 </p>
-                <p className="text-[14.5px] text-ink leading-relaxed">
+                <p className="text-sm text-ink leading-relaxed">
                   Because your chart rewards intensity. Your emotional engine rates depth
                   over stability <span className="text-gold-bright font-semibold">two to one</span> —
                   Scorpio is simply the sign that keeps up. Watch the pacing gap

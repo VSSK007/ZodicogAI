@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR, EASE } from "@/lib/motion";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
@@ -169,7 +170,7 @@ export default function ArchetypePage() {
                               className={`h-full rounded-full ${name === ad.archetype ? "bg-gold-bright" : "bg-white/20"}`}
                               initial={{ width: 0 }}
                               animate={{ width: `${Math.min((score / 90) * 100, 100)}%` }}
-                              transition={{ duration: 0.6, ease: "easeOut" }}
+                              transition={{ duration: DUR.base, ease: EASE }}
                             />
                           </div>
                         </div>

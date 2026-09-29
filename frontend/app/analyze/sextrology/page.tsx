@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { EASE } from "@/lib/motion";
@@ -121,7 +122,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-1.5 mb-2">
       <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-      <span className="text-[10px] font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
+      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-zinc-500">{children}</span>
     </div>
   );
 }
@@ -134,7 +135,7 @@ function AIHeader() {
         <div className="w-2 h-2 rounded-full bg-accent" />
       </div>
       <span className="text-xs font-semibold text-zinc-300 tracking-wide">AI Interpretation</span>
-      <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
+      <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-accent/10 text-accent-bright/80 border border-accent/20">
         Gemini 2.5 Flash
       </span>
     </div>
@@ -237,7 +238,7 @@ export default function SextrologyPage() {
 
       <AnimatePresence>
         {result && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} className="space-y-4 md:space-y-6">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: DUR.fast }} className="space-y-4 md:space-y-6">
 
             {(submittedAsPair || isPair(result)) ? (
               (() => { const pr = result as PairResult; return (
@@ -245,7 +246,7 @@ export default function SextrologyPage() {
                 {/* Pair — score ring */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, ease: EASE }}
+                  transition={{ duration: DUR.base, ease: EASE }}
                   className={CARD}
                 >
                   <div className="h-0.5 bg-gradient-to-r from-[#6366f1]/60 via-[#6366f1]/20 to-transparent" />
@@ -273,7 +274,7 @@ export default function SextrologyPage() {
                 {/* Pair — metrics */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, delay: 0.1, ease: EASE }}
+                  transition={{ duration: DUR.base, delay: 0.1, ease: EASE }}
                   className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-2 md:gap-3"
                 >
                   <MetricCard label="Intensity Alignment"        value={pr.intimacy_intensity_alignment}          accent="indigo" />
@@ -285,7 +286,7 @@ export default function SextrologyPage() {
                 {/* Pair — radar */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, delay: 0.2, ease: EASE }}
+                  transition={{ duration: DUR.base, delay: 0.2, ease: EASE }}
                   className={CARD}
                 >
                   <div className="h-0.5 bg-gradient-to-r from-accent/50 via-gold/20 to-transparent" />
@@ -299,7 +300,7 @@ export default function SextrologyPage() {
                 {result.analysis && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, delay: 0.3, ease: EASE }}
+                  transition={{ duration: DUR.base, delay: 0.3, ease: EASE }}
                   className={CARD}
                 >
                   <AIHeader />
@@ -323,7 +324,7 @@ export default function SextrologyPage() {
                 {/* Solo — all fields */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.55, ease: EASE }}
+                  transition={{ duration: DUR.base, ease: EASE }}
                   className={CARD}
                 >
                   <AIHeader />
@@ -331,8 +332,8 @@ export default function SextrologyPage() {
                     <div className="flex items-center justify-between gap-3 flex-wrap mb-5">
                       <h2 className="text-sm font-semibold text-zinc-300">Sextrology Profile</h2>
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-gold/10 md:bg-indigo-500/10 text-gold-bright md:text-indigo-300 border border-gold/20 md:border-indigo-500/20">{sr.sign}</span>
-                        <span className="text-[11px] px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 border border-white/[0.07]">{sr.mbti_type}</span>
+                        <span className="text-micro px-2 py-0.5 rounded-full bg-gold/10 md:bg-indigo-500/10 text-gold-bright md:text-indigo-300 border border-gold/20 md:border-indigo-500/20">{sr.sign}</span>
+                        <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.05] text-zinc-400 border border-white/[0.07]">{sr.mbti_type}</span>
                         <ResultActions
                           analysisType="sextrology_solo_analysis"
                           title={`${sr.name}'s Sextrology Profile`}

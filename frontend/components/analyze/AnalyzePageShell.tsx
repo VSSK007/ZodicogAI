@@ -1,5 +1,6 @@
 "use client";
 
+import { DUR } from "@/lib/motion";
 /**
  * AnalyzePageShell — the shared template for every /analyze page.
  *
@@ -74,7 +75,7 @@ export default function AnalyzePageShell({
           <motion.div
             key="form"
             initial={false}
-            exit={{ opacity: 0, y: -14, transition: { duration: 0.25 } }}
+            exit={{ opacity: 0, y: -14, transition: { duration: DUR.fast } }}
           >
             {form}
             {error && (
@@ -96,7 +97,7 @@ export default function AnalyzePageShell({
             key="result"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: EASE }}
+            transition={{ duration: DUR.base, ease: EASE }}
           >
             {result}
             {onReset && (

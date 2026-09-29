@@ -62,7 +62,7 @@ function FooterInner() {
                 Zodicog<span className="text-accent-bright">AI</span>
               </span>
             </Link>
-            <p className="mt-3.5 text-[13px] text-ink-muted max-w-[260px] leading-relaxed">
+            <p className="mt-3.5 text-sm text-ink-muted max-w-[260px] leading-relaxed">
               Explainable compatibility and relationship intelligence — deterministic
               engines score every framework, AI explains the result.
             </p>
@@ -94,14 +94,14 @@ function FooterInner() {
           {/* Link columns */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <p className="font-display font-extrabold text-[10.5px] tracking-[0.22em] uppercase text-ink-muted mb-4">
+              <p className="font-display font-extrabold text-micro tracking-[0.22em] uppercase text-ink-muted mb-4">
                 {col.title}
               </p>
               {col.links.map(({ href, label }) => (
                 <Link
                   key={href}
                   href={href}
-                  className="block text-[13.5px] text-ink-secondary hover:text-accent-bright transition-colors mb-2.5"
+                  className="block text-sm text-ink-secondary hover:text-accent-bright transition-colors mb-2.5"
                 >
                   {label}
                 </Link>

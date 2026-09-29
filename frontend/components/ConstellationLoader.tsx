@@ -75,7 +75,7 @@ export default function ConstellationLoader() {
           />
         ))}
       </svg>
-      <p key={msg} className="text-shimmer text-[11px] font-semibold uppercase tracking-[0.16em]">
+      <p key={msg} className="text-shimmer text-micro font-semibold uppercase tracking-[0.16em]">
         {MESSAGES[msg]}
       </p>
     </div>

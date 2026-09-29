@@ -141,7 +141,7 @@ export default function FaqPage() {
         {GROUPS.map((group) => (
           <section key={group.title}>
             <div className="mb-4 flex items-center gap-3.5">
-              <span className="flex items-center gap-2 font-display font-extrabold text-[11px] tracking-[0.24em] uppercase text-ink-muted">
+              <span className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-ink-muted">
                 <Star4 size={9} className="text-gold" />
                 {group.title}
               </span>
@@ -155,14 +155,14 @@ export default function FaqPage() {
                   className="group rounded-card border border-hairline bg-white/[0.02] open:border-hairline-accent open:bg-white/[0.03] transition-colors"
                 >
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 [&::-webkit-details-marker]:hidden tap-highlight-none">
-                    <span className="text-[15px] font-semibold text-ink">{q}</span>
+                    <span className="text-base font-semibold text-ink">{q}</span>
                     <ChevronDown
                       className="size-4 shrink-0 text-ink-muted transition-transform duration-200 group-open:rotate-180 group-open:text-gold-bright"
                       aria-hidden="true"
                     />
                   </summary>
                   <div className="px-5 pb-5">
-                    <p className="text-[14.5px] text-ink-secondary leading-[1.7]">{a}</p>
+                    <p className="text-sm text-ink-secondary leading-[1.7]">{a}</p>
                     {link && (
                       <Link
                         href={link.href}

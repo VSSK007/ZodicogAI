@@ -37,7 +37,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
   ];
 
   const sectionLabel =
-    "flex items-center gap-1.5 font-display font-extrabold text-[10px] uppercase tracking-[0.22em] mb-2";
+    "flex items-center gap-1.5 font-display font-extrabold text-micro uppercase tracking-[0.22em] mb-2";
   const tile =
     "rounded-card bg-white/[0.04] border border-hairline p-3 text-center text-xs font-medium text-ink-secondary hover:bg-white/[0.08] hover:text-ink transition-all tap-highlight-none";
 
@@ -125,7 +125,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
                 <div className="relative px-4 py-4 flex items-center justify-between">
                   <div>
                     <p className="text-sm font-bold text-ink mb-0.5">Zodiac Celebrities</p>
-                    <p className="text-[11px] text-ink-muted">360 profiles across all 12 signs</p>
+                    <p className="text-micro text-ink-muted">360 profiles across all 12 signs</p>
                     <div className="flex gap-1.5 mt-2.5 text-gold/50">
                       {ZODIAC_GLYPHS.slice(0, 6).map((g) => (
                         <Glyph key={g} name={g} size={11} strokeWidth={1.8} />
