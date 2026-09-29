@@ -58,6 +58,9 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
 
           {/* Sheet */}
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             className="fixed inset-x-0 bottom-20 z-50 max-h-[75vh] rounded-t-3xl bg-surface-overlay border-t border-hairline-strong overflow-y-auto scrollbar-none"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}

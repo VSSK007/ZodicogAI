@@ -1,0 +1,64 @@
+{
+ "a_name": "Alex",
+ "b_name": "Jordan",
+ "a_color": {
+  "name": "Teal Aura",
+  "hex": "#2DD4BF",
+  "rgb": [
+   45,
+   212,
+   191
+  ],
+  "keywords": [
+   "healing",
+   "compassion",
+   "intuition",
+   "flow"
+  ],
+  "power_name": "Celadon Mist",
+  "power_hex": "#86EFAC",
+  "power_2026": "Sunset Brown"
+ },
+ "b_color": {
+  "name": "Radiant Gold",
+  "hex": "#FBBF24",
+  "rgb": [
+   251,
+   191,
+   36
+  ],
+  "keywords": [
+   "royalty",
+   "strength",
+   "radiance",
+   "leadership"
+  ],
+  "power_name": "Royal Gold",
+  "power_hex": "#D97706",
+  "power_2026": "Deep Ochre"
+ },
+ "middle_ground": {
+  "name": "Cosmic Aura-Gold Blend",
+  "hex": "#94C971",
+  "rgb": [
+   148,
+   201,
+   113
+  ]
+ },
+ "compatible_color": {
+  "name": "Harmonic Bridge",
+  "hex": "#A671C9",
+  "rgb": [
+   166,
+   113,
+   201
+  ]
+ },
+ "analysis": {
+  "color_harmony": "Alex's Teal Aura brings a deep sense of healing and intuitive flow, beautifully complementing Jordan's Radiant Gold energy of strength and leadership. Their individual energies aren't at odds; instead, Alex's compassion grounds Jordan's powerful presence, while Jordan's radiant direction provides a clear path for Alex's intuitive insights. This creates a powerful **complementary** dynamic where one's depth enhances the other's brilliance.",
+  "compatible_color_meaning": "The Harmonic Bridge color, #A671C9, represents their shared journey towards spiritual insight and transformative wisdom. This deep purple hue signifies that when Alex and Jordan truly connect, they unlock a higher understanding and elevate each other's perspectives. It's the color of profound personal and relational growth, suggesting a future filled with enlightened co-creation.",
+  "middle_ground_meaning": "Their blended Cosmic Aura-Gold Blend (#94C971) signifies a relationship that is inherently nurturing and balanced, a fertile ground where both can truly thrive. This verdant shade embodies a grounded abundance, where Alex's healing compassion and Jordan's foundational strength combine to create a deeply supportive environment. It means their shared life will consistently offer stability and organic growth.",
+  "pair_advice": "Alex needs to lean into her intuitive flow to temper and guide Jordan's leadership, ensuring their shared path is always infused with compassion. Jordan should intentionally provide the radiant strength and structure Alex needs to channel her healing energies effectively into their shared reality. Together, they should consciously seek opportunities for spiritual expansion, allowing their Harmonic Bridge to lead them to deeper wisdom and mutual growth."
+ }
+}

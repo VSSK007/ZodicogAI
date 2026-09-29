@@ -1,0 +1,14 @@
+data: {"chunk": "Alex and Jordan, you two are a study in fascinating, magnetic polarity. Alex, your deep,"}
+
+data: {"chunk": " intuitive Pisces nature, intensified by your Scorpio sub-ruler, draws Jordan's radiant, passionate Leo, who's got that extra Aries fire from his decan. This **Fire and Water** combination usually creates a lot of transformative"}
+
+data: {"chunk": " tension, and your impressive romantic polarity score proves it\u2019s a powerful pull.\n\nJordan, your ENFP charisma and Eros love style mean you're likely all about grand gestures and intense, physical passion, while Alex, your INTJ mind leans into"}
+
+data: {"chunk": " a more pragmatic approach to love. Your high emotional compatibility is a massive strength here, but your differing affection expression suggests you might show and receive love in distinct ways. Alex needs tangible, sensible acts of commitment, and Jordan, you thrive on playful"}
+
+data: {"chunk": ", appreciative fire and attention.\n\nTo truly deepen your connection, Alex needs to consciously articulate her emotional needs rather than hoping Jordan intuitively grasps them. Jordan, lean into your innate desire for **quality time** and undivided attention, ensuring Alex"}
+
+data: {"chunk": " feels seen and understood beyond the grand displays. This intentional bridging transforms your natural tension into a powerful, unbreakable bond."}
+
+data: {"done": true, "scores": {"emotional_compatibility": 0.0, "romantic_compatibility": 0.0}, "labels": {"emotional_compatibility": "Significant Emotional Distance", "romantic_compatibility": "Low Romantic Polarity"}, "overall": 0.0, "a_traits": {"intensity": 8.8, "stability": 3.2, "expressiveness": 7.5, "dominance": 3.0, "adaptability": 8.0}, "b_traits": {"intensity": 9.8, "stability": 7.0, "expressiveness": 8.5, "dominance": 10.0, "adaptability": 5.5}, "attachment_pacing_similarity": 67.2, "affection_expression_similarity": 66.0, "romantic_polarity_score": 80.0, "romantic_compatibility_score": 76.91, "emotional_expression_similarity": 90.0, "emotional_intensity_alignment": 90.0, "emotional_stability_compatibility": 62.0, "emotional_compatibility_score": 85.6}
+

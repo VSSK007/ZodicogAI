@@ -1,0 +1,34 @@
+name: Visual baselines
+
+# Screenshot baselines are per-platform. Run this (Actions -> Visual baselines ->
+# Run workflow) to generate the Linux ones CI compares against, download the
+# "visual-baselines" artifact, and commit its contents to
+# frontend/e2e/__screenshots__/ . Re-run after an intentional UI change.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  baselines:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+      - name: Generate Linux baselines
+        run: npx playwright test --project=visual --update-snapshots
+      - uses: actions/upload-artifact@v4
+        with:
+          name: visual-baselines
+          path: frontend/e2e/__screenshots__

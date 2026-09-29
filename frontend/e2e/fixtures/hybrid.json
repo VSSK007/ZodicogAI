@@ -1,0 +1,74 @@
+{
+ "name": "Alex",
+ "zodiac_profile": {
+  "sign": "Pisces",
+  "element": "Water",
+  "modality": "Mutable",
+  "trait_vector": {
+   "intensity": 8.8,
+   "stability": 3.2,
+   "expressiveness": 7.5,
+   "dominance": 3.0,
+   "adaptability": 8.0
+  },
+  "decan": {
+   "number": 3,
+   "date_range": "",
+   "sub_ruler": "Pluto",
+   "sub_sign": "Scorpio",
+   "keywords": [
+    "spiritual",
+    "poetic",
+    "occult-drawn",
+    "paradoxical",
+    "receptive"
+   ],
+   "description_short": "Scorpio/Pluto influence: heads full of bizarre ideas they somehow manage to rationalize and sublimate. Highly spiritual and poetic; many drawn to the occult. Paradoxical — typically more vindictive and jealous than other Pisceans. Highly receptive and sensitive.",
+   "description_rich": "Third decan Pisceans may have their heads full of bizarre ideas, but they somehow manage to rationalize and sublimate all of them. They are highly spiritual and poetic, and many are drawn to the occult. For less hardy exemplars it is sometimes too much to take. Often these Pisces are paradoxical, and typically more vindictive and jealous than other Pisceans, who don't seem to have a drop of bad blood in their body. Third decan Pisceans are highly receptive and sensitive but perhaps less so than the other decans. Sensing that good and evil is an illusion and that earthly life is mere surface, they identify with the whole spectrum of attitudes and ethics. They have a tendency to mess with drugs and liquids.",
+   "vector_modifier": {
+    "intensity": 0.08,
+    "stability": -0.08,
+    "expressiveness": 0.05,
+    "dominance": 0.0,
+    "adaptability": 0.1
+   }
+  }
+ },
+ "mbti_profile": {
+  "type": "INTJ",
+  "name": "Architect",
+  "dimensions": {
+   "I": true,
+   "N": true,
+   "T": true,
+   "J": true
+  },
+  "trait_vector": {
+   "intensity": 7,
+   "stability": 8,
+   "expressiveness": 3,
+   "dominance": 6,
+   "adaptability": 5
+  }
+ },
+ "analysis": {
+  "behavioral_core": "Alex operates from a deep, intuitive core, constantly processing information and possibilities through an intellectual lens. Despite the intense inner world of a Pisces, the INTJ structure provides a systematic, logical framework for Alex to organize and express her complex ideas. Alex is driven by internal logic and an almost spiritual quest for understanding.",
+  "emotional_pattern": "Alex's emotional world is deep and often intense, thanks to her Pisces nature amplified by Scorpio. However, the INTJ tendency to prioritize logic means Alex often intellectualizes her feelings, potentially masking her sensitivity or even vindictive streaks beneath a cool, analytical exterior. This combination results in a complex, sometimes contradictory emotional landscape for Alex.",
+  "decision_making_style": "Alex makes decisions by rigorously applying **logic** to her profound intuitive insights, needing structure and closure despite a mutable nature. Alex processes information internally, connecting patterns and possibilities before executing a precise, well-thought-out plan. While Alex values intuitive leaps, the final call always gets the INTJ's logical stamp of approval.",
+  "social_dynamic": "Alex thrives in deep, one-on-one connections where intellectual and spiritual exploration can occur. Alex often appears reserved, needing significant solitude to recharge, but seeks genuine emotional and intellectual depth in her chosen relationships. Small talk is a drain; profound, meaningful exchanges are what Alex craves.",
+  "conflict_style": "Alex approaches conflict with a strategic, analytical mindset, prioritizing logical solutions over emotional theatrics. While Alex is deeply sensitive to underlying energies, she will use precise, cutting logic to dismantle opposing arguments, potentially revealing a vindictive edge if feeling truly wronged. Alex prefers to resolve issues with finality, not ongoing drama.",
+  "leadership_tendency": "Alex leads with a visionary, strategic mind, always seeing the big picture and designing elegant solutions for complex problems. Alex inspires by sharing a compelling intellectual vision, guiding others towards a meticulously planned future, though Alex might need help with the emotional nuances of team dynamics. Alex is a **mastermind** leader, not a cheerleader.",
+  "strengths": [
+   "Strategic Vision",
+   "Intellectual Depth",
+   "Adaptable Problem-Solver",
+   "Profound Empathy"
+  ],
+  "growth_edges": [
+   "Emotional Detachment",
+   "Social Isolation",
+   "Vindictiveness/Jealousy",
+   "Stubborn Idealism"
+  ]
+ }
+}

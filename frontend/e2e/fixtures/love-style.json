@@ -1,0 +1,42 @@
+{
+ "a_love_style": {
+  "eros": 82.8,
+  "storge": 37.4,
+  "ludus": 75.2,
+  "mania": 66.5,
+  "pragma": 43.8,
+  "agape": 74.75,
+  "dominant_style": "eros"
+ },
+ "b_love_style": {
+  "eros": 92.8,
+  "storge": 58.0,
+  "ludus": 45.0,
+  "mania": 74.7,
+  "pragma": 47.75,
+  "agape": 40.5,
+  "dominant_style": "eros"
+ },
+ "love_style_compatibility_score": 94.65,
+ "a_traits": {
+  "intensity": 8.8,
+  "stability": 3.2,
+  "expressiveness": 7.5,
+  "dominance": 3.0,
+  "adaptability": 8.0
+ },
+ "b_traits": {
+  "intensity": 9.8,
+  "stability": 7.0,
+  "expressiveness": 8.5,
+  "dominance": 10.0,
+  "adaptability": 5.5
+ },
+ "analysis": {
+  "relationship_dynamic": "Alex and Jordan share intensely **Eros**-dominant love styles, creating powerful initial passion and physical attraction. This undeniable magnetism is their core, confirmed by 94.65% love style compatibility. They speak the same language of desire, fostering mutual understanding.",
+  "communication_pattern": "Jordan, a frank Leo ENFP with an Aries-ruled decan, communicates directly with emotional volatility and drive. Alex, a deep Pisces INTJ, processes through intuitive, complex intellectual pathways from their paradoxical decan. Jordan is transparent, while Alex's communication is more subtle; a stimulating yet challenging dynamic.",
+  "conflict_risk": "High **Mania** in both love styles signals significant conflict risk, indicating obsessive tendencies, jealousy, and extreme emotional swings. Jordan's stubborn Leo-Aries decan amplifies volatility; Alex’s Pisces-Scorpio decan can be vindictive. This Fire+Water \"steam dynamic\" fuels passion but risks possessiveness.",
+  "long_term_viability": "Their **Golden Pair** MBTI and high love style compatibility offers immense potential for intellectual depth and mutual growth. Managing shared Mania is crucial, transforming potential jealousy into profound commitment. If channeled constructively, their transformative Fire+Water union offers deep emotional fulfillment.",
+  "modality_dynamic": "Alex, a **Mutable** Pisces, adapts fluidly and responds rather than initiates, aligning with their receptive nature. Jordan, a **Fixed** Leo, provides unwavering loyalty and resists change, preferring to lead and sustain. Jordan will likely guide, with Alex intuitively providing emotional depth to ground Jordan's fiery drive."
+ }
+}

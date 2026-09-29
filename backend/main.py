@@ -78,6 +78,9 @@ origins = [
     "https://www.zodicogai.com",  # Production with www
 ]
 
+# Staging / preview / test-runner origins, comma separated (e.g. http://localhost:3100).
+origins += [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

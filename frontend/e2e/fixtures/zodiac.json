@@ -1,0 +1,80 @@
+{
+ "name": "Alex",
+ "zodiac_profile": {
+  "sign": "Pisces",
+  "element": "Water",
+  "modality": "Mutable",
+  "trait_vector": {
+   "intensity": 8.8,
+   "stability": 3.2,
+   "expressiveness": 7.5,
+   "dominance": 3.0,
+   "adaptability": 8.0
+  },
+  "decan": {
+   "number": 3,
+   "date_range": "",
+   "sub_ruler": "Pluto",
+   "sub_sign": "Scorpio",
+   "keywords": [
+    "spiritual",
+    "poetic",
+    "occult-drawn",
+    "paradoxical",
+    "receptive"
+   ],
+   "description_short": "Scorpio/Pluto influence: heads full of bizarre ideas they somehow manage to rationalize and sublimate. Highly spiritual and poetic; many drawn to the occult. Paradoxical — typically more vindictive and jealous than other Pisceans. Highly receptive and sensitive.",
+   "description_rich": "Third decan Pisceans may have their heads full of bizarre ideas, but they somehow manage to rationalize and sublimate all of them. They are highly spiritual and poetic, and many are drawn to the occult. For less hardy exemplars it is sometimes too much to take. Often these Pisces are paradoxical, and typically more vindictive and jealous than other Pisceans, who don't seem to have a drop of bad blood in their body. Third decan Pisceans are highly receptive and sensitive but perhaps less so than the other decans. Sensing that good and evil is an illusion and that earthly life is mere surface, they identify with the whole spectrum of attitudes and ethics. They have a tendency to mess with drugs and liquids.",
+   "vector_modifier": {
+    "intensity": 0.08,
+    "stability": -0.08,
+    "expressiveness": 0.05,
+    "dominance": 0.0,
+    "adaptability": 0.1
+   }
+  }
+ },
+ "article": {
+  "overview": "Alex, as a Pisces, you embody the boundless ocean, a compassionate soul whose depths hold universal empathy and profound mystery. You're the zodiac's ultimate dreamer, constantly navigating the liminal space between reality and imagination, spirit and form. Your Third Decan, sub-ruled by intense Pluto and Scorpio, adds a layer of occult-drawn mysticism and a magnetic, transformative edge to your already complex nature. This blend makes you a truly spiritual and poetic force, capable of rationalizing the most bizarre ideas.",
+  "the_symbol": "The symbol of two fish swimming in opposite directions perfectly captures your eternal tug-of-war, Alex, between the tangible world and the endless sea of your subconscious. Ruled by Neptune, the planet of illusion and dreams, you absorb emotions and experiences without boundaries, blurring the lines of self. Jupiter, your traditional co-ruler, fuels your expansive idealism and philosophical quests, making your spirit constantly yearn for something beyond. Your Plutonian decan just deepens that magnetic draw to the hidden realms.",
+  "personality": "Pisces are notorious for their deep emotional reservoirs, Alex, often feeling everything at once and absorbing others' energies like a sponge. Your mutable water nature makes you incredibly adaptable, flowing around obstacles, but also prone to being swept away by intense currents. As a Third Decan, you're a paradox, highly receptive and sensitive yet sometimes less overtly fragile than other Pisceans. While profoundly spiritual and often poetic, this decan also hints at a darker, more vindictive or jealous streak, a sharp contrast to the typical Pisceans' gentle demeanor, especially when boundaries are ignored. You're wired to see good and evil as illusions, identifying with the full spectrum of human experience, which sometimes leads to an unsettling tendency to experiment with altered states or 'mess with drugs and liquids.'",
+  "modality_profile": "As a **Mutable** Water sign, Alex, your energy is all about adaptability and transition, making you the ultimate shapeshifter of the zodiac. You are incredibly flexible and empathetic, effortlessly flowing into different situations and understanding diverse perspectives. However, this fluid nature often means you struggle with firm boundaries, leaving you prone to overwhelm and making clear decisions difficult.",
+  "highest_expression": "At your absolute best, Alex, you are the cosmic empath, a visionary healer and artist who translates universal truths into tangible beauty. You embody **unconditional** love and compassion, dissolving ego to connect deeply with all sentient beings. This elevated state allows you to transmute suffering into profound wisdom and creative expression, guiding others to their own spiritual depths.",
+  "shadow_expression": "When operating from your shadow, Alex, you can succumb to intense escapism, drowning in delusion, victimhood, and addictive patterns to avoid harsh realities. The Third Decan adds a potent layer of potential vindictiveness and jealousy, a darker edge that can surface if you feel wronged or lost in your own illusions. This can lead to profound self-sabotage, losing yourself entirely to the currents instead of steering the ship.",
+  "strengths": [
+   "Profound Empathy",
+   "Boundless Creativity",
+   "Intuitive Insight",
+   "Deeply Compassionate",
+   "Spiritual Receptivity",
+   "Imaginative Vision"
+  ],
+  "weaknesses": [
+   "Prone to Escapism",
+   "Lack of Boundaries",
+   "Overly Sensitive",
+   "Self-Sacrificing Tendencies",
+   "Vindictive Shadow"
+  ],
+  "in_love": "In love, Alex, you are the ultimate romantic, seeking a soul-level, almost fated connection that transcends the mundane. You pour your entire being into a partnership, often idealizing your lover and craving a bond that feels like a sacred merging of spirits. Your Plutonian decan might draw you to relationships with intense power dynamics or a transformative, almost occult-like magnetism, seeking a partner who can navigate the depths with you. You need a love that understands your paradoxes and provides a safe harbor from the world's harshness.",
+  "as_a_friend": "As a friend, Alex, you are the most empathetic ear, the non-judgmental confidante who instinctively understands unspoken sorrows and secret dreams. You offer unwavering loyalty to your chosen few, often acting as a creative muse or spiritual guide for those you hold dear. You expect genuine emotional connection and profound understanding, withdrawing if you feel superficiality or a lack of true depth in the bond.",
+  "career_and_ambition": "Your career path, Alex, isn't driven by conventional ambition but by a deep-seated need for purpose, expression, or service, particularly in creative or healing fields. You thrive in environments that allow your profound empathy and imaginative vision to flourish, whether it's through art, counseling, or spiritual work. Your occult-drawn decan might even pull you towards esoteric studies, therapy, or any field where you can explore the hidden aspects of life and consciousness, often sacrificing personal gain for a higher calling.",
+  "tips_for_relating": "When connecting with Alex, you absolutely must honor their need for emotional space and recognize their deep intuitive processing. Never, ever dismiss their feelings or intuitions; their inner world is as real, if not more real, than the physical one. Help them establish and maintain boundaries, as they naturally struggle with this, and appreciate their boundless imagination without letting them completely drift into escapism. Understand that their Third Decan brings a unique blend of spiritual receptivity and a potentially vindictive shadow, so approach them with both empathy and clear communication.",
+  "best_matches": [
+   "Cancer",
+   "Scorpio",
+   "Taurus",
+   "Capricorn"
+  ],
+  "famous_people": [
+   "Rihanna (Feb 20, 1988)",
+   "Drew Barrymore (Feb 22, 1975)",
+   "Kurt Cobain (Feb 20, 1967)",
+   "Steve Jobs (Feb 24, 1955)",
+   "Albert Einstein (Mar 14, 1879)",
+   "Frédéric Chopin (Mar 1, 1810)",
+   "George Harrison (Feb 25, 1943)",
+   "Simone Biles (Mar 14, 1997)"
+  ]
+ }
+}

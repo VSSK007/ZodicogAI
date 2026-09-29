@@ -1,0 +1,72 @@
+{
+ "a_name": "Alex",
+ "b_name": "Jordan",
+ "a_numerology": {
+  "life_path_number": 9,
+  "expression_number": 6,
+  "lucky_number": 6,
+  "number_title": "The Sage",
+  "number_core": "Completion, wisdom, compassion, universal love",
+  "love_note": "Romantic idealist; best with 3, 6, 9",
+  "strengths": [
+   "wise",
+   "compassionate",
+   "creative",
+   "humanitarian"
+  ],
+  "challenges": [
+   "possessive",
+   "idealistic to a fault",
+   "emotionally volatile"
+  ]
+ },
+ "b_numerology": {
+  "life_path_number": 3,
+  "expression_number": 8,
+  "lucky_number": 11,
+  "number_title": "The Creator",
+  "number_core": "Expression, joy, creativity, communication",
+  "love_note": "Playful and romantic; thrives with 1, 5, 9",
+  "strengths": [
+   "charismatic",
+   "imaginative",
+   "optimistic",
+   "social"
+  ],
+  "challenges": [
+   "scattered",
+   "superficial",
+   "avoids depth when threatened"
+  ]
+ },
+ "compatibility": {
+  "compatibility_score": 76.0,
+  "life_path_score": 80.0,
+  "expression_score": 75.0,
+  "cross_score": 67.5,
+  "pursue_signal": "pursue"
+ },
+ "analysis": {
+  "compatibility_reading": "Alex, the humanitarian Life Path 9, and Jordan, the expressive Life Path 3, share a naturally harmonious and deeply creative numerological bond. Alex brings an idealistic, global perspective, while Jordan provides the vibrant communication and artistic flair to bring those visions to life. This pairing thrives on shared purpose and mutual inspiration.",
+  "swot_strengths": [
+   "Alex's humanitarian vision (Life Path 9) finds a powerful voice through Jordan's creative expression (Life Path 3).",
+   "Alex's nurturing nature (Expression 6) provides a stable, caring foundation for Jordan's ambitious drive (Expression 8).",
+   "The 9 and 3 Life Paths are inherently harmonious, fostering a deep understanding and shared mission."
+  ],
+  "swot_weaknesses": [
+   "Alex's idealism can sometimes lead to detachment, potentially frustrating Jordan's need for direct engagement.",
+   "Jordan's energetic expression and ambition might occasionally overshadow Alex's more reflective, giving nature if not balanced."
+  ],
+  "swot_opportunities": [
+   "Jordan can amplify Alex's causes, becoming the articulate and engaging spokesperson for Alex's global ideals.",
+   "Alex can help Jordan channel their creative energy and ambition into meaningful, impactful projects rather than superficial pursuits.",
+   "Together, they can build a platform for change, blending Alex's wisdom with Jordan's communication prowess to inspire many."
+  ],
+  "swot_threats": [
+   "Alex might feel Jordan is too focused on personal recognition, while Jordan might find Alex's goals too abstract or distant.",
+   "Unaddressed differences in how they express love and care (Alex's Nurturer 6 vs. Jordan's Powerhouse 8) could lead to misunderstandings."
+  ],
+  "pursue_or_avoid": "Pursue. With a strong 76% compatibility score and the harmonious 9+3 Life Path pairing, this connection offers significant potential for growth and mutual fulfillment. Their energies naturally complement each other, creating a dynamic and inspiring partnership.",
+  "pair_advice": "Alex needs to clearly articulate their grand visions, grounding them in tangible ways for Jordan to grasp and champion. Jordan must actively listen to Alex's deeper motivations, ensuring their expressive efforts genuinely serve the shared humanitarian goals. Lean into their shared passion for making an impact, leveraging Jordan's creativity to realize Alex's compassionate ideals."
+ }
+}

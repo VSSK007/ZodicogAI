@@ -1,0 +1,18 @@
+data: {"chunk": "Alex and"}
+
+data: {"chunk": " Jordan, your emotional compatibility is genuinely strong, hitting a fantastic 85.6%. Alex, your INTJ nature combined with your Pisces intuition means you're usually guarded, but Jordan's ENFP warmth and direct Leo/Aries"}
+
+data: {"chunk": " energy will make you feel incredibly **safe** to express yourself. He's open and honest, which you'll find reassuring, despite any occasional Leo self-righteousness.\n\nWhen conflict inevitably arises, Jordan, your Leo/A"}
+
+data: {"chunk": "ries decan will have you tackling it head-on with passion and perhaps some stubbornness. Alex, your Pisces side will feel the emotional undertow, but your INTJ brain will want to analyze and rationalize, possibly retreating or showing a"}
+
+data: {"chunk": " flash of that Scorpio **vindictiveness** if you feel truly threatened. This requires mutual respect for your different conflict styles.\n\nYour empathy dynamic is seriously powerful; you both just *get* it. Alex, your Pisces/Scorpio"}
+
+data: {"chunk": " intuition means you're deeply receptive and understand emotional nuances instinctively. Jordan, your ENFP heart leads with profound, values-driven empathy, creating a genuine mirror for each other's feelings and fostering a profound **understanding**.\n\nTo deepen"}
+
+data: {"chunk": " your bond even further, focus on that 62% stability compatibility. Alex, as an INTJ Judger, you thrive on predictability, while Jordan, your ENFP Perceiver needs flexibility. Instituting **intentional rituals**\u2014like a consistent"}
+
+data: {"chunk": " weekly date or a shared morning routine\u2014will provide Alex with the grounding she craves and offer Jordan a reliable container for his spontaneous spirit."}
+
+data: {"done": true, "scores": {"emotional_compatibility": 0.0}, "labels": {"emotional_compatibility": "Significant Emotional Distance"}, "overall": 0.0, "a_traits": {"intensity": 8.8, "stability": 3.2, "expressiveness": 7.5, "dominance": 3.0, "adaptability": 8.0}, "b_traits": {"intensity": 9.8, "stability": 7.0, "expressiveness": 8.5, "dominance": 10.0, "adaptability": 5.5}, "emotional_expression_similarity": 90.0, "emotional_intensity_alignment": 90.0, "emotional_stability_compatibility": 62.0, "emotional_compatibility_score": 85.6}
+

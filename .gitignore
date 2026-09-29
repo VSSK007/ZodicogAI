@@ -50,3 +50,9 @@ backend/results.db
 
 # Lighthouse CI output
 frontend/.lighthouseci/
+
+# Playwright
+frontend/test-results/
+frontend/playwright-report/
+frontend/e2e/__screenshots__/**/*-win32.png
+frontend/e2e/__screenshots__/**/*-darwin.png
