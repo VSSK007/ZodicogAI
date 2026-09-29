@@ -74,8 +74,8 @@ export default function MobileNavbar() {
     <>
       <MobileMenuSheet isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
     <nav
-      className="mobile-fab block md:hidden fixed bottom-0 left-0 right-0 z-50 h-16 flex items-center justify-center"
-      style={{ background: "transparent" }}
+      className="mobile-fab md:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center justify-center"
+      style={{ bottom: "calc(0.5rem + var(--safe-area-bottom))" }}
     >
       <div className="relative flex items-center justify-center">
         {/* Left of FAB: back button on non-home pages */}
