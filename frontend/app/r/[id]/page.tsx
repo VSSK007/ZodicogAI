@@ -9,6 +9,8 @@ import { notFound } from "next/navigation";
 import { renderMd } from "@/lib/renderMd";
 import { Star4 } from "@/components/ui/glyphs";
 import Sigil from "@/components/Sigil";
+import SynastryReport from "@/components/report/SynastryReport";
+import type { FullResult, ReportPersonas } from "@/components/report/types";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
@@ -139,6 +141,31 @@ export default async function SharedReadingPage(
   const date = new Date(result.created_at).toLocaleDateString("en-US", {
     year: "numeric", month: "long", day: "numeric",
   });
+
+  if (result.analysis_type === "full_relationship_intelligence" && "relationship_intelligence" in result.payload) {
+    const payload = result.payload as unknown as FullResult & { personas?: ReportPersonas };
+    // Older saves have no persona snapshot; recover the names from the title.
+    const [nameA = "Person A", rest = "Person B"] = (result.title || "").split(" × ");
+    const personas: ReportPersonas = payload.personas ?? {
+      a: { name: nameA, sign: "" },
+      b: { name: rest.replace(/ Synastry Report$/, ""), sign: "" },
+    };
+    return (
+      <main className="min-h-screen px-4 md:px-6 py-8 md:py-14 max-w-6xl mx-auto">
+        <SynastryReport result={payload} personas={personas} title={result.title} shareId={id} />
+        <div className="mt-12 rounded-card border border-hairline-accent bg-gradient-to-b from-white/[0.05] to-white/[0.02] p-6 text-center" data-print-hide>
+          <p className="font-display font-extrabold text-lg tracking-[-0.02em] text-ink">Get your own report</p>
+          <p className="mt-1.5 text-sm text-ink-secondary">Scored by 18 deterministic engines. Free, no sign-up, instant.</p>
+          <Link
+            href="/dashboard"
+            className="mt-5 inline-flex items-center justify-center rounded-control px-6 py-2.5 min-h-[44px] text-sm font-semibold text-accent-ink bg-gradient-to-b from-accent-bright to-accent glow-accent hover:brightness-110 transition-all duration-200"
+          >
+            Generate a synastry report
+          </Link>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen px-4 md:px-6 py-10 md:py-16 max-w-3xl mx-auto">

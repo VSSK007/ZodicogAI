@@ -1,500 +1,46 @@
 "use client";
 
-import { usePrefilledPerson } from "@/lib/profile";
-import { DUR } from "@/lib/motion";
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import ScoreRing from "@/components/ScoreRing";
-import TraitRadar from "@/components/TraitRadar";
-import BehavioralMap from "@/components/BehavioralMap";
+/**
+ * /dashboard — the full synastry report. Two people in, one long-form report
+ * out (see components/report/SynastryReport). Saved on completion so every
+ * section has a shareable permalink.
+ */
+import { useEffect, useMemo, useState } from "react";
+import { Printer } from "lucide-react";
 import PersonForm from "@/components/PersonForm";
+import ShareImageButton from "@/components/ShareImageButton";
+import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
+import SynastryReport from "@/components/report/SynastryReport";
+import ResultActions from "@/components/analyze/ResultActions";
+import { Button } from "@/components/ui/Button";
+import { ErrorNotice } from "@/components/ui/ErrorNotice";
+import { Eyebrow } from "@/components/ui/Eyebrow";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
-import { renderMd } from "@/lib/renderMd";
-import { getZodiacSign } from "@/lib/colors";
+import { usePrefilledPerson } from "@/lib/profile";
+import { getSign, getSignKey } from "@/lib/zodiac";
+import { SIGN_COLOR, SIGN_SYMBOL } from "@/lib/celebrities";
+import type { FullResult, ReportPersonas } from "@/components/report/types";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-interface Traits { intensity: number; stability: number; expressiveness: number; dominance: number; adaptability: number; }
-
-interface NumerologyCompat {
-  compatibility_score: number;
-  life_path_score: number;
-  expression_score: number;
-  cross_score: number;
-  pursue_signal: "pursue" | "caution" | "avoid";
+function persona(p: PersonData) {
+  return {
+    name: p.name.trim() || "Person",
+    sign: getSign(Number(p.day), Number(p.month)),
+    mbti: p.mbti || undefined,
+  };
 }
-
-interface FullResult {
-  vector_similarity_percent: number;
-  element_compatibility: string;
-  modality_interaction: string;
-  zodiac_compatibility_score: number;
-  emotional: { emotional_compatibility_score: number; emotional_expression_similarity: number; emotional_intensity_alignment: number; emotional_stability_compatibility: number; };
-  romantic: { romantic_compatibility_score: number; attachment_pacing_similarity: number; affection_expression_similarity: number; romantic_polarity_score: number; };
-  sextrology: { sexual_compatibility_score: number; intimacy_intensity_alignment: number; intimacy_pacing_alignment: number; dominance_receptiveness_polarity: number; emotional_physical_balance_similarity: number; };
-  love_style: { love_style_compatibility_score: number; a_love_style: { dominant_style: string }; b_love_style: { dominant_style: string }; };
-  love_language: { love_language_compatibility_score: number; a_love_language: { primary_language: string }; b_love_language: { primary_language: string }; };
-  numerology_compat: NumerologyCompat;
-  relationship_intelligence: { overall_score: number; stability_prediction: "stable" | "moderate" | "volatile"; conflict_probability: number; strengths: string[]; risks: string[]; };
-  a_traits: Traits;
-  b_traits: Traits;
-  analysis: { relationship_dynamic: string; communication_pattern: string; conflict_risk: string; long_term_viability: string; };
-}
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const STABILITY_COLOR: Record<string, string> = {
-  stable:   "#2fbf71",
-  moderate: "#fbbc04",
-  volatile: "#ea4335",
-};
-
-const SIGNAL_STYLE: Record<string, string> = {
-  pursue:  "bg-success/10 text-success border-success/25",
-  caution: "bg-warning/10 text-warning border-warning/25",
-  avoid:   "bg-danger/10 text-danger border-danger/25",
-};
-
-const SIGNAL_LABEL: Record<string, string> = {
-  pursue:  "✓ Numerology Match",
-  caution: "⚠ Numerology Caution",
-  avoid:   "✗ Numerology Clash",
-};
-
-const DIM_COLORS: Record<string, string> = {
-  Emotional:       "#a78bfa",
-  Romantic:        "#fb7185",
-  Behavioral:      "#60a5fa",
-  Intimacy:        "#818cf8",
-  "Love Style":    "#fb923c",
-  "Love Language": "#2dd4bf",
-  Numerology:      "#fbbf24",
-  Zodiac:          "#f472b6",
-};
-
-const CARD = "bg-surface-raised border border-white/[0.07] rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.5)] overflow-hidden";
-
-const SLIDE_LABELS = ["Overview", "Dimensions", "Love Intel", "Vectors", "Risk", "AI Reading"];
-
-
-// ── Small UI helpers ──────────────────────────────────────────────────────────
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-1.5 mb-2">
-      <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-      <span className="text-micro font-semibold tracking-[0.13em] uppercase text-ink-muted">{children}</span>
-    </div>
-  );
-}
-
-function ScoreChip({ score }: { score: number }) {
-  const cls =
-    score >= 80 ? "bg-success/15 text-success border-success/30" :
-    score >= 65 ? "bg-accent/15 text-accent border-accent/30" :
-    score >= 45 ? "bg-warning/15 text-warning border-warning/30" :
-                  "bg-danger/15 text-danger border-danger/30";
-  return (
-    <span className={`text-xs px-2 py-0.5 rounded-full font-semibold tabular-nums border ${cls}`}>
-      {score.toFixed(0)}
-    </span>
-  );
-}
-
-function CardStripe({ color = "#8b7cf6" }: { color?: string }) {
-  return (
-    <div
-      className="h-0.5 rounded-t-2xl"
-      style={{ background: `linear-gradient(to right, ${color}90, transparent)` }}
-    />
-  );
-}
-
-function dims(r: FullResult) {
-  return [
-    { name: "Emotional",      score: r.emotional.emotional_compatibility_score },
-    { name: "Romantic",       score: r.romantic.romantic_compatibility_score },
-    { name: "Behavioral",     score: r.vector_similarity_percent },
-    { name: "Intimacy",       score: r.sextrology.sexual_compatibility_score },
-    { name: "Love Style",     score: r.love_style.love_style_compatibility_score },
-    { name: "Love Language",  score: r.love_language.love_language_compatibility_score },
-    { name: "Numerology",     score: r.numerology_compat.compatibility_score },
-    { name: "Zodiac",         score: r.zodiac_compatibility_score },
-  ];
-}
-
-// ── Slide 1: Overview ─────────────────────────────────────────────────────────
-
-function SlideOverview({ result, a, b }: { result: FullResult; a: PersonData; b: PersonData }) {
-  const ri = result.relationship_intelligence;
-  const nc = result.numerology_compat;
-  const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
-  const signA = getZodiacSign(Number(a.day), Number(a.month));
-  const signB = getZodiacSign(Number(b.day), Number(b.month));
-
-  return (
-    <div className="space-y-4">
-      {/* Persona cards */}
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: names.a, sign: signA, mbti: a.mbti, color: "#8b7cf6" },
-          { label: names.b, sign: signB, mbti: b.mbti, color: "#a78bfa" },
-        ].map(({ label, sign, mbti, color }) => (
-          <div key={label} className={CARD}>
-            <CardStripe color={color} />
-            <div className="p-4">
-              <p className="font-semibold text-white text-sm">{label}</p>
-              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                <span className="text-xs text-ink-muted">{sign}</span>
-                {mbti && (
-                  <span className="text-micro px-2 py-0.5 rounded-full bg-white/[0.06] text-ink-secondary font-mono">
-                    {mbti}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* ScoreRing + prediction */}
-      <div className={CARD}>
-        <CardStripe />
-        <div className="p-6 flex flex-col sm:flex-row items-center gap-6">
-          <ScoreRing score={ri.overall_score} size={148} label="Overall" color="#8b7cf6" />
-          <div className="flex-1 space-y-4 w-full">
-            <div>
-              <Eyebrow>Prediction</Eyebrow>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-lg font-bold" style={{ color: STABILITY_COLOR[ri.stability_prediction] }}>
-                  {ri.stability_prediction.charAt(0).toUpperCase() + ri.stability_prediction.slice(1)}
-                </span>
-                <span className="text-ink-muted text-sm">stability</span>
-                <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${SIGNAL_STYLE[nc.pursue_signal]}`}>
-                  {SIGNAL_LABEL[nc.pursue_signal]}
-                </span>
-              </div>
-            </div>
-            <div>
-              <div className="flex justify-between text-xs text-ink-muted mb-1.5">
-                <span>Conflict Probability</span>
-                <span>{ri.conflict_probability.toFixed(0)}%</span>
-              </div>
-              <div className="h-[2px] bg-white/[0.05] rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full bg-danger/60"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${ri.conflict_probability}%` }}
-                  transition={{ duration: DUR.base, delay: 0.2 }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 3-metric strip */}
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: "Stability",     value: ri.stability_prediction.charAt(0).toUpperCase() + ri.stability_prediction.slice(1), color: STABILITY_COLOR[ri.stability_prediction] },
-          { label: "Conflict Risk", value: `${ri.conflict_probability.toFixed(0)}%`, color: "#ea4335" },
-          { label: "Element",       value: result.element_compatibility, sub: result.modality_interaction },
-        ].map(({ label, value, color, sub }) => (
-          <div key={label} className={CARD}>
-            <div className="p-4">
-              <Eyebrow>{label}</Eyebrow>
-              <p className="text-base font-bold" style={{ color: color || "white" }}>{value}</p>
-              {sub && <p className="text-micro text-ink-muted mt-0.5">{sub}</p>}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── Slide 2: Dimensions ───────────────────────────────────────────────────────
-
-function SlideDimensions({ result }: { result: FullResult }) {
-  const nc = result.numerology_compat;
-  return (
-    <div className="space-y-4">
-      <div className={CARD}>
-        <CardStripe />
-        <div className="p-6">
-          <Eyebrow>Compatibility Breakdown</Eyebrow>
-          <h2 className="text-sm font-semibold text-ink-secondary mb-5">Eight Dimensions</h2>
-          <div>
-            {dims(result).map((d, i) => (
-              <motion.div
-                key={d.name}
-                className="flex items-center gap-4 py-3 border-b border-white/[0.04] last:border-0"
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: DUR.fast, delay: i * 0.06 }}
-              >
-                <div className="w-28 text-sm text-ink-secondary flex-shrink-0">{d.name}</div>
-                <div className="flex-1 h-[2px] bg-white/[0.05] rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{ background: DIM_COLORS[d.name] }}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${d.score}%` }}
-                    transition={{ duration: DUR.base, delay: i * 0.07 }}
-                  />
-                </div>
-                <ScoreChip score={d.score} />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Numerology summary */}
-      <div className={CARD}>
-        <CardStripe color="#fbbf24" />
-        <div className="p-5">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <Eyebrow>Numerology</Eyebrow>
-              <h2 className="text-sm font-semibold text-ink-secondary">Number Compatibility</h2>
-            </div>
-            <span className={`text-xs px-3 py-1 rounded-full font-semibold border ${SIGNAL_STYLE[nc.pursue_signal]}`}>
-              {nc.compatibility_score.toFixed(0)}%
-            </span>
-          </div>
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: "Life Path",  value: nc.life_path_score },
-              { label: "Expression", value: nc.expression_score },
-              { label: "Cross-Pair", value: nc.cross_score },
-            ].map(({ label, value }) => (
-              <div key={label} className="rounded-xl bg-white/[0.02] border border-white/[0.04] p-3">
-                <p className="text-micro text-ink-muted uppercase tracking-wider mb-1">{label}</p>
-                <p className="text-2xl font-extrabold text-ink tabular-nums" style={{ fontFamily: "var(--font-manrope)" }}>
-                  {value.toFixed(0)}<span className="text-xs text-ink-muted ml-0.5">%</span>
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Slide 3: Love Intel ───────────────────────────────────────────────────────
-
-function SlideLoveIntel({ result, a, b }: { result: FullResult; a: PersonData; b: PersonData }) {
-  const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
-  const ls = result.love_style;
-  const ll = result.love_language;
-
-  return (
-    <div className="space-y-4">
-      {/* Compat score bars */}
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: "Love Style",     score: ls.love_style_compatibility_score,     color: "#fb923c" },
-          { label: "Love Language",  score: ll.love_language_compatibility_score,  color: "#2dd4bf" },
-        ].map(({ label, score, color }) => (
-          <div key={label} className={CARD}>
-            <CardStripe color={color} />
-            <div className="p-4">
-              <Eyebrow>{label}</Eyebrow>
-              <p className="text-3xl font-extrabold tabular-nums" style={{ color, fontFamily: "var(--font-manrope)" }}>
-                {score.toFixed(0)}<span className="text-sm text-ink-muted ml-0.5">%</span>
-              </p>
-              <div className="h-[2px] bg-white/[0.05] rounded-full overflow-hidden mt-2">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ background: color }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${score}%` }}
-                  transition={{ duration: DUR.base, delay: 0.1 }}
-                />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* 4 detail cards */}
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { label: `${names.a} Love Style`,     val: ls.a_love_style.dominant_style,                             color: "#fb923c" },
-          { label: `${names.b} Love Style`,     val: ls.b_love_style.dominant_style,                             color: "#fb923c" },
-          { label: `${names.a} Love Language`,  val: ll.a_love_language.primary_language.replace(/_/g, " "),    color: "#2dd4bf" },
-          { label: `${names.b} Love Language`,  val: ll.b_love_language.primary_language.replace(/_/g, " "),    color: "#2dd4bf" },
-        ].map(({ label, val, color }, i) => (
-          <motion.div
-            key={label}
-            className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.07 }}
-          >
-            <p className="text-micro text-ink-muted uppercase tracking-wider mb-1">{label}</p>
-            <p className="text-sm font-semibold capitalize" style={{ color }}>{val}</p>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ── Slide 4: Trait Vectors ────────────────────────────────────────────────────
-
-function SlideVectors({ result, a, b }: { result: FullResult; a: PersonData; b: PersonData }) {
-  const names = { a: a.name.trim() || "Person A", b: b.name.trim() || "Person B" };
-  return (
-    <div className="space-y-4">
-      <div className={CARD}>
-        <CardStripe color="#60a5fa" />
-        <div className="p-6">
-          <Eyebrow>Trait Vectors</Eyebrow>
-          <h2 className="text-sm font-semibold text-ink-secondary mb-4">Behavioral Comparison</h2>
-          <TraitRadar a={result.a_traits} b={result.b_traits} nameA={names.a} nameB={names.b} />
-        </div>
-      </div>
-      <BehavioralMap aTraits={result.a_traits} bTraits={result.b_traits} nameA={names.a} nameB={names.b} />
-    </div>
-  );
-}
-
-// ── Slide 5: Strengths & Risks ────────────────────────────────────────────────
-
-function SlideRisk({ result }: { result: FullResult }) {
-  const ri = result.relationship_intelligence;
-  return (
-    <div className="space-y-4">
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className={CARD}>
-          <div className="h-0.5 bg-gradient-to-r from-success/50 to-transparent" />
-          <div className="p-5">
-            <Eyebrow>Strengths</Eyebrow>
-            <ol className="space-y-2.5 mt-1">
-              {ri.strengths.map((s, i) => (
-                <motion.li
-                  key={i}
-                  className="flex items-start gap-2.5 text-sm"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                >
-                  <span className="text-success font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
-                  <span className="text-ink-secondary">{s}</span>
-                </motion.li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        <div className={CARD}>
-          <div className="h-0.5 bg-gradient-to-r from-danger/50 to-transparent" />
-          <div className="p-5">
-            <Eyebrow>Risk Areas</Eyebrow>
-            <ol className="space-y-2.5 mt-1">
-              {ri.risks.map((r, i) => (
-                <motion.li
-                  key={i}
-                  className="flex items-start gap-2.5 text-sm"
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                >
-                  <span className="text-danger font-bold mt-0.5 flex-shrink-0">{i + 1}.</span>
-                  <span className="text-ink-secondary">{r}</span>
-                </motion.li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Slide 6: AI Reading ───────────────────────────────────────────────────────
-
-function SlideAI({ result }: { result: FullResult }) {
-  const keys = ["relationship_dynamic", "communication_pattern", "conflict_risk", "long_term_viability"] as const;
-  const allDash = keys.every(k => !result.analysis[k] || result.analysis[k] === "—");
-
-  return (
-    <div className={CARD}>
-      <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-white/[0.06] bg-white/[0.02]">
-        <div className="relative w-2 h-2 shrink-0">
-          <div className="absolute inset-0 rounded-full bg-accent animate-ping opacity-60" />
-          <div className="w-2 h-2 rounded-full bg-accent" />
-        </div>
-        <span className="text-xs font-semibold text-ink-secondary tracking-wide">AI Interpretation</span>
-        <span className="ml-auto text-micro px-2 py-0.5 rounded-full bg-accent/10 text-accent/80 border border-accent/20">
-          Gemini 2.5 Flash
-        </span>
-      </div>
-      {allDash ? (
-        <div className="p-8 flex flex-col items-center gap-3 text-center">
-          <p className="text-ink-muted text-sm">AI interpretation unavailable — the model timed out or was rate-limited.</p>
-          <p className="text-ink-muted text-xs">Run the report again to retry.</p>
-        </div>
-      ) : (
-        <div className="p-6 grid md:grid-cols-2 gap-6">
-          {keys.map((key, i) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <p className="text-micro text-ink-muted uppercase tracking-[0.1em] font-semibold mb-2">
-                {key.replace(/_/g, " ")}
-              </p>
-              <p className="text-sm text-ink-secondary leading-relaxed">{renderMd(result.analysis[key])}</p>
-            </motion.div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ── Main component ────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
   const [a, setA] = usePrefilledPerson();
   const [b, setB] = useState<PersonData>(emptyPerson());
   const [result, setResult] = useState<FullResult | null>(null);
+  const [personas, setPersonas] = useState<ReportPersonas | null>(null);
+  const [shareId, setShareId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [slideDir, setSlideDir] = useState(1);
-  const touchX = useRef(0);
 
-  const goTo = useCallback((idx: number) => {
-    const clamped = Math.max(0, Math.min(5, idx));
-    setSlideDir(clamped >= activeSlide ? 1 : -1);
-    setActiveSlide(clamped);
-  }, [activeSlide]);
-
-  // Keyboard navigation
+  // The floating mobile buttons would sit on top of the report's chips.
   useEffect(() => {
-    if (!result) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") { setSlideDir(1);  setActiveSlide(p => Math.min(5, p + 1)); }
-      if (e.key === "ArrowLeft")  { setSlideDir(-1); setActiveSlide(p => Math.max(0, p - 1)); }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [result]);
-
-  // Reset to slide 0 when new result arrives
-  useEffect(() => { if (result) { setActiveSlide(0); setSlideDir(1); } }, [result]);
-
-  // Hide mobile FAB/nav while results carousel is visible
-  useEffect(() => {
-    if (result) document.body.classList.add("results-open");
-    else document.body.classList.remove("results-open");
+    document.body.classList.toggle("results-open", !!result);
     return () => document.body.classList.remove("results-open");
   }, [result]);
 
@@ -507,7 +53,10 @@ export default function DashboardPage() {
     setError("");
     try {
       const data = await apiFetch<FullResult>("/analyze/full", pairBody(a, b));
+      setPersonas({ a: persona(a), b: persona(b) });
+      setShareId(null);
       setResult(data);
+      window.scrollTo({ top: 0 });
     } catch (e: unknown) {
       setError((e as Error).message);
     } finally {
@@ -515,160 +64,91 @@ export default function DashboardPage() {
     }
   }
 
-  function renderSlide(i: number) {
-    if (!result) return null;
-    switch (i) {
-      case 0: return <SlideOverview    result={result} a={a} b={b} />;
-      case 1: return <SlideDimensions  result={result} />;
-      case 2: return <SlideLoveIntel   result={result} a={a} b={b} />;
-      case 3: return <SlideVectors     result={result} a={a} b={b} />;
-      case 4: return <SlideRisk        result={result} />;
-      case 5: return <SlideAI          result={result} />;
-      default: return null;
-    }
+  const title = personas ? `${personas.a.name} × ${personas.b.name} Synastry Report` : "";
+
+  // Saved with the result so a shared link can show who the report is about.
+  const savedPayload = useMemo(
+    () => (result && personas ? { ...result, personas } : null),
+    [result, personas],
+  );
+
+  if (result && personas) {
+    return (
+      <main className="min-h-screen px-4 md:px-6 py-6 md:py-10 max-w-6xl mx-auto">
+        <button
+          onClick={() => setResult(null)}
+          data-print-hide
+          className="mb-6 inline-flex items-center gap-1.5 text-sm text-ink-muted hover:text-ink-secondary transition-colors"
+        >
+          ← New report
+        </button>
+        <SynastryReport
+          result={result}
+          personas={personas}
+          title={title}
+          shareId={shareId}
+          actions={
+            <>
+              <ResultActions
+                analysisType="full_relationship_intelligence"
+                title={title}
+                payload={savedPayload}
+                onSaved={setShareId}
+                showSigil={false}
+              />
+              <ShareImageButton
+                data={{
+                  type: "compat",
+                  nameA: personas.a.name, nameB: personas.b.name,
+                  signA: personas.a.sign, symbolA: SIGN_SYMBOL[getSignKey(Number(a.day), Number(a.month))] ?? "✦",
+                  colorA: SIGN_COLOR[getSignKey(Number(a.day), Number(a.month))] ?? "#f59e0b",
+                  signB: personas.b.sign, symbolB: SIGN_SYMBOL[getSignKey(Number(b.day), Number(b.month))] ?? "✦",
+                  colorB: SIGN_COLOR[getSignKey(Number(b.day), Number(b.month))] ?? "#818cf8",
+                  score: result.relationship_intelligence.overall_score,
+                }}
+              />
+              <button
+                onClick={() => window.print()}
+                className="inline-flex items-center gap-1.5 rounded-full border border-hairline px-3 py-1.5 text-xs font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"
+              >
+                <Printer className="size-3.5" aria-hidden="true" /> Export PDF
+              </button>
+            </>
+          }
+        />
+      </main>
+    );
   }
 
   return (
-    <>
-      {/* Fixed floating sub-nav — appears when results are visible */}
-      <AnimatePresence>
-        {result && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: DUR.fast }}
-            className="fixed left-1/2 -translate-x-1/2 z-30 top-2 md:top-[52px]"
-          >
-            <div className="flex items-center gap-0.5 bg-surface-overlay/90 backdrop-blur-xl border border-white/[0.08] rounded-[14px] px-1.5 py-1 shadow-xl max-w-[calc(100vw-24px)] md:max-w-none">
-              <button
-                onClick={() => goTo(activeSlide - 1)}
-                disabled={activeSlide === 0}
-                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-ink-secondary hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
-              >
-                ‹
-              </button>
-              <div className="flex items-center gap-0.5 overflow-x-auto scrollbar-none">
-                {SLIDE_LABELS.map((label, i) => (
-                  <button
-                    key={i}
-                    onClick={() => goTo(i)}
-                    className={`px-2.5 md:px-3 py-1.5 rounded-[10px] text-xs font-medium transition-all whitespace-nowrap ${
-                      activeSlide === i
-                        ? "bg-accent text-white shadow-sm"
-                        : "text-ink-muted hover:text-ink-secondary"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => goTo(activeSlide + 1)}
-                disabled={activeSlide === 5}
-                className="w-7 h-7 flex items-center justify-center rounded-[10px] text-ink-secondary hover:text-white disabled:opacity-20 transition-colors text-base leading-none shrink-0"
-              >
-                ›
-              </button>
-              <span className="text-micro text-ink-muted ml-1 tabular-nums pr-1 shrink-0">{activeSlide + 1}/6</span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <main className="min-h-screen px-4 md:px-6 py-8 md:py-14 max-w-4xl mx-auto">
+      <header className="mb-8 md:mb-10">
+        <Eyebrow>Relationship intelligence</Eyebrow>
+        <h1 className="mt-3 font-display font-extrabold tracking-[-0.03em] text-3xl md:text-[40px] leading-[1.08] text-ink text-balance">
+          Full synastry report
+        </h1>
+        <p className="mt-3 text-ink-secondary max-w-xl leading-relaxed">
+          Eight compatibility dimensions, trait vectors, risk areas and an AI reading — one long-form report
+          you can share section by section or save as a PDF.
+        </p>
+      </header>
 
-      <main className="min-h-screen px-4 md:px-6 py-6 md:py-10 max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-1.5 mb-2">
-            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-            <span className="text-micro font-semibold tracking-[0.13em] uppercase text-ink-muted">Relationship Intelligence</span>
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight" style={{ fontFamily: "var(--font-manrope)" }}>
-            Synastry
-          </h1>
-          <p className="text-ink-muted mt-1 text-sm">Full read — 8 dimensions + AI interpretation</p>
+      <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <PersonForm label="Person A" value={a} onChange={setA} self />
+        <PersonForm label="Person B" value={b} onChange={setB} />
+      </div>
+
+      {error && <ErrorNotice message={error} onRetry={handleSubmit} className="mb-4" />}
+
+      <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full">
+        {loading ? "Reading the stars…" : "Generate synastry report"}
+      </Button>
+
+      {loading && (
+        <div className="mt-8">
+          <AnalyzeSkeleton variant="pair" />
         </div>
-
-        {/* Input forms — hidden once result is shown */}
-        {!result && (<>
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <PersonForm label="Person A" value={a} onChange={setA} self />
-            <PersonForm label="Person B" value={b} onChange={setB} />
-          </div>
-
-          {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-zinc-100 disabled:opacity-40 transition mb-10"
-          >
-            {loading ? "Reading the stars…" : "Generate Synastry Report"}
-          </button>
-        </>)}
-
-        {/* Carousel results */}
-        <AnimatePresence>
-          {result && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: DUR.fast }}
-              className="pt-10 md:pt-12"
-            >
-              <button
-                onClick={() => setResult(null)}
-                className="flex items-center gap-1.5 text-xs text-ink-muted hover:text-ink-secondary transition-colors mb-4"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
-                Try again
-              </button>
-
-              {/* Touch wrapper */}
-              <div
-                onTouchStart={(e) => { touchX.current = e.targetTouches[0].clientX; }}
-                onTouchEnd={(e) => {
-                  const delta = touchX.current - e.changedTouches[0].clientX;
-                  if (Math.abs(delta) > 40) goTo(activeSlide + (delta > 0 ? 1 : -1));
-                }}
-              >
-                <AnimatePresence mode="wait" custom={slideDir}>
-                  <motion.div
-                    key={activeSlide}
-                    custom={slideDir}
-                    variants={{
-                      enter: (d: number) => ({ opacity: 0, x: d * 32 }),
-                      center: { opacity: 1, x: 0 },
-                      exit:  (d: number) => ({ opacity: 0, x: d * -32 }),
-                    }}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: DUR.fast, ease: [0.25, 0.46, 0.45, 0.94] }}
-                  >
-                    {renderSlide(activeSlide)}
-                  </motion.div>
-                </AnimatePresence>
-
-                {/* Dot pagination */}
-                <div className="flex items-center justify-center gap-2 mt-6 mb-4">
-                  {SLIDE_LABELS.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goTo(i)}
-                      className={`rounded-full transition-all duration-200 ${
-                        activeSlide === i
-                          ? "w-5 h-1.5 bg-accent"
-                          : "w-1.5 h-1.5 bg-white/20 hover:bg-white/40"
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </main>
-    </>
+      )}
+    </main>
   );
 }

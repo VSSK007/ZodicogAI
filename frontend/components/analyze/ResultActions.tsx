@@ -20,10 +20,16 @@ export default function ResultActions({
   analysisType,
   title,
   payload,
+  onSaved,
+  showSigil = true,
 }: {
   analysisType: string;
   title: string;
   payload: unknown;
+  /** Called once the reading is saved, with its permalink id (null if saving failed). */
+  onSaved?: (id: string | null) => void;
+  /** Hide the inline sigil when the page already shows a larger one. */
+  showSigil?: boolean;
 }) {
   const [shareId, setShareId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -37,7 +43,10 @@ export default function ResultActions({
     if (saved.current || !payload) return;
     saved.current = true;
     trackAnalysisCompleted(analysisType);
-    saveReading(analysisType, title, payload).then(setShareId);
+    saveReading(analysisType, title, payload).then((id) => {
+      setShareId(id);
+      onSaved?.(id);
+    });
   }, [analysisType, title, payload]);
 
   async function copy() {
@@ -57,7 +66,7 @@ export default function ResultActions({
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
-      <Sigil seed={title} size={56} className="shrink-0 mr-1" />
+      {showSigil && <Sigil seed={title} size={56} className="shrink-0 mr-1" />}
       {shareId && (
         <button
           onClick={copy}

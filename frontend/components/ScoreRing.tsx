@@ -71,7 +71,7 @@ export default function ScoreRing({
         <text
           x={center} y={center - 4}
           textAnchor="middle"
-          fill="white"
+          fill="var(--color-ink)"
           fontSize={size * 0.18}
           fontWeight="800"
           fontFamily="var(--font-manrope), inherit"

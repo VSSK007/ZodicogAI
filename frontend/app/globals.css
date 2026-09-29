@@ -296,3 +296,31 @@ html {
     margin-bottom: calc(64px + var(--safe-area-bottom));
   }
 }
+
+
+/* ── Print / "Export as PDF" ─────────────────────────────────────────────────
+   Re-point the ink and surface tokens to paper colours so every token-based
+   class prints dark-on-white, and drop chrome that makes no sense on paper.   */
+@media print {
+  :root {
+    --color-surface:         #ffffff;
+    --color-surface-raised:  #f6f5fa;
+    --color-surface-overlay: #ffffff;
+    --color-ink:             #14121f;
+    --color-ink-secondary:   #3a3650;
+    --color-ink-muted:       #6a6580;
+    --color-ink-faint:       #8a869c;
+    --color-hairline:        rgba(20, 18, 31, 0.14);
+    --color-hairline-strong: rgba(20, 18, 31, 0.24);
+    --color-gold-bright:     #8a6410;
+    --color-accent-bright:   #5b47d6;
+  }
+  html, body { background: #ffffff !important; }
+  .cosmic-layer, nav, footer, .mobile-fab, [data-print-hide] { display: none !important; }
+  [data-report-section] { break-inside: avoid-page; }
+  /* Scroll-triggered reveals must print in their final state even if never scrolled to. */
+  [data-report] * { opacity: 1 !important; transform: none !important; }
+  [data-bar-fill] { width: var(--w) !important; }
+  * { animation: none !important; transition: none !important; }
+  a { text-decoration: none; }
+}

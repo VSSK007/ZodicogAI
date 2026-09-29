@@ -88,7 +88,7 @@ export default function CosmicBackground() {
     <>
       {/* ── Nebula — violet crown + faint gold horizon, all viewports ──────── */}
       <div
-        className="fixed inset-x-0 top-0 h-lvh -z-20 pointer-events-none"
+        className="cosmic-layer fixed inset-x-0 top-0 h-lvh -z-20 pointer-events-none"
         style={{
           background: [
             "radial-gradient(ellipse 90% 55% at 50% -8%,  rgba(139,124,246,0.16) 0%, transparent 65%)",
@@ -100,7 +100,7 @@ export default function CosmicBackground() {
       />
 
       {/* ── Star field ────────────────────────────────────────────────────── */}
-      <div className="fixed inset-x-0 top-0 h-lvh -z-20 pointer-events-none" aria-hidden="true">
+      <div className="cosmic-layer fixed inset-x-0 top-0 h-lvh -z-20 pointer-events-none" aria-hidden="true">
         {STARS.map((s, i) => (
           <div
             key={i}
@@ -120,7 +120,7 @@ export default function CosmicBackground() {
       </div>
 
       {/* ── Floating doodle symbols ───────────────────────────────────────── */}
-      <div className="fixed inset-x-0 top-0 h-lvh -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
+      <div className="cosmic-layer fixed inset-x-0 top-0 h-lvh -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
         {DOODLES.map((d, i) => (
           /* Outer: fixed position + static rotation */
           <div
