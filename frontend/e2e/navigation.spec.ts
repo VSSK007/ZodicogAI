@@ -25,8 +25,10 @@ test.describe("command palette", () => {
     await page.keyboard.type("zendaya");
     await expect(dialog.getByRole("option").first()).toContainText("Zendaya");
     await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden(); // a person sees it close before reopening it
 
     await page.keyboard.press("Control+k");
+    await expect(dialog.getByRole("combobox")).toBeFocused();
     await page.keyboard.type("scorpio");
     await expect(dialog.getByRole("option", { name: /Scorpio/ }).first()).toBeVisible();
   });

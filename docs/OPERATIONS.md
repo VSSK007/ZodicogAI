@@ -170,6 +170,37 @@ sessions, saved profile and owned readings. Anonymous readings are unaffected.
 API is on a different origin from the site. Tokens are 256-bit random and stored
 only as SHA-256 hashes; login requests are rate-limited per address and per IP.
 
+## Docker (reproducible deploys)
+
+The repo builds as two small images and a compose file that also runs Postgres:
+
+```bash
+cp .env.example .env        # set GEMINI_API_KEY and POSTGRES_PASSWORD at least
+docker compose up --build   # frontend :3000, backend :8000, Postgres with a volume
+```
+
+- `frontend/Dockerfile`: multi-stage, Next.js **standalone** output (`NEXT_OUTPUT=standalone`),
+  non-root, healthcheck. `NEXT_PUBLIC_*` values are build args because they are baked
+  into the client bundle (they are public, not secrets).
+- `backend/Dockerfile`: python:3.11-slim, non-root, healthcheck on `/health`, one
+  uvicorn process on purpose (the AI budget and rate limits live in memory).
+  Without `DATABASE_URL` it uses SQLite at `/data/results.db` (mount a volume there).
+- CI builds both images and boots them (`docker` job): `/health` must answer, and the
+  frontend must serve the site with security headers.
+- The standalone build can't be produced on Windows (a dependency ships a file name
+  containing `:`); build images on Linux or in CI.
+
+`deploy/nginx.conf.example` is a reference reverse proxy: HTTPS, HSTS, long-cache
+for hashed assets, **no buffering for streamed (SSE) responses**, and the
+Cloudflare real-IP setup so per-IP limits see visitors, not the CDN.
+
+Baseline security headers (nosniff, frame denial, referrer and permissions
+policies) are set by Next itself; a strict CSP is deliberately left for later since
+GA/PostHog/Sentry need a tested allow-list.
+
+The current PM2 deployment keeps working unchanged; moving to containers is
+opt-in.
+
 ## Environment variable reference
 
 | Variable | Used by | Purpose |

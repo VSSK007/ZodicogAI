@@ -89,5 +89,5 @@ export async function backendUp(): Promise<boolean> {
 /** Navigate and wait until the client has hydrated (keyboard handlers exist only after that). */
 export async function hydrated(page: Page, path: string) {
   await page.goto(path);
-  await page.waitForLoadState("networkidle");
+  await page.locator('html[data-hydrated="true"]').waitFor({ state: "attached" });
 }

@@ -1,6 +1,25 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Docker builds set NEXT_OUTPUT=standalone for a small, self-contained server
+  // (see frontend/Dockerfile); the PM2 deployment leaves it unset.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
+  poweredByHeader: false,
+  async headers() {
+    // Baseline hardening. (A strict CSP is intentionally not set here: GA, PostHog
+    // and Sentry load lazily from several origins and need a tested allow-list.)
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+        ],
+      },
+    ];
+  },
   experimental: {
     // React <ViewTransition>: page cross-fades and shared-element morphs.
     viewTransition: true,

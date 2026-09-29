@@ -20,6 +20,8 @@ export default function ObservabilityProvider() {
   const pathname = usePathname();
 
   useEffect(() => {
+    // Lets tests (and debugging) know the client has mounted and handlers exist.
+    document.documentElement.dataset.hydrated = "true";
     installGlobalErrorHandlers();
 
     const events = ["pointerdown", "keydown", "scroll", "touchstart"] as const;

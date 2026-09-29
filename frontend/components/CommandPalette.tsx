@@ -154,6 +154,9 @@ export default function CommandPalette() {
       })),
     );
     if (!celebs) import("@/lib/celebrities").then((m) => setCelebs(m.CELEBRITIES));
+    // autoFocus covers a fresh mount; this covers reopening while the previous
+    // instance is still animating out (same input element, so no remount).
+    inputRef.current?.focus();
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const celebItems: Item[] = useMemo(

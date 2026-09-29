@@ -113,6 +113,31 @@ jobs:
             frontend/test-results
           if-no-files-found: ignore
 
+  docker:
+    name: Docker images build and boot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        run: POSTGRES_PASSWORD=ci docker compose config -q
+      - name: Build backend image
+        run: docker build -t zodicog-backend ./backend
+      - name: Build frontend image
+        run: docker build -t zodicog-frontend --build-arg NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 ./frontend
+      - name: Smoke test - backend boots and reports healthy
+        run: |
+          docker run -d --name be -p 8000:8000 -e GEMINI_API_KEY=ci-dummy zodicog-backend
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:8000/health && break; sleep 2; done
+          curl -fsS http://127.0.0.1:8000/health | grep -q '"status":"ok"'
+      - name: Smoke test - frontend serves the site with security headers
+        run: |
+          docker run -d --name fe -p 3000:3000 zodicog-frontend
+          for i in $(seq 1 30); do curl -fsS -o /dev/null http://127.0.0.1:3000/ && break; sleep 2; done
+          curl -sI http://127.0.0.1:3000/ | grep -i "x-content-type-options: nosniff"
+          curl -fsS http://127.0.0.1:3000/celebrities/zendaya | grep -q "Sep 1, 1996"
+      - if: failure()
+        run: docker logs be; docker logs fe
+
   lighthouse:
     name: Lighthouse budget (mobile)
     runs-on: ubuntu-latest
@@ -142,7 +167,7 @@ jobs:
 
   deploy:
     name: Deploy to VPS
-    needs: [backend, frontend, e2e, lighthouse]
+    needs: [backend, frontend, e2e, lighthouse, docker]
     # Opt-in: set the repo variable DEPLOY_ENABLED=true once the VPS secrets exist.
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
