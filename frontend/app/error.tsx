@@ -1,6 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
 import { Star4 } from "@/components/ui/glyphs";
+import { reportError } from "@/lib/monitoring";
 
 export default function Error({
   error,
@@ -9,6 +11,10 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    reportError(error, { digest: error.digest, boundary: "error" });
+  }, [error]);
+
   return (
     <main className="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center">
       <Star4 size={18} className="text-gold" />

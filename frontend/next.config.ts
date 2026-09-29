@@ -26,4 +26,17 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Source-map upload needs SENTRY_AUTH_TOKEN (+ SENTRY_ORG / SENTRY_PROJECT).
+// Without it the config is returned untouched (Sentry still reports, with
+// minified stacks) and the SDK isn't even loaded by `next start`.
+export default async function config(): Promise<NextConfig> {
+  if (!process.env.SENTRY_AUTH_TOKEN) return nextConfig;
+  const { withSentryConfig } = await import("@sentry/nextjs");
+  return withSentryConfig(nextConfig, {
+    org: process.env.SENTRY_ORG,
+    project: process.env.SENTRY_PROJECT,
+    silent: !process.env.CI,
+    widenClientFileUpload: true,
+    disableLogger: true,
+  });
+}

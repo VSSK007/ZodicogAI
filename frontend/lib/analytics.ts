@@ -6,10 +6,12 @@
  * Safe no-op if analytics hasn't loaded (ad blockers, SSR) or before consent.
  */
 import { sendGAEvent } from "@next/third-parties/google";
+import { capture } from "@/lib/posthog";
 
 function track(name: string, params: Record<string, unknown> = {}) {
   try {
     sendGAEvent("event", name, params);
+    capture(name, params);
   } catch {
     // Analytics is an enhancement, never a blocker.
   }

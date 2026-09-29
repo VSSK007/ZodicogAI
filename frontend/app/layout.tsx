@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import localFont from "next/font/local";
 import { Manrope } from "next/font/google";
 import DeferredAnalytics from "@/components/DeferredAnalytics";
+import ObservabilityProvider from "@/components/ObservabilityProvider";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import { ViewTransition } from "react";
@@ -89,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </MotionProvider>
       </body>
       <DeferredAnalytics gaId="G-HY2R286L2X" />
+      <ObservabilityProvider />
     </html>
   );
 }

@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { Check, UserRound } from "lucide-react";
 import { clearProfile, isProfileComplete, saveProfile, useProfile } from "@/lib/profile";
+import { capture, useFeatureFlag } from "@/lib/posthog";
 
 type Person = {
   name: string;
@@ -21,6 +22,9 @@ const chip =
 
 export default function ProfileNotice({ person }: { person: Person }) {
   const profile = useProfile();
+  // Experiment: does friendlier copy get more people to save a profile? (PostHog flag
+  // `remember_me_copy`; anyone not in the experiment sees the control.)
+  const copy = useFeatureFlag<string>("remember_me_copy", "control");
   const complete = isProfileComplete(person);
 
   const same =
@@ -30,6 +34,7 @@ export default function ProfileNotice({ person }: { person: Person }) {
     profile.month === Number(person.month);
 
   function save() {
+    capture("profile_saved", { copy });
     saveProfile({
       name: person.name.trim(),
       day: Number(person.day),
@@ -66,7 +71,11 @@ export default function ProfileNotice({ person }: { person: Person }) {
         className={`${chip} border-hairline text-ink-secondary hover:text-ink hover:border-hairline-strong`}
       >
         <UserRound className="size-3.5" aria-hidden="true" />
-        {profile ? "Update my saved profile" : "Remember me on this device"}
+        {profile
+          ? "Update my saved profile"
+          : copy === "save_details"
+            ? "Save my details for next time"
+            : "Remember me on this device"}
       </button>
     </div>
   );
