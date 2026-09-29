@@ -144,6 +144,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
               <p className={`${sectionLabel} text-ink-faint`}><Star4 size={9} /> More</p>
               <div className="grid grid-cols-3 gap-2">
                 {[
+                  { label: "My profile", href: "/profile" },
                   { label: "Horoscope", href: "/horoscope" },
                   { label: "Blog", href: "/blog" },
                   { label: "About", href: "/about" },

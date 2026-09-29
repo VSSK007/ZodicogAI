@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledSimple } from "@/lib/profile";
 import { DUR, EASE } from "@/lib/motion";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -196,7 +197,7 @@ function ProfileCard({ profile, name }: { profile: NumerologyProfile; name: stri
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function NumerologyPage() {
-  const [a, setA] = useState<SimplePersonState>(emptySimple());
+  const [a, setA] = usePrefilledSimple();
   const [b, setB] = useState<SimplePersonState>(emptySimple());
   const [showB, setShowB] = useState(false);
   const [result, setResult] = useState<NumerologyResult | null>(null);
@@ -245,7 +246,7 @@ export default function NumerologyPage() {
       form={
         <>
           <div className={`grid gap-4 mb-4 ${showB ? "md:grid-cols-2" : ""}`}>
-            <SimpleForm label="Person A" value={a} onChange={setA} />
+            <SimpleForm label="Person A" value={a} onChange={setA} self />
             {showB && <SimpleForm label="Person B" value={b} onChange={setB} />}
           </div>
 

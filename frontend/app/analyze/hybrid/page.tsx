@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledPerson } from "@/lib/profile";
 import { useState } from "react";
 import TraitRadar from "@/components/TraitRadar";
 import PersonForm from "@/components/PersonForm";
@@ -51,7 +52,7 @@ interface HybridResult {
 }
 
 export default function HybridPage() {
-  const [person, setPerson] = useState<PersonData>(emptyPerson());
+  const [person, setPerson] = usePrefilledPerson();
   const [result, setResult] = useState<HybridResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -96,7 +97,7 @@ export default function HybridPage() {
       form={
         <>
           <div className="mb-6">
-            <PersonForm label="Your Profile" value={person} onChange={setPerson} />
+            <PersonForm label="Your Profile" value={person} onChange={setPerson} self />
           </div>
           <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full">
             {loading ? "Analyzing…" : "Analyze Your Profile"}

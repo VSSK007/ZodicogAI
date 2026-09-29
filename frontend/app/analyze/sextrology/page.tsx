@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledPerson } from "@/lib/profile";
 import { DUR } from "@/lib/motion";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -141,7 +142,7 @@ const PAIR_FIELDS: { key: keyof SextrologyAnalysis; label: string; icon: string 
 ];
 
 export default function SextrologyPage() {
-  const [a, setA] = useState<PersonData>(emptyPerson());
+  const [a, setA] = usePrefilledPerson();
   const [b, setB] = useState<PersonData>(emptyPerson());
   const [showB, setShowB] = useState(false);
   const [result, setResult] = useState<SextrologyResult | null>(null);
@@ -189,7 +190,7 @@ export default function SextrologyPage() {
 
       {!result && (<>
         <div className={`grid gap-4 mb-4 ${showB ? "md:grid-cols-2" : ""}`}>
-          <PersonForm label="Person A" value={a} onChange={setA} />
+          <PersonForm label="Person A" value={a} onChange={setA} self />
           {showB && <PersonForm label="Person B" value={b} onChange={setB} />}
         </div>
 

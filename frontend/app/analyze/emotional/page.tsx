@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledPerson } from "@/lib/profile";
 import { DUR } from "@/lib/motion";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -43,7 +44,7 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
 }
 
 export default function EmotionalPage() {
-  const [a, setA] = useState<PersonData>(emptyPerson());
+  const [a, setA] = usePrefilledPerson();
   const [b, setB] = useState<PersonData>(emptyPerson());
   const [result, setResult] = useState<EmotionalResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -129,7 +130,7 @@ export default function EmotionalPage() {
 
       {!result && (<>
         <div className="grid md:grid-cols-2 gap-4 mb-6">
-          <PersonForm label="Person A" value={a} onChange={setA} />
+          <PersonForm label="Person A" value={a} onChange={setA} self />
           <PersonForm label="Person B" value={b} onChange={setB} />
         </div>
         {error && <p className="text-red-400 text-sm mb-4">{error}</p>}

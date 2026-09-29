@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
+import ProfileLink from "./ProfileLink";
 import { Glyph } from "@/components/ui/glyphs";
 import { ANALYZE_YOU, ANALYZE_TOGETHER, type AnalyzeLink } from "@/lib/analyses";
 
@@ -160,6 +161,7 @@ export default function Navbar() {
 
         {/* Right section */}
         <div className="flex items-center gap-2.5 shrink-0">
+          <ProfileLink active={path === "/profile"} />
           {/* Zodicognac — gold sub-brand pill; on the homepage it plays the ?zn=1 ritual first */}
           <motion.div
             whileHover={{ scale: 1.03 }}

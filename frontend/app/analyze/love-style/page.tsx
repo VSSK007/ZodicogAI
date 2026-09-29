@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledPerson } from "@/lib/profile";
 import { useState } from "react";
 import PersonForm from "@/components/PersonForm";
 import TraitRadar from "@/components/TraitRadar";
@@ -42,7 +43,7 @@ const STYLE_LABELS: Record<string, string> = {
 };
 
 export default function LoveStylePage() {
-  const [a, setA] = useState<PersonData>(emptyPerson());
+  const [a, setA] = usePrefilledPerson();
   const [b, setB] = useState<PersonData>(emptyPerson());
   const [result, setResult] = useState<LoveStyleResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -76,7 +77,7 @@ export default function LoveStylePage() {
       form={
         <>
           <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <PersonForm label="Person A" value={a} onChange={setA} />
+            <PersonForm label="Person A" value={a} onChange={setA} self />
             <PersonForm label="Person B" value={b} onChange={setB} />
           </div>
           <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full">

@@ -5,17 +5,20 @@ import { AnimatePresence } from "framer-motion";
 import { PersonData } from "@/lib/api";
 import MbtiSelect from "./MbtiSelect";
 import MbtiQuiz from "./MbtiQuiz";
+import ProfileNotice from "@/components/ui/ProfileNotice";
 
 interface Props {
   label: string;
   value: PersonData;
   onChange: (v: PersonData) => void;
   compact?: boolean;
+  /** Marks this as the visitor's own form: shows the remember-me / saved-profile strip. */
+  self?: boolean;
 }
 
 const INPUT_SMALL = "bg-white/[0.04] border border-hairline-strong px-3 py-3 md:py-2 text-white text-sm placeholder-ink-faint focus:outline-none focus:border-hairline-accent transition-colors rounded-lg";
 
-export default function PersonForm({ label, value, onChange }: Props) {
+export default function PersonForm({ label, value, onChange, self = false }: Props) {
   const [showQuiz, setShowQuiz] = useState(false);
 
   useEffect(() => {
@@ -31,7 +34,8 @@ export default function PersonForm({ label, value, onChange }: Props) {
     };
 
   return (
-    <div className="rounded-2xl ring-1 ring-gold/20 md:ring-white/10 p-5 bg-white/[0.03]">
+    <div>
+    <div className="rounded-2xl ring-1 ring-hairline p-5 bg-white/[0.03]">
       <p className="text-xs font-semibold text-ink-secondary uppercase tracking-wider mb-3">{label}</p>
       <div className="flex flex-col gap-2">
         {/* Row 1: Name + Gender — transparent underline style */}
@@ -100,6 +104,8 @@ export default function PersonForm({ label, value, onChange }: Props) {
           )}
         </AnimatePresence>
       </div>
+    </div>
+    {self && <ProfileNotice person={value} />}
     </div>
   );
 }

@@ -7,6 +7,7 @@
  * analyze/color and analyze/numerology.
  */
 import { Glyph } from "@/components/ui/glyphs";
+import ProfileNotice from "@/components/ui/ProfileNotice";
 
 export interface SimplePersonState {
   name: string;
@@ -35,10 +36,13 @@ export function SimpleForm({
   label,
   value,
   onChange,
+  self = false,
 }: {
   label: string;
   value: SimplePersonState;
   onChange: (v: SimplePersonState) => void;
+  /** Marks this as the visitor's own form: shows the remember-me / saved-profile strip. */
+  self?: boolean;
 }) {
   const set =
     (key: keyof SimplePersonState) =>
@@ -46,6 +50,7 @@ export function SimpleForm({
       onChange({ ...value, [key]: e.target.value });
 
   return (
+    <div>
     <div className="bg-white/[0.03] p-5 rounded-card border border-hairline space-y-3">
       <div className="flex gap-2 items-center border-b border-hairline pb-2.5">
         <input
@@ -76,6 +81,8 @@ export function SimpleForm({
         <input className={`w-20 md:w-16 ${INPUT_SMALL}`} placeholder="Day" type="number" min={1} max={31} value={value.day} onChange={set("day")} />
         <input className={`w-20 md:w-16 ${INPUT_SMALL}`} placeholder="Mo" type="number" min={1} max={12} value={value.month} onChange={set("month")} />
       </div>
+    </div>
+    {self && <ProfileNotice person={value} />}
     </div>
   );
 }

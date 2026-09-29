@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledPerson } from "@/lib/profile";
 import { DUR, EASE } from "@/lib/motion";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -110,7 +111,7 @@ export default function ChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [showProfiles, setShowProfiles] = useState(false);
-  const [personA, setPersonA] = useState<PersonData>(emptyPerson());
+  const [personA, setPersonA] = usePrefilledPerson();
   const [personB, setPersonB] = useState<PersonData>(emptyPerson());
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);

@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledSimple } from "@/lib/profile";
 /**
  * CelebrityMatch — "Check your match" against a celebrity.
  *
@@ -66,7 +67,7 @@ export default function CelebrityMatch({
   celebBirthMonth: number;
 }) {
   const [open, setOpen] = useState(false);
-  const [visitor, setVisitor] = useState<SimplePersonState>(emptySimple());
+  const [visitor, setVisitor] = usePrefilledSimple();
   const [result, setResult] = useState<NumerologyPairResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -118,7 +119,7 @@ export default function CelebrityMatch({
             <Star4 size={9} />
             Check your match with {celebName}
           </p>
-          <SimpleForm label="Your name" value={visitor} onChange={setVisitor} />
+          <SimpleForm label="Your name" value={visitor} onChange={setVisitor} self />
           {visitorMeta && celebMeta && (
             <div className="mt-4 flex items-center justify-center gap-3 text-xs text-ink-muted">
               <span className="flex items-center gap-1.5">

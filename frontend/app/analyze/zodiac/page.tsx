@@ -1,5 +1,6 @@
 "use client";
 
+import { usePrefilledSimple } from "@/lib/profile";
 import { DUR } from "@/lib/motion";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
@@ -126,7 +127,7 @@ function Section({ title, children, accent }: { title: string; children: React.R
 function ZodiacPageInner() {
   const searchParams = useSearchParams();
 
-  const [person, setPerson] = useState<SimplePersonState>(emptySimple());
+  const [person, setPerson] = usePrefilledSimple();
   const [result, setResult] = useState<ZodiacResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState("");
@@ -203,7 +204,7 @@ function ZodiacPageInner() {
       {/* Input card */}
       {showForm && (
         <div className="mb-4">
-          <SimpleForm label="Name" value={person} onChange={setPerson} />
+          <SimpleForm label="Name" value={person} onChange={setPerson} self />
           {error && <p className="text-red-400 text-sm mt-3">{error}</p>}
         </div>
       )}
