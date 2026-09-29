@@ -3,7 +3,7 @@
 import { usePrefilledPerson } from "@/lib/profile";
 import { useState } from "react";
 import PersonForm from "@/components/PersonForm";
-import TraitRadar from "@/components/TraitRadar";
+import { TraitRadar } from "@/components/LazyCharts";
 import { renderMd } from "@/lib/renderMd";
 import { PersonData, emptyPerson, validatePerson, pairBody, apiFetch } from "@/lib/api";
 import ShareImageButton from "@/components/ShareImageButton";

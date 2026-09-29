@@ -9,7 +9,7 @@ import { renderMd } from "@/lib/renderMd";
 import { getSignKey } from "@/lib/zodiac";
 import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
-import TraitRadar from "@/components/TraitRadar";
+import { TraitRadar } from "@/components/LazyCharts";
 import PersonForm from "@/components/PersonForm";
 import { PersonData, emptyPerson, validatePerson, apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";

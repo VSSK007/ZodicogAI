@@ -1,0 +1,48 @@
+{
+  "ci": {
+    "collect": {
+      "startServerCommand": "npm run start -- -p 3100",
+      "startServerReadyPattern": "Ready",
+      "startServerReadyTimeout": 60000,
+      "url": [
+        "http://localhost:3100/",
+        "http://localhost:3100/analyze/hybrid",
+        "http://localhost:3100/celebrities/zendaya"
+      ],
+      "numberOfRuns": 3,
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": { "mobile": true, "width": 412, "height": 823, "deviceScaleFactor": 1.75, "disabled": false },
+        "throttlingMethod": "simulate",
+        "onlyCategories": ["performance", "accessibility"]
+      }
+    },
+    "assert": {
+      "assertMatrix": [
+        {
+          "matchingUrlPattern": ".*",
+          "assertions": {
+            "largest-contentful-paint": ["warn", { "maxNumericValue": 2500, "aggregationMethod": "median" }],
+            "total-blocking-time": ["warn", { "maxNumericValue": 300, "aggregationMethod": "median" }],
+            "categories:performance": ["warn", { "minScore": 0.9, "aggregationMethod": "median" }]
+          }
+        },
+        {
+          "matchingUrlPattern": ".*",
+          "assertions": {
+            "largest-contentful-paint": ["error", { "maxNumericValue": 4800, "aggregationMethod": "median" }],
+            "total-blocking-time": ["error", { "maxNumericValue": 800, "aggregationMethod": "median" }],
+            "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1, "aggregationMethod": "median" }],
+            "categories:performance": ["error", { "minScore": 0.65, "aggregationMethod": "median" }],
+            "categories:accessibility": ["error", { "minScore": 0.9, "aggregationMethod": "median" }],
+            "resource-summary:script:size": ["error", { "maxNumericValue": 380000 }]
+          }
+        }
+      ]
+    },
+    "upload": {
+      "target": "filesystem",
+      "outputDir": ".lighthouseci"
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { ViewTransition } from "react";
+import { blurDataURL } from "@/lib/blur";
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
@@ -165,7 +166,10 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
                     width={128}
                     height={128}
                     className="w-full h-full object-cover object-top"
-                    unoptimized
+                    sizes="128px"
+                    priority
+                    placeholder="blur"
+                    blurDataURL={blurDataURL(color)}
                   />
                 </div>
               ) : (

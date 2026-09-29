@@ -1,8 +1,8 @@
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import localFont from "next/font/local";
 import { Manrope } from "next/font/google";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import DeferredAnalytics from "@/components/DeferredAnalytics";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import { ViewTransition } from "react";
@@ -10,6 +10,16 @@ import MotionProvider from "@/components/MotionProvider";
 import CommandPalette from "@/components/CommandPalette";
 import Footer from "@/components/Footer";
 import CosmicBackground from "@/components/CosmicBackground";
+
+// Mono is used only for small numerals/step numbers, so it is not preloaded:
+// it loads when first needed instead of competing with the LCP resources.
+const geistMono = localFont({
+  src: "../node_modules/geist/dist/fonts/geist-mono/GeistMono-Variable.woff2",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+  display: "swap",
+  preload: false,
+});
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -51,7 +61,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.className} ${GeistMono.variable} ${manrope.variable}`}>
+    <html lang="en" className={`${GeistSans.className} ${geistMono.variable} ${manrope.variable}`}>
       <body className="bg-surface text-ink antialiased">
         <MotionProvider>
         <CommandPalette />
@@ -78,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>{/* end flex wrapper */}
         </MotionProvider>
       </body>
-      <GoogleAnalytics gaId="G-HY2R286L2X" />
+      <DeferredAnalytics gaId="G-HY2R286L2X" />
     </html>
   );
 }

@@ -8,19 +8,23 @@ import { DUR, EASE } from "@/lib/motion";
  */
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "framer-motion";
 import ZodicognacMark from "@/components/ZodicognacMark";
 import { EASE_SPRING } from "@/lib/motion";
 import Hero from "@/components/home/Hero";
 import StatsStrip from "@/components/home/StatsStrip";
-import HoroscopeBand from "@/components/home/HoroscopeBand";
-import HowItWorks from "@/components/home/HowItWorks";
-import AnalysisShowcase from "@/components/home/AnalysisShowcase";
-import LiveTeaser from "@/components/home/LiveTeaser";
-import ZodicognacBand from "@/components/home/ZodicognacBand";
-import TeaserRows from "@/components/home/TeaserRows";
-import FinalCta from "@/components/home/FinalCta";
 import RecentReadings from "@/components/home/RecentReadings";
+
+// Below-the-fold sections load as separate chunks (still server-rendered, so
+// the HTML stays complete for SEO); this keeps the first-paint JS small.
+const HoroscopeBand    = dynamic(() => import("@/components/home/HoroscopeBand"));
+const HowItWorks       = dynamic(() => import("@/components/home/HowItWorks"));
+const AnalysisShowcase = dynamic(() => import("@/components/home/AnalysisShowcase"));
+const LiveTeaser       = dynamic(() => import("@/components/home/LiveTeaser"));
+const ZodicognacBand   = dynamic(() => import("@/components/home/ZodicognacBand"));
+const TeaserRows       = dynamic(() => import("@/components/home/TeaserRows"));
+const FinalCta         = dynamic(() => import("@/components/home/FinalCta"));
 
 const ZN_DURATION_MS = 2000;
 

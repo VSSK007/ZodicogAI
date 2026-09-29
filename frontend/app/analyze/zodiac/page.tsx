@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { apiFetch } from "@/lib/api";
 import AnalyzeSkeleton from "@/components/AnalyzeSkeleton";
 import { renderMd } from "@/lib/renderMd";
-import TraitRadar from "@/components/TraitRadar";
+import { TraitRadar } from "@/components/LazyCharts";
 import RevealOnScroll from "@/components/RevealOnScroll";
 import { ZODIAC_COLORS } from "@/lib/colors";
 import ShareImageButton from "@/components/ShareImageButton";

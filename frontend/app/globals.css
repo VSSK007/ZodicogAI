@@ -148,52 +148,25 @@ html {
 }
 
 
-/* ── Omnidirectional doodle drift keyframes ─────────────────────────────────
-   6 directions — outer wrapper holds rotation, inner div plays one of these.
-   All breathe in/out with opacity; mid-point is the apex of the drift.       */
-
-@keyframes drift0 {
-  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
-  15%, 85% { opacity: 0.06; }
-  50%      { opacity: 0.04; transform: translate(-18px, -24px); }
-}
-@keyframes drift1 {
-  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
-  15%, 85% { opacity: 0.06; }
-  50%      { opacity: 0.04; transform: translate(24px, -18px); }
-}
-@keyframes drift2 {
-  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
-  15%, 85% { opacity: 0.06; }
-  50%      { opacity: 0.04; transform: translate(20px,  22px); }
-}
-@keyframes drift3 {
-  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
-  15%, 85% { opacity: 0.06; }
-  50%      { opacity: 0.04; transform: translate(-22px, 20px); }
-}
-@keyframes drift4 {
-  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
-  15%, 85% { opacity: 0.06; }
-  50%      { opacity: 0.04; transform: translate(12px, -30px); }
-}
-@keyframes drift5 {
-  0%, 100% { opacity: 0;    transform: translate(0,    0);    }
-  15%, 85% { opacity: 0.06; }
-  50%      { opacity: 0.04; transform: translate(-28px, 14px); }
-}
-
-
-/* ── Subtle star twinkle ────────────────────────────────────────────────────── */
-@keyframes twinkle {
-  0%, 100% { opacity: var(--star-opacity, 0.15); }
-  50%      { opacity: calc(var(--star-opacity, 0.15) * 0.3); }
-}
-
 /* ── Mobile Zodicognac FAB pulse glow (gold) ─────────────────────────────── */
 @keyframes pulse-amber {
   0%, 100% { box-shadow: 0 0 0 0 rgba(216,166,60,0.4); }
   50%      { box-shadow: 0 0 0 12px rgba(216,166,60,0); }
+}
+
+/* ── Hero entrance — CSS so the copy is visible before hydration ───────────── */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes bar-grow {
+  from { width: 0; }
+}
+@utility hero-in {
+  animation: hero-in var(--duration-base) var(--ease-standard) var(--hero-delay, 0s) both;
+}
+@utility bar-grow {
+  animation: bar-grow var(--duration-base) var(--ease-standard) var(--hero-delay, 0s) both;
 }
 
 /* ── Text shimmer — a bright band sweeping across muted text ("thinking" lines) */

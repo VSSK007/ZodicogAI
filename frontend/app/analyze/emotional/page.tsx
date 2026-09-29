@@ -8,7 +8,7 @@ import { EASE } from "@/lib/motion";
 import { getSignKey } from "@/lib/zodiac";
 import ScoreRing from "@/components/ScoreRing";
 import MetricCard from "@/components/MetricCard";
-import TraitRadar from "@/components/TraitRadar";
+import { TraitRadar } from "@/components/LazyCharts";
 import PersonForm from "@/components/PersonForm";
 import ConstellationStream from "@/components/ConstellationStream";
 import { renderMd } from "@/lib/renderMd";

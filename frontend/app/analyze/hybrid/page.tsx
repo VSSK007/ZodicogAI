@@ -2,7 +2,7 @@
 
 import { usePrefilledPerson } from "@/lib/profile";
 import { useState } from "react";
-import TraitRadar from "@/components/TraitRadar";
+import { TraitRadar } from "@/components/LazyCharts";
 import PersonForm from "@/components/PersonForm";
 import { renderMd } from "@/lib/renderMd";
 import { validatePerson, apiFetch } from "@/lib/api";
