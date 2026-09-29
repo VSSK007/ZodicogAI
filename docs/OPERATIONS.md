@@ -32,6 +32,7 @@ back to the previous commit automatically and fails the workflow.
 | `VPS_SSH_KEY` | secret | private half of a **dedicated deploy key** (below) |
 | `VPS_KNOWN_HOSTS` | secret | output of `ssh-keyscan -H <host>` (pins the host key) |
 | `VPS_APP_DIR` | variable | checkout path on the server, default `~/ZodicogAI` |
+| `DEPLOY_ENABLED` | variable | set to `true` **last**, once the four secrets above exist; until then CI runs tests/build but skips the deploy job |
 
 Create the environment **production** (Settings → Environments); add required
 reviewers there if you want a manual approval before each deploy.

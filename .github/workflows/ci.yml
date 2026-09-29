@@ -52,7 +52,8 @@ jobs:
   deploy:
     name: Deploy to VPS
     needs: [backend, frontend]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    # Opt-in: set the repo variable DEPLOY_ENABLED=true once the VPS secrets exist.
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     environment: production
     concurrency:
