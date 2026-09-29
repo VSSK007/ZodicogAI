@@ -5,7 +5,8 @@
  * every analysis form. Lives in localStorage only (no account required).
  */
 import { useCallback, useMemo, useSyncExternalStore, useState } from "react";
-import { emptyPerson, type PersonData } from "@/lib/api";
+import { API, emptyPerson, type PersonData } from "@/lib/api";
+import { authHeaders, getToken } from "@/lib/session-token";
 import { emptySimple, type SimplePersonState } from "@/components/ui/SimpleForm";
 
 const KEY = "zodicog.profile";
@@ -41,7 +42,16 @@ function subscribe(cb: () => void) {
   };
 }
 
-export function saveProfile(next: PersonData) {
+/** The saved profile, read straight from storage (for non-React callers). */
+export function getStoredProfile(): PersonData | null {
+  return read();
+}
+
+/**
+ * Save the profile on this device and, when signed in, to the account.
+ * Pass { sync: false } when the data just came *from* the server.
+ */
+export function saveProfile(next: PersonData, { sync = true }: { sync?: boolean } = {}) {
   // Forms without an MBTI field (color, numerology…) must not erase a saved type.
   const prev = read();
   const merged: PersonData = { ...next, mbti: next.mbti || prev?.mbti || "" };
@@ -51,6 +61,15 @@ export function saveProfile(next: PersonData) {
     // Storage unavailable — profile memory is best-effort.
   }
   window.dispatchEvent(new Event(EVENT));
+
+  if (sync && getToken() && isProfileComplete(merged)) {
+    // Fire and forget: the local copy is already saved, sync is best-effort.
+    void fetch(`${API}/me/profile`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", ...authHeaders() },
+      body: JSON.stringify(merged),
+    }).catch(() => {});
+  }
 }
 
 export function clearProfile() {

@@ -8,6 +8,7 @@
  * homepage can show "Your recent readings". Capped at 10 entries.
  */
 import { API } from "@/lib/api";
+import { authHeaders } from "@/lib/session-token";
 
 export interface ReadingEntry {
   id: string;
@@ -50,7 +51,7 @@ export async function saveReading(
   try {
     const res = await fetch(`${API}/results`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...authHeaders() },
       body: JSON.stringify({ analysis_type: analysisType, title, payload }),
     });
     if (!res.ok) return null;

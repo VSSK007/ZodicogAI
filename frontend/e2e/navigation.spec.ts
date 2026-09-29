@@ -21,6 +21,7 @@ test.describe("command palette", () => {
     await hydrated(page, "/");
     const dialog = page.getByRole("dialog", { name: "Search" });
     await page.keyboard.press("Control+k");
+    await expect(dialog.getByRole("combobox")).toBeFocused();
     await page.keyboard.type("zendaya");
     await expect(dialog.getByRole("option").first()).toContainText("Zendaya");
     await page.keyboard.press("Escape");

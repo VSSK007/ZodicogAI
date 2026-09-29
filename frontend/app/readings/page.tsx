@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * /readings — full localStorage reading history (the homepage teaser only
- * shows 5). Client-only: nothing here is server-known, it's per-browser.
+ * /readings — reading history. Always includes this browser's readings; when
+ * signed in it also merges the account's readings, so history follows you
+ * across devices. (The homepage teaser only shows 5.)
  */
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import { Trash2 } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Star4 } from "@/components/ui/glyphs";
 import { getHistory, type ReadingEntry } from "@/lib/history";
+import { fetchServerReadings, useSession } from "@/lib/auth";
 
 const TYPE_LABELS: Record<string, string> = {
   hybrid_analysis: "Behavioral Profile",
@@ -30,12 +32,30 @@ const TYPE_LABELS: Record<string, string> = {
 
 const HISTORY_KEY = "zodicog.readings";
 
+function merge(local: ReadingEntry[], server: ReadingEntry[]): ReadingEntry[] {
+  const byId = new Map<string, ReadingEntry>();
+  for (const e of [...local, ...server]) byId.set(e.id, e);
+  return [...byId.values()].sort((a, b) => b.date.localeCompare(a.date));
+}
+
 export default function ReadingsPage() {
+  const session = useSession();
   const [entries, setEntries] = useState<ReadingEntry[] | null>(null);
 
   useEffect(() => {
     setEntries(getHistory());
   }, []);
+
+  useEffect(() => {
+    if (session.status !== "signed-in") return;
+    let cancelled = false;
+    fetchServerReadings().then((server) => {
+      if (!cancelled) setEntries((prev) => merge(prev ?? [], server));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [session.status]);
 
   function clearAll() {
     try {
@@ -55,7 +75,17 @@ export default function ReadingsPage() {
             Your readings
           </h1>
           <p className="mt-3 text-ink-secondary max-w-md">
-            Saved to this browser only — your last 10 readings.
+            {session.status === "signed-in"
+              ? "Synced to your account, so they follow you to every device."
+              : (
+                <>
+                  Saved to this browser only — your last 10 readings.{" "}
+                  <Link href="/login" className="font-semibold text-accent-bright hover:text-gold-bright">
+                    Sign in to keep them everywhere
+                  </Link>
+                  .
+                </>
+              )}
           </p>
         </div>
         {entries && entries.length > 0 && (
@@ -64,7 +94,7 @@ export default function ReadingsPage() {
             className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 text-sm font-semibold text-ink-muted hover:text-red-400 hover:border-red-500/30 transition-colors tap-highlight-none"
           >
             <Trash2 className="size-3.5" />
-            Clear history
+            Clear this device
           </button>
         )}
       </div>

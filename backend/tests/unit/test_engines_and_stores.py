@@ -32,25 +32,80 @@ def test_numerology_master_numbers_are_not_reduced():
 
 
 def test_result_store_prunes_by_age_and_row_cap(monkeypatch):
+    import db
+    from sqlalchemy import func, select, update
+
     for i in range(5):
         results_store.save_result("t", {"i": i}, f"r{i}")
 
+    def count(conn):
+        return conn.execute(select(func.count()).select_from(db.results)).scalar_one()
+
     # Age out everything: backdate then prune.
     old = (datetime.now(timezone.utc) - timedelta(days=results_store.RETENTION_DAYS + 1)).isoformat()
-    with results_store._lock, results_store._conn() as conn:
-        conn.execute("UPDATE results SET created_at = ?", (old,))
-        results_store._prune(conn)
-        (left,) = conn.execute("SELECT COUNT(*) FROM results").fetchone()
-    assert left == 0
+    with db.get_engine().begin() as conn:
+        conn.execute(update(db.results).values(created_at=old))
+        results_store.prune(conn)
+        assert count(conn) == 0
 
     # Row cap: keep only the newest MAX_ROWS.
     monkeypatch.setattr(results_store, "MAX_ROWS", 3)
     for i in range(6):
         results_store.save_result("t", {"i": i}, f"r{i}")
-    with results_store._lock, results_store._conn() as conn:
-        results_store._prune(conn)
-        (left,) = conn.execute("SELECT COUNT(*) FROM results").fetchone()
-    assert left == 3
+    with db.get_engine().begin() as conn:
+        results_store.prune(conn)
+        assert count(conn) == 3
+
+
+def test_owned_readings_survive_pruning():
+    import db
+    from sqlalchemy import func, select, update
+
+    mine = results_store.save_result("t", {"x": 1}, "mine", user_id="user1")
+    anon = results_store.save_result("t", {"x": 2}, "anon")
+    old = (datetime.now(timezone.utc) - timedelta(days=results_store.RETENTION_DAYS + 5)).isoformat()
+    with db.get_engine().begin() as conn:
+        conn.execute(update(db.results).values(created_at=old))
+        results_store.prune(conn)
+    assert results_store.load_result(mine) is not None
+    assert results_store.load_result(anon) is None
+
+
+def test_legacy_results_table_is_upgraded_in_place(tmp_path, monkeypatch):
+    """A results.db created before accounts existed gains user_id without losing rows."""
+    import sqlite3
+
+    import db
+
+    path = tmp_path / "legacy.db"
+    conn = sqlite3.connect(path)
+    conn.execute("CREATE TABLE results (id TEXT PRIMARY KEY, analysis_type TEXT NOT NULL, "
+                 "title TEXT NOT NULL DEFAULT '', payload TEXT NOT NULL, created_at TEXT NOT NULL)")
+    conn.execute("INSERT INTO results VALUES ('old1', 'color_analysis', 'Old one', '{\"a\": 1}', '2026-01-01T00:00:00+00:00')")
+    conn.commit()
+    conn.close()
+
+    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{path.as_posix()}")
+    db.reset_engine()
+    row = results_store.load_result("old1")
+    assert row is not None and row["title"] == "Old one" and row["payload"] == {"a": 1}
+    # ...and it accepts owned rows now.
+    rid = results_store.save_result("t", {}, "new", user_id="u1")
+    assert results_store.list_for_user("u1")[0]["id"] == rid
+
+
+def test_database_url_forms():
+    import os
+
+    import db
+
+    for given, expected in [
+        ("postgres://u:p@h/d", "postgresql+psycopg://u:p@h/d"),
+        ("postgresql://u:p@h/d", "postgresql+psycopg://u:p@h/d"),
+        ("postgresql+psycopg://u:p@h/d", "postgresql+psycopg://u:p@h/d"),
+    ]:
+        os.environ["DATABASE_URL"] = given
+        assert db.database_url() == expected
 
 
 def test_gemini_limiter_queues_then_gives_up(monkeypatch):

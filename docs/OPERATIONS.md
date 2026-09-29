@@ -135,6 +135,41 @@ TLS, caching and DDoS protection, with the origin hidden.
    (ufw), and make nginx trust `CF-Connecting-IP` (`set_real_ip_from` for those
    ranges) so the backend's per-IP rate limit sees real visitors.
 
+## Accounts and Postgres
+
+Accounts are optional and passwordless: a visitor enters an email, gets a
+one-time link (valid 15 minutes, single use), and is signed in for 30 days.
+Signing in adopts the readings made on that device and syncs the saved profile,
+so history follows the person across devices. Anonymous use is unchanged.
+
+**Email** (sign-in links): set one of
+- `RESEND_API_KEY` (recommended) and `MAIL_FROM="ZodicogAI <login@yourdomain>"`, or
+- `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`, `SMTP_PASSWORD`, `MAIL_FROM`.
+
+Without either, links are only written to the backend log (the site tells nobody
+"sent"), which is fine for development and useless in production. Also set
+`FRONTEND_URL=https://zodicogai.com` so links point at the site.
+
+**Postgres** (recommended once accounts exist; SQLite still works):
+
+```bash
+# 1. create a database and user (or use a managed Postgres)
+# 2. stop the backend, copy existing data (idempotent; ids and /r/<id> links are preserved)
+DATABASE_URL=postgresql://user:pw@host/zodicog python backend/scripts/migrate_sqlite_to_postgres.py
+# 3. add DATABASE_URL to the backend environment and restart
+pm2 restart backend --update-env
+```
+
+The same test-suite runs against SQLite and a real Postgres in CI. `backup.sh`
+switches to `pg_dump` automatically when `DATABASE_URL` is set.
+
+**Deleting an account** (Profile page -> Delete account) removes the user, their
+sessions, saved profile and owned readings. Anonymous readings are unaffected.
+
+**Session storage.** Sessions are bearer tokens kept in `localStorage` because the
+API is on a different origin from the site. Tokens are 256-bit random and stored
+only as SHA-256 hashes; login requests are rate-limited per address and per IP.
+
 ## Environment variable reference
 
 | Variable | Used by | Purpose |
@@ -143,7 +178,12 @@ TLS, caching and DDoS protection, with the origin hidden.
 | `GEMINI_MAX_CONCURRENT` / `GEMINI_SLOT_WAIT_SECONDS` | backend | concurrent Gemini calls (8) / max queue wait (45 s) |
 | `SENTRY_DSN`, `SENTRY_TRACES_SAMPLE_RATE`, `APP_ENV` | backend | error monitoring |
 | `METRICS_TOKEN` | backend | protect `/metrics` |
-| `DATABASE_URL` | backend | Postgres (`postgresql+psycopg://…`); SQLite when unset |
+| `DATABASE_URL` | backend | Postgres (`postgresql://…`); SQLite file when unset |
+| `RESEND_API_KEY` or `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASSWORD`, `MAIL_FROM` | backend | sign-in email |
+| `FRONTEND_URL` | backend | base URL used in sign-in links |
+| `CORS_ORIGINS` | backend | extra allowed origins (staging, previews), comma-separated |
+| `AUTH_MAX_LINKS_PER_EMAIL_HOUR`, `AUTH_MAX_LINKS_PER_IP_HOUR` | backend | sign-in throttles (5 / 20) |
+| `AUTH_DEV_LINKS` | backend | `1` returns the link in the API response - **development and CI only** |
 | `NEXT_PUBLIC_API_URL` | frontend | backend base URL |
 | `NEXT_PUBLIC_SENTRY_DSN` | frontend | error monitoring |
 | `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_POSTHOG_HOST` | frontend | product analytics + feature flags |

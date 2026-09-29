@@ -66,6 +66,7 @@ const PAGES: Item[] = [
   { id: "p-about", group: "Go to", label: "About", href: "/about", glyph: "mercury" },
   { id: "p-readings", group: "Go to", label: "My readings", hint: "History on this device", href: "/readings", glyph: "infinity" },
   { id: "p-profile", group: "Go to", label: "My profile", hint: "Saved details", href: "/profile", glyph: "sun", keywords: "settings me account" },
+  { id: "p-login", group: "Go to", label: "Sign in", hint: "Sync your profile and readings across devices", href: "/login", glyph: "sun", keywords: "log in account email register" },
   ...[
     ["archetype", "Love archetype"], ["pattern", "Relationship pattern"],
     ["attraction", "Attraction style"], ["recommendations", "Taste profile"],
@@ -153,7 +154,6 @@ export default function CommandPalette() {
       })),
     );
     if (!celebs) import("@/lib/celebrities").then((m) => setCelebs(m.CELEBRITIES));
-    requestAnimationFrame(() => inputRef.current?.focus());
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const celebItems: Item[] = useMemo(
@@ -235,6 +235,7 @@ export default function CommandPalette() {
               <Search className="size-4 text-ink-muted shrink-0" aria-hidden="true" />
               <input
                 ref={inputRef}
+                autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}

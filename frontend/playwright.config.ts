@@ -65,6 +65,9 @@ export default defineConfig({
             env: {
               GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? "e2e-dummy-key",
               CORS_ORIGINS: `http://localhost:${PORT}`,
+              AUTH_DEV_LINKS: "1",
+              FRONTEND_URL: `http://localhost:${PORT}`,
+              AUTH_MAX_LINKS_PER_IP_HOUR: "10000",
             },
           },
         ]

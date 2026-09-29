@@ -14,10 +14,11 @@ const Placeholder = ({ height }: { height: string }) => (
 
 export const TraitRadar = dynamic(() => import("@/components/TraitRadar"), {
   ssr: false,
-  loading: () => <Placeholder height="h-[300px]" />,
+  // Heights match the loaded chart (incl. legend) so nothing below it shifts when it arrives.
+  loading: () => <Placeholder height="h-[254px] md:h-[334px]" />,
 });
 
 export const BehavioralMap = dynamic(() => import("@/components/BehavioralMap"), {
   ssr: false,
-  loading: () => <Placeholder height="h-[340px]" />,
+  loading: () => <Placeholder height="h-[304px] md:h-[412px]" />,
 });

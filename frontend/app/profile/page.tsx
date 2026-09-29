@@ -6,7 +6,7 @@
  */
 import { useState } from "react";
 import Link from "next/link";
-import { Check, Trash2 } from "lucide-react";
+import { Check, CloudSync, Trash2 } from "lucide-react";
 import PersonForm from "@/components/PersonForm";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -15,6 +15,63 @@ import { SignGlyph } from "@/components/ui/glyphs";
 import { emptyPerson, validatePerson, type PersonData } from "@/lib/api";
 import { getSign } from "@/lib/zodiac";
 import { clearProfile, saveProfile, useProfile } from "@/lib/profile";
+import { deleteAccount, signOut, useSession } from "@/lib/auth";
+
+function AccountPanel() {
+  const session = useSession();
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  if (session.status === "loading") return null;
+
+  if (session.status === "signed-out") {
+    return (
+      <Card className="mt-10 p-5">
+        <p className="flex items-center gap-2 font-display font-extrabold text-base tracking-[-0.01em] text-ink">
+          <CloudSync className="size-4 text-gold-bright" aria-hidden="true" /> Sync across devices
+        </p>
+        <p className="mt-2 text-sm text-ink-secondary leading-relaxed">
+          Sign in with your email (no password) to keep this profile and your reading history on every device.
+        </p>
+        <Link href="/login" className="mt-3 inline-block text-sm font-semibold text-accent-bright hover:text-gold-bright">
+          Sign in →
+        </Link>
+      </Card>
+    );
+  }
+
+  return (
+    <Card variant="gold" className="mt-10 p-5" data-testid="account-panel">
+      <p className="text-xs text-ink-muted uppercase tracking-wider">Signed in</p>
+      <p className="mt-1 font-semibold text-ink break-all">{session.user.email}</p>
+      <p className="mt-2 text-sm text-ink-secondary">Your profile and readings sync to this account.</p>
+      <div className="mt-4 flex items-center gap-4 flex-wrap">
+        <button onClick={() => void signOut()} className="text-sm font-semibold text-ink-secondary hover:text-ink transition-colors">
+          Sign out
+        </button>
+        {!confirming ? (
+          <button onClick={() => setConfirming(true)} className="text-sm text-ink-muted hover:text-danger transition-colors">
+            Delete account
+          </button>
+        ) : (
+          <span className="text-sm text-ink-secondary">
+            Delete your account, profile and readings for good?{" "}
+            <button
+              disabled={busy}
+              onClick={async () => { setBusy(true); await deleteAccount().catch(() => {}); setBusy(false); setConfirming(false); }}
+              className="font-semibold text-danger hover:underline"
+            >
+              Yes, delete
+            </button>{" "}
+            <button onClick={() => setConfirming(false)} className="text-ink-muted hover:text-ink-secondary">
+              Cancel
+            </button>
+          </span>
+        )}
+      </div>
+    </Card>
+  );
+}
 
 export default function ProfilePage() {
   const saved = useProfile();
@@ -43,7 +100,7 @@ export default function ProfilePage() {
         </h1>
         <p className="mt-3 text-ink-secondary leading-relaxed">
           We&apos;ll pre-fill every reading with your details. They stay on this device — nothing is sent
-          anywhere until you run an analysis.
+          anywhere until you run an analysis, unless you choose to sign in and sync.
         </p>
       </header>
 
@@ -82,6 +139,8 @@ export default function ProfilePage() {
           </button>
         )}
       </div>
+
+      <AccountPanel />
 
       <p className="mt-8 text-sm text-ink-muted">
         Ready?{" "}

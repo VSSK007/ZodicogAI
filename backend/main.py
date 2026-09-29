@@ -23,6 +23,7 @@ from models.schemas import (
     NumerologyInput,
     DiscoverInput,
 )
+import accounts
 import metrics
 from chat.chat_handler import handle_chat, prepare_chat_stream
 from agent_controller import (
@@ -69,6 +70,7 @@ if os.getenv("SENTRY_DSN"):
 _STARTED_AT = time.time()
 
 app = FastAPI()
+app.include_router(accounts.router)
 
 # CORS configuration — restrict to specific origins for security
 origins = [
@@ -646,10 +648,11 @@ class SaveResultInput(BaseModel):
 
 
 @app.post("/results")
-def create_shared_result(data: SaveResultInput):
+def create_shared_result(data: SaveResultInput, request: Request):
     if len(json.dumps(data.payload)) > 200_000:
         raise HTTPException(status_code=413, detail="Result payload too large")
-    return _wrap(lambda: {"id": save_result(data.analysis_type, data.payload, data.title)})
+    owner = accounts.optional_user(request)  # signed-in readings follow the user across devices
+    return _wrap(lambda: {"id": save_result(data.analysis_type, data.payload, data.title, owner["id"] if owner else None)})
 
 
 @app.get("/results/{result_id}")

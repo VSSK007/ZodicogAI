@@ -19,12 +19,27 @@ import pytest  # noqa: E402
 
 @pytest.fixture(autouse=True)
 def isolated_results_db(tmp_path, monkeypatch):
-    """Each test gets its own throwaway results database."""
+    """Each test gets a clean database and clean rate limits.
+
+    Default: a throwaway SQLite file. Set TEST_DATABASE_URL (CI does, with a
+    Postgres service container) to run the same suite against another engine;
+    tables are dropped and recreated before every test.
+    """
+    import auth
+    import db
     import results_store
 
-    monkeypatch.setattr(results_store, "_DB_PATH", tmp_path / "results.db")
+    url = os.getenv("TEST_DATABASE_URL") or f"sqlite:///{(tmp_path / 'test.db').as_posix()}"
+    monkeypatch.setenv("DATABASE_URL", url)
     monkeypatch.setattr(results_store, "_save_count", 0)
+    db.reset_engine()
+    if os.getenv("TEST_DATABASE_URL"):
+        engine = db.get_engine()
+        db.metadata.drop_all(engine)
+        db.metadata.create_all(engine)
+    auth.reset_rate_limits()
     yield
+    db.reset_engine()
 
 
 @pytest.fixture(autouse=True)
