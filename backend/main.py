@@ -1,10 +1,15 @@
 import json
+import os
+import shutil
 import threading
+import time
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from datetime import datetime
+
+import sentry_sdk
 
 from models.schemas import (
     HybridInput,
@@ -18,6 +23,7 @@ from models.schemas import (
     NumerologyInput,
     DiscoverInput,
 )
+import metrics
 from chat.chat_handler import handle_chat, prepare_chat_stream
 from agent_controller import (
     run_analysis,
@@ -49,6 +55,18 @@ from gemini_client import (
     generate_zodiac_compat_article, generate_mbti_compat_article,
     generate_celebrity_bio, generate_daily_horoscope,
 )
+
+# Error monitoring: a no-op unless SENTRY_DSN is set. Leaves PII off - readings
+# contain names and birth dates the visitor typed.
+if os.getenv("SENTRY_DSN"):
+    sentry_sdk.init(
+        dsn=os.environ["SENTRY_DSN"],
+        environment=os.getenv("APP_ENV", "production"),
+        traces_sample_rate=float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.05")),
+        send_default_pii=False,
+    )
+
+_STARTED_AT = time.time()
 
 app = FastAPI()
 
@@ -223,6 +241,47 @@ def _wrap(fn):
 @app.get("/")
 def root():
     return {"message": "ZodicogAI backend running"}
+
+
+DISK_WARN_PERCENT = 85
+DISK_FAIL_PERCENT = 95
+
+
+@app.get("/health")
+def health():
+    """Liveness + the two things that have actually taken the site down:
+    a full disk and an unreachable results database. 503 when either is bad,
+    so an uptime monitor or the deploy script's post-restart check fails loudly."""
+    usage = shutil.disk_usage("/")
+    disk_percent = round(usage.used / usage.total * 100, 1)
+    try:
+        ping_store()
+        db = "ok"
+    except Exception as exc:  # noqa: BLE001 - report any failure as unhealthy
+        db = f"error: {exc.__class__.__name__}"
+
+    healthy = db == "ok" and disk_percent < DISK_FAIL_PERCENT
+    body = {
+        "status": "ok" if healthy else "unhealthy",
+        "db": db,
+        "disk": {
+            "percent_used": disk_percent,
+            "free_gb": round(usage.free / 1e9, 1),
+            "warning": disk_percent >= DISK_WARN_PERCENT,
+        },
+        "uptime_seconds": int(time.time() - _STARTED_AT),
+    }
+    return JSONResponse(body, status_code=200 if healthy else 503)
+
+
+@app.get("/metrics")
+def gemini_metrics(request: Request):
+    """Per-analysis Gemini call counts, failure rate and latency percentiles.
+    Set METRICS_TOKEN to require `Authorization: Bearer <token>`."""
+    token = os.getenv("METRICS_TOKEN")
+    if token and request.headers.get("authorization") != f"Bearer {token}":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return {"gemini": metrics.snapshot()}
 
 
 # ---------------------------------------------------------------------------
@@ -572,7 +631,7 @@ def celebrity_profile(
 # ---------------------------------------------------------------------------
 
 from pydantic import BaseModel
-from results_store import save_result, load_result
+from results_store import save_result, load_result, ping as ping_store
 
 
 class SaveResultInput(BaseModel):

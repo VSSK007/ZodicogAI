@@ -23,12 +23,15 @@ import logging
 import os
 import threading
 import time
+from contextlib import contextmanager
 from typing import Iterator
 
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from pydantic import BaseModel, ValidationError
+
+import metrics
 
 load_dotenv()
 
@@ -41,6 +44,35 @@ _client = genai.Client(api_key=_api_key)
 _MODELS      = ["gemini-2.5-flash", "gemini-2.5-flash-lite"]
 _MAX_RETRIES = 3
 _log         = logging.getLogger(__name__)
+
+# ---------------------------------------------------------------------------
+# Concurrency limit - a bounded queue in front of Gemini
+#
+# FastAPI runs sync endpoints on a shared threadpool. Without a cap, a burst of
+# slow generations occupies every worker thread and even cheap endpoints
+# (/results, /health) stall. At most GEMINI_MAX_CONCURRENT calls run at once;
+# the rest wait in line up to GEMINI_SLOT_WAIT_SECONDS, then give up so the
+# caller degrades gracefully (call_gemini returns schema defaults, streams emit
+# an error event) instead of hanging.
+# ---------------------------------------------------------------------------
+
+_MAX_CONCURRENT = int(os.getenv("GEMINI_MAX_CONCURRENT", "8"))
+_SLOT_WAIT      = float(os.getenv("GEMINI_SLOT_WAIT_SECONDS", "45"))
+_slots          = threading.BoundedSemaphore(_MAX_CONCURRENT)
+
+
+class GeminiBusy(RuntimeError):
+    """Raised when no Gemini slot frees up within GEMINI_SLOT_WAIT_SECONDS."""
+
+
+@contextmanager
+def _gemini_slot():
+    if not _slots.acquire(timeout=_SLOT_WAIT):
+        raise GeminiBusy(f"All {_MAX_CONCURRENT} Gemini slots busy for {_SLOT_WAIT:.0f}s")
+    try:
+        yield
+    finally:
+        _slots.release()
 
 # ---------------------------------------------------------------------------
 # Context caching — static framework context cached on Gemini servers
@@ -245,50 +277,51 @@ def _api_call(prompt: str, schema: type[BaseModel]) -> str:
     then moves to the next model. Returns the raw response text.
     Raises RuntimeError if every option is exhausted.
     """
-    last_error: Exception = RuntimeError("No models tried")
-    cache = _get_or_create_cache()
+    with _gemini_slot():
+        last_error: Exception = RuntimeError("No models tried")
+        cache = _get_or_create_cache()
 
-    for model_name in _MODELS:
-        for attempt in range(_MAX_RETRIES):
-            try:
-                config_kwargs: dict = dict(
-                    response_mime_type="application/json",
-                    response_schema=schema,
-                    max_output_tokens=16384,
-                )
-                # Only primary model supports context caching
-                if cache and model_name == _CACHE_MODEL:
-                    config_kwargs["cached_content"] = cache.name
+        for model_name in _MODELS:
+            for attempt in range(_MAX_RETRIES):
+                try:
+                    config_kwargs: dict = dict(
+                        response_mime_type="application/json",
+                        response_schema=schema,
+                        max_output_tokens=16384,
+                    )
+                    # Only primary model supports context caching
+                    if cache and model_name == _CACHE_MODEL:
+                        config_kwargs["cached_content"] = cache.name
 
-                response = _client.models.generate_content(
-                    model=model_name,
-                    contents=prompt,
-                    config=types.GenerateContentConfig(**config_kwargs),
-                )
-                text = response.text
-                if not text:
-                    raise RuntimeError("Gemini returned empty/blocked response")
-                return text
-            except Exception as exc:
-                last_error = exc
-                _log.warning(
-                    "Gemini attempt failed (model=%s attempt=%d): %s",
-                    model_name, attempt + 1, exc,
-                )
-                # If cache was used and the call failed, invalidate it so the
-                # next attempt (and future calls) try without the stale cache.
-                if cache and model_name == _CACHE_MODEL:
-                    with _cache_lock:
-                        _cache_registry.pop(_CACHE_MODEL, None)
-                        _cache_expiry.pop(_CACHE_MODEL, None)
-                    cache = None
-                if attempt < _MAX_RETRIES - 1:
-                    time.sleep(2 ** attempt)
+                    response = _client.models.generate_content(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(**config_kwargs),
+                    )
+                    text = response.text
+                    if not text:
+                        raise RuntimeError("Gemini returned empty/blocked response")
+                    return text
+                except Exception as exc:
+                    last_error = exc
+                    _log.warning(
+                        "Gemini attempt failed (model=%s attempt=%d): %s",
+                        model_name, attempt + 1, exc,
+                    )
+                    # If cache was used and the call failed, invalidate it so the
+                    # next attempt (and future calls) try without the stale cache.
+                    if cache and model_name == _CACHE_MODEL:
+                        with _cache_lock:
+                            _cache_registry.pop(_CACHE_MODEL, None)
+                            _cache_expiry.pop(_CACHE_MODEL, None)
+                        cache = None
+                    if attempt < _MAX_RETRIES - 1:
+                        time.sleep(2 ** attempt)
 
-    raise RuntimeError(
-        f"Gemini API failed on all models after {_MAX_RETRIES} retries. "
-        f"Last error: {last_error}"
-    )
+        raise RuntimeError(
+            f"Gemini API failed on all models after {_MAX_RETRIES} retries. "
+            f"Last error: {last_error}"
+        )
 
 
 def _correction_prompt(original_prompt: str, bad_response: str, error: str,
@@ -325,7 +358,7 @@ def _parse_and_validate(raw: str, schema: type[BaseModel]) -> BaseModel:
 # Public interface
 # ---------------------------------------------------------------------------
 
-def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
+def _call_gemini(prompt: str, schema: type[BaseModel]) -> tuple[BaseModel, bool]:
     """
     Call Gemini and return a validated schema instance.
 
@@ -336,14 +369,14 @@ def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
                 constrained to produce conforming JSON.
 
     Returns:
-        A validated instance of schema.
-        On total failure returns schema() — all fields at their defaults.
+        (instance, ok). ok is False when the instance is the all-defaults
+        fallback because every attempt failed.
     """
     # --- Attempt 1: original prompt ---
     raw: str | None = None
     try:
         raw = _api_call(prompt, schema)
-        return _parse_and_validate(raw, schema)
+        return _parse_and_validate(raw, schema), True
     except (ValidationError, ValueError, json.JSONDecodeError) as parse_err:
         # API succeeded but output was malformed — retry with correction prompt
         _log.warning("call_gemini parse error for %s: %s | raw[:200]=%s",
@@ -352,15 +385,27 @@ def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
     except Exception as exc:
         # API itself failed — return safe default immediately
         _log.error("call_gemini API failure for %s: %s", schema.__name__, exc)
-        return schema()
+        return schema(), False
 
     # --- Attempt 2: one correction retry ---
     try:
         raw = _api_call(correction, schema)
-        return _parse_and_validate(raw, schema)
+        return _parse_and_validate(raw, schema), True
     except Exception as exc:
         _log.error("call_gemini correction retry failed for %s: %s", schema.__name__, exc)
-        return schema()
+        return schema(), False
+
+
+def call_gemini(prompt: str, schema: type[BaseModel]) -> BaseModel:
+    """
+    Call Gemini and return a validated schema instance (all-defaults schema()
+    on total failure). Latency and failures are recorded per schema name for
+    GET /metrics.
+    """
+    started = time.monotonic()
+    result, ok = _call_gemini(prompt, schema)
+    metrics.record(schema.__name__, time.monotonic() - started, ok)
+    return result
 
 
 def stream_gemini(prompt: str) -> Iterator[str]:
@@ -380,31 +425,38 @@ def stream_gemini(prompt: str) -> Iterator[str]:
     Raises:
         RuntimeError: if every model option is exhausted.
     """
-    last_error: Exception = RuntimeError("No models tried")
-    cache = _get_or_create_cache()
+    started = time.monotonic()
+    ok = False
+    try:
+        with _gemini_slot():
+            last_error: Exception = RuntimeError("No models tried")
+            cache = _get_or_create_cache()
 
-    for model_name in _MODELS:
-        try:
-            config_kwargs: dict = dict(max_output_tokens=16384)
-            if cache and model_name == _CACHE_MODEL:
-                config_kwargs["cached_content"] = cache.name
+            for model_name in _MODELS:
+                try:
+                    config_kwargs: dict = dict(max_output_tokens=16384)
+                    if cache and model_name == _CACHE_MODEL:
+                        config_kwargs["cached_content"] = cache.name
 
-            stream = _client.models.generate_content_stream(
-                model=model_name,
-                contents=prompt,
-                config=types.GenerateContentConfig(**config_kwargs),
+                    stream = _client.models.generate_content_stream(
+                        model=model_name,
+                        contents=prompt,
+                        config=types.GenerateContentConfig(**config_kwargs),
+                    )
+                    for chunk in stream:
+                        if chunk.text:
+                            yield chunk.text
+                    ok = True
+                    return  # success - stop trying models
+                except Exception as exc:
+                    last_error = exc
+                    # Try next model
+
+            raise RuntimeError(
+                f"stream_gemini failed on all models. Last error: {last_error}"
             )
-            for chunk in stream:
-                if chunk.text:
-                    yield chunk.text
-            return  # success — stop trying models
-        except Exception as exc:
-            last_error = exc
-            # Try next model
-
-    raise RuntimeError(
-        f"stream_gemini failed on all models. Last error: {last_error}"
-    )
+    finally:
+        metrics.record("stream", time.monotonic() - started, ok)
 
 
 # ---------------------------------------------------------------------------

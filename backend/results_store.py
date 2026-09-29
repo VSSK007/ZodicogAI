@@ -84,6 +84,12 @@ def save_result(analysis_type: str, payload: dict, title: str = "") -> str:
     return result_id
 
 
+def ping() -> None:
+    """Raise if the database can't be opened and queried."""
+    with _lock, _conn() as conn:
+        conn.execute("SELECT 1").fetchone()
+
+
 def load_result(result_id: str) -> dict | None:
     with _lock, _conn() as conn:
         row = conn.execute(
