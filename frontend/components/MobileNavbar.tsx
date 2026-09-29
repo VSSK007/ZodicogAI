@@ -42,26 +42,30 @@ export default function MobileNavbar() {
   const router = useRouter();
   const pathname = usePathname();
   const inChat = pathname.startsWith("/chat");
-  const inBlog = pathname.startsWith("/blog");
-  const inAbout = pathname === "/about";
-  const inAnalyze = pathname.startsWith("/analyze");
   const isHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // On blog/about/analyze pages: only show when scrolled near the bottom
-  const inCelebs        = pathname.startsWith("/celebrities");
-  const inDiscover      = pathname.startsWith("/discover");
-  const scrollControlled = inBlog || inAbout || inAnalyze || inCelebs || inDiscover || isHome;
+  // Every page except chat reveals the buttons only near the bottom of the
+  // page. Chat keeps its home button on screen because the composer owns the
+  // rest of the viewport.
+  const scrollControlled = !inChat;
   const [scrollVisible, setScrollVisible] = useState(false);
   useEffect(() => {
     if (!scrollControlled) return;
     setScrollVisible(false);
-    const onScroll = () => {
+    const update = () => {
       const nearBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 200;
       setScrollVisible(nearBottom);
     };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    // Run once after layout so pages too short to scroll still show the buttons.
+    const raf = requestAnimationFrame(update);
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, [scrollControlled, pathname]);
 
   if (scrollControlled && !scrollVisible) return null;
