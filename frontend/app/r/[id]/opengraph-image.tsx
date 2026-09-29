@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import Sigil from "@/components/Sigil";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -113,13 +114,19 @@ export default async function Image({ params }: { params: Promise<{ id: string }
           transform: "translateX(-50%)", display: "flex",
         }} />
 
+        {/* Sigil seal, top-right */}
+        <div style={{ position: "absolute", top: 48, right: 56, display: "flex" }}>
+          <Sigil seed={title} size={190} />
+        </div>
+
         {/* Eyebrow */}
         <div style={{
           display: "flex", alignItems: "center", gap: 10,
           fontSize: 20, fontWeight: 700, letterSpacing: "0.22em",
           color: "#d8a63c", marginBottom: 26, textTransform: "uppercase",
         }}>
-          ✦ {typeLabel}
+          <svg width="20" height="20" viewBox="0 0 24 24"><path d="M12 2l1.5 8.5L22 12l-8.5 1.5L12 22l-1.5-8.5L2 12l8.5-1.5z" fill="#d8a63c" /></svg>
+          {typeLabel}
         </div>
 
         {/* Title */}

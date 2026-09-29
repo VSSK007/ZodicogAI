@@ -1,4 +1,5 @@
 "use client";
+import { drawSigil, getCurrentSigilSeed } from "@/lib/sigil";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -671,6 +672,10 @@ async function renderCard(data: ShareData): Promise<string> {
   else if (data.type === "numerology-pair") renderNumerologyPair(ctx, data, font);
   else if (data.type === "color-single")    renderColorSingle(ctx, data, font);
   else if (data.type === "color-pair")      renderColorPair(ctx, data, font);
+
+  // The reading's sigil, bottom-right — same seal as the result card.
+  const seed = getCurrentSigilSeed();
+  if (seed) drawSigil(ctx, seed, W - 150, H - 135, 82, undefined, 0.95);
 
   return canvas.toDataURL("image/png");
 }

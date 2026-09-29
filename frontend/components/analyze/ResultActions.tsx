@@ -13,6 +13,8 @@ import { Check, Link as LinkIcon } from "lucide-react";
 import ZodicognacMark from "@/components/ZodicognacMark";
 import { saveReading } from "@/lib/history";
 import { trackAnalysisCompleted, trackShareLinkCopied } from "@/lib/analytics";
+import Sigil from "@/components/Sigil";
+import { setCurrentSigilSeed } from "@/lib/sigil";
 
 export default function ResultActions({
   analysisType,
@@ -26,6 +28,10 @@ export default function ResultActions({
   const [shareId, setShareId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const saved = useRef(false);
+
+  useEffect(() => {
+    setCurrentSigilSeed(title);
+  }, [title]);
 
   useEffect(() => {
     if (saved.current || !payload) return;
@@ -51,6 +57,7 @@ export default function ResultActions({
 
   return (
     <div className="flex items-center gap-2 flex-wrap">
+      <Sigil seed={title} size={56} className="shrink-0 mr-1" />
       {shareId && (
         <button
           onClick={copy}

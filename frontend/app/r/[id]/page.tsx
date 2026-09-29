@@ -8,6 +8,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderMd } from "@/lib/renderMd";
 import { Star4 } from "@/components/ui/glyphs";
+import Sigil from "@/components/Sigil";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
@@ -141,12 +142,13 @@ export default async function SharedReadingPage(
 
   return (
     <main className="min-h-screen px-4 md:px-6 py-10 md:py-16 max-w-3xl mx-auto">
-      <header className="mb-9">
+      <header className="mb-9 relative">
+        <Sigil seed={result.title || typeLabel} size={112} className="absolute right-0 top-0 hidden sm:block opacity-90" />
         <div className="flex items-center gap-2 font-display font-extrabold text-micro tracking-[0.24em] uppercase text-gold">
           <Star4 size={11} />
           Shared reading
         </div>
-        <h1 className="mt-3 font-display font-extrabold tracking-[-0.03em] text-3xl md:text-[38px] leading-[1.1] text-ink text-balance">
+        <h1 className="mt-3 font-display font-extrabold tracking-[-0.03em] text-3xl md:text-[38px] leading-[1.1] text-ink text-balance sm:pr-32">
           {result.title || typeLabel}
         </h1>
         <p className="mt-2.5 text-sm text-ink-muted">
