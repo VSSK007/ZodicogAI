@@ -47,6 +47,8 @@ __pycache__/
 .coverage
 # Shareable-results store (runtime data)
 backend/results.db
+backend/results.db-*
+backend/*.db
 
 # Lighthouse CI output
 frontend/.lighthouseci/
