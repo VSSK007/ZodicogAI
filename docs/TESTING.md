@@ -48,6 +48,8 @@ What's covered (about 35 scenarios, ~70 counting both viewports):
   automatically if no backend answers `/health`).
 - **`navigation.spec.ts`** - command palette, saved profile pre-fill/forget,
   celebrity pages (incl. corrected birth dates), 404, smoke test of key routes.
+- **`pwa.spec.ts`** - manifest, Chrome's installability audit, service-worker headers,
+  offline page, and that only static assets are ever cached.
 - **`mobile.spec.ts`** (Pixel 7) - no sideways scroll, floating buttons appear only
   near the bottom and never as a full-width strip, menu sheet, a reading and the
   report on a phone.

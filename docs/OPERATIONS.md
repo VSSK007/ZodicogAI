@@ -127,7 +127,8 @@ TLS, caching and DDoS protection, with the origin hidden.
 3. SSL/TLS → **Full (strict)** (install a Cloudflare Origin Certificate in nginx), enable *Always Use HTTPS*.
 4. Caching rules:
    - Cache everything under `/_next/static/*` and `/fonts/*` (immutable, long TTL).
-   - **Bypass cache** for the API host and for `/r/*` (shared readings are dynamic).
+   - **Bypass cache** for the API host, for `/r/*` (shared readings are dynamic) and for
+     `/sw.js` (a cached service worker can't be fixed - see `docs/PWA.md`).
 5. Security: enable Bot Fight Mode; add a rate-limiting rule on the API host
    (e.g. 60 requests / 10 s per IP) as a first line ahead of the app's own
    per-IP AI budget.

@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { Manrope } from "next/font/google";
 import DeferredAnalytics from "@/components/DeferredAnalytics";
 import ObservabilityProvider from "@/components/ObservabilityProvider";
+import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
 import { ViewTransition } from "react";
@@ -46,6 +47,8 @@ export const metadata = {
     title: "ZodicogAI | Explainable Compatibility and Relationship Intelligence",
     description: "Hybrid symbolic-generative compatibility intelligence — deterministic multi-framework profiling with grounded AI interpretation.",
   },
+  applicationName: "ZodicogAI",
+  appleWebApp: { capable: true, title: "ZodicogAI", statusBarStyle: "black-translucent" },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/pwa-icon-512", sizes: "512x512", type: "image/png" }],
@@ -58,6 +61,7 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#0b0a14",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -91,6 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </body>
       <DeferredAnalytics gaId="G-HY2R286L2X" />
       <ObservabilityProvider />
+      <ServiceWorkerRegister />
     </html>
   );
 }

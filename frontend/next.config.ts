@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
     // and Sentry load lazily from several origins and need a tested allow-list.)
     return [
       {
+        // The worker script itself must never be cached by the browser/CDN, or
+        // a fixed worker would take days to reach visitors.
+        source: "/sw.js",
+        headers: [
+          { key: "Cache-Control", value: "no-cache, no-store, must-revalidate" },
+          { key: "Service-Worker-Allowed", value: "/" },
+        ],
+      },
+      {
         source: "/:path*",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
