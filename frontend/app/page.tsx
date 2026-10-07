@@ -13,6 +13,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import ZodicognacMark from "@/components/ZodicognacMark";
 import { EASE_SPRING } from "@/lib/motion";
 import Hero from "@/components/home/Hero";
+import InstallBanner from "@/components/home/InstallBanner";
 import StatsStrip from "@/components/home/StatsStrip";
 import RecentReadings from "@/components/home/RecentReadings";
 
@@ -107,6 +108,7 @@ export default function Home() {
         <ZodicognacRitualController />
       </Suspense>
 
+      <InstallBanner />
       <Hero />
       <RecentReadings />
       <StatsStrip />

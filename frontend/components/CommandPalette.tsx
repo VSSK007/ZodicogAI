@@ -111,7 +111,9 @@ export default function CommandPalette() {
   const [active, setActive] = useState(0);
   const [celebs, setCelebs] = useState<Celebrity[] | null>(null);
   const [readings, setReadings] = useState<Item[]>([]);
-  const { status: installStatus } = useInstall();
+  const { status: installStatus, platform } = useInstall();
+  // Install is a phone/tablet feature: hidden on desktop and once installed.
+  const installable = (platform === "android" || platform.startsWith("ios")) && installStatus !== "installed";
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -173,7 +175,7 @@ export default function CommandPalette() {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const pages = installStatus === "installed" ? PAGES.filter((p) => p.href !== "#install") : PAGES;
+    const pages = installable ? PAGES : PAGES.filter((p) => p.href !== "#install");
     const all = [...ANALYSES, ...pages, ...readings, ...SIGN_ITEMS, ...MBTI_ITEMS, ...GUIDES, ...celebItems];
     if (!q) return [...ANALYSES, ...readings.slice(0, 3), ...pages.slice(0, 5)];
     const scored = all
@@ -192,7 +194,7 @@ export default function CommandPalette() {
       href: `/chat?ask=${encodeURIComponent(query.trim())}`, glyph: "star4",
     });
     return out;
-  }, [query, readings, celebItems, installStatus]);
+  }, [query, readings, celebItems, installable]);
 
   useEffect(() => setActive(0), [query]);
 

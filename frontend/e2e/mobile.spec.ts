@@ -157,3 +157,37 @@ test.describe("mobile menu sheet", () => {
     await expect(you.getByRole("button", { name: "Install app" })).toHaveCount(0);
   });
 });
+
+test.describe("install banner (phones)", () => {
+  test("sits at the very top of the homepage and opens the install steps", async ({ page }) => {
+    await hydrated(page, "/");
+    const banner = page.getByTestId("install-banner");
+    await expect(banner).toBeVisible();
+    const box = (await banner.boundingBox())!;
+    expect(box.y).toBeLessThanOrEqual(2); // first thing on the page, above the hero
+    const hero = (await page.getByRole("heading", { level: 1 }).boundingBox())!;
+    expect(box.y).toBeLessThan(hero.y);
+
+    await banner.getByRole("button", { name: "Install" }).click();
+    await expect(page.getByRole("dialog", { name: /Install ZodicogAI/ })).toBeVisible();
+  });
+
+  test("can be dismissed, and stays dismissed after a reload", async ({ page }) => {
+    await hydrated(page, "/");
+    await page.getByTestId("install-banner").getByRole("button", { name: "Dismiss" }).click();
+    await expect(page.getByTestId("install-banner")).toBeHidden();
+    await hydrated(page, "/");
+    await expect(page.getByTestId("install-banner")).toBeHidden();
+  });
+
+  test("the footer carries no install button (banner and menu tile cover phones)", async ({ page }) => {
+    await hydrated(page, "/about");
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(page.locator("footer").getByRole("button", { name: "Install app" })).toHaveCount(0);
+  });
+
+  test("it only appears on the homepage", async ({ page }) => {
+    await hydrated(page, "/about");
+    await expect(page.getByTestId("install-banner")).toHaveCount(0);
+  });
+});

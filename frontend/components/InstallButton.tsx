@@ -31,7 +31,7 @@ export default function InstallButton({
 
   if (variant === "card") {
     return (
-      <div className={`rounded-card border border-hairline-gold bg-gold/[0.04] p-5 ${className}`} data-testid="install-card">
+      <div className={`lg:hidden rounded-card border border-hairline-gold bg-gold/[0.04] p-5 ${className}`} data-testid="install-card">
         <p className="flex items-center gap-2 font-display font-extrabold text-base tracking-[-0.01em] text-ink">
           <Download className="size-4 text-gold-bright" aria-hidden="true" /> Use ZodicogAI like an app
         </p>

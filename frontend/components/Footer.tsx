@@ -9,7 +9,6 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import ZodicogMark from "./ZodicogMark";
-import InstallButton from "./InstallButton";
 
 const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
@@ -108,7 +107,6 @@ function FooterInner() {
                   {label}
                 </Link>
               ))}
-              {col.title === "Company" && <InstallButton variant="link" className="mb-2.5" />}
             </div>
           ))}
         </div>
