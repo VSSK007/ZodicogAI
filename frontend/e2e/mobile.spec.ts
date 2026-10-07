@@ -78,3 +78,82 @@ test("the synastry report is usable on a phone: chips, sections, no overflow", a
   await expect(page.getByRole("navigation", { name: "Report sections" })).toBeHidden();
   await noHorizontalScroll(page);
 });
+
+test.describe("mobile menu sheet", () => {
+  async function openMenu(page: import("@playwright/test").Page, path = "/about") {
+    await hydrated(page, path);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.getByRole("button", { name: "Open menu" }).click();
+    const menu = page.getByRole("dialog", { name: "Site menu" });
+    await expect(menu).toBeVisible();
+    await page.waitForTimeout(600); // spring animation
+    return menu;
+  }
+  const htmlOverflow = (page: import("@playwright/test").Page) =>
+    page.evaluate(() => document.documentElement.style.overflow);
+
+  test("the sheet runs to the bottom of the screen - no dark bar beneath it", async ({ page }) => {
+    const menu = await openMenu(page);
+    const box = (await menu.boundingBox())!;
+    const vh = page.viewportSize()!.height;
+    expect(Math.abs(box.y + box.height - vh)).toBeLessThanOrEqual(1);
+  });
+
+  test("scrolling inside the menu keeps it open and does not move the page behind it", async ({ page }) => {
+    const menu = await openMenu(page);
+    const before = await page.evaluate(() => window.scrollY);
+    const box = (await menu.boundingBox())!;
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    for (let i = 0; i < 8; i++) {
+      await page.mouse.wheel(0, 600); // well past the end, like a hard flick
+      await page.waitForTimeout(80);
+    }
+    await expect(menu).toBeVisible();
+    expect(await menu.evaluate((e) => e.scrollTop)).toBeGreaterThan(50); // it did scroll
+    expect(await page.evaluate(() => window.scrollY)).toBe(before); // the page did not
+    await expect(page.getByRole("button", { name: "Open menu" })).toBeVisible(); // buttons still there
+  });
+
+  test("the page can't scroll while the menu is open, and can again once it closes", async ({ page }) => {
+    const menu = await openMenu(page);
+    expect(await htmlOverflow(page)).toBe("hidden");
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    expect(await htmlOverflow(page)).toBe("");
+  });
+
+  test("tapping the dimmed area or the hamburger closes it", async ({ page }) => {
+    let menu = await openMenu(page);
+    await page.mouse.click(10, 10); // backdrop, above the sheet
+    await expect(menu).toBeHidden();
+    expect(await htmlOverflow(page)).toBe("");
+
+    await page.getByRole("button", { name: "Open menu" }).click();
+    menu = page.getByRole("dialog", { name: "Site menu" });
+    await expect(menu).toBeVisible();
+    await page.getByRole("button", { name: "Open menu" }).click(); // toggles
+    await expect(menu).toBeHidden();
+  });
+
+  test("choosing a link, or using the home button, closes the menu and releases scrolling", async ({ page }) => {
+    let menu = await openMenu(page);
+    await menu.getByRole("link", { name: "Love Style" }).click();
+    await expect(page).toHaveURL(/love-style/);
+    await expect(menu).toBeHidden();
+    expect(await htmlOverflow(page)).toBe("");
+
+    menu = await openMenu(page, "/about");
+    await page.getByRole("button", { name: "Go home" }).click();
+    await expect(page).toHaveURL(/\/$/);
+    await expect(page.getByRole("dialog", { name: "Site menu" })).toBeHidden();
+    expect(await htmlOverflow(page)).toBe("");
+  });
+
+  test("Install app sits under More, not You", async ({ page }) => {
+    const menu = await openMenu(page);
+    const more = menu.locator("div", { has: page.getByText("More", { exact: true }) }).last();
+    await expect(more.getByRole("button", { name: "Install app" })).toBeVisible();
+    const you = menu.locator("div", { has: page.getByText("You", { exact: true }) }).first();
+    await expect(you.getByRole("button", { name: "Install app" })).toHaveCount(0);
+  });
+});

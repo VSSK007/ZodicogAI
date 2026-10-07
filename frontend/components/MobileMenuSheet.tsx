@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Star4, ZODIAC_GLYPHS, Glyph } from "@/components/ui/glyphs";
@@ -39,6 +40,20 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
     { label: "Taste Profile", href: "/discover/recommendations" },
   ];
 
+  // While the menu is open the page behind it must not scroll, and Escape closes it.
+  useEffect(() => {
+    if (!isOpen) return;
+    const html = document.documentElement;
+    const previous = html.style.overflow;
+    html.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => {
+      html.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [isOpen, onClose]);
+
   const sectionLabel =
     "flex items-center gap-1.5 font-display font-extrabold text-micro uppercase tracking-[0.22em] mb-2";
   const tile =
@@ -57,12 +72,21 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
             onClick={onClose}
           />
 
+          {/* Soft fade so the floating buttons stay legible over the menu's content */}
+          <motion.div
+            aria-hidden="true"
+            className="pointer-events-none fixed inset-x-0 bottom-0 z-[49] h-28 bg-gradient-to-t from-surface-overlay via-surface-overlay/85 to-transparent"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+
           {/* Sheet */}
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            className="fixed inset-x-0 bottom-20 z-50 max-h-[75vh] rounded-t-3xl bg-surface-overlay border-t border-hairline-strong overflow-y-auto scrollbar-none"
+            className="fixed inset-x-0 bottom-0 z-[48] max-h-[82dvh] rounded-t-3xl bg-surface-overlay border-t border-hairline-strong overflow-y-auto overscroll-contain scrollbar-none"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
@@ -93,7 +117,6 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
                     {link.label}
                   </Link>
                 ))}
-                <InstallButton variant="tile" onActivate={onClose} />
               </div>
             </div>
 
@@ -158,7 +181,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
             </div>
 
             {/* More */}
-            <div className="px-5 pb-12">
+            <div className="px-5 pb-[calc(7rem+env(safe-area-inset-bottom,0px))]">
               <p className={`${sectionLabel} text-ink-faint`}><Star4 size={9} /> More</p>
               <div className="grid grid-cols-3 gap-2">
                 {[
@@ -172,6 +195,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
                     {link.label}
                   </Link>
                 ))}
+                <InstallButton variant="tile" onActivate={onClose} />
               </div>
             </div>
           </motion.div>

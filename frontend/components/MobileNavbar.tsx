@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import ZodicogMark from "./ZodicogMark";
 import ZodicognacMark from "./ZodicognacMark";
@@ -44,6 +44,13 @@ export default function MobileNavbar() {
   const inChat = pathname.startsWith("/chat");
   const isHome = pathname === "/";
   const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
+  // The nav lives in the root layout, so it survives navigation: close the menu
+  // when the page changes instead of leaving it (and its scroll lock) open.
+  useEffect(() => {
+    closeMenu();
+  }, [pathname, closeMenu]);
 
   // Every page except chat reveals the buttons only near the bottom of the
   // page. Chat keeps its home button on screen because the composer owns the
@@ -68,11 +75,13 @@ export default function MobileNavbar() {
     };
   }, [scrollControlled, pathname]);
 
-  if (scrollControlled && !scrollVisible) return null;
+  // Never unmount while the menu is open: the sheet is rendered from here, and the
+  // buttons are what close it.
+  if (scrollControlled && !scrollVisible && !menuOpen) return null;
 
   return (
     <>
-      <MobileMenuSheet isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      <MobileMenuSheet isOpen={menuOpen} onClose={closeMenu} />
     <nav
       className="mobile-fab lg:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center justify-center"
       style={{ bottom: "calc(0.5rem + var(--safe-area-bottom))" }}
@@ -91,6 +100,8 @@ export default function MobileNavbar() {
             <button
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Open menu"
+              aria-haspopup="dialog"
+              aria-expanded={menuOpen}
               className="w-12 h-12 rounded-full flex items-center justify-center tap-highlight-none active:scale-90 transition-transform bg-gold/10 border border-gold/25"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(251,191,36,0.8)" strokeWidth="2" strokeLinecap="round">
