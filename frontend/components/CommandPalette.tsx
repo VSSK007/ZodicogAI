@@ -17,6 +17,7 @@ import { ANALYZE_TOGETHER, ANALYZE_YOU } from "@/lib/analyses";
 import { MBTI_DATA } from "@/lib/mbti-data";
 import { getHistory } from "@/lib/history";
 import { DUR, EASE } from "@/lib/motion";
+import { requestInstall, useInstall } from "@/lib/install";
 import type { Celebrity } from "@/lib/celebrities";
 
 const OPEN_EVENT = "zodicog:palette";
@@ -66,6 +67,7 @@ const PAGES: Item[] = [
   { id: "p-about", group: "Go to", label: "About", href: "/about", glyph: "mercury" },
   { id: "p-readings", group: "Go to", label: "My readings", hint: "History on this device", href: "/readings", glyph: "infinity" },
   { id: "p-profile", group: "Go to", label: "My profile", hint: "Saved details", href: "/profile", glyph: "sun", keywords: "settings me account" },
+  { id: "p-install", group: "Go to", label: "Install app", hint: "Add ZodicogAI to your home screen or desktop", href: "#install", glyph: "star4", keywords: "pwa download app home screen" },
   { id: "p-login", group: "Go to", label: "Sign in", hint: "Sync your profile and readings across devices", href: "/login", glyph: "sun", keywords: "log in account email register" },
   ...[
     ["archetype", "Love archetype"], ["pattern", "Relationship pattern"],
@@ -109,6 +111,7 @@ export default function CommandPalette() {
   const [active, setActive] = useState(0);
   const [celebs, setCelebs] = useState<Celebrity[] | null>(null);
   const [readings, setReadings] = useState<Item[]>([]);
+  const { status: installStatus } = useInstall();
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -170,8 +173,9 @@ export default function CommandPalette() {
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const all = [...ANALYSES, ...PAGES, ...readings, ...SIGN_ITEMS, ...MBTI_ITEMS, ...GUIDES, ...celebItems];
-    if (!q) return [...ANALYSES, ...readings.slice(0, 3), ...PAGES.slice(0, 5)];
+    const pages = installStatus === "installed" ? PAGES.filter((p) => p.href !== "#install") : PAGES;
+    const all = [...ANALYSES, ...pages, ...readings, ...SIGN_ITEMS, ...MBTI_ITEMS, ...GUIDES, ...celebItems];
+    if (!q) return [...ANALYSES, ...readings.slice(0, 3), ...pages.slice(0, 5)];
     const scored = all
       .map((it) => ({ it, s: score(it, q) }))
       .filter((x) => x.s > 0)
@@ -188,7 +192,7 @@ export default function CommandPalette() {
       href: `/chat?ask=${encodeURIComponent(query.trim())}`, glyph: "star4",
     });
     return out;
-  }, [query, readings, celebItems]);
+  }, [query, readings, celebItems, installStatus]);
 
   useEffect(() => setActive(0), [query]);
 
@@ -200,6 +204,10 @@ export default function CommandPalette() {
   function go(item: Item | undefined) {
     if (!item) return;
     setOpen(false);
+    if (item.href === "#install") {
+      void requestInstall();
+      return;
+    }
     router.push(item.href);
   }
 

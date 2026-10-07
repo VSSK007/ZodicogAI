@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Star4, ZODIAC_GLYPHS, Glyph } from "@/components/ui/glyphs";
 import { Search } from "lucide-react";
 import { openCommandPalette } from "@/components/CommandPalette";
+import InstallButton from "@/components/InstallButton";
 
 interface MobileMenuSheetProps {
   isOpen: boolean;
@@ -92,6 +93,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
                     {link.label}
                   </Link>
                 ))}
+                <InstallButton variant="tile" onActivate={onClose} />
               </div>
             </div>
 

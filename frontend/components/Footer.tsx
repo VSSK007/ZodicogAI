@@ -2,12 +2,14 @@
 
 /**
  * Site footer — multi-column, all viewports.
- * Hidden on /chat and during the ?zn=1 Zodicognac ritual.
+ * Hidden on /chat, on the /offline page (its links can't work there) and during
+ * the ?zn=1 Zodicognac ritual.
  */
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import ZodicogMark from "./ZodicogMark";
+import InstallButton from "./InstallButton";
 
 const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
   {
@@ -43,7 +45,7 @@ function FooterInner() {
   const path = usePathname();
   const params = useSearchParams();
 
-  if (path.startsWith("/chat")) return null;
+  if (path.startsWith("/chat") || path === "/offline") return null;
   if (params.get("zn") === "1") return null;
 
   return (
@@ -106,6 +108,7 @@ function FooterInner() {
                   {label}
                 </Link>
               ))}
+              {col.title === "Company" && <InstallButton variant="link" className="mb-2.5" />}
             </div>
           ))}
         </div>

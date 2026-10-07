@@ -16,6 +16,7 @@ import { emptyPerson, validatePerson, type PersonData } from "@/lib/api";
 import { getSign } from "@/lib/zodiac";
 import { clearProfile, saveProfile, useProfile } from "@/lib/profile";
 import { deleteAccount, signOut, useSession } from "@/lib/auth";
+import InstallButton from "@/components/InstallButton";
 
 function AccountPanel() {
   const session = useSession();
@@ -141,6 +142,8 @@ export default function ProfilePage() {
       </div>
 
       <AccountPanel />
+
+      <InstallButton variant="card" className="mt-4" />
 
       <p className="mt-8 text-sm text-ink-muted">
         Ready?{" "}

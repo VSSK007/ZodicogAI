@@ -12,6 +12,15 @@ iOS Safari: Share -> Add to Home Screen) and opens full-screen with its own icon
 | Registration (production only) | `frontend/components/ServiceWorkerRegister.tsx` |
 | Offline page | `frontend/app/offline/` |
 
+## The in-site "Install app" option
+
+`lib/install.ts` keeps the browser's `beforeinstallprompt` event (it fires once, early)
+so an **Install app** button can use the real prompt on Chrome/Edge/Android. Where no
+prompt exists (iPhone, Firefox, private windows, or Chrome before it offers one) the
+same button opens step-by-step instructions for that platform, so there is always an
+option until the app is installed or already running installed (then it disappears).
+It appears in the footer, the mobile menu, the profile page and the search palette.
+
 ## What the service worker does - and refuses to do
 
 - **Caches** content-hashed build assets (`/_next/static/*`), the icons and fonts, so

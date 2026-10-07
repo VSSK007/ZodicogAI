@@ -37,6 +37,17 @@ test("the menu sheet opens from the hamburger and navigates", async ({ page }) =
   await expect(page).toHaveURL(/\/analyze\/love-style/);
 });
 
+test("the mobile menu has an Install app tile with Android steps", async ({ page }) => {
+  await hydrated(page, "/about");
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.getByRole("button", { name: "Open menu" }).click();
+  await page.getByRole("dialog", { name: "Site menu" }).getByRole("button", { name: "Install app" }).click();
+  const dialog = page.getByRole("dialog", { name: /Install ZodicogAI/ });
+  await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText("Install app");
+  await expect(page.getByRole("dialog", { name: "Site menu" })).toBeHidden(); // menu closed first
+});
+
 test("a reading works end to end on a phone", async ({ page }) => {
   const errors = trackPageErrors(page);
   await mockJson(page, "/analyze/hybrid", "hybrid");
