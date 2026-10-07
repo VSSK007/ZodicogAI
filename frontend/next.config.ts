@@ -5,6 +5,13 @@ const nextConfig: NextConfig = {
   // (see frontend/Dockerfile); the PM2 deployment leaves it unset.
   output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   poweredByHeader: false,
+  // Pin the workspace root so a stray lockfile in a parent folder can't change it.
+  turbopack: { root: process.cwd() },
+  typescript: {
+    // CI runs the type-check on every push. A small server (<=2 GB RAM) can set
+    // SKIP_TYPECHECK=1 so `next build` doesn't spend ~1 GB repeating it.
+    ignoreBuildErrors: process.env.SKIP_TYPECHECK === "1",
+  },
   async headers() {
     // Baseline hardening. (A strict CSP is intentionally not set here: GA, PostHog
     // and Sentry load lazily from several origins and need a tested allow-list.)
