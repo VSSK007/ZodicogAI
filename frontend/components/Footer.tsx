@@ -48,7 +48,7 @@ function FooterInner() {
   if (params.get("zn") === "1") return null;
 
   return (
-    <footer className="border-t border-hairline mb-nav md:mb-0">
+    <footer className="app-footer border-t border-hairline mb-nav md:mb-0">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-14">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-x-8 gap-y-10">
 

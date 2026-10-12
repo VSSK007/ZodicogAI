@@ -191,3 +191,92 @@ test.describe("install banner (phones)", () => {
     await expect(page.getByTestId("install-banner")).toHaveCount(0);
   });
 });
+
+// ── Installed app: bottom tab bar replaces the floating buttons and the footer ──
+
+test.describe("installed app (standalone)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      const real = window.matchMedia.bind(window);
+      window.matchMedia = (q: string) =>
+        q.includes("display-mode: standalone")
+          ? ({ matches: true, media: q, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, onchange: null, dispatchEvent: () => false } as MediaQueryList)
+          : real(q);
+    });
+  });
+
+  test("shows the tab bar; the floating buttons and the footer are gone", async ({ page }) => {
+    await hydrated(page, "/about");
+    const bar = page.getByTestId("app-tabbar");
+    await expect(bar).toBeVisible();
+    for (const name of ["Today", "Analyze", "Chat", "Readings", "Me"]) {
+      await expect(bar.getByText(name, { exact: true })).toBeVisible();
+    }
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(page.locator("nav.mobile-fab")).toBeHidden();
+    await expect(page.locator("footer")).toBeHidden();
+    // Last content must not hide under the bar.
+    const barTop = (await bar.boundingBox())!.y;
+    const lastBottom = await page.evaluate(() => document.querySelector("main")!.getBoundingClientRect().bottom);
+    expect(lastBottom).toBeLessThanOrEqual(barTop + 1);
+  });
+
+  test("every tab navigates and the active one is marked", async ({ page }) => {
+    await hydrated(page, "/about");
+    const bar = page.getByTestId("app-tabbar");
+
+    await bar.getByRole("link", { name: "Chat" }).click();
+    await expect(page).toHaveURL(/\/chat$/);
+    await expect(bar.getByRole("link", { name: "Chat" })).toHaveAttribute("aria-current", "page");
+
+    await bar.getByRole("link", { name: "Readings" }).click();
+    await expect(page).toHaveURL(/\/readings$/);
+    await expect(bar.getByRole("link", { name: "Readings" })).toHaveAttribute("aria-current", "page");
+
+    await bar.getByRole("link", { name: "Me" }).click();
+    await expect(page).toHaveURL(/\/profile$/);
+    await expect(bar.getByRole("link", { name: "Me" })).toHaveAttribute("aria-current", "page");
+    await expect(bar.getByRole("link", { name: "Chat" })).not.toHaveAttribute("aria-current", "page");
+
+    await bar.getByRole("link", { name: "Today" }).click();
+    await expect(page).toHaveURL(/\/today$/);
+  });
+
+  test("Analyze opens a sheet of analyses that navigates and closes", async ({ page }) => {
+    await hydrated(page, "/about");
+    const bar = page.getByTestId("app-tabbar");
+    await bar.getByRole("button", { name: "Analyze" }).click();
+
+    const sheet = page.getByRole("dialog", { name: "Analyze" });
+    await expect(sheet).toBeVisible();
+    await expect(sheet.getByRole("link", { name: "Romantic" })).toBeVisible();
+    await expect(sheet.getByRole("link", { name: "Zodiac Deep-Dive" })).toBeVisible();
+    // The bar stays reachable above the sheet.
+    await expect(bar).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(sheet).toBeHidden();
+
+    await bar.getByRole("button", { name: "Analyze" }).click();
+    await sheet.getByRole("link", { name: "Romantic" }).click();
+    await expect(page).toHaveURL(/\/analyze\/romantic$/);
+    await expect(sheet).toBeHidden();
+    await expect(bar.getByRole("button", { name: "Analyze" })).toHaveAttribute("aria-current", "page");
+  });
+
+  test("chat's composer clears the bar", async ({ page }) => {
+    await hydrated(page, "/chat");
+    const barTop = (await page.getByTestId("app-tabbar").boundingBox())!.y;
+    const shell = await page.locator(".chat-shell").boundingBox();
+    expect(shell!.y + shell!.height).toBeLessThanOrEqual(barTop + 1);
+  });
+});
+
+test("in a normal browser tab there is no tab bar and the floating buttons remain", async ({ page }) => {
+  await hydrated(page, "/about");
+  await expect(page.getByTestId("app-tabbar")).toBeHidden();
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await expect(page.locator("nav.mobile-fab")).toBeVisible();
+  await expect(page.locator("footer")).toBeVisible();
+});

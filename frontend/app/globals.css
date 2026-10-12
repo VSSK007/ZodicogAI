@@ -288,6 +288,26 @@ html {
   }
 }
 
+/* ── Installed app (phones/tablets) ──────────────────────────────────────────
+   html[data-installed] is set before first paint from the standalone
+   display-mode. The tab bar replaces the floating buttons and the footer.    */
+.app-tabbar {
+  display: none;
+}
+@media (max-width: 1023px) {
+  html[data-installed="true"] .app-tabbar {
+    display: flex;
+  }
+  html[data-installed="true"] .mobile-fab,
+  html[data-installed="true"] .app-footer {
+    display: none !important;
+  }
+  /* Chat's composer must clear the bar (it already left 64px for the old FAB). */
+  html[data-installed="true"] .chat-shell {
+    height: calc(100dvh - 64px - var(--safe-area-bottom));
+  }
+}
+
 
 /* ── Print / "Export as PDF" ─────────────────────────────────────────────────
    Re-point the ink and surface tokens to paper colours so every token-based

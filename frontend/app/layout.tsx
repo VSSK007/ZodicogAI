@@ -8,6 +8,7 @@ import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import InstallProvider from "@/components/InstallProvider";
 import Navbar from "@/components/Navbar";
 import MobileNavbar from "@/components/MobileNavbar";
+import AppTabBar from "@/components/AppTabBar";
 import { ViewTransition } from "react";
 import MotionProvider from "@/components/MotionProvider";
 import CommandPalette from "@/components/CommandPalette";
@@ -67,7 +68,16 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.className} ${geistMono.variable} ${manrope.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${GeistSans.className} ${geistMono.variable} ${manrope.variable}`}>
+      <head>
+        {/* Before first paint: mark the installed app so its chrome (tab bar, no FAB/footer) never flashes. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)document.documentElement.dataset.installed='true'}catch(e){}",
+          }}
+        />
+      </head>
       <body className="bg-surface text-ink antialiased">
         <MotionProvider>
         <CommandPalette />
@@ -81,6 +91,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Mobile navbar — hidden on desktop */}
         <MobileNavbar />
+        <AppTabBar />
 
         {/* Flex wrapper ensures footer always stays below content */}
         <div className="flex flex-col min-h-screen">
