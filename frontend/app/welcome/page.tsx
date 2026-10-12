@@ -15,7 +15,7 @@ import { SignGlyph } from "@/components/ui/glyphs";
 import { getSign } from "@/lib/zodiac";
 import { useProfile } from "@/lib/profile";
 
-const DEFAULT_NEXT = "/";
+const DEFAULT_NEXT = "/today";
 
 /** Only same-site, absolute paths: never an open redirect. */
 function safeNext(raw: string | null): string {

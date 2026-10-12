@@ -24,6 +24,7 @@ from models.schemas import (
     DiscoverInput,
 )
 import accounts
+import daily
 import metrics
 from chat.chat_handler import handle_chat, prepare_chat_stream
 from agent_controller import (
@@ -54,7 +55,7 @@ from gemini_client import (
     generate_love_lang_article, generate_love_style_article,
     generate_numerology_lp_article, generate_sextrology_guide,
     generate_zodiac_compat_article, generate_mbti_compat_article,
-    generate_celebrity_bio, generate_daily_horoscope,
+    generate_celebrity_bio, generate_daily_horoscope, generate_daily_tip,
 )
 
 # Error monitoring: a no-op unless SENTRY_DSN is set. Leaves PII off - readings
@@ -527,29 +528,94 @@ from engines.horoscope_engine import compute_daily_scores, compute_lucky_number
 _VALID_HOROSCOPE_SIGNS = {"aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"}
 
 
+def _horoscope_payload(s: str) -> dict:
+    today = datetime.utcnow().date()
+    scores = compute_daily_scores(s, today)
+    lucky_number = compute_lucky_number(s, today)
+    # Avoid strftime's %-d/%#d day-of-month flags - not portable across
+    # Windows (where this runs in production) and POSIX.
+    date_label = f"{today.strftime('%B')} {today.day}, {today.year}"
+    result = generate_daily_horoscope(s.capitalize(), date_label, scores)
+    return {
+        "sign": s,
+        "date": today.isoformat(),
+        "lucky_number": lucky_number,
+        **result,
+    }
+
+
+def _horoscope_key(s: str) -> str:
+    return f"horoscope:{s}:{datetime.utcnow().date().isoformat()}"
+
+
 @app.get("/horoscope/{sign}")
 def horoscope(sign: str):
     s = sign.lower()
     if s not in _VALID_HOROSCOPE_SIGNS:
         raise HTTPException(status_code=404, detail=f"Unknown sign: {sign}")
+    return _wrap(lambda: _cached_generate(_horoscope_key(s), lambda: _horoscope_payload(s)))
 
-    def _produce():
-        today = datetime.utcnow().date()
-        scores = compute_daily_scores(s, today)
-        lucky_number = compute_lucky_number(s, today)
-        # Avoid strftime's %-d/%#d day-of-month flags — not portable across
-        # Windows (where this runs in production) and POSIX.
-        date_label = f"{today.strftime('%B')} {today.day}, {today.year}"
-        result = generate_daily_horoscope(s.capitalize(), date_label, scores)
+
+# ---------------------------------------------------------------------------
+# /daily/{sign} - the personal daily card (works without an account)
+# ---------------------------------------------------------------------------
+
+@app.get("/daily/{sign}")
+def daily_card(sign: str, request: Request, mbti: str = "", day: int = 0, month: int = 0):
+    """
+    Horoscope + MBTI tip + lucky colour/number + do/avoid for one visitor today.
+
+    Generated text is shared: the horoscope per sign per day, the tip per
+    (sign, mbti, day). Only a cache miss costs AI budget (global and per-IP).
+    Name is deliberately not a parameter - it would only fragment the cache.
+    """
+    s = sign.lower()
+    if s not in _VALID_HOROSCOPE_SIGNS:
+        raise HTTPException(status_code=404, detail=f"Unknown sign: {sign}")
+    mbti = mbti.strip().upper()
+    if mbti and mbti not in _VALID_MBTI:
+        raise HTTPException(status_code=400, detail=f"Unknown MBTI type: {mbti}")
+    if bool(day) != bool(month) or (day and not 1 <= day <= 31) or (month and not 1 <= month <= 12):
+        raise HTTPException(status_code=400, detail="Provide a valid day (1-31) and month (1-12), or neither.")
+
+    today = datetime.utcnow().date()
+    key = daily.tip_key(s, mbti, today)
+    with _content_cache_lock:
+        horoscope_cached = _horoscope_key(s) in _content_cache
+    cached_tip = daily.get_cached_tip(key)
+
+    # Per-IP budget is charged once, and only when this request will call Gemini.
+    # (The global budget is charged where each generation actually happens.)
+    if not horoscope_cached or cached_tip is None:
+        try:
+            _consume_ip_budget(_client_ip(request))
+        except HTTPException as exc:
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+    def _build():
+        base = _cached_generate(_horoscope_key(s), lambda: _horoscope_payload(s))
+        scores = base["scores"]
+        tip = cached_tip
+        if tip is None:
+            _consume_ai_budget()
+            date_label = f"{today.strftime('%B')} {today.day}, {today.year}"
+            tip = generate_daily_tip(s.capitalize(), mbti, date_label, scores)
+            daily.store_tip(key, tip)
+        tip = daily.usable(tip)
         return {
-            "sign": s,
             "date": today.isoformat(),
-            "lucky_number": lucky_number,
-            **result,
+            "sign": s,
+            "mbti": mbti,
+            "horoscope": base["article"]["reading"],
+            "focus_area": base["article"]["focus_area"],
+            "scores": scores,
+            "mbti_tip": tip["mbti_tip"],
+            "do": tip["do_this"],
+            "avoid": tip["avoid_this"],
+            **daily.lucky_extras(s, day, month, today),
         }
 
-    today_key = datetime.utcnow().date().isoformat()
-    return _wrap(lambda: _cached_generate(f"horoscope:{s}:{today_key}", _produce))
+    return _wrap(_build)
 
 
 # ---------------------------------------------------------------------------

@@ -12,6 +12,8 @@ Public interface:
 """
 
 import colorsys
+import hashlib
+from datetime import date
 
 # ---------------------------------------------------------------------------
 # Zodiac color data
@@ -219,3 +221,17 @@ def compute_color_harmony(sign_a: str, sign_b: str) -> dict:
             "rgb":  list(comp_rgb),
         },
     }
+
+
+def daily_lucky_color(seed_key: str, on: date) -> dict:
+    """
+    Lucky colour of the day: one of the twelve classic power colours, picked
+    deterministically from `seed_key` (a birthday like "3-15", or a sign name
+    when no birthday is known) and the date. Same inputs, same colour.
+    """
+    signs = sorted(ZODIAC_COLORS)
+    digest = hashlib.sha256(f"color:{seed_key}:{on.isoformat()}".encode()).digest()
+    pick = ZODIAC_COLORS[signs[digest[0] % len(signs)]]
+    return {"name": pick["power_name"], "hex": pick["power_hex"]}
+
+

@@ -426,3 +426,12 @@ class HoroscopeArticle(BaseModel):
     reading: str = "—"
     focus_area: str = "—"
     advice: str = "—"
+
+
+class DailyTip(BaseModel):
+    """The generated part of the personal daily card (one call per sign x type x day)."""
+    mbti_tip: str = "—"
+    do_this: str = "—"
+    avoid_this: str = "—"
+
+

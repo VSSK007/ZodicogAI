@@ -252,3 +252,16 @@ def compute_numerology_compatibility(profile_a: dict, profile_b: dict) -> dict:
         "cross_score":         cross_score,
         "pursue_signal":       signal,
     }
+
+
+def personal_day_number(day: int, month: int, on) -> int:
+    """
+    Personal day number: the classic numerology "number of the day" - the
+    digits of the birth day + month plus today's year, month and day, reduced
+    (master numbers 11/22/33 are kept).
+    """
+    digits = f"{day}{month}{on.year}{on.month}{on.day}"
+    return _reduce(sum(int(d) for d in digits))
+
+
+

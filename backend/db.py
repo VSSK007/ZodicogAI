@@ -14,6 +14,7 @@ Tables
   login_tokens  single-use, short-lived magic-link tokens (hashed)
   sessions      long-lived session tokens (hashed)
   profiles      one saved "me" per user
+  daily_cache   generated daily-card text, one row per (sign, mbti, date)
 """
 import os
 import threading
@@ -70,6 +71,13 @@ profiles = Table(
     Column("user_id", String(32), primary_key=True),
     Column("data", Text, nullable=False),
     Column("updated_at", String(40), nullable=False),
+)
+
+daily_cache = Table(
+    "daily_cache", metadata,
+    Column("key", String(160), primary_key=True),
+    Column("payload", Text, nullable=False),
+    Column("created_at", String(40), nullable=False),
 )
 
 _engine: Engine | None = None

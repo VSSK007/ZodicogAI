@@ -86,7 +86,7 @@ test("next only accepts same-site paths", async ({ page }) => {
   await page.getByPlaceholder("Day").fill("9");
   await page.getByRole("button", { name: "Next" }).click();
   await page.getByRole("button", { name: "Finish without MBTI" }).click();
-  await expect(page).toHaveURL(/^http:\/\/(localhost|127\.0\.0\.1):\d+\/$/);
+  await expect(page).toHaveURL(/^http:\/\/(localhost|127\.0\.0\.1):\d+\/today$/); // the default, not evil.example
 });
 
 test("a revisit with a saved profile offers Edit profile instead of the wizard", async ({ page }) => {

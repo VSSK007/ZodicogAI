@@ -1534,7 +1534,7 @@ Required JSON:
 from models.schemas import (
     LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
     SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
-    CelebrityArticle, HoroscopeArticle,
+    CelebrityArticle, HoroscopeArticle, DailyTip,
 )
 
 
@@ -1586,6 +1586,34 @@ def generate_daily_horoscope(sign: str, date_label: str, scores: dict) -> dict:
     prompt = _prompt_horoscope(sign, date_label, scores)
     result = call_gemini(prompt, HoroscopeArticle)
     return {"sign": sign, "scores": scores, "article": result.model_dump()}
+
+
+def _prompt_daily_tip(sign: str, mbti: str, date_label: str, scores: dict) -> str:
+    who = f"a {sign} with the MBTI type {mbti}" if mbti else f"a {sign}"
+    tip_focus = (
+        f"how a {mbti} specifically can make the most of today"
+        if mbti
+        else f"how a {sign} can make the most of today"
+    )
+    return (
+        f"You are writing a short personal daily card for {who} ({date_label}).\n\n"
+        f"Today's computed energy scores for {sign} (0-100, final - be true to them in tone, "
+        f"never list the raw numbers):\n"
+        f"  Love: {scores['love']}  Career: {scores['career']}  "
+        f"Energy: {scores['energy']}  Luck: {scores['luck']}\n\n"
+        f"Write:\n"
+        f"1. mbti_tip - 1-2 sentences on {tip_focus}, grounded in the scores.\n"
+        f"2. do_this - one concrete thing to do today, max 14 words, imperative.\n"
+        f"3. avoid_this - one concrete thing to avoid today, max 14 words, imperative.\n\n"
+        f"Speak directly to the reader. Warm, specific, no hedging, no emojis. "
+        f"Do not mention that scores or a type were provided."
+    )
+
+
+def generate_daily_tip(sign: str, mbti: str, date_label: str, scores: dict) -> dict:
+    """The generated half of the daily card. Returns DailyTip fields as a dict."""
+    result = call_gemini(_prompt_daily_tip(sign, mbti, date_label, scores), DailyTip)
+    return result.model_dump()
 
 
 def generate_zodiac_compat_article(sign: str) -> dict:
