@@ -5,6 +5,7 @@
  * offers to remember the visitor, or shows that a saved profile is in use.
  */
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Check, UserRound } from "lucide-react";
 import { clearProfile, isProfileComplete, saveProfile, useProfile } from "@/lib/profile";
 import { capture, useFeatureFlag } from "@/lib/posthog";
@@ -22,6 +23,7 @@ const chip =
 
 export default function ProfileNotice({ person }: { person: Person }) {
   const profile = useProfile();
+  const pathname = usePathname();
   // Experiment: does friendlier copy get more people to save a profile? (PostHog flag
   // `remember_me_copy`; anyone not in the experiment sees the control.)
   const copy = useFeatureFlag<string>("remember_me_copy", "control");
@@ -57,9 +59,15 @@ export default function ProfileNotice({ person }: { person: Person }) {
 
   if (!complete) {
     return profile ? null : (
-      <p className="mt-2 flex items-center gap-1.5 text-xs text-ink-muted">
+      <p className="mt-2 flex items-center gap-x-1.5 gap-y-1 flex-wrap text-xs text-ink-muted">
         <UserRound className="size-3.5" aria-hidden="true" />
         Fill this in once and we&apos;ll remember you on this device.
+        <Link
+          href={`/welcome?next=${encodeURIComponent(pathname)}`}
+          className="font-semibold text-accent-bright hover:text-gold-bright"
+        >
+          Set up once, skip the forms
+        </Link>
       </p>
     );
   }

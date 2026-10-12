@@ -103,6 +103,13 @@ export default function ProfilePage() {
           We&apos;ll pre-fill every reading with your details. They stay on this device — nothing is sent
           anywhere until you run an analysis, unless you choose to sign in and sync.
         </p>
+        {!saved && (
+          <p className="mt-3 text-sm">
+            <Link href="/welcome?next=/profile" className="font-semibold text-accent-bright hover:text-gold-bright">
+              Prefer a guided setup? 3 quick steps →
+            </Link>
+          </p>
+        )}
       </header>
 
       {saved && sign && (
