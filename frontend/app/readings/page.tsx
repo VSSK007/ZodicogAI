@@ -5,13 +5,14 @@
  * signed in it also merges the account's readings, so history follows you
  * across devices. (The homepage teaser only shows 5.)
  */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Star4 } from "@/components/ui/glyphs";
 import { getHistory, type ReadingEntry } from "@/lib/history";
 import { fetchServerReadings, useSession } from "@/lib/auth";
+import PullToRefresh from "@/components/PullToRefresh";
 
 const TYPE_LABELS: Record<string, string> = {
   hybrid_analysis: "Behavioral Profile",
@@ -57,6 +58,14 @@ export default function ReadingsPage() {
     };
   }, [session.status]);
 
+  // Pull-to-refresh (installed app): re-read this device's history and the account's.
+  const refresh = useCallback(async () => {
+    const local = getHistory();
+    if (session.status !== "signed-in") return setEntries(local);
+    const server = await fetchServerReadings();
+    setEntries(merge(local, server));
+  }, [session.status]);
+
   function clearAll() {
     try {
       window.localStorage.removeItem(HISTORY_KEY);
@@ -67,6 +76,7 @@ export default function ReadingsPage() {
   }
 
   return (
+    <PullToRefresh onRefresh={refresh}>
     <main className="min-h-screen px-4 md:px-8 py-10 md:py-16 max-w-3xl mx-auto">
       <div className="mb-10 flex items-start justify-between gap-4 flex-wrap">
         <div>
@@ -136,5 +146,6 @@ export default function ReadingsPage() {
         </div>
       )}
     </main>
+    </PullToRefresh>
   );
 }

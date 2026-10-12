@@ -293,6 +293,8 @@ html {
    display-mode. The tab bar replaces the floating buttons and the footer.    */
 .app-tabbar {
   display: none;
+  /* Its own transition group: page transitions never crossfade the bar. */
+  view-transition-name: app-tabbar;
 }
 @media (max-width: 1023px) {
   html[data-installed="true"] .app-tabbar {

@@ -3,6 +3,7 @@
 import { DUR, EASE } from "@/lib/motion";
 import { motion, useMotionValue, animate } from "framer-motion";
 import { useEffect, useState } from "react";
+import { haptic } from "@/lib/haptics";
 
 interface Props {
   score: number;
@@ -39,6 +40,7 @@ export default function ScoreRing({
       duration: RING_DURATION,
       ease: EASE,
       onUpdate: (v) => setDisplayed(v),
+      onComplete: () => haptic(14), // the reveal lands (installed app only)
     });
     return () => controls.stop();
     // eslint-disable-next-line react-hooks/exhaustive-deps

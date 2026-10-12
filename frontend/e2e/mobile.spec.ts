@@ -273,6 +273,107 @@ test.describe("installed app (standalone)", () => {
   });
 });
 
+const STANDALONE_STUB = () => {
+  const real = window.matchMedia.bind(window);
+  window.matchMedia = (q: string) =>
+    q.includes("display-mode: standalone")
+      ? ({ matches: true, media: q, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {}, onchange: null, dispatchEvent: () => false } as MediaQueryList)
+      : real(q);
+};
+const SPY_VIBRATE = () => {
+  (window as unknown as { __vibrations: number[] }).__vibrations = [];
+  navigator.vibrate = ((p: number | number[]) => {
+    (window as unknown as { __vibrations: number[] }).__vibrations.push(Array.isArray(p) ? p[0] : p);
+    return true;
+  }) as typeof navigator.vibrate;
+};
+const vibrations = (page: import("@playwright/test").Page) =>
+  page.evaluate(() => (window as unknown as { __vibrations: number[] }).__vibrations.length);
+
+test.describe("native touches", () => {
+  test("haptic ticks fire on primary actions in the installed app", async ({ page }) => {
+    await page.addInitScript(STANDALONE_STUB);
+    await page.addInitScript(SPY_VIBRATE);
+    await hydrated(page, "/profile");
+    expect(await vibrations(page)).toBe(0);
+    await page.getByRole("button", { name: "Save my profile" }).click(); // primary Button
+    expect(await vibrations(page)).toBeGreaterThan(0);
+
+    const before = await vibrations(page);
+    await page.getByTestId("app-tabbar").getByRole("link", { name: "Chat" }).click(); // tab switch
+    await expect.poll(() => vibrations(page)).toBeGreaterThan(before);
+  });
+
+  test("a normal browser tab never vibrates", async ({ page }) => {
+    await page.addInitScript(SPY_VIBRATE);
+    await hydrated(page, "/profile");
+    await page.getByRole("button", { name: "Save my profile" }).click();
+    expect(await vibrations(page)).toBe(0);
+  });
+
+  test("reduced motion silences haptics", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.addInitScript(STANDALONE_STUB);
+    await page.addInitScript(SPY_VIBRATE);
+    await hydrated(page, "/profile");
+    await page.getByRole("button", { name: "Save my profile" }).click();
+    expect(await vibrations(page)).toBe(0);
+  });
+
+  test("pulling down on Readings refreshes the list once, without a reload", async ({ page }) => {
+    await page.addInitScript(STANDALONE_STUB);
+    await hydrated(page, "/readings");
+    await expect(page.getByText("No readings yet.")).toBeVisible();
+    await page.evaluate(() => {
+      (window as unknown as { __marker: string }).__marker = "same-page";
+      localStorage.setItem(
+        "zodicog.readings",
+        JSON.stringify([{ id: "abc123", type: "hybrid_analysis", title: "Pulled in", date: new Date().toISOString() }]),
+      );
+    });
+
+    // Drag from the top of the page to ~160px down (damped to >70px).
+    await page.evaluate(async () => {
+      const touch = (y: number) =>
+        new Touch({ identifier: 1, target: document.body, clientX: 200, clientY: y });
+      const fire = (type: string, y: number | null) =>
+        document.dispatchEvent(
+          new TouchEvent(type, {
+            touches: y === null ? [] : [touch(y)],
+            changedTouches: [touch(y ?? 0)],
+            bubbles: true,
+            cancelable: true,
+          }),
+        );
+      fire("touchstart", 100);
+      for (let y = 110; y <= 260; y += 25) {
+        fire("touchmove", y);
+        await new Promise((r) => setTimeout(r, 16));
+      }
+      fire("touchend", null);
+    });
+
+    await expect(page.getByText("Pulled in")).toBeVisible();
+    expect(await page.evaluate(() => (window as unknown as { __marker?: string }).__marker)).toBe("same-page");
+  });
+
+  test("a short pull does nothing, and a normal tab has no pull-to-refresh", async ({ page }) => {
+    await hydrated(page, "/readings"); // not installed
+    await page.evaluate(() => {
+      localStorage.setItem(
+        "zodicog.readings",
+        JSON.stringify([{ id: "x1", type: "hybrid_analysis", title: "Should not appear", date: new Date().toISOString() }]),
+      );
+      const touch = (y: number) => new Touch({ identifier: 1, target: document.body, clientX: 200, clientY: y });
+      document.dispatchEvent(new TouchEvent("touchstart", { touches: [touch(100)], bubbles: true }));
+      document.dispatchEvent(new TouchEvent("touchmove", { touches: [touch(300)], bubbles: true }));
+      document.dispatchEvent(new TouchEvent("touchend", { touches: [], changedTouches: [touch(300)], bubbles: true }));
+    });
+    await expect(page.getByTestId("pull-indicator")).toHaveCount(0);
+    await expect(page.getByText("Should not appear")).toHaveCount(0);
+  });
+});
+
 test("in a normal browser tab there is no tab bar and the floating buttons remain", async ({ page }) => {
   await hydrated(page, "/about");
   await expect(page.getByTestId("app-tabbar")).toBeHidden();

@@ -18,6 +18,7 @@ import ZodicognacMark from "./ZodicognacMark";
 import { Glyph } from "@/components/ui/glyphs";
 import { openCommandPalette } from "@/components/CommandPalette";
 import { ANALYZE_TOGETHER, ANALYZE_YOU, type AnalyzeLink } from "@/lib/analyses";
+import { haptic } from "@/lib/haptics";
 
 const EXPLORE: { href: string; label: string }[] = [
   { href: "/horoscope", label: "Horoscope" },
@@ -160,14 +161,14 @@ export default function AppTabBar() {
         className="app-tabbar fixed inset-x-0 bottom-0 z-50 items-stretch border-t border-hairline bg-surface-overlay/95 backdrop-blur-md"
         style={{ paddingBottom: "var(--safe-area-bottom)" }}
       >
-        <Link href="/today" aria-current={active.today ? "page" : undefined} className={`${TAB} ${tone(active.today)}`}>
+        <Link href="/today" onClick={() => haptic()} aria-current={active.today ? "page" : undefined} className={`${TAB} ${tone(active.today)}`}>
           <Sun className="size-[22px]" aria-hidden="true" />
           Today
         </Link>
 
         <button
           type="button"
-          onClick={() => setSheetOpen((v) => !v)}
+          onClick={() => { haptic(); setSheetOpen((v) => !v); }}
           aria-haspopup="dialog"
           aria-expanded={sheetOpen}
           aria-current={active.analyze ? "page" : undefined}
@@ -177,17 +178,17 @@ export default function AppTabBar() {
           Analyze
         </button>
 
-        <Link href="/chat" aria-current={active.chat ? "page" : undefined} className={`${TAB} ${tone(active.chat)}`}>
+        <Link href="/chat" onClick={() => haptic()} aria-current={active.chat ? "page" : undefined} className={`${TAB} ${tone(active.chat)}`}>
           <ZodicognacMark size={22} active={active.chat} />
           Chat
         </Link>
 
-        <Link href="/readings" aria-current={active.readings ? "page" : undefined} className={`${TAB} ${tone(active.readings)}`}>
+        <Link href="/readings" onClick={() => haptic()} aria-current={active.readings ? "page" : undefined} className={`${TAB} ${tone(active.readings)}`}>
           <BookOpen className="size-[22px]" aria-hidden="true" />
           Readings
         </Link>
 
-        <Link href="/profile" aria-current={active.me ? "page" : undefined} className={`${TAB} ${tone(active.me)}`}>
+        <Link href="/profile" onClick={() => haptic()} aria-current={active.me ? "page" : undefined} className={`${TAB} ${tone(active.me)}`}>
           <UserRound className="size-[22px]" aria-hidden="true" />
           Me
         </Link>

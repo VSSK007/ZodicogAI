@@ -12,6 +12,7 @@
  */
 import Link from "next/link";
 import type { ComponentProps } from "react";
+import { haptic } from "@/lib/haptics";
 
 type Variant = "primary" | "gold" | "secondary" | "ghost" | "link";
 type Size = "sm" | "md" | "lg";
@@ -66,12 +67,18 @@ export function Button({
   className = "",
   disabled,
   children,
+  onClick,
   ...rest
 }: StyleProps & { loading?: boolean } & ComponentProps<"button">) {
   return (
     <button
       className={classes(variant, size, className)}
       disabled={loading || disabled}
+      onClick={(e) => {
+        // Tactile tick for the page's main actions (installed app only; see lib/haptics).
+        if (variant === "primary" || variant === "gold") haptic();
+        onClick?.(e);
+      }}
       {...rest}
     >
       {loading && <Spinner />}
