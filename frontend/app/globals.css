@@ -291,6 +291,17 @@ html {
 /* ── Installed app (phones/tablets) ──────────────────────────────────────────
    html[data-installed] is set before first paint from the standalone
    display-mode. The tab bar replaces the floating buttons and the footer.    */
+/* Returning visitors: the homepage "Your day" strip and the readings row it replaces. */
+.today-strip {
+  display: none;
+}
+html[data-has-profile="true"] .today-strip {
+  display: block;
+}
+html[data-has-profile="true"] .recent-readings {
+  display: none;
+}
+
 .app-tabbar {
   display: none;
   /* Its own transition group: page transitions never crossfade the bar. */

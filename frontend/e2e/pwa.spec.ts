@@ -24,7 +24,7 @@ test("the manifest is complete and every asset it points at exists", async ({ pa
 
   expect(m.id).toBe("/");
   expect(m.scope).toBe("/");
-  expect(m.start_url).toBe("/");
+  expect(m.start_url).toBe("/today");
   expect(m.display).toBe("standalone");
   expect(m.shortcuts.length).toBeGreaterThanOrEqual(3);
   expect(m.icons.some((i: { purpose?: string }) => i.purpose === "maskable")).toBe(true);

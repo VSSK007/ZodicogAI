@@ -16,6 +16,7 @@ import Hero from "@/components/home/Hero";
 import InstallBanner from "@/components/home/InstallBanner";
 import StatsStrip from "@/components/home/StatsStrip";
 import RecentReadings from "@/components/home/RecentReadings";
+import TodayStrip from "@/components/home/TodayStrip";
 
 // Below-the-fold sections load as separate chunks (still server-rendered, so
 // the HTML stays complete for SEO); this keeps the first-paint JS small.
@@ -109,6 +110,7 @@ export default function Home() {
       </Suspense>
 
       <InstallBanner />
+      <TodayStrip />
       <Hero />
       <RecentReadings />
       <StatsStrip />

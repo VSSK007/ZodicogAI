@@ -19,7 +19,7 @@ export default function RecentReadings() {
   if (entries.length === 0) return null;
 
   return (
-    <section className="max-w-6xl mx-auto px-6 pt-12">
+    <section className="recent-readings max-w-6xl mx-auto px-6 pt-12">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2 text-ink-muted">
           <History className="size-3.5" aria-hidden="true" />

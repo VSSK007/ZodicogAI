@@ -7,7 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "ZodicogAI",
     description: "Deterministic engines score every framework; AI explains the result.",
     lang: "en",
-    start_url: "/",
+    // The installed app opens on the personal daily card.
+    start_url: "/today",
     scope: "/",
     display: "standalone",
     orientation: "portrait",

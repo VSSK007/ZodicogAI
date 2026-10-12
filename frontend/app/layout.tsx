@@ -70,11 +70,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning className={`${GeistSans.className} ${geistMono.variable} ${manrope.variable}`}>
       <head>
-        {/* Before first paint: mark the installed app so its chrome (tab bar, no FAB/footer) never flashes. */}
+        {/* Before first paint: mark the installed app and a saved profile so their chrome never flashes in. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)document.documentElement.dataset.installed='true'}catch(e){}",
+              "try{var h=document.documentElement;if(matchMedia('(display-mode: standalone)').matches||navigator.standalone===true)h.dataset.installed='true';var p=JSON.parse(localStorage.getItem('zodicog.profile')||'null');if(p&&p.name&&p.day&&p.month)h.dataset.hasProfile='true'}catch(e){}",
           }}
         />
       </head>
