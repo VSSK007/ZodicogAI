@@ -1,52 +1,11 @@
 import { ImageResponse } from "next/og";
 import Sigil from "@/components/Sigil";
+import { extractScore, TYPE_LABELS } from "@/lib/shareCard";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
-
-const TYPE_LABELS: Record<string, string> = {
-  hybrid_analysis: "Behavioral Profile",
-  compatibility_analysis: "Compatibility",
-  emotional_compatibility: "Emotional Compatibility",
-  romantic_compatibility: "Romantic Compatibility",
-  sextrology_analysis: "Sextrology",
-  sextrology_solo_analysis: "Sextrology",
-  love_style_analysis: "Love Style",
-  love_language_analysis: "Love Language",
-  full_relationship_intelligence: "Full Synastry Report",
-  zodiac_article: "Zodiac Deep-Dive",
-  color_analysis: "Aura Colors",
-  color_pair_analysis: "Aura Colors",
-  numerology_analysis: "Numerology",
-  numerology_pair_analysis: "Numerology",
-};
-
-// Known score fields across analysis types, checked in order — flat first,
-// then one level into a nested "compatibility" object (numerology pairs).
-const SCORE_KEYS = [
-  "sexual_compatibility_score",
-  "romantic_compatibility_score",
-  "emotional_compatibility_score",
-  "love_style_compatibility_score",
-  "love_language_compatibility_score",
-  "overall_score",
-  "overall",
-];
-
-function findScore(payload: Record<string, unknown>): number | null {
-  for (const key of SCORE_KEYS) {
-    const v = payload[key];
-    if (typeof v === "number") return Math.round(v);
-  }
-  const nested = payload["compatibility"];
-  if (nested && typeof nested === "object") {
-    const v = (nested as Record<string, unknown>)["compatibility_score"];
-    if (typeof v === "number") return Math.round(v);
-  }
-  return null;
-}
 
 function fallbackImage(label = "ZodicogAI") {
   return new ImageResponse(
@@ -78,7 +37,7 @@ export default async function Image({ params }: { params: Promise<{ id: string }
       const data = await res.json();
       title = data.title || title;
       analysisType = data.analysis_type || "";
-      score = findScore(data.payload ?? {});
+      score = extractScore(data.payload);
     } else {
       return fallbackImage();
     }

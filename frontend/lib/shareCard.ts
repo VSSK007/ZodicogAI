@@ -35,6 +35,8 @@ const SCORE_KEYS = [
   "overall",
 ];
 
+const HEADLINE_CONTAINERS = ["relationship_intelligence", "compatibility", "numerology_compat"];
+
 /** 0-100 headline score, looking one or two levels deep. null when the type has none. */
 export function extractScore(payload: unknown): number | null {
   if (!isObj(payload)) return null;
@@ -47,6 +49,17 @@ export function extractScore(payload: unknown): number | null {
   };
   const top = scan(payload);
   if (top !== null) return top;
+
+  // Containers that hold *the* headline score, in priority order. Only after these do we
+  // fall back to any nested object - otherwise a sub-engine's score (e.g. "emotional" in the
+  // full report) would be mistaken for the overall one.
+  for (const k of HEADLINE_CONTAINERS) {
+    const v = payload[k];
+    if (isObj(v)) {
+      const inner = scan(v);
+      if (inner !== null) return inner;
+    }
+  }
   for (const v of Object.values(payload)) {
     if (isObj(v)) {
       const inner = scan(v);
