@@ -14,7 +14,7 @@
  *
  * Bump VERSION to drop every old cache on the next visit.
  */
-const VERSION = "v2";
+const VERSION = "v3";
 const CACHE = `zodicog-static-${VERSION}`;
 const OFFLINE_URL = "/offline";
 const MAX_ENTRIES = 160; // hashed assets pile up across deploys; keep the newest
