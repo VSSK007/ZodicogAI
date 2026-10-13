@@ -10,9 +10,9 @@
  *
  * Used live on /dashboard and on shared /r/[id] pages for saved reports.
  */
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { Check, Link as LinkIcon, Printer } from "lucide-react";
+import { Check, GalleryHorizontal, Link as LinkIcon, Printer } from "lucide-react";
 import ScoreRing from "@/components/ScoreRing";
 import { TraitRadar } from "@/components/LazyCharts";
 import { BehavioralMap } from "@/components/LazyCharts";
@@ -25,6 +25,8 @@ import { renderMd } from "@/lib/renderMd";
 import { DUR, EASE } from "@/lib/motion";
 import type { FullResult, ReportPersonas } from "@/components/report/types";
 import InviteButton from "@/components/invite/InviteButton";
+import StoryMode from "@/components/report/StoryMode";
+import { DIM_COLORS, STABILITY, dimensions, verdictFor } from "@/components/report/data";
 
 // ── Static config ─────────────────────────────────────────────────────────────
 
@@ -37,43 +39,11 @@ const SECTIONS = [
   { id: "reading",    label: "The reading",       lede: "An AI interpretation written from the scores above — never the other way round." },
 ] as const;
 
-/** Per-dimension data colours (categorical, used only for bars). */
-const DIM_COLORS: Record<string, string> = {
-  Emotional: "#a78bfa", Romantic: "#fb7185", Behavioral: "#60a5fa", Intimacy: "#818cf8",
-  "Love Style": "#fb923c", "Love Language": "#2dd4bf", Numerology: "#fbbf24", Zodiac: "#f472b6",
-};
-
-const STABILITY: Record<string, { color: string; label: string }> = {
-  stable:   { color: "var(--color-success)", label: "Stable" },
-  moderate: { color: "var(--color-warning)", label: "Moderate" },
-  volatile: { color: "var(--color-danger)",  label: "Volatile" },
-};
-
 const SIGNAL: Record<string, { cls: string; label: string }> = {
   pursue:  { cls: "bg-success/10 text-success border-success/25", label: "Numerology match" },
   caution: { cls: "bg-warning/10 text-warning border-warning/25", label: "Numerology caution" },
   avoid:   { cls: "bg-danger/10 text-danger border-danger/25",   label: "Numerology clash" },
 };
-
-function dimensions(r: FullResult) {
-  return [
-    { name: "Emotional",     score: r.emotional.emotional_compatibility_score },
-    { name: "Romantic",      score: r.romantic.romantic_compatibility_score },
-    { name: "Behavioral",    score: r.vector_similarity_percent },
-    { name: "Intimacy",      score: r.sextrology.sexual_compatibility_score },
-    { name: "Love Style",    score: r.love_style.love_style_compatibility_score },
-    { name: "Love Language", score: r.love_language.love_language_compatibility_score },
-    { name: "Numerology",    score: r.numerology_compat.compatibility_score },
-    { name: "Zodiac",        score: r.zodiac_compatibility_score },
-  ];
-}
-
-function verdictFor(score: number) {
-  if (score >= 80) return "A rare alignment";
-  if (score >= 65) return "Strong foundations";
-  if (score >= 45) return "Workable, with effort";
-  return "Real friction to navigate";
-}
 
 // ── Small pieces ──────────────────────────────────────────────────────────────
 
@@ -187,6 +157,8 @@ export default function SynastryReport({
   // ── scroll progress + scroll-spy ─────────────────────────────────────────
   const rootRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<string>(SECTIONS[0].id);
+  const [storyOpen, setStoryOpen] = useState(false);
+  const closeStory = useCallback(() => setStoryOpen(false), []);
   const { scrollYProgress } = useScroll({ target: rootRef, offset: ["start start", "end end"] });
   const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
@@ -220,6 +192,7 @@ export default function SynastryReport({
 
   return (
     <div ref={rootRef} data-report className="relative">
+      {storyOpen && <StoryMode result={result} personas={personas} shareId={shareId} onClose={closeStory} />}
       {/* Reading progress */}
       <motion.div
         aria-hidden="true"
@@ -267,6 +240,16 @@ export default function SynastryReport({
             </p>
           </div>
         </div>
+
+        {/* Phones and tablets: the whole report as swipeable cards. */}
+        <button
+          onClick={() => setStoryOpen(true)}
+          data-print-hide
+          data-testid="story-mode-open"
+          className="lg:hidden mt-6 inline-flex items-center gap-2 rounded-control border border-hairline-gold bg-gold/[0.06] px-4 py-2.5 min-h-[44px] text-sm font-semibold text-gold-bright tap-highlight-none"
+        >
+          <GalleryHorizontal className="size-4" aria-hidden="true" /> Story mode
+        </button>
 
         {actions && <div className="mt-8 flex flex-wrap items-center gap-2" data-print-hide>{actions}</div>}
       </header>

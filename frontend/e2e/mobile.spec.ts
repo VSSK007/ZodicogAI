@@ -381,3 +381,127 @@ test("in a normal browser tab there is no tab bar and the floating buttons remai
   await expect(page.locator("nav.mobile-fab")).toBeVisible();
   await expect(page.locator("footer")).toBeVisible();
 });
+
+// ── Story mode: the report as swipeable cards ──────────────────────────────────
+
+test.describe("report story mode", () => {
+  async function openStory(page: import("@playwright/test").Page) {
+    await mockJson(page, "/analyze/full", "full");
+    await page.goto("/dashboard");
+    await fillPerson(page, 0, ALEX);
+    await fillPerson(page, 1, JORDAN);
+    await page.getByRole("button", { name: /Generate synastry report/ }).click();
+    await expect(page.locator("[data-report]")).toBeVisible({ timeout: 20_000 });
+    await page.getByTestId("story-mode-open").click();
+    const story = page.getByRole("dialog", { name: "Story mode" });
+    await expect(story).toBeVisible();
+    return story;
+  }
+  const position = (story: import("@playwright/test").Locator) =>
+    story.getByRole("progressbar").getAttribute("aria-valuenow").then(Number);
+
+  test("opens on the score, advances with Next/Back and the keyboard, and closes with Escape", async ({ page }) => {
+    const story = await openStory(page);
+    expect(await position(story)).toBe(1);
+    await expect(story.getByText("Your compatibility")).toBeVisible();
+    const total = Number(await story.getByRole("progressbar").getAttribute("aria-valuemax"));
+    expect(total).toBeGreaterThanOrEqual(13); // score, verdict, 8 frameworks, strengths, risks, share, invite (+ reading)
+
+    await story.getByRole("button", { name: "Next", exact: true }).click();
+    await expect(story.getByText("The verdict")).toBeVisible();
+    expect(await position(story)).toBe(2);
+
+    await page.keyboard.press("ArrowRight");
+    await expect.poll(() => position(story)).toBe(3);
+    await page.keyboard.press("ArrowLeft");
+    await expect.poll(() => position(story)).toBe(2);
+    await story.getByRole("button", { name: "Back" }).click();
+    await expect.poll(() => position(story)).toBe(1);
+    await expect(story.getByRole("button", { name: "Back" })).toBeDisabled();
+
+    await page.keyboard.press("Escape");
+    await expect(story).toBeHidden();
+  });
+
+  test("swiping moves between cards", async ({ page }) => {
+    const story = await openStory(page);
+    const card = story.getByTestId("story-card");
+    const box = (await card.boundingBox())!;
+    const y = box.y + box.height / 2;
+
+    await page.mouse.move(box.x + box.width * 0.8, y);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width * 0.2, y, { steps: 8 }); // swipe left = next
+    await page.mouse.up();
+    await expect.poll(() => position(story)).toBe(2);
+
+    await expect(story.getByText("The verdict")).toBeVisible(); // the next card has finished arriving
+    const box2 = (await story.getByTestId("story-card").boundingBox())!;
+    await page.mouse.move(box2.x + box2.width * 0.2, y);
+    await page.mouse.down();
+    await page.mouse.move(box2.x + box2.width * 0.8, y, { steps: 8 }); // swipe right = back
+    await page.mouse.up();
+    await expect.poll(() => position(story)).toBe(1);
+  });
+
+  test("every framework gets a card, then share and invite close it out", async ({ page }) => {
+    const story = await openStory(page);
+    const names: string[] = [];
+    await page.keyboard.press("ArrowRight"); // verdict
+    for (let i = 0; i < 8; i++) {
+      await page.keyboard.press("ArrowRight");
+      names.push(((await story.getByRole("progressbar").getAttribute("aria-valuetext")) ?? "").split(": ")[1]);
+    }
+    expect(names).toEqual(["Emotional", "Romantic", "Behavioral", "Intimacy", "Love Style", "Love Language", "Numerology", "Zodiac"]);
+
+    // Then the last two cards.
+    const total = Number(await story.getByRole("progressbar").getAttribute("aria-valuemax"));
+    for (let i = 0; i < total; i++) await page.keyboard.press("ArrowRight");
+    await expect(story.getByText("Check it with someone else")).toBeVisible();
+    await expect(story.getByRole("button", { name: "Done" })).toBeVisible();
+
+    await page.keyboard.press("ArrowLeft");
+    await expect(story.getByRole("button", { name: "Share story card" })).toBeVisible();
+    await expect(story.getByRole("button", { name: /Copy link|Copied/ })).toBeVisible();
+  });
+
+  test("closing restores the page where it was, and the page can't scroll while open", async ({ page }) => {
+    await mockJson(page, "/analyze/full", "full");
+    await page.goto("/dashboard");
+    await fillPerson(page, 0, ALEX);
+    await fillPerson(page, 1, JORDAN);
+    await page.getByRole("button", { name: /Generate synastry report/ }).click();
+    await expect(page.locator("[data-report]")).toBeVisible({ timeout: 20_000 });
+
+    await page.evaluate(() => window.scrollTo(0, 400));
+    const before = await page.evaluate(() => window.scrollY);
+    await page.getByTestId("story-mode-open").click();
+    await expect(page.getByRole("dialog", { name: "Story mode" })).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("hidden");
+
+    await page.getByRole("button", { name: "Close story mode" }).click();
+    await expect(page.getByRole("dialog", { name: "Story mode" })).toBeHidden();
+    expect(await page.evaluate(() => document.documentElement.style.overflow)).not.toBe("hidden");
+    expect(await page.evaluate(() => window.scrollY)).toBe(before);
+  });
+
+  test("reduced motion still navigates (crossfade, no slide)", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const story = await openStory(page);
+    await page.keyboard.press("ArrowRight");
+    await expect.poll(() => position(story)).toBe(2);
+  });
+
+  test("it isn't offered on desktop", async ({ browser, baseURL }) => {
+    const ctx = await browser.newContext({ baseURL, viewport: { width: 1280, height: 800 } });
+    const page = await ctx.newPage();
+    await mockJson(page, "/analyze/full", "full");
+    await page.goto("/dashboard");
+    await fillPerson(page, 0, ALEX);
+    await fillPerson(page, 1, JORDAN);
+    await page.getByRole("button", { name: /Generate synastry report/ }).click();
+    await expect(page.locator("[data-report]")).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByTestId("story-mode-open")).toBeHidden();
+    await ctx.close();
+  });
+});
