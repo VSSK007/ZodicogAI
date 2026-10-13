@@ -55,7 +55,8 @@ export function GroupHeatmap({ result }: { result: GroupResult }) {
         style={{ gridTemplateColumns: `minmax(3.5rem, 5.5rem) repeat(${n}, minmax(2.25rem, 1fr))` }}
       >
         <div role="row" className="contents">
-          <span role="columnheader" className="sr-only">Person</span>
+          {/* An in-flow (empty) cell: an sr-only/absolute element would not occupy a grid column. */}
+          <span role="columnheader"><span className="sr-only">Person</span></span>
           {result.people.map((p, j) => (
             <span key={j} role="columnheader" className="text-micro text-ink-muted text-center truncate self-end pb-1" title={p.name}>
               {short(p.name, 6)}

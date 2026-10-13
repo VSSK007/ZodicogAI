@@ -156,3 +156,28 @@ test.describe("saved group readings", () => {
     await expect(page.getByTestId("group-glue")).toBeVisible();
   });
 });
+
+test("the heat-map columns line up with the row labels", async ({ page }) => {
+  await mockGroup(page);
+  await page.goto("/analyze/group");
+  await page.getByRole("button", { name: "Add person" }).click(); // starts with three
+  await fillAll(page, 4);
+  await page.getByRole("button", { name: "Read the group" }).click();
+  const map = page.getByTestId("group-heatmap");
+  await expect(map).toBeVisible({ timeout: 20_000 });
+
+  // Each row header sits to the LEFT of its cells, and each column header is centred over its column.
+  const rowHeaders = await map.locator('[role="rowheader"]').all();
+  const firstRowCells = await map.locator('[role="row"]').nth(1).locator('[role="cell"]').all();
+  const colHeaders = await map.locator('[role="columnheader"]').all();
+  const rh = (await rowHeaders[0].boundingBox())!;
+  const c0 = (await firstRowCells[0].boundingBox())!;
+  expect(rh.x + rh.width).toBeLessThanOrEqual(c0.x + 1);
+
+  expect(colHeaders).toHaveLength(5); // the empty corner + 4 names
+  for (let j = 0; j < 4; j++) {
+    const header = (await colHeaders[j + 1].boundingBox())!;
+    const cell = (await firstRowCells[j].boundingBox())!;
+    expect(Math.abs(header.x + header.width / 2 - (cell.x + cell.width / 2))).toBeLessThan(3);
+  }
+});
