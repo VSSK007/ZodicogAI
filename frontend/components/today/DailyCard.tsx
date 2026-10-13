@@ -7,7 +7,7 @@
  * and shared, so opening the card is free for everyone after the first).
  */
 import { useCallback, useEffect, useState } from "react";
-import { Flame, Share2 } from "lucide-react";
+import { Flame, Image as ImageIcon, Share2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { ErrorNotice } from "@/components/ui/ErrorNotice";
@@ -18,6 +18,7 @@ import { getSign } from "@/lib/zodiac";
 import { recordVisit } from "@/lib/streak";
 import { capture } from "@/lib/posthog";
 import { haptic } from "@/lib/haptics";
+import { shareImageUrl } from "@/lib/shareImage";
 
 export interface DailyResult {
   date: string;
@@ -99,6 +100,22 @@ export default function DailyCard({
   useEffect(() => {
     void load();
   }, [load, reloadKey]);
+
+  async function shareStory() {
+    if (!data) return;
+    haptic();
+    capture("daily_card_story_shared");
+    const q = new URLSearchParams({
+      sign: getSign(day, month).toLowerCase(), day: String(day), month: String(month), name,
+    });
+    if (mbti) q.set("mbti", mbti);
+    try {
+      await shareImageUrl(`/story/daily?${q}`, "zodicogai-today.png", "My ZodicogAI day");
+    } catch {
+      setShared("Couldn't make the image");
+      setTimeout(() => setShared(""), 2500);
+    }
+  }
 
   async function share() {
     if (!data) return;
@@ -209,13 +226,22 @@ export default function DailyCard({
           <Flame className="size-3.5" aria-hidden="true" />
           {streak <= 1 ? "Day 1 - come back tomorrow" : `${streak}-day streak`}
         </p>
-        <button
-          onClick={() => void share()}
-          className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 min-h-[44px] text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"
-        >
-          <Share2 className="size-4" aria-hidden="true" />
-          {shared || "Share today"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => void shareStory()}
+            className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 min-h-[44px] text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"
+          >
+            <ImageIcon className="size-4" aria-hidden="true" />
+            Story card
+          </button>
+          <button
+            onClick={() => void share()}
+            className="inline-flex items-center gap-1.5 rounded-control border border-hairline px-4 py-2 min-h-[44px] text-sm font-semibold text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors tap-highlight-none"
+          >
+            <Share2 className="size-4" aria-hidden="true" />
+            {shared || "Share today"}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@
  * no AI cost) and records {id, type, title, date} in localStorage so the
  * homepage can show "Your recent readings". Capped at 10 entries.
  */
+import { useSyncExternalStore } from "react";
 import { API } from "@/lib/api";
 import { authHeaders } from "@/lib/session-token";
 
@@ -45,6 +46,34 @@ function pushHistory(entry: ReadingEntry) {
 }
 
 /**
+ * The reading most recently saved in this page session. Share buttons use it to
+ * offer the story card; `seq` lets a button ignore an id saved before it
+ * mounted (a different reading).
+ */
+interface CurrentReading {
+  id: string | null;
+  seq: number;
+}
+let current: CurrentReading = { id: null, seq: 0 };
+const currentListeners = new Set<() => void>();
+
+function setCurrent(id: string | null) {
+  current = { id, seq: current.seq + 1 };
+  currentListeners.forEach((l) => l());
+}
+
+export function useCurrentReading(): CurrentReading {
+  return useSyncExternalStore(
+    (cb) => {
+      currentListeners.add(cb);
+      return () => currentListeners.delete(cb);
+    },
+    () => current,
+    () => current,
+  );
+}
+
+/**
  * Persist a finished reading; returns its permalink id (or null on failure —
  * sharing is an enhancement, never a blocker).
  */
@@ -53,6 +82,7 @@ export async function saveReading(
   title: string,
   payload: unknown,
 ): Promise<string | null> {
+  setCurrent(null);
   try {
     const res = await fetch(`${API}/results`, {
       method: "POST",
@@ -62,6 +92,7 @@ export async function saveReading(
     if (!res.ok) return null;
     const { id } = (await res.json()) as { id: string };
     pushHistory({ id, type: analysisType, title, date: new Date().toISOString() });
+    setCurrent(id);
     return id;
   } catch {
     return null;
