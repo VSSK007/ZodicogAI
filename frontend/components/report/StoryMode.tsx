@@ -7,8 +7,8 @@
  * invite. Swipe, tap the edges, use the arrow keys or the Back/Next buttons;
  * Escape or the X closes it. Reduced motion swaps the slide for a crossfade.
  */
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, useReducedMotion, type PanInfo } from "framer-motion";
+import { useCallback, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { motion, useMotionValue, useReducedMotion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Check, Link as LinkIcon, Send, X } from "lucide-react";
 import ScoreRing from "@/components/ScoreRing";
 import InviteButton from "@/components/invite/InviteButton";
@@ -68,6 +68,11 @@ export default function StoryMode({
   onClose: () => void;
 }) {
   const reduced = useReducedMotion();
+  // Finger-follow offset while swiping. The decision is made from raw pointer
+  // down/up deltas (not framer's drag or pan, which are frame-batched and fight
+  // the enter animation), so a swipe is read correctly even mid-transition.
+  const panX = useMotionValue(0);
+  const swipe = useRef<{ id: number; x: number; y: number } | null>(null);
   const ri = result.relationship_intelligence;
   const nc = result.numerology_compat;
   const stab = STABILITY[ri.stability_prediction] ?? STABILITY.moderate;
@@ -239,9 +244,35 @@ export default function StoryMode({
     };
   }, [onClose, go]);
 
-  function onDragEnd(_: unknown, info: PanInfo) {
-    if (info.offset.x <= -SWIPE_PX) go(1);
-    else if (info.offset.x >= SWIPE_PX) go(-1);
+  function onPointerDown(e: ReactPointerEvent) {
+    if ((e.target as HTMLElement).closest("button, a, input, [data-no-swipe]")) return; // let controls work
+    swipe.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    // Keep receiving move/up even if the finger ends over the edge tap zones (siblings of the card).
+    try {
+      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+    } catch {
+      // Not capturable (synthetic event): the card still gets events that start and end on it.
+    }
+  }
+
+  function onPointerMove(e: ReactPointerEvent) {
+    const s0 = swipe.current;
+    if (!s0 || s0.id !== e.pointerId || reduced) return;
+    const dx = e.clientX - s0.x;
+    if (Math.abs(dx) > Math.abs(e.clientY - s0.y)) panX.set(dx * 0.35);
+  }
+
+  function endSwipe(e: ReactPointerEvent, cancelled = false) {
+    const s0 = swipe.current;
+    if (!s0 || s0.id !== e.pointerId) return;
+    swipe.current = null;
+    panX.set(0);
+    if (cancelled) return;
+    const dx = e.clientX - s0.x;
+    const dy = e.clientY - s0.y;
+    if (Math.abs(dx) < Math.abs(dy)) return; // a vertical scroll, not a swipe
+    if (dx <= -SWIPE_PX) go(1);
+    else if (dx >= SWIPE_PX) go(-1);
   }
 
   async function copyLink() {
@@ -271,13 +302,11 @@ export default function StoryMode({
   const isInvite = index === cards.length + 1;
   const label = isShare ? "Share" : isInvite ? "Invite" : cards[index].label;
 
-  const variants = reduced
-    ? { enter: { opacity: 0 }, center: { opacity: 1 }, exit: { opacity: 0 } }
-    : {
-        enter: (d: number) => ({ opacity: 0, x: d >= 0 ? 48 : -48 }),
-        center: { opacity: 1, x: 0 },
-        exit: (d: number) => ({ opacity: 0, x: d >= 0 ? -48 : 48 }),
-      };
+  // Enter-only transition: with an exit phase (AnimatePresence mode="wait") a burst of
+  // quick taps can leave the incoming card unmounted. Reduced motion crossfades.
+  const enter = reduced
+    ? { opacity: 0 }
+    : { opacity: 0, x: direction >= 0 ? 40 : -40 };
 
   return (
     <div
@@ -331,19 +360,16 @@ export default function StoryMode({
           className="absolute inset-y-0 right-0 w-[18%] z-10 tap-highlight-none disabled:pointer-events-none"
         />
 
-        <AnimatePresence mode="wait" custom={direction} initial={false}>
           <motion.div
             key={index}
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
+            initial={index === 0 && direction === 0 ? false : enter}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: reduced ? 0.15 : 0.22 }}
-            drag={reduced ? false : "x"}
-            dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={0.2}
-            onDragEnd={onDragEnd}
+            style={{ x: panX, touchAction: "pan-y" }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={(e) => endSwipe(e)}
+            onPointerCancel={(e) => endSwipe(e, true)}
             data-testid="story-card"
             className="absolute inset-0 overflow-y-auto overscroll-contain px-7 py-8 flex"
           >
@@ -382,7 +408,7 @@ export default function StoryMode({
               )}
             </div>
           </motion.div>
-        </AnimatePresence>
+
       </div>
 
       {/* Back / Next */}

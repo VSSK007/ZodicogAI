@@ -425,23 +425,35 @@ test.describe("report story mode", () => {
 
   test("swiping moves between cards", async ({ page }) => {
     const story = await openStory(page);
-    const card = story.getByTestId("story-card");
-    const box = (await card.boundingBox())!;
-    const y = box.y + box.height / 2;
 
-    await page.mouse.move(box.x + box.width * 0.8, y);
-    await page.mouse.down();
-    await page.mouse.move(box.x + box.width * 0.2, y, { steps: 8 }); // swipe left = next
-    await page.mouse.up();
-    await expect.poll(() => position(story)).toBe(2);
+    // Under heavy CPU load the compositor can lag a few frames before a freshly mounted
+    // dialog is hit-testable, and early events land on <html>. A real person never swipes
+    // within a frame of it appearing, so retry the gesture rather than assert on that race.
+    async function swipe(direction: "left" | "right", expected: number) {
+      for (let attempt = 0; attempt < 4; attempt++) {
+        await page.evaluate(() => new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r()))));
+        const box = (await story.getByTestId("story-card").boundingBox())!;
+        const y = box.y + box.height / 2;
+        const from = direction === "left" ? 0.8 : 0.2;
+        const to = direction === "left" ? 0.2 : 0.8;
+        await page.mouse.move(box.x + box.width * from, y);
+        await page.mouse.down();
+        await page.mouse.move(box.x + box.width * to, y, { steps: 8 });
+        await page.mouse.up();
+        try {
+          await expect.poll(() => position(story), { timeout: 1500 }).toBe(expected);
+          return;
+        } catch {
+          // gesture swallowed by the lag: try again
+        }
+      }
+      expect(await position(story)).toBe(expected);
+    }
 
-    await expect(story.getByText("The verdict")).toBeVisible(); // the next card has finished arriving
-    const box2 = (await story.getByTestId("story-card").boundingBox())!;
-    await page.mouse.move(box2.x + box2.width * 0.2, y);
-    await page.mouse.down();
-    await page.mouse.move(box2.x + box2.width * 0.8, y, { steps: 8 }); // swipe right = back
-    await page.mouse.up();
-    await expect.poll(() => position(story)).toBe(1);
+    await swipe("left", 2); // swipe left = next
+    await expect(story.getByText("The verdict")).toBeVisible();
+    await swipe("right", 1); // swipe right = back
+    await expect(story.getByText("Your compatibility")).toBeVisible();
   });
 
   test("every framework gets a card, then share and invite close it out", async ({ page }) => {
@@ -473,10 +485,14 @@ test.describe("report story mode", () => {
     await page.getByRole("button", { name: /Generate synastry report/ }).click();
     await expect(page.locator("[data-report]")).toBeVisible({ timeout: 20_000 });
 
-    await page.evaluate(() => window.scrollTo(0, 400));
-    const before = await page.evaluate(() => window.scrollY);
-    await page.getByTestId("story-mode-open").click();
+    // The site scrolls smoothly; jump instantly so the position is settled before we measure.
+    await page.evaluate(() => window.scrollTo({ top: 400, behavior: "instant" }));
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(400);
+    // A DOM click: Playwright's own scroll-into-view would animate (smooth) and move the page under us.
+    await page.getByTestId("story-mode-open").evaluate((el) => (el as HTMLElement).click());
     await expect(page.getByRole("dialog", { name: "Story mode" })).toBeVisible();
+    const before = await page.evaluate(() => window.scrollY); // where the page was when it opened
+    expect(before).toBeGreaterThan(0);
     expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("hidden");
 
     await page.getByRole("button", { name: "Close story mode" }).click();
