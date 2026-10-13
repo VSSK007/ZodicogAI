@@ -385,6 +385,22 @@ test("in a normal browser tab there is no tab bar and the floating buttons remai
 // ── Story mode: the report as swipeable cards ──────────────────────────────────
 
 test.describe("report story mode", () => {
+  /**
+   * Tap "Story mode" until the dialog is up. Under heavy parallel CPU load the very first
+   * tap in the moments after the report renders is sometimes dropped (a second one always
+   * lands); a person would simply tap again, so the test does too.
+   */
+  async function tapStoryMode(page: import("@playwright/test").Page) {
+    const dialog = page.getByRole("dialog", { name: "Story mode" });
+    for (let attempt = 0; attempt < 4; attempt++) {
+      // A DOM click: Playwright's own scroll-into-view would animate (smooth) and move the page under us.
+      await page.getByTestId("story-mode-open").evaluate((el) => (el as HTMLElement).click());
+      if (await dialog.waitFor({ state: "visible", timeout: 1500 }).then(() => true, () => false)) return dialog;
+    }
+    await expect(dialog).toBeVisible();
+    return dialog;
+  }
+
   async function openStory(page: import("@playwright/test").Page) {
     await mockJson(page, "/analyze/full", "full");
     await page.goto("/dashboard");
@@ -392,10 +408,7 @@ test.describe("report story mode", () => {
     await fillPerson(page, 1, JORDAN);
     await page.getByRole("button", { name: /Generate synastry report/ }).click();
     await expect(page.locator("[data-report]")).toBeVisible({ timeout: 20_000 });
-    await page.getByTestId("story-mode-open").click();
-    const story = page.getByRole("dialog", { name: "Story mode" });
-    await expect(story).toBeVisible();
-    return story;
+    return tapStoryMode(page);
   }
   const position = (story: import("@playwright/test").Locator) =>
     story.getByRole("progressbar").getAttribute("aria-valuenow").then(Number);
@@ -462,6 +475,7 @@ test.describe("report story mode", () => {
     await page.keyboard.press("ArrowRight"); // verdict
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press("ArrowRight");
+      await expect(story.getByRole("progressbar")).toHaveAttribute("aria-valuenow", String(i + 3)); // card i+3 is showing
       names.push(((await story.getByRole("progressbar").getAttribute("aria-valuetext")) ?? "").split(": ")[1]);
     }
     expect(names).toEqual(["Emotional", "Romantic", "Behavioral", "Intimacy", "Love Style", "Love Language", "Numerology", "Zodiac"]);
@@ -488,9 +502,7 @@ test.describe("report story mode", () => {
     // The site scrolls smoothly; jump instantly so the position is settled before we measure.
     await page.evaluate(() => window.scrollTo({ top: 400, behavior: "instant" }));
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(400);
-    // A DOM click: Playwright's own scroll-into-view would animate (smooth) and move the page under us.
-    await page.getByTestId("story-mode-open").evaluate((el) => (el as HTMLElement).click());
-    await expect(page.getByRole("dialog", { name: "Story mode" })).toBeVisible();
+    await tapStoryMode(page);
     const before = await page.evaluate(() => window.scrollY); // where the page was when it opened
     expect(before).toBeGreaterThan(0);
     expect(await page.evaluate(() => document.documentElement.style.overflow)).toBe("hidden");

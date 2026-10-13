@@ -30,6 +30,7 @@ export default function MobileMenuSheet({ isOpen, onClose }: MobileMenuSheetProp
     { label: "Sextrology", href: "/analyze/sextrology" },
     { label: "Love Style", href: "/analyze/love-style" },
     { label: "Love Language", href: "/analyze/love-language" },
+    { label: "Group Chemistry", href: "/analyze/group" },
     { label: "Full Report", href: "/dashboard" },
   ];
 

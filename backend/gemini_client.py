@@ -1534,7 +1534,7 @@ Required JSON:
 from models.schemas import (
     LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
     SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
-    CelebrityArticle, HoroscopeArticle, DailyTip,
+    CelebrityArticle, HoroscopeArticle, DailyTip, GroupSummary,
 )
 
 
@@ -1614,6 +1614,35 @@ def generate_daily_tip(sign: str, mbti: str, date_label: str, scores: dict) -> d
     """The generated half of the daily card. Returns DailyTip fields as a dict."""
     result = call_gemini(_prompt_daily_tip(sign, mbti, date_label, scores), DailyTip)
     return result.model_dump()
+
+
+def _prompt_group_summary(people: list[dict], result: dict) -> str:
+    roster = "\n".join(
+        f"  {i + 1}. {p['name']} ({p['sign']}, {p['mbti']}) - average pair score {result['averages'][i]}"
+        for i, p in enumerate(people)
+    )
+    strongest, spiciest, glue = result["strongest"], result["spiciest"], result["glue"]
+    return (
+        f"You are writing a short group-chemistry reading for {len(people)} friends.\n\n"
+        f"People (each pair was scored 0-100 by deterministic engines; the numbers are final):\n{roster}\n\n"
+        f"Group average: {result['group_score']}\n"
+        f"Glue person (highest average): {glue['name']} ({glue['average']})\n"
+        f"Strongest pair: {strongest['names'][0]} + {strongest['names'][1]} ({strongest['score']})\n"
+        f"Lowest-scoring pair: {spiciest['names'][0]} + {spiciest['names'][1]} ({spiciest['score']})\n\n"
+        f"Write, speaking to the whole group, warm and specific, no hedging, no emojis:\n"
+        f"1. group_dynamic - 2-3 sentences on how this group works together.\n"
+        f"2. glue_note - 1-2 sentences on why {glue['name']} holds the group together.\n"
+        f"3. strongest_pair_note - 1-2 sentences on {strongest['names'][0]} and {strongest['names'][1]}.\n"
+        f"4. spiciest_pair_note - 1-2 sentences on {spiciest['names'][0]} and {spiciest['names'][1]}: "
+        f"where the friction or spark is, kindly.\n"
+        f"5. tip - one concrete sentence for the group.\n\n"
+        f"Do not restate raw numbers as a list and do not mention that scores were provided."
+    )
+
+
+def generate_group_summary(people: list[dict], result: dict) -> dict:
+    """ONE Gemini call for the whole group. `people` entries need name, sign and mbti."""
+    return call_gemini(_prompt_group_summary(people, result), GroupSummary).model_dump()
 
 
 def generate_zodiac_compat_article(sign: str) -> dict:

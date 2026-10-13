@@ -428,6 +428,26 @@ class HoroscopeArticle(BaseModel):
     advice: str = "—"
 
 
+class GroupPerson(BaseModel):
+    name: str
+    day: int
+    month: int
+    mbti: str
+
+
+class GroupInput(BaseModel):
+    people: list[GroupPerson]
+
+
+class GroupSummary(BaseModel):
+    """One AI summary per group; every number it refers to is computed beforehand."""
+    group_dynamic: str = "—"
+    glue_note: str = "—"
+    strongest_pair_note: str = "—"
+    spiciest_pair_note: str = "—"
+    tip: str = "—"
+
+
 class DailyTip(BaseModel):
     """The generated part of the personal daily card (one call per sign x type x day)."""
     mbti_tip: str = "—"

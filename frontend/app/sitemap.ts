@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/analyze/sextrology`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/love-style`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/love-language`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/analyze/group`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/color`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/analyze/numerology`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/chat`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },

@@ -2,7 +2,7 @@
  * The analyses registry — single source for every analysis link, used by the
  * Navbar dropdown, the homepage showcase grid, and the footer.
  */
-import { Hash, MessageCircle, Palette } from "lucide-react";
+import { Hash, MessageCircle, Palette, Users } from "lucide-react";
 import type { GlyphName } from "@/components/ui/glyphs";
 
 export type AnalyzeLink = {
@@ -26,5 +26,6 @@ export const ANALYZE_TOGETHER: AnalyzeLink[] = [
   { href: "/analyze/sextrology",    label: "Sextrology",    desc: "Chemistry, candidly — solo or as a pair",          glyph: "mars" },
   { href: "/analyze/love-style",    label: "Love Style",    desc: "Six ways of loving, mapped and matched",           glyph: "heart" },
   { href: "/analyze/love-language", label: "Love Language", desc: "Five languages, two people — compared",            icon: MessageCircle },
+  { href: "/analyze/group",         label: "Group Chemistry", desc: "3–8 people: who clicks, who clashes, who is the glue", icon: Users },
   { href: "/dashboard",             label: "Full Report",   desc: "Every engine, one verdict — complete synastry",    glyph: "infinity" },
 ];

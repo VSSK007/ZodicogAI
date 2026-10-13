@@ -10,6 +10,8 @@ import { renderMd } from "@/lib/renderMd";
 import { Star4 } from "@/components/ui/glyphs";
 import Sigil from "@/components/Sigil";
 import SynastryReport from "@/components/report/SynastryReport";
+import GroupResultView from "@/components/group/GroupResultView";
+import type { GroupResult } from "@/components/group/GroupViz";
 import type { FullResult, ReportPersonas } from "@/components/report/types";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
@@ -61,6 +63,7 @@ const TYPE_LABELS: Record<string, string> = {
   color_pair_analysis: "Aura Colors",
   numerology_analysis: "Numerology",
   numerology_pair_analysis: "Numerology",
+  group_analysis: "Group Chemistry",
 };
 
 function labelize(key: string): string {
@@ -183,11 +186,15 @@ export default async function SharedReadingPage(
         </p>
       </header>
 
-      <div className="space-y-5">
-        {Object.entries(result.payload).map(([k, v]) => (
-          <Value key={k} k={k} v={v} />
-        ))}
-      </div>
+      {result.analysis_type === "group_analysis" && "matrix" in result.payload ? (
+        <GroupResultView result={result.payload as unknown as GroupResult} />
+      ) : (
+        <div className="space-y-5">
+          {Object.entries(result.payload).map(([k, v]) => (
+            <Value key={k} k={k} v={v} />
+          ))}
+        </div>
+      )}
 
       <div className="mt-12 rounded-card border border-hairline-accent bg-gradient-to-b from-white/[0.05] to-white/[0.02] p-6 text-center">
         <p className="font-display font-extrabold text-lg tracking-[-0.02em] text-ink">

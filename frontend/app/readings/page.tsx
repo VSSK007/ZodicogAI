@@ -29,6 +29,7 @@ const TYPE_LABELS: Record<string, string> = {
   color_pair_analysis: "Aura Colors",
   numerology_analysis: "Numerology",
   numerology_pair_analysis: "Numerology",
+  group_analysis: "Group Chemistry",
 };
 
 const HISTORY_KEY = "zodicog.readings";

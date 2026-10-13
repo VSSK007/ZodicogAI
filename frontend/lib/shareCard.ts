@@ -18,6 +18,7 @@ export const TYPE_LABELS: Record<string, string> = {
   color_pair_analysis: "Aura Colors",
   numerology_analysis: "Numerology",
   numerology_pair_analysis: "Numerology",
+  group_analysis: "Group Chemistry",
 };
 
 type Obj = Record<string, unknown>;
@@ -25,6 +26,7 @@ const isObj = (v: unknown): v is Obj => !!v && typeof v === "object" && !Array.i
 
 const SCORE_KEYS = [
   "overall_score",
+  "group_score",
   "overall_compatibility_score",
   "romantic_compatibility_score",
   "emotional_compatibility_score",

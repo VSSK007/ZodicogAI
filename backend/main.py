@@ -23,6 +23,7 @@ from models.schemas import (
     ColorInput,
     NumerologyInput,
     DiscoverInput,
+    GroupInput,
 )
 import accounts
 import daily
@@ -57,7 +58,7 @@ from gemini_client import (
     generate_love_lang_article, generate_love_style_article,
     generate_numerology_lp_article, generate_sextrology_guide,
     generate_zodiac_compat_article, generate_mbti_compat_article,
-    generate_celebrity_bio, generate_daily_horoscope, generate_daily_tip,
+    generate_celebrity_bio, generate_daily_horoscope, generate_daily_tip, generate_group_summary,
 )
 
 # Error monitoring: a no-op unless SENTRY_DSN is set. Leaves PII off - readings
@@ -388,6 +389,40 @@ def analyze_color(data: ColorInput):
             b = {"name": data.person_b_name, "day": data.person_b_day, "month": data.person_b_month, "mbti": ""}
             return run_analysis(COLOR_PAIR_ANALYSIS, a, b)
         return run_analysis(COLOR_ANALYSIS, a)
+    return _wrap(_run)
+
+
+@app.post("/analyze/group")
+def analyze_group_endpoint(data: GroupInput):
+    """
+    Group chemistry for 3-8 people: every pair scored by the deterministic engines
+    (no AI per pair), then ONE Gemini call for the group summary.
+    """
+    from engines.group_engine import MAX_PEOPLE, MIN_PEOPLE, analyze_group
+    from engines.zodiac_engine import get_sun_sign
+
+    if not MIN_PEOPLE <= len(data.people) <= MAX_PEOPLE:
+        raise HTTPException(status_code=400, detail=f"Add between {MIN_PEOPLE} and {MAX_PEOPLE} people.")
+
+    people = []
+    for i, p in enumerate(data.people, start=1):
+        name = p.name.strip()
+        mbti = p.mbti.strip().upper()
+        if not name or len(name) > 60:
+            raise HTTPException(status_code=400, detail=f"Person {i}: provide a name (up to 60 characters).")
+        if mbti not in _VALID_MBTI:
+            raise HTTPException(status_code=400, detail=f"{name}: choose an MBTI type.")
+        if not 1 <= p.month <= 12 or not 1 <= p.day <= calendar.monthrange(2000, p.month)[1]:
+            raise HTTPException(status_code=400, detail=f"{name}: enter a real birth day and month.")
+        people.append({"name": name, "day": p.day, "month": p.month, "mbti": mbti})
+
+    def _run():
+        result = analyze_group(people)
+        described = [{**p, "sign": get_sun_sign(p["day"], p["month"])} for p in people]
+        result["people"] = [{"name": p["name"], "sign": p["sign"], "mbti": p["mbti"]} for p in described]
+        result["analysis"] = generate_group_summary(described, result)
+        return result
+
     return _wrap(_run)
 
 
