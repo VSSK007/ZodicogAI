@@ -1,4 +1,5 @@
 import CelebrityExplorer from "@/components/CelebrityExplorer";
+import CelebrityMatches from "@/components/CelebrityMatches";
 
 export const metadata = {
   title: "Celebrity Zodiac Database | ZodicogAI",
@@ -7,5 +8,10 @@ export const metadata = {
 };
 
 export default function CelebritiesPage() {
-  return <CelebrityExplorer />;
+  return (
+    <>
+      <CelebrityMatches className="max-w-6xl mx-auto px-4 md:px-6 pt-8" />
+      <CelebrityExplorer />
+    </>
+  );
 }

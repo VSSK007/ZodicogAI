@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import DailyCard, { DailySkeleton } from "@/components/today/DailyCard";
 import PullToRefresh from "@/components/PullToRefresh";
+import CelebrityMatches from "@/components/CelebrityMatches";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -46,6 +47,8 @@ export default function TodayPage() {
         ) : (
           <NoProfile />
         )}
+
+        <CelebrityMatches className="mt-10" />
 
         <p className="mt-8 text-sm text-ink-muted">
           Want the whole sky?{" "}

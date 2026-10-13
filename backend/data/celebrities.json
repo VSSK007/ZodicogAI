@@ -1,0 +1,2882 @@
+[
+ {
+  "name": "Aamir Khan",
+  "slug": "aamir-khan",
+  "sign": "pisces",
+  "day": 14,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Abhishek Bachchan",
+  "slug": "abhishek-bachchan",
+  "sign": "aquarius",
+  "day": 5,
+  "month": 2,
+  "category": "Actor"
+ },
+ {
+  "name": "Abraham Lincoln",
+  "slug": "abraham-lincoln",
+  "sign": "aquarius",
+  "day": 12,
+  "month": 2,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Adam Driver",
+  "slug": "adam-driver",
+  "sign": "scorpio",
+  "day": 19,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Adam Levine",
+  "slug": "adam-levine",
+  "sign": "pisces",
+  "day": 18,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Adam Sandler",
+  "slug": "adam-sandler",
+  "sign": "virgo",
+  "day": 9,
+  "month": 9,
+  "category": "Comedian"
+ },
+ {
+  "name": "Adele",
+  "slug": "adele",
+  "sign": "taurus",
+  "day": 5,
+  "month": 5,
+  "category": "Musician"
+ },
+ {
+  "name": "Aishwarya Rai",
+  "slug": "aishwarya-rai",
+  "sign": "scorpio",
+  "day": 1,
+  "month": 11,
+  "category": "Actress"
+ },
+ {
+  "name": "Ajay Devgn",
+  "slug": "ajay-devgn",
+  "sign": "aries",
+  "day": 2,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Ajith Kumar",
+  "slug": "ajith-kumar",
+  "sign": "taurus",
+  "day": 1,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Akshay Kumar",
+  "slug": "akshay-kumar",
+  "sign": "virgo",
+  "day": 9,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "Al Pacino",
+  "slug": "al-pacino",
+  "sign": "taurus",
+  "day": 25,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Albert Einstein",
+  "slug": "albert-einstein",
+  "sign": "pisces",
+  "day": 14,
+  "month": 3,
+  "category": "Scientist"
+ },
+ {
+  "name": "Alia Bhatt",
+  "slug": "alia-bhatt",
+  "sign": "pisces",
+  "day": 15,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Alicia Keys",
+  "slug": "alicia-keys",
+  "sign": "aquarius",
+  "day": 25,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Allu Arjun",
+  "slug": "allu-arjun",
+  "sign": "aries",
+  "day": 8,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Amitabh Bachchan",
+  "slug": "amitabh-bachchan",
+  "sign": "libra",
+  "day": 11,
+  "month": 10,
+  "category": "Actor"
+ },
+ {
+  "name": "Amy Winehouse",
+  "slug": "amy-winehouse",
+  "sign": "virgo",
+  "day": 14,
+  "month": 9,
+  "category": "Musician"
+ },
+ {
+  "name": "Andy Warhol",
+  "slug": "andy-warhol",
+  "sign": "leo",
+  "day": 6,
+  "month": 8,
+  "category": "Artist"
+ },
+ {
+  "name": "Angelina Jolie",
+  "slug": "angelina-jolie",
+  "sign": "gemini",
+  "day": 4,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Anna Kendrick",
+  "slug": "anna-kendrick",
+  "sign": "leo",
+  "day": 9,
+  "month": 8,
+  "category": "Actress"
+ },
+ {
+  "name": "Anne Hathaway",
+  "slug": "anne-hathaway",
+  "sign": "scorpio",
+  "day": 12,
+  "month": 11,
+  "category": "Actress"
+ },
+ {
+  "name": "Antonio Banderas",
+  "slug": "antonio-banderas",
+  "sign": "leo",
+  "day": 10,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Anupam Kher",
+  "slug": "anupam-kher",
+  "sign": "pisces",
+  "day": 7,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Anushka Sharma",
+  "slug": "anushka-sharma",
+  "sign": "taurus",
+  "day": 1,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "Anushka Shetty",
+  "slug": "anushka-shetty",
+  "sign": "scorpio",
+  "day": 7,
+  "month": 11,
+  "category": "Actress"
+ },
+ {
+  "name": "AR Rahman",
+  "slug": "ar-rahman",
+  "sign": "capricorn",
+  "day": 6,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Ariana Grande",
+  "slug": "ariana-grande",
+  "sign": "cancer",
+  "day": 26,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Ashton Kutcher",
+  "slug": "ashton-kutcher",
+  "sign": "aquarius",
+  "day": 7,
+  "month": 2,
+  "category": "Actor"
+ },
+ {
+  "name": "Audrey Hepburn",
+  "slug": "audrey-hepburn",
+  "sign": "taurus",
+  "day": 4,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "Awkwafina",
+  "slug": "awkwafina",
+  "sign": "gemini",
+  "day": 2,
+  "month": 6,
+  "category": "Musician/Actress"
+ },
+ {
+  "name": "Barack Obama",
+  "slug": "barack-obama",
+  "sign": "leo",
+  "day": 4,
+  "month": 8,
+  "category": "Politician"
+ },
+ {
+  "name": "Bella Hadid",
+  "slug": "bella-hadid",
+  "sign": "libra",
+  "day": 9,
+  "month": 10,
+  "category": "Model"
+ },
+ {
+  "name": "Ben Affleck",
+  "slug": "ben-affleck",
+  "sign": "leo",
+  "day": 15,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Ben Stiller",
+  "slug": "ben-stiller",
+  "sign": "sagittarius",
+  "day": 30,
+  "month": 11,
+  "category": "Comedian"
+ },
+ {
+  "name": "Benedict Cumberbatch",
+  "slug": "benedict-cumberbatch",
+  "sign": "cancer",
+  "day": 19,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Beyoncé",
+  "slug": "beyonce",
+  "sign": "virgo",
+  "day": 4,
+  "month": 9,
+  "category": "Musician"
+ },
+ {
+  "name": "Big Sean",
+  "slug": "big-sean",
+  "sign": "aries",
+  "day": 25,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Bill Clinton",
+  "slug": "bill-clinton",
+  "sign": "leo",
+  "day": 19,
+  "month": 8,
+  "category": "Politician"
+ },
+ {
+  "name": "Bill Gates",
+  "slug": "bill-gates",
+  "sign": "scorpio",
+  "day": 28,
+  "month": 10,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Billie Eilish",
+  "slug": "billie-eilish",
+  "sign": "sagittarius",
+  "day": 18,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Björk",
+  "slug": "bjork",
+  "sign": "scorpio",
+  "day": 21,
+  "month": 11,
+  "category": "Musician"
+ },
+ {
+  "name": "Blake Lively",
+  "slug": "blake-lively",
+  "sign": "virgo",
+  "day": 25,
+  "month": 8,
+  "category": "Actress"
+ },
+ {
+  "name": "Bob Dylan",
+  "slug": "bob-dylan",
+  "sign": "gemini",
+  "day": 24,
+  "month": 5,
+  "category": "Musician"
+ },
+ {
+  "name": "Bob Marley",
+  "slug": "bob-marley",
+  "sign": "aquarius",
+  "day": 6,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Bobby Deol",
+  "slug": "bobby-deol",
+  "sign": "aquarius",
+  "day": 27,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Brad Pitt",
+  "slug": "brad-pitt",
+  "sign": "sagittarius",
+  "day": 18,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Bradley Cooper",
+  "slug": "bradley-cooper",
+  "sign": "capricorn",
+  "day": 5,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Britney Spears",
+  "slug": "britney-spears",
+  "sign": "sagittarius",
+  "day": 2,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Bruce Lee",
+  "slug": "bruce-lee",
+  "sign": "sagittarius",
+  "day": 27,
+  "month": 11,
+  "category": "Martial Artist"
+ },
+ {
+  "name": "Bruce Willis",
+  "slug": "bruce-willis",
+  "sign": "pisces",
+  "day": 19,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Bruno Mars",
+  "slug": "bruno-mars",
+  "sign": "libra",
+  "day": 8,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Calvin Klein",
+  "slug": "calvin-klein",
+  "sign": "scorpio",
+  "day": 19,
+  "month": 11,
+  "category": "Fashion Designer"
+ },
+ {
+  "name": "Cameron Diaz",
+  "slug": "cameron-diaz",
+  "sign": "virgo",
+  "day": 30,
+  "month": 8,
+  "category": "Actress"
+ },
+ {
+  "name": "Camila Cabello",
+  "slug": "camila-cabello",
+  "sign": "pisces",
+  "day": 3,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Cardi B",
+  "slug": "cardi-b",
+  "sign": "libra",
+  "day": 11,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Cary Grant",
+  "slug": "cary-grant",
+  "sign": "capricorn",
+  "day": 18,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Catherine Zeta-Jones",
+  "slug": "catherine-zeta-jones",
+  "sign": "libra",
+  "day": 25,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Celine Dion",
+  "slug": "celine-dion",
+  "sign": "aries",
+  "day": 30,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Chance the Rapper",
+  "slug": "chance-the-rapper",
+  "sign": "aries",
+  "day": 16,
+  "month": 4,
+  "category": "Musician"
+ },
+ {
+  "name": "Channing Tatum",
+  "slug": "channing-tatum",
+  "sign": "taurus",
+  "day": 26,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Charles Darwin",
+  "slug": "charles-darwin",
+  "sign": "aquarius",
+  "day": 12,
+  "month": 2,
+  "category": "Scientist"
+ },
+ {
+  "name": "Charlie Chaplin",
+  "slug": "charlie-chaplin",
+  "sign": "aries",
+  "day": 16,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Charlie Sheen",
+  "slug": "charlie-sheen",
+  "sign": "virgo",
+  "day": 3,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "Cher",
+  "slug": "cher",
+  "sign": "taurus",
+  "day": 20,
+  "month": 5,
+  "category": "Musician"
+ },
+ {
+  "name": "Chiranjeevi",
+  "slug": "chiranjeevi",
+  "sign": "leo",
+  "day": 22,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Chris Evans",
+  "slug": "chris-evans",
+  "sign": "gemini",
+  "day": 13,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Chris Hemsworth",
+  "slug": "chris-hemsworth",
+  "sign": "leo",
+  "day": 11,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Chris Pine",
+  "slug": "chris-pine",
+  "sign": "virgo",
+  "day": 26,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Chris Pratt",
+  "slug": "chris-pratt",
+  "sign": "cancer",
+  "day": 21,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Christian Bale",
+  "slug": "christian-bale",
+  "sign": "aquarius",
+  "day": 30,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Cindy Crawford",
+  "slug": "cindy-crawford",
+  "sign": "pisces",
+  "day": 20,
+  "month": 2,
+  "category": "Model"
+ },
+ {
+  "name": "Claudia Schiffer",
+  "slug": "claudia-schiffer",
+  "sign": "virgo",
+  "day": 25,
+  "month": 8,
+  "category": "Model"
+ },
+ {
+  "name": "Coco Chanel",
+  "slug": "coco-chanel",
+  "sign": "leo",
+  "day": 19,
+  "month": 8,
+  "category": "Fashion Designer"
+ },
+ {
+  "name": "Colin Farrell",
+  "slug": "colin-farrell",
+  "sign": "gemini",
+  "day": 31,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Conan O'Brien",
+  "slug": "conan-obrien",
+  "sign": "aries",
+  "day": 18,
+  "month": 4,
+  "category": "TV Host"
+ },
+ {
+  "name": "Condoleezza Rice",
+  "slug": "condoleezza-rice",
+  "sign": "scorpio",
+  "day": 14,
+  "month": 11,
+  "category": "Politician"
+ },
+ {
+  "name": "Courteney Cox",
+  "slug": "courteney-cox",
+  "sign": "gemini",
+  "day": 15,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Cristiano Ronaldo",
+  "slug": "cristiano-ronaldo",
+  "sign": "aquarius",
+  "day": 5,
+  "month": 2,
+  "category": "Athlete"
+ },
+ {
+  "name": "Daniel Craig",
+  "slug": "daniel-craig",
+  "sign": "pisces",
+  "day": 2,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Daniel Radcliffe",
+  "slug": "daniel-radcliffe",
+  "sign": "leo",
+  "day": 23,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "David Beckham",
+  "slug": "david-beckham",
+  "sign": "taurus",
+  "day": 2,
+  "month": 5,
+  "category": "Athlete"
+ },
+ {
+  "name": "David Bowie",
+  "slug": "david-bowie",
+  "sign": "capricorn",
+  "day": 8,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Deepika Padukone",
+  "slug": "deepika-padukone",
+  "sign": "capricorn",
+  "day": 5,
+  "month": 1,
+  "category": "Actress"
+ },
+ {
+  "name": "Demi Lovato",
+  "slug": "demi-lovato",
+  "sign": "leo",
+  "day": 20,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Denzel Washington",
+  "slug": "denzel-washington",
+  "sign": "capricorn",
+  "day": 28,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Dhanush",
+  "slug": "dhanush",
+  "sign": "leo",
+  "day": 28,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Diane Keaton",
+  "slug": "diane-keaton",
+  "sign": "capricorn",
+  "day": 5,
+  "month": 1,
+  "category": "Actress"
+ },
+ {
+  "name": "Diane Kruger",
+  "slug": "diane-kruger",
+  "sign": "cancer",
+  "day": 15,
+  "month": 7,
+  "category": "Actress"
+ },
+ {
+  "name": "DJ Khaled",
+  "slug": "dj-khaled",
+  "sign": "sagittarius",
+  "day": 26,
+  "month": 11,
+  "category": "Musician"
+ },
+ {
+  "name": "Doja Cat",
+  "slug": "doja-cat",
+  "sign": "libra",
+  "day": 21,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Dolly Parton",
+  "slug": "dolly-parton",
+  "sign": "capricorn",
+  "day": 19,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Drake",
+  "slug": "drake",
+  "sign": "scorpio",
+  "day": 24,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Drew Barrymore",
+  "slug": "drew-barrymore",
+  "sign": "pisces",
+  "day": 22,
+  "month": 2,
+  "category": "Actress"
+ },
+ {
+  "name": "Dua Lipa",
+  "slug": "dua-lipa",
+  "sign": "leo",
+  "day": 22,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Dwayne Johnson",
+  "slug": "dwayne-johnson",
+  "sign": "taurus",
+  "day": 2,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Ed Sheeran",
+  "slug": "ed-sheeran",
+  "sign": "aquarius",
+  "day": 17,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Edgar Allan Poe",
+  "slug": "edgar-allan-poe",
+  "sign": "capricorn",
+  "day": 19,
+  "month": 1,
+  "category": "Author"
+ },
+ {
+  "name": "Elizabeth Taylor",
+  "slug": "elizabeth-taylor",
+  "sign": "pisces",
+  "day": 27,
+  "month": 2,
+  "category": "Actress"
+ },
+ {
+  "name": "Ellen DeGeneres",
+  "slug": "ellen-degeneres",
+  "sign": "aquarius",
+  "day": 26,
+  "month": 1,
+  "category": "TV Host"
+ },
+ {
+  "name": "Elon Musk",
+  "slug": "elon-musk",
+  "sign": "cancer",
+  "day": 28,
+  "month": 6,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Elton John",
+  "slug": "elton-john",
+  "sign": "aries",
+  "day": 25,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Elvis Presley",
+  "slug": "elvis-presley",
+  "sign": "capricorn",
+  "day": 8,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Emily Blunt",
+  "slug": "emily-blunt",
+  "sign": "pisces",
+  "day": 23,
+  "month": 2,
+  "category": "Actress"
+ },
+ {
+  "name": "Eminem",
+  "slug": "eminem",
+  "sign": "libra",
+  "day": 17,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Emma Watson",
+  "slug": "emma-watson",
+  "sign": "aries",
+  "day": 15,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Eva Longoria",
+  "slug": "eva-longoria",
+  "sign": "pisces",
+  "day": 15,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Eva Mendes",
+  "slug": "eva-mendes",
+  "sign": "pisces",
+  "day": 5,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "F. Scott Fitzgerald",
+  "slug": "f-scott-fitzgerald",
+  "sign": "libra",
+  "day": 24,
+  "month": 9,
+  "category": "Author"
+ },
+ {
+  "name": "Frank Ocean",
+  "slug": "frank-ocean",
+  "sign": "scorpio",
+  "day": 28,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Frank Sinatra",
+  "slug": "frank-sinatra",
+  "sign": "sagittarius",
+  "day": 12,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Franz Kafka",
+  "slug": "franz-kafka",
+  "sign": "cancer",
+  "day": 3,
+  "month": 7,
+  "category": "Author"
+ },
+ {
+  "name": "Freddie Mercury",
+  "slug": "freddie-mercury",
+  "sign": "virgo",
+  "day": 5,
+  "month": 9,
+  "category": "Musician"
+ },
+ {
+  "name": "Frédéric Chopin",
+  "slug": "frederic-chopin",
+  "sign": "pisces",
+  "day": 1,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Gabrielle Union",
+  "slug": "gabrielle-union",
+  "sign": "scorpio",
+  "day": 29,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Gal Gadot",
+  "slug": "gal-gadot",
+  "sign": "taurus",
+  "day": 30,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Galileo Galilei",
+  "slug": "galileo-galilei",
+  "sign": "aquarius",
+  "day": 15,
+  "month": 2,
+  "category": "Scientist"
+ },
+ {
+  "name": "George Clooney",
+  "slug": "george-clooney",
+  "sign": "taurus",
+  "day": 6,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "George Washington",
+  "slug": "george-washington",
+  "sign": "pisces",
+  "day": 22,
+  "month": 2,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Gwyneth Paltrow",
+  "slug": "gwyneth-paltrow",
+  "sign": "libra",
+  "day": 27,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Halle Berry",
+  "slug": "halle-berry",
+  "sign": "leo",
+  "day": 14,
+  "month": 8,
+  "category": "Actress"
+ },
+ {
+  "name": "Hardik Pandya",
+  "slug": "hardik-pandya",
+  "sign": "libra",
+  "day": 11,
+  "month": 10,
+  "category": "Athlete"
+ },
+ {
+  "name": "Harrison Ford",
+  "slug": "harrison-ford",
+  "sign": "cancer",
+  "day": 13,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Harry Houdini",
+  "slug": "harry-houdini",
+  "sign": "aries",
+  "day": 24,
+  "month": 3,
+  "category": "Illusionist"
+ },
+ {
+  "name": "Harry Styles",
+  "slug": "harry-styles",
+  "sign": "aquarius",
+  "day": 1,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Heath Ledger",
+  "slug": "heath-ledger",
+  "sign": "aries",
+  "day": 4,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Helena Bonham Carter",
+  "slug": "helena-bonham-carter",
+  "sign": "gemini",
+  "day": 26,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "Henry Cavill",
+  "slug": "henry-cavill",
+  "sign": "taurus",
+  "day": 5,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Hilary Duff",
+  "slug": "hilary-duff",
+  "sign": "libra",
+  "day": 28,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Hillary Clinton",
+  "slug": "hillary-clinton",
+  "sign": "scorpio",
+  "day": 26,
+  "month": 10,
+  "category": "Politician"
+ },
+ {
+  "name": "Hrithik Roshan",
+  "slug": "hrithik-roshan",
+  "sign": "capricorn",
+  "day": 10,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Iggy Azalea",
+  "slug": "iggy-azalea",
+  "sign": "gemini",
+  "day": 7,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Indira Gandhi",
+  "slug": "indira-gandhi",
+  "sign": "scorpio",
+  "day": 19,
+  "month": 11,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Irrfan Khan",
+  "slug": "irrfan-khan",
+  "sign": "capricorn",
+  "day": 7,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Isla Fisher",
+  "slug": "isla-fisher",
+  "sign": "aquarius",
+  "day": 3,
+  "month": 2,
+  "category": "Actress"
+ },
+ {
+  "name": "Jackie Chan",
+  "slug": "jackie-chan",
+  "sign": "aries",
+  "day": 7,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Jake Gyllenhaal",
+  "slug": "jake-gyllenhaal",
+  "sign": "sagittarius",
+  "day": 19,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "James McAvoy",
+  "slug": "james-mcavoy",
+  "sign": "taurus",
+  "day": 21,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Jamie Foxx",
+  "slug": "jamie-foxx",
+  "sign": "sagittarius",
+  "day": 13,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Janet Jackson",
+  "slug": "janet-jackson",
+  "sign": "taurus",
+  "day": 16,
+  "month": 5,
+  "category": "Musician"
+ },
+ {
+  "name": "Jared Leto",
+  "slug": "jared-leto",
+  "sign": "capricorn",
+  "day": 26,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Jason Momoa",
+  "slug": "jason-momoa",
+  "sign": "leo",
+  "day": 1,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Jasprit Bumrah",
+  "slug": "jasprit-bumrah",
+  "sign": "sagittarius",
+  "day": 6,
+  "month": 12,
+  "category": "Athlete"
+ },
+ {
+  "name": "Jawaharlal Nehru",
+  "slug": "jawaharlal-nehru",
+  "sign": "scorpio",
+  "day": 14,
+  "month": 11,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Jay-Z",
+  "slug": "jay-z",
+  "sign": "sagittarius",
+  "day": 4,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Jeff Bezos",
+  "slug": "jeff-bezos",
+  "sign": "capricorn",
+  "day": 12,
+  "month": 1,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Jennifer Aniston",
+  "slug": "jennifer-aniston",
+  "sign": "aquarius",
+  "day": 11,
+  "month": 2,
+  "category": "Actress"
+ },
+ {
+  "name": "Jennifer Garner",
+  "slug": "jennifer-garner",
+  "sign": "aries",
+  "day": 17,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Jennifer Lopez",
+  "slug": "jennifer-lopez",
+  "sign": "leo",
+  "day": 24,
+  "month": 7,
+  "category": "Musician"
+ },
+ {
+  "name": "Jessica Alba",
+  "slug": "jessica-alba",
+  "sign": "taurus",
+  "day": 28,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Jessica Simpson",
+  "slug": "jessica-simpson",
+  "sign": "cancer",
+  "day": 10,
+  "month": 7,
+  "category": "Musician"
+ },
+ {
+  "name": "Jim Carrey",
+  "slug": "jim-carrey",
+  "sign": "capricorn",
+  "day": 17,
+  "month": 1,
+  "category": "Comedian"
+ },
+ {
+  "name": "Jim Morrison",
+  "slug": "jim-morrison",
+  "sign": "sagittarius",
+  "day": 8,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Jimi Hendrix",
+  "slug": "jimi-hendrix",
+  "sign": "sagittarius",
+  "day": 27,
+  "month": 11,
+  "category": "Musician"
+ },
+ {
+  "name": "Jimmy Fallon",
+  "slug": "jimmy-fallon",
+  "sign": "virgo",
+  "day": 19,
+  "month": 9,
+  "category": "TV Host"
+ },
+ {
+  "name": "Jodie Foster",
+  "slug": "jodie-foster",
+  "sign": "scorpio",
+  "day": 19,
+  "month": 11,
+  "category": "Actress"
+ },
+ {
+  "name": "John Legend",
+  "slug": "john-legend",
+  "sign": "capricorn",
+  "day": 28,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "John Lennon",
+  "slug": "john-lennon",
+  "sign": "libra",
+  "day": 9,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Johnny Depp",
+  "slug": "johnny-depp",
+  "sign": "gemini",
+  "day": 9,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Jon Hamm",
+  "slug": "jon-hamm",
+  "sign": "pisces",
+  "day": 10,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Jr NTR",
+  "slug": "jr-ntr",
+  "sign": "taurus",
+  "day": 20,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Julia Roberts",
+  "slug": "julia-roberts",
+  "sign": "scorpio",
+  "day": 28,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Justin Bieber",
+  "slug": "justin-bieber",
+  "sign": "pisces",
+  "day": 1,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Justin Timberlake",
+  "slug": "justin-timberlake",
+  "sign": "aquarius",
+  "day": 31,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Kajol",
+  "slug": "kajol",
+  "sign": "leo",
+  "day": 5,
+  "month": 8,
+  "category": "Actress"
+ },
+ {
+  "name": "Kamal Haasan",
+  "slug": "kamal-haasan",
+  "sign": "scorpio",
+  "day": 7,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Kanye West",
+  "slug": "kanye-west",
+  "sign": "gemini",
+  "day": 8,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Karan Johar",
+  "slug": "karan-johar",
+  "sign": "gemini",
+  "day": 25,
+  "month": 5,
+  "category": "Director"
+ },
+ {
+  "name": "Kareena Kapoor",
+  "slug": "kareena-kapoor",
+  "sign": "virgo",
+  "day": 21,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Kartik Aaryan",
+  "slug": "kartik-aaryan",
+  "sign": "sagittarius",
+  "day": 22,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Kate Middleton",
+  "slug": "kate-middleton",
+  "sign": "capricorn",
+  "day": 9,
+  "month": 1,
+  "category": "Royalty"
+ },
+ {
+  "name": "Kate Winslet",
+  "slug": "kate-winslet",
+  "sign": "libra",
+  "day": 5,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Katrina Kaif",
+  "slug": "katrina-kaif",
+  "sign": "cancer",
+  "day": 16,
+  "month": 7,
+  "category": "Actress"
+ },
+ {
+  "name": "Katy Perry",
+  "slug": "katy-perry",
+  "sign": "scorpio",
+  "day": 25,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Keanu Reeves",
+  "slug": "keanu-reeves",
+  "sign": "virgo",
+  "day": 2,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "Keira Knightley",
+  "slug": "keira-knightley",
+  "sign": "aries",
+  "day": 26,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Kendrick Lamar",
+  "slug": "kendrick-lamar",
+  "sign": "gemini",
+  "day": 17,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Kerry Washington",
+  "slug": "kerry-washington",
+  "sign": "aquarius",
+  "day": 31,
+  "month": 1,
+  "category": "Actress"
+ },
+ {
+  "name": "Kesha",
+  "slug": "kesha",
+  "sign": "pisces",
+  "day": 1,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Kevin Hart",
+  "slug": "kevin-hart",
+  "sign": "cancer",
+  "day": 6,
+  "month": 7,
+  "category": "Comedian"
+ },
+ {
+  "name": "Khloe Kardashian",
+  "slug": "khloe-kardashian",
+  "sign": "cancer",
+  "day": 27,
+  "month": 6,
+  "category": "TV Personality"
+ },
+ {
+  "name": "Kim Kardashian",
+  "slug": "kim-kardashian",
+  "sign": "libra",
+  "day": 21,
+  "month": 10,
+  "category": "TV Personality"
+ },
+ {
+  "name": "Kourtney Kardashian",
+  "slug": "kourtney-kardashian",
+  "sign": "aries",
+  "day": 18,
+  "month": 4,
+  "category": "TV Personality"
+ },
+ {
+  "name": "Kristen Stewart",
+  "slug": "kristen-stewart",
+  "sign": "aries",
+  "day": 9,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Kurt Cobain",
+  "slug": "kurt-cobain",
+  "sign": "pisces",
+  "day": 20,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Kylie Jenner",
+  "slug": "kylie-jenner",
+  "sign": "leo",
+  "day": 10,
+  "month": 8,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Lady Gaga",
+  "slug": "lady-gaga",
+  "sign": "aries",
+  "day": 28,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Lana Del Rey",
+  "slug": "lana-del-rey",
+  "sign": "cancer",
+  "day": 21,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Laverne Cox",
+  "slug": "laverne-cox",
+  "sign": "gemini",
+  "day": 29,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "LeBron James",
+  "slug": "lebron-james",
+  "sign": "capricorn",
+  "day": 30,
+  "month": 12,
+  "category": "Athlete"
+ },
+ {
+  "name": "Leo Tolstoy",
+  "slug": "leo-tolstoy",
+  "sign": "virgo",
+  "day": 9,
+  "month": 9,
+  "category": "Author"
+ },
+ {
+  "name": "Leonardo DiCaprio",
+  "slug": "leonardo-dicaprio",
+  "sign": "scorpio",
+  "day": 11,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Liam Hemsworth",
+  "slug": "liam-hemsworth",
+  "sign": "capricorn",
+  "day": 13,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Lin-Manuel Miranda",
+  "slug": "lin-manuel-miranda",
+  "sign": "capricorn",
+  "day": 16,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Lizzo",
+  "slug": "lizzo",
+  "sign": "taurus",
+  "day": 27,
+  "month": 4,
+  "category": "Musician"
+ },
+ {
+  "name": "Ludwig van Beethoven",
+  "slug": "ludwig-van-beethoven",
+  "sign": "sagittarius",
+  "day": 17,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Lupita Nyong'o",
+  "slug": "lupita-nyongo",
+  "sign": "pisces",
+  "day": 1,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Macaulay Culkin",
+  "slug": "macaulay-culkin",
+  "sign": "virgo",
+  "day": 26,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Madhuri Dixit",
+  "slug": "madhuri-dixit",
+  "sign": "taurus",
+  "day": 15,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "Madonna",
+  "slug": "madonna",
+  "sign": "leo",
+  "day": 16,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Mahatma Gandhi",
+  "slug": "mahatma-gandhi",
+  "sign": "libra",
+  "day": 2,
+  "month": 10,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Mahesh Babu",
+  "slug": "mahesh-babu",
+  "sign": "leo",
+  "day": 9,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Mandy Moore",
+  "slug": "mandy-moore",
+  "sign": "aries",
+  "day": 10,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Margot Robbie",
+  "slug": "margot-robbie",
+  "sign": "cancer",
+  "day": 2,
+  "month": 7,
+  "category": "Actress"
+ },
+ {
+  "name": "Mariah Carey",
+  "slug": "mariah-carey",
+  "sign": "aries",
+  "day": 27,
+  "month": 3,
+  "category": "Musician"
+ },
+ {
+  "name": "Marilyn Monroe",
+  "slug": "marilyn-monroe",
+  "sign": "gemini",
+  "day": 1,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Mark Twain",
+  "slug": "mark-twain",
+  "sign": "sagittarius",
+  "day": 30,
+  "month": 11,
+  "category": "Author"
+ },
+ {
+  "name": "Mark Zuckerberg",
+  "slug": "mark-zuckerberg",
+  "sign": "taurus",
+  "day": 14,
+  "month": 5,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Mary J. Blige",
+  "slug": "mary-j-blige",
+  "sign": "capricorn",
+  "day": 11,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Matt Damon",
+  "slug": "matt-damon",
+  "sign": "libra",
+  "day": 8,
+  "month": 10,
+  "category": "Actor"
+ },
+ {
+  "name": "Matthew McConaughey",
+  "slug": "matthew-mcconaughey",
+  "sign": "scorpio",
+  "day": 4,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Megan Fox",
+  "slug": "megan-fox",
+  "sign": "taurus",
+  "day": 16,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "Mel Gibson",
+  "slug": "mel-gibson",
+  "sign": "capricorn",
+  "day": 3,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Meryl Streep",
+  "slug": "meryl-streep",
+  "sign": "cancer",
+  "day": 22,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Michael Jackson",
+  "slug": "michael-jackson",
+  "sign": "virgo",
+  "day": 29,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Michael Jordan",
+  "slug": "michael-jordan",
+  "sign": "aquarius",
+  "day": 17,
+  "month": 2,
+  "category": "Athlete"
+ },
+ {
+  "name": "Michelangelo",
+  "slug": "michelangelo",
+  "sign": "pisces",
+  "day": 6,
+  "month": 3,
+  "category": "Artist"
+ },
+ {
+  "name": "Michelle Obama",
+  "slug": "michelle-obama",
+  "sign": "capricorn",
+  "day": 17,
+  "month": 1,
+  "category": "Politician"
+ },
+ {
+  "name": "Mick Jagger",
+  "slug": "mick-jagger",
+  "sign": "leo",
+  "day": 26,
+  "month": 7,
+  "category": "Musician"
+ },
+ {
+  "name": "Miley Cyrus",
+  "slug": "miley-cyrus",
+  "sign": "sagittarius",
+  "day": 23,
+  "month": 11,
+  "category": "Musician"
+ },
+ {
+  "name": "Mithun Chakraborty",
+  "slug": "mithun-chakraborty",
+  "sign": "gemini",
+  "day": 16,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Morgan Freeman",
+  "slug": "morgan-freeman",
+  "sign": "gemini",
+  "day": 1,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Mother Teresa",
+  "slug": "mother-teresa",
+  "sign": "virgo",
+  "day": 26,
+  "month": 8,
+  "category": "Humanitarian"
+ },
+ {
+  "name": "MS Dhoni",
+  "slug": "ms-dhoni",
+  "sign": "cancer",
+  "day": 7,
+  "month": 7,
+  "category": "Athlete"
+ },
+ {
+  "name": "Naga Chaitanya",
+  "slug": "naga-chaitanya",
+  "sign": "sagittarius",
+  "day": 23,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Nagarjuna",
+  "slug": "nagarjuna",
+  "sign": "virgo",
+  "day": 29,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Nani",
+  "slug": "nani",
+  "sign": "pisces",
+  "day": 24,
+  "month": 2,
+  "category": "Actor"
+ },
+ {
+  "name": "Naomi Campbell",
+  "slug": "naomi-campbell",
+  "sign": "gemini",
+  "day": 22,
+  "month": 5,
+  "category": "Model"
+ },
+ {
+  "name": "Naomi Watts",
+  "slug": "naomi-watts",
+  "sign": "libra",
+  "day": 28,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Natalie Portman",
+  "slug": "natalie-portman",
+  "sign": "gemini",
+  "day": 9,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Nayanthara",
+  "slug": "nayanthara",
+  "sign": "scorpio",
+  "day": 18,
+  "month": 11,
+  "category": "Actress"
+ },
+ {
+  "name": "Nelson Mandela",
+  "slug": "nelson-mandela",
+  "sign": "cancer",
+  "day": 18,
+  "month": 7,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Nick Jonas",
+  "slug": "nick-jonas",
+  "sign": "virgo",
+  "day": 16,
+  "month": 9,
+  "category": "Musician"
+ },
+ {
+  "name": "Nicki Minaj",
+  "slug": "nicki-minaj",
+  "sign": "sagittarius",
+  "day": 8,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "Nicolas Cage",
+  "slug": "nicolas-cage",
+  "sign": "capricorn",
+  "day": 7,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Nicole Kidman",
+  "slug": "nicole-kidman",
+  "sign": "gemini",
+  "day": 20,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Olivia Rodrigo",
+  "slug": "olivia-rodrigo",
+  "sign": "pisces",
+  "day": 20,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Oprah Winfrey",
+  "slug": "oprah-winfrey",
+  "sign": "aquarius",
+  "day": 29,
+  "month": 1,
+  "category": "TV Host"
+ },
+ {
+  "name": "Oscar Wilde",
+  "slug": "oscar-wilde",
+  "sign": "libra",
+  "day": 16,
+  "month": 10,
+  "category": "Author"
+ },
+ {
+  "name": "Owen Wilson",
+  "slug": "owen-wilson",
+  "sign": "scorpio",
+  "day": 18,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Pablo Picasso",
+  "slug": "pablo-picasso",
+  "sign": "scorpio",
+  "day": 25,
+  "month": 10,
+  "category": "Artist"
+ },
+ {
+  "name": "Pamela Anderson",
+  "slug": "pamela-anderson",
+  "sign": "cancer",
+  "day": 1,
+  "month": 7,
+  "category": "Actress"
+ },
+ {
+  "name": "Paris Hilton",
+  "slug": "paris-hilton",
+  "sign": "aquarius",
+  "day": 17,
+  "month": 2,
+  "category": "TV Personality"
+ },
+ {
+  "name": "Paul McCartney",
+  "slug": "paul-mccartney",
+  "sign": "gemini",
+  "day": 18,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Paul Rudd",
+  "slug": "paul-rudd",
+  "sign": "aries",
+  "day": 6,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Pawan Kalyan",
+  "slug": "pawan-kalyan",
+  "sign": "virgo",
+  "day": 2,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "Penélope Cruz",
+  "slug": "penelope-cruz",
+  "sign": "taurus",
+  "day": 28,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Penn Badgley",
+  "slug": "penn-badgley",
+  "sign": "scorpio",
+  "day": 1,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Pharrell Williams",
+  "slug": "pharrell-williams",
+  "sign": "aries",
+  "day": 5,
+  "month": 4,
+  "category": "Musician"
+ },
+ {
+  "name": "Pink",
+  "slug": "pink",
+  "sign": "virgo",
+  "day": 8,
+  "month": 9,
+  "category": "Musician"
+ },
+ {
+  "name": "Pooja Bhatt",
+  "slug": "pooja-batt",
+  "sign": "pisces",
+  "day": 24,
+  "month": 2,
+  "category": "Actress"
+ },
+ {
+  "name": "Pooja Hegde",
+  "slug": "pooja-hegde",
+  "sign": "libra",
+  "day": 13,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Post Malone",
+  "slug": "post-malone",
+  "sign": "cancer",
+  "day": 4,
+  "month": 7,
+  "category": "Musician"
+ },
+ {
+  "name": "Prabhas",
+  "slug": "prabhas",
+  "sign": "scorpio",
+  "day": 23,
+  "month": 10,
+  "category": "Actor"
+ },
+ {
+  "name": "Preity Zinta",
+  "slug": "preity-zinta",
+  "sign": "aquarius",
+  "day": 31,
+  "month": 1,
+  "category": "Actress"
+ },
+ {
+  "name": "Prince",
+  "slug": "prince",
+  "sign": "gemini",
+  "day": 7,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Princess Diana",
+  "slug": "princess-diana",
+  "sign": "cancer",
+  "day": 1,
+  "month": 7,
+  "category": "Royalty"
+ },
+ {
+  "name": "Priyanka Chopra",
+  "slug": "priyanka-chopra",
+  "sign": "cancer",
+  "day": 18,
+  "month": 7,
+  "category": "Actress"
+ },
+ {
+  "name": "Quentin Tarantino",
+  "slug": "quentin-tarantino",
+  "sign": "aries",
+  "day": 27,
+  "month": 3,
+  "category": "Director"
+ },
+ {
+  "name": "R Madhavan",
+  "slug": "r-madhavan",
+  "sign": "gemini",
+  "day": 1,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Rachel Weisz",
+  "slug": "rachel-weisz",
+  "sign": "pisces",
+  "day": 7,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Rajinikanth",
+  "slug": "rajinikanth",
+  "sign": "sagittarius",
+  "day": 12,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Rakul Preet Singh",
+  "slug": "rakul-preet-singh",
+  "sign": "libra",
+  "day": 10,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Ram Charan",
+  "slug": "ram-charan",
+  "sign": "aries",
+  "day": 27,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Rami Malek",
+  "slug": "rami-malek",
+  "sign": "taurus",
+  "day": 12,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Ranbir Kapoor",
+  "slug": "ranbir-kapoor",
+  "sign": "libra",
+  "day": 28,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "Rani Mukerji",
+  "slug": "rani-mukerji",
+  "sign": "aries",
+  "day": 21,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Ranveer Singh",
+  "slug": "ranveer-singh",
+  "sign": "cancer",
+  "day": 6,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Rashmika Mandanna",
+  "slug": "rashmika-mandanna",
+  "sign": "aries",
+  "day": 5,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Ratan Tata",
+  "slug": "ratan-tata",
+  "sign": "capricorn",
+  "day": 28,
+  "month": 12,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Reese Witherspoon",
+  "slug": "reese-witherspoon",
+  "sign": "aries",
+  "day": 22,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Rekha",
+  "slug": "rekha",
+  "sign": "libra",
+  "day": 10,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Rihanna",
+  "slug": "rihanna",
+  "sign": "pisces",
+  "day": 20,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Ringo Starr",
+  "slug": "ringo-starr",
+  "sign": "cancer",
+  "day": 7,
+  "month": 7,
+  "category": "Musician"
+ },
+ {
+  "name": "Rishabh Pant",
+  "slug": "rishabh-pant",
+  "sign": "libra",
+  "day": 4,
+  "month": 10,
+  "category": "Athlete"
+ },
+ {
+  "name": "Rishi Kapoor",
+  "slug": "rishi-kapoor",
+  "sign": "virgo",
+  "day": 4,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "Riteish Deshmukh",
+  "slug": "riteish-deshmukh",
+  "sign": "sagittarius",
+  "day": 17,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Robbie Williams",
+  "slug": "robbie-williams",
+  "sign": "aquarius",
+  "day": 13,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Robert De Niro",
+  "slug": "robert-de-niro",
+  "sign": "leo",
+  "day": 17,
+  "month": 8,
+  "category": "Actor"
+ },
+ {
+  "name": "Robert Downey Jr.",
+  "slug": "robert-downey-jr",
+  "sign": "aries",
+  "day": 4,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Robert Pattinson",
+  "slug": "robert-pattinson",
+  "sign": "taurus",
+  "day": 13,
+  "month": 5,
+  "category": "Actor"
+ },
+ {
+  "name": "Robin Williams",
+  "slug": "robin-williams",
+  "sign": "cancer",
+  "day": 21,
+  "month": 7,
+  "category": "Comedian"
+ },
+ {
+  "name": "Roger Federer",
+  "slug": "roger-federer",
+  "sign": "leo",
+  "day": 8,
+  "month": 8,
+  "category": "Athlete"
+ },
+ {
+  "name": "Rosa Parks",
+  "slug": "rosa-parks",
+  "sign": "aquarius",
+  "day": 4,
+  "month": 2,
+  "category": "Activist"
+ },
+ {
+  "name": "Russell Crowe",
+  "slug": "russell-crowe",
+  "sign": "aries",
+  "day": 7,
+  "month": 4,
+  "category": "Actor"
+ },
+ {
+  "name": "Ryan Gosling",
+  "slug": "ryan-gosling",
+  "sign": "scorpio",
+  "day": 12,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Sabrina Carpenter",
+  "slug": "sabrina-carpenter",
+  "sign": "taurus",
+  "day": 11,
+  "month": 5,
+  "category": "Musician"
+ },
+ {
+  "name": "Sacha Baron Cohen",
+  "slug": "sacha-baron-cohen",
+  "sign": "libra",
+  "day": 13,
+  "month": 10,
+  "category": "Comedian"
+ },
+ {
+  "name": "Salma Hayek",
+  "slug": "salma-hayek",
+  "sign": "virgo",
+  "day": 2,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Salman Khan",
+  "slug": "salman-khan",
+  "sign": "capricorn",
+  "day": 27,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Samantha Ruth Prabhu",
+  "slug": "samantha-ruth-prabhu",
+  "sign": "taurus",
+  "day": 28,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Samuel L. Jackson",
+  "slug": "samuel-l-jackson",
+  "sign": "sagittarius",
+  "day": 21,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Sandra Bullock",
+  "slug": "sandra-bullock",
+  "sign": "leo",
+  "day": 26,
+  "month": 7,
+  "category": "Actress"
+ },
+ {
+  "name": "Satya Nadella",
+  "slug": "satya-nadella",
+  "sign": "leo",
+  "day": 19,
+  "month": 8,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Scarlett Johansson",
+  "slug": "scarlett-johansson",
+  "sign": "sagittarius",
+  "day": 22,
+  "month": 11,
+  "category": "Actress"
+ },
+ {
+  "name": "Selena Gomez",
+  "slug": "selena-gomez",
+  "sign": "cancer",
+  "day": 22,
+  "month": 7,
+  "category": "Musician"
+ },
+ {
+  "name": "Serena Williams",
+  "slug": "serena-williams",
+  "sign": "libra",
+  "day": 26,
+  "month": 9,
+  "category": "Athlete"
+ },
+ {
+  "name": "Shah Rukh Khan",
+  "slug": "shah-rukh-khan",
+  "sign": "scorpio",
+  "day": 2,
+  "month": 11,
+  "category": "Actor"
+ },
+ {
+  "name": "Shahid Kapoor",
+  "slug": "shahid-kapoor",
+  "sign": "pisces",
+  "day": 25,
+  "month": 2,
+  "category": "Actor"
+ },
+ {
+  "name": "Shakira",
+  "slug": "shakira",
+  "sign": "aquarius",
+  "day": 2,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Shania Twain",
+  "slug": "shania-twain",
+  "sign": "virgo",
+  "day": 28,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Shawn Mendes",
+  "slug": "shawn-mendes",
+  "sign": "leo",
+  "day": 8,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Shilpa Shetty",
+  "slug": "shilpa-shetty",
+  "sign": "gemini",
+  "day": 8,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Shraddha Kapoor",
+  "slug": "shraddha-kapoor",
+  "sign": "pisces",
+  "day": 3,
+  "month": 3,
+  "category": "Actress"
+ },
+ {
+  "name": "Sigmund Freud",
+  "slug": "sigmund-freud",
+  "sign": "taurus",
+  "day": 6,
+  "month": 5,
+  "category": "Scientist"
+ },
+ {
+  "name": "Simbu",
+  "slug": "simbu",
+  "sign": "aquarius",
+  "day": 3,
+  "month": 2,
+  "category": "Actor"
+ },
+ {
+  "name": "Snoop Dogg",
+  "slug": "snoop-dogg",
+  "sign": "libra",
+  "day": 20,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Sonakshi Sinha",
+  "slug": "sonakshi-sinha",
+  "sign": "gemini",
+  "day": 2,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Sonam Kapoor",
+  "slug": "sonam-kapoor",
+  "sign": "gemini",
+  "day": 9,
+  "month": 6,
+  "category": "Actress"
+ },
+ {
+  "name": "Sophia Loren",
+  "slug": "sophia-loren",
+  "sign": "virgo",
+  "day": 20,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Sophie Choudry",
+  "slug": "sophie-choudry",
+  "sign": "aquarius",
+  "day": 8,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Stephen Hawking",
+  "slug": "stephen-hawking",
+  "sign": "capricorn",
+  "day": 8,
+  "month": 1,
+  "category": "Scientist"
+ },
+ {
+  "name": "Stephen King",
+  "slug": "stephen-king",
+  "sign": "virgo",
+  "day": 21,
+  "month": 9,
+  "category": "Author"
+ },
+ {
+  "name": "Steve Jobs",
+  "slug": "steve-jobs",
+  "sign": "pisces",
+  "day": 24,
+  "month": 2,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Steven Spielberg",
+  "slug": "steven-spielberg",
+  "sign": "sagittarius",
+  "day": 18,
+  "month": 12,
+  "category": "Director"
+ },
+ {
+  "name": "Stevie Wonder",
+  "slug": "stevie-wonder",
+  "sign": "taurus",
+  "day": 13,
+  "month": 5,
+  "category": "Musician"
+ },
+ {
+  "name": "Sundar Pichai",
+  "slug": "sundar-pichai",
+  "sign": "gemini",
+  "day": 10,
+  "month": 6,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Suriya",
+  "slug": "suriya",
+  "sign": "leo",
+  "day": 23,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Tamannaah Bhatia",
+  "slug": "tamannaah-bhatia",
+  "sign": "sagittarius",
+  "day": 21,
+  "month": 12,
+  "category": "Actress"
+ },
+ {
+  "name": "Taraji P. Henson",
+  "slug": "taraji-p-henson",
+  "sign": "virgo",
+  "day": 11,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Taylor Swift",
+  "slug": "taylor-swift",
+  "sign": "sagittarius",
+  "day": 13,
+  "month": 12,
+  "category": "Musician"
+ },
+ {
+  "name": "The Weeknd",
+  "slug": "the-weeknd",
+  "sign": "aquarius",
+  "day": 16,
+  "month": 2,
+  "category": "Musician"
+ },
+ {
+  "name": "Tiger Shroff",
+  "slug": "tiger-shroff",
+  "sign": "pisces",
+  "day": 2,
+  "month": 3,
+  "category": "Actor"
+ },
+ {
+  "name": "Tim Burton",
+  "slug": "tim-burton",
+  "sign": "virgo",
+  "day": 25,
+  "month": 8,
+  "category": "Director"
+ },
+ {
+  "name": "Timothée Chalamet",
+  "slug": "timothee-chalamet",
+  "sign": "capricorn",
+  "day": 27,
+  "month": 12,
+  "category": "Actor"
+ },
+ {
+  "name": "Tina Turner",
+  "slug": "tina-turner",
+  "sign": "sagittarius",
+  "day": 26,
+  "month": 11,
+  "category": "Musician"
+ },
+ {
+  "name": "Tobey Maguire",
+  "slug": "tobey-maguire",
+  "sign": "cancer",
+  "day": 27,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Tom Brady",
+  "slug": "tom-brady",
+  "sign": "leo",
+  "day": 3,
+  "month": 8,
+  "category": "Athlete"
+ },
+ {
+  "name": "Tom Cruise",
+  "slug": "tom-cruise",
+  "sign": "cancer",
+  "day": 3,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Tom Hanks",
+  "slug": "tom-hanks",
+  "sign": "cancer",
+  "day": 9,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Tom Holland",
+  "slug": "tom-holland",
+  "sign": "gemini",
+  "day": 1,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Tom Selleck",
+  "slug": "tom-selleck",
+  "sign": "aquarius",
+  "day": 29,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Tovino Thomas",
+  "slug": "tovino-thomas",
+  "sign": "aquarius",
+  "day": 21,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Trisha Krishnan",
+  "slug": "trisha-krishnan",
+  "sign": "taurus",
+  "day": 4,
+  "month": 5,
+  "category": "Actress"
+ },
+ {
+  "name": "Tupac Shakur",
+  "slug": "tupac-shakur",
+  "sign": "gemini",
+  "day": 16,
+  "month": 6,
+  "category": "Musician"
+ },
+ {
+  "name": "Tyra Banks",
+  "slug": "tyra-banks",
+  "sign": "sagittarius",
+  "day": 4,
+  "month": 12,
+  "category": "Model"
+ },
+ {
+  "name": "Uma Thurman",
+  "slug": "uma-thurman",
+  "sign": "taurus",
+  "day": 29,
+  "month": 4,
+  "category": "Actress"
+ },
+ {
+  "name": "Usher",
+  "slug": "usher",
+  "sign": "libra",
+  "day": 14,
+  "month": 10,
+  "category": "Musician"
+ },
+ {
+  "name": "Venus Williams",
+  "slug": "venus-williams",
+  "sign": "gemini",
+  "day": 17,
+  "month": 6,
+  "category": "Athlete"
+ },
+ {
+  "name": "Victoria Beckham",
+  "slug": "victoria-beckham",
+  "sign": "aries",
+  "day": 17,
+  "month": 4,
+  "category": "Fashion Designer"
+ },
+ {
+  "name": "Viggo Mortensen",
+  "slug": "viggo-mortensen",
+  "sign": "libra",
+  "day": 20,
+  "month": 10,
+  "category": "Actor"
+ },
+ {
+  "name": "Vijay",
+  "slug": "vijay-actor",
+  "sign": "cancer",
+  "day": 22,
+  "month": 6,
+  "category": "Actor"
+ },
+ {
+  "name": "Vijay Sethupathi",
+  "slug": "vijay-sethupathi",
+  "sign": "capricorn",
+  "day": 16,
+  "month": 1,
+  "category": "Actor"
+ },
+ {
+  "name": "Vin Diesel",
+  "slug": "vin-diesel",
+  "sign": "cancer",
+  "day": 18,
+  "month": 7,
+  "category": "Actor"
+ },
+ {
+  "name": "Vincent van Gogh",
+  "slug": "vincent-van-gogh",
+  "sign": "aries",
+  "day": 30,
+  "month": 3,
+  "category": "Artist"
+ },
+ {
+  "name": "Viola Davis",
+  "slug": "viola-davis",
+  "sign": "leo",
+  "day": 11,
+  "month": 8,
+  "category": "Actress"
+ },
+ {
+  "name": "Virat Kohli",
+  "slug": "virat-kohli",
+  "sign": "scorpio",
+  "day": 5,
+  "month": 11,
+  "category": "Athlete"
+ },
+ {
+  "name": "Walt Disney",
+  "slug": "walt-disney",
+  "sign": "sagittarius",
+  "day": 5,
+  "month": 12,
+  "category": "Entrepreneur"
+ },
+ {
+  "name": "Walt Whitman",
+  "slug": "walt-whitman",
+  "sign": "gemini",
+  "day": 31,
+  "month": 5,
+  "category": "Poet"
+ },
+ {
+  "name": "Whitney Houston",
+  "slug": "whitney-houston",
+  "sign": "leo",
+  "day": 9,
+  "month": 8,
+  "category": "Musician"
+ },
+ {
+  "name": "Whoopi Goldberg",
+  "slug": "whoopi-goldberg",
+  "sign": "scorpio",
+  "day": 13,
+  "month": 11,
+  "category": "Comedian"
+ },
+ {
+  "name": "Will Smith",
+  "slug": "will-smith",
+  "sign": "libra",
+  "day": 25,
+  "month": 9,
+  "category": "Actor"
+ },
+ {
+  "name": "William Shakespeare",
+  "slug": "william-shakespeare",
+  "sign": "taurus",
+  "day": 23,
+  "month": 4,
+  "category": "Playwright"
+ },
+ {
+  "name": "Winona Ryder",
+  "slug": "winona-ryder",
+  "sign": "scorpio",
+  "day": 29,
+  "month": 10,
+  "category": "Actress"
+ },
+ {
+  "name": "Winston Churchill",
+  "slug": "winston-churchill",
+  "sign": "sagittarius",
+  "day": 30,
+  "month": 11,
+  "category": "Political Leader"
+ },
+ {
+  "name": "Yoko Ono",
+  "slug": "yoko-ono",
+  "sign": "aquarius",
+  "day": 18,
+  "month": 2,
+  "category": "Artist"
+ },
+ {
+  "name": "Zac Efron",
+  "slug": "zac-efron",
+  "sign": "libra",
+  "day": 18,
+  "month": 10,
+  "category": "Actor"
+ },
+ {
+  "name": "Zayn Malik",
+  "slug": "zayn-malik",
+  "sign": "capricorn",
+  "day": 12,
+  "month": 1,
+  "category": "Musician"
+ },
+ {
+  "name": "Zendaya",
+  "slug": "zendaya",
+  "sign": "virgo",
+  "day": 1,
+  "month": 9,
+  "category": "Actress"
+ },
+ {
+  "name": "Zoe Saldana",
+  "slug": "zoe-saldana",
+  "sign": "gemini",
+  "day": 19,
+  "month": 6,
+  "category": "Actress"
+ }
+]

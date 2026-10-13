@@ -283,12 +283,14 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
             </div>
           </div>
 
-          <CelebrityMatch
-            celebName={celeb.name}
-            celebSign={celeb.sign}
-            celebBirthDay={celeb.birthDay}
-            celebBirthMonth={celeb.birthMonth}
-          />
+          <div id="match" className="scroll-mt-24">
+            <CelebrityMatch
+              celebName={celeb.name}
+              celebSign={celeb.sign}
+              celebBirthDay={celeb.birthDay}
+              celebBirthMonth={celeb.birthMonth}
+            />
+          </div>
         </div>
 
         {/* Article sections */}

@@ -302,6 +302,14 @@ html[data-has-profile="true"] .recent-readings {
   display: none;
 }
 
+/* Content that only makes sense with a saved profile (same pre-paint flag as the strip). */
+.has-profile-only {
+  display: none;
+}
+html[data-has-profile="true"] .has-profile-only {
+  display: block;
+}
+
 .app-tabbar {
   display: none;
   /* Its own transition group: page transitions never crossfade the bar. */

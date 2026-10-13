@@ -49,6 +49,22 @@ test.describe("story cards", () => {
     expect(bad.status()).toBe(200);
     expect(pngSize(await bad.body())).toEqual({ width: 1080, height: 1920 });
   });
+  test("the celebrity matches story card renders from the API's ranking", async ({ request }) => {
+    const ok = await request.get("/story/celebrities?name=Alex&day=15&month=3");
+    expect(ok.status()).toBe(200);
+    const okBody = await ok.body();
+    expect(pngSize(okBody)).toEqual({ width: 1080, height: 1920 });
+
+    const bad = await request.get("/story/celebrities?name=&day=x&month=3"); // degrades to a plain card
+    expect(bad.status()).toBe(200);
+    const badBody = await bad.body();
+    expect(pngSize(badBody)).toEqual({ width: 1080, height: 1920 });
+
+    // The real card (five rows of text) is far heavier than the plain fallback, so a
+    // missing backend endpoint can't masquerade as success.
+    expect(okBody.length).toBeGreaterThan(badBody.length * 2);
+  });
+
   test("a finished reading offers Story 9:16 once saved, and downloads the card", async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, "share", { value: undefined, configurable: true }); // force the download path

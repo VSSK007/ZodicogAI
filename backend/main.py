@@ -1,3 +1,4 @@
+import calendar
 import json
 import os
 import shutil
@@ -687,6 +688,31 @@ def blog_mbti_compat(mbti_type: str):
 # ---------------------------------------------------------------------------
 
 from engines.numerology_engine import get_numerology_profile
+
+
+@app.get("/celebrities/matches")
+def celebrity_matches(name: str, day: int, month: int, limit: int = 5):
+    """
+    The celebrities whose sign and numbers fit this person best.
+
+    Deterministic and free (no AI call): zodiac + numerology only, never an
+    MBTI type for a real person. Registered before /celebrities/{slug} so
+    "matches" is not read as a slug.
+    """
+    name = name.strip()
+    if not name or len(name) > 60:
+        raise HTTPException(status_code=400, detail="Provide a name (up to 60 characters).")
+    if not 1 <= limit <= 20:
+        raise HTTPException(status_code=400, detail="limit must be between 1 and 20.")
+    if not 1 <= month <= 12 or not 1 <= day <= calendar.monthrange(2000, month)[1]:  # 2000: leap year, so Feb 29 is allowed
+        raise HTTPException(status_code=400, detail="Provide a real birth day and month.")
+
+    def _run():
+        from engines.celebrity_rank import rank_matches
+
+        return {"matches": rank_matches(name, day, month, limit)}
+
+    return _wrap(_run)
 
 
 @app.get("/celebrities/{slug}")

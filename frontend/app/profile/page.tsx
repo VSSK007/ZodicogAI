@@ -18,6 +18,7 @@ import { clearProfile, saveProfile, useProfile } from "@/lib/profile";
 import { deleteAccount, signOut, useSession } from "@/lib/auth";
 import InstallButton from "@/components/InstallButton";
 import InviteButton from "@/components/invite/InviteButton";
+import CelebrityMatches from "@/components/CelebrityMatches";
 
 function AccountPanel() {
   const session = useSession();
@@ -150,6 +151,8 @@ export default function ProfilePage() {
       </div>
 
       <InviteButton className="mt-10 block" />
+
+      <CelebrityMatches className="mt-10" />
 
       <AccountPanel />
 
