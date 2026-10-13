@@ -38,6 +38,9 @@ def isolated_results_db(tmp_path, monkeypatch):
         db.metadata.drop_all(engine)
         db.metadata.create_all(engine)
     auth.reset_rate_limits()
+    import invites
+
+    invites.reset_rate_limits()
     yield
     db.reset_engine()
 

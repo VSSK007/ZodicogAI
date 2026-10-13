@@ -25,6 +25,7 @@ from models.schemas import (
 )
 import accounts
 import daily
+import invites
 import metrics
 from chat.chat_handler import handle_chat, prepare_chat_stream
 from agent_controller import (
@@ -72,6 +73,7 @@ _STARTED_AT = time.time()
 
 app = FastAPI()
 app.include_router(accounts.router)
+app.include_router(invites.router)
 
 # CORS configuration — restrict to specific origins for security
 origins = [
@@ -169,6 +171,15 @@ def _consume_ip_budget(ip: str):
 
         entry["count"] += 1
         _ip_usage[ip] = entry
+
+
+def _invite_budget_guard(request: Request) -> None:
+    """Accepting an invite runs the full pipeline: charge it like /analyze/full."""
+    _consume_ip_budget(_client_ip(request))
+    _consume_ai_budget()
+
+
+invites.set_budget_guard(_invite_budget_guard)
 
 
 @app.middleware("http")

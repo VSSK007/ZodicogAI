@@ -17,6 +17,7 @@ import { getSign } from "@/lib/zodiac";
 import { clearProfile, saveProfile, useProfile } from "@/lib/profile";
 import { deleteAccount, signOut, useSession } from "@/lib/auth";
 import InstallButton from "@/components/InstallButton";
+import InviteButton from "@/components/invite/InviteButton";
 
 function AccountPanel() {
   const session = useSession();
@@ -147,6 +148,8 @@ export default function ProfilePage() {
           </button>
         )}
       </div>
+
+      <InviteButton className="mt-10 block" />
 
       <AccountPanel />
 

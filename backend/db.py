@@ -15,6 +15,7 @@ Tables
   sessions      long-lived session tokens (hashed)
   profiles      one saved "me" per user
   daily_cache   generated daily-card text, one row per (sign, mbti, date)
+  invites       partner invite links (inviter snapshot, status, resulting report)
 """
 import os
 import threading
@@ -78,6 +79,18 @@ daily_cache = Table(
     Column("key", String(160), primary_key=True),
     Column("payload", Text, nullable=False),
     Column("created_at", String(40), nullable=False),
+)
+
+invites = Table(
+    "invites", metadata,
+    Column("token", String(32), primary_key=True),
+    Column("inviter_json", Text, nullable=False),
+    Column("inviter_user_id", String(32), nullable=True),
+    Column("created_at", String(40), nullable=False),
+    Column("expires_at", String(40), nullable=False),
+    Column("status", String(16), nullable=False, server_default="pending"),
+    Column("result_id", String(32), nullable=True),
+    Index("ix_invites_user_id", "inviter_user_id"),
 )
 
 _engine: Engine | None = None

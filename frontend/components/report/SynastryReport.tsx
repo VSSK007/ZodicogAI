@@ -24,6 +24,7 @@ import { SignGlyph, Star4 } from "@/components/ui/glyphs";
 import { renderMd } from "@/lib/renderMd";
 import { DUR, EASE } from "@/lib/motion";
 import type { FullResult, ReportPersonas } from "@/components/report/types";
+import InviteButton from "@/components/invite/InviteButton";
 
 // ── Static config ─────────────────────────────────────────────────────────────
 
@@ -470,6 +471,8 @@ export default function SynastryReport({
               </div>
             )}
           </Section>
+
+          <InviteButton className="block mt-10" />
         </div>
       </div>
     </div>

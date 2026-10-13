@@ -5,6 +5,7 @@
  * out (see components/report/SynastryReport). Saved on completion so every
  * section has a shareable permalink.
  */
+import InviteButton from "@/components/invite/InviteButton";
 import { useEffect, useMemo, useState } from "react";
 import { Printer } from "lucide-react";
 import PersonForm from "@/components/PersonForm";
@@ -143,6 +144,13 @@ export default function DashboardPage() {
       <Button onClick={handleSubmit} loading={loading} size="lg" className="w-full">
         {loading ? "Reading the stars…" : "Generate synastry report"}
       </Button>
+
+      {!loading && (
+        <div className="mt-6 flex items-center justify-center gap-2 text-sm text-ink-muted">
+          Don&apos;t have their details?
+          <InviteButton variant="button" />
+        </div>
+      )}
 
       {loading && (
         <div className="mt-8">

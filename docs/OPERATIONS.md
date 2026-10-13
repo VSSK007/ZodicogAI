@@ -215,6 +215,7 @@ opt-in.
 | `FRONTEND_URL` | backend | base URL used in sign-in links |
 | `CORS_ORIGINS` | backend | extra allowed origins (staging, previews), comma-separated |
 | `AUTH_MAX_LINKS_PER_EMAIL_HOUR`, `AUTH_MAX_LINKS_PER_IP_HOUR` | backend | sign-in throttles (5 / 20) |
+| `INVITES_MAX_PER_IP_HOUR` | backend | partner invites a device may create per hour (default 20) |
 | `AUTH_DEV_LINKS` | backend | `1` returns the link in the API response - **development and CI only** |
 | `NEXT_PUBLIC_API_URL` | frontend | backend base URL |
 | `NEXT_PUBLIC_SENTRY_DSN` | frontend | error monitoring |

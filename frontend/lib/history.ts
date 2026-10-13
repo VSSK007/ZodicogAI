@@ -30,6 +30,11 @@ export function getHistory(): ReadingEntry[] {
   }
 }
 
+/** Add a reading made elsewhere (e.g. via an invite) to this device's history. */
+export function rememberReading(entry: ReadingEntry) {
+  pushHistory(entry);
+}
+
 function pushHistory(entry: ReadingEntry) {
   try {
     const next = [entry, ...getHistory().filter((e) => e.id !== entry.id)].slice(0, CAP);
