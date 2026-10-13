@@ -9,6 +9,8 @@ import Link from "next/link";
 import DailyCard, { DailySkeleton } from "@/components/today/DailyCard";
 import PullToRefresh from "@/components/PullToRefresh";
 import CelebrityMatches from "@/components/CelebrityMatches";
+import LazyZodiacWheel from "@/components/LazyZodiacWheel";
+import { getSign } from "@/lib/zodiac";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
@@ -46,6 +48,12 @@ export default function TodayPage() {
           <DailyCard profile={profile} reloadKey={reloadKey} />
         ) : (
           <NoProfile />
+        )}
+
+        {mounted && ready && profile && (
+          <section aria-label="Your sign on the wheel" className="mt-10">
+            <LazyZodiacWheel signs={[getSign(profile.day, profile.month)]} />
+          </section>
         )}
 
         <CelebrityMatches className="mt-10" />

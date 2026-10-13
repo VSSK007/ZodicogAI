@@ -26,6 +26,7 @@ import { DUR, EASE } from "@/lib/motion";
 import type { FullResult, ReportPersonas } from "@/components/report/types";
 import InviteButton from "@/components/invite/InviteButton";
 import StoryMode from "@/components/report/StoryMode";
+import LazyZodiacWheel from "@/components/LazyZodiacWheel";
 import { DIM_COLORS, STABILITY, dimensions, verdictFor } from "@/components/report/data";
 
 // ── Static config ─────────────────────────────────────────────────────────────
@@ -240,6 +241,13 @@ export default function SynastryReport({
             </p>
           </div>
         </div>
+
+        {/* Where the two signs sit on the wheel, and the angle between them. */}
+        {personas.a.sign && personas.b.sign && (
+          <div className="mt-8 max-w-xs" data-print-hide>
+            <LazyZodiacWheel signs={[personas.a.sign, personas.b.sign]} />
+          </div>
+        )}
 
         {/* Phones and tablets: the whole report as swipeable cards. */}
         <button
