@@ -11,6 +11,7 @@ import { Star4 } from "@/components/ui/glyphs";
 import Sigil from "@/components/Sigil";
 import SynastryReport from "@/components/report/SynastryReport";
 import GroupResultView from "@/components/group/GroupResultView";
+import ZodicognacMark from "@/components/ZodicognacMark";
 import type { GroupResult } from "@/components/group/GroupViz";
 import type { FullResult, ReportPersonas } from "@/components/report/types";
 
@@ -185,6 +186,14 @@ export default async function SharedReadingPage(
           {typeLabel} · {date}
         </p>
       </header>
+
+      <Link
+        href={`/chat?r=${encodeURIComponent(id)}`}
+        data-testid="ask-zodicognac"
+        className="mb-6 inline-flex items-center gap-2 rounded-control border border-hairline-gold bg-gold/[0.06] px-4 py-2.5 min-h-[44px] text-sm font-semibold text-gold-bright"
+      >
+        <ZodicognacMark size={16} active /> Ask Zodicognac about this reading
+      </Link>
 
       {result.analysis_type === "group_analysis" && "matrix" in result.payload ? (
         <GroupResultView result={result.payload as unknown as GroupResult} />

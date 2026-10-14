@@ -943,6 +943,7 @@ def build_chat_prompt(
     person_b: dict | None,
     engine_data: dict,
     history_block: str = "",
+    reading_block: str = "",
 ) -> str:
     """
     Select the prompt template for intent and render it with the supplied data.
@@ -954,6 +955,8 @@ def build_chat_prompt(
     prompt = builder(message, person_a, person_b, engine_data)
     if intent != "sextrology":  # sextrology has its own detailed format rules
         prompt = prompt + _UNIVERSAL_FORMAT
+    if reading_block:
+        prompt = prompt + reading_block
     if history_block:
         prompt = prompt + history_block
     return prompt

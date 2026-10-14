@@ -81,7 +81,7 @@ export default function ResultActions({
         </button>
       )}
       <Link
-        href={`/chat?ask=${encodeURIComponent(`I just got my ${title} reading — can you go deeper on it?`)}`}
+        href={`/chat?${shareId ? `r=${encodeURIComponent(shareId)}&` : ""}ask=${encodeURIComponent(`I just got my ${title} reading — can you go deeper on it?`)}`}
         className={`${chip} border-gold/25 text-gold/90 hover:text-gold-bright hover:border-hairline-gold`}
       >
         <ZodicognacMark size={12} active />

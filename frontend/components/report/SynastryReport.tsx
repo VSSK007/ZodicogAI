@@ -27,6 +27,8 @@ import type { FullResult, ReportPersonas } from "@/components/report/types";
 import InviteButton from "@/components/invite/InviteButton";
 import StoryMode from "@/components/report/StoryMode";
 import LazyZodiacWheel from "@/components/LazyZodiacWheel";
+import ZodicognacMark from "@/components/ZodicognacMark";
+import Link from "next/link";
 import { DIM_COLORS, STABILITY, dimensions, verdictFor } from "@/components/report/data";
 
 // ── Static config ─────────────────────────────────────────────────────────────
@@ -247,6 +249,18 @@ export default function SynastryReport({
           <div className="mt-8 max-w-xs" data-print-hide>
             <LazyZodiacWheel signs={[personas.a.sign, personas.b.sign]} />
           </div>
+        )}
+
+        {/* Shared view only: live mode already has this action (it saves first, so the id arrives late). */}
+        {shareId && !actions && (
+          <Link
+            href={`/chat?r=${encodeURIComponent(shareId)}`}
+            data-print-hide
+            data-testid="ask-zodicognac"
+            className="mt-6 mr-3 inline-flex items-center gap-2 rounded-control border border-hairline-gold bg-gold/[0.06] px-4 py-2.5 min-h-[44px] text-sm font-semibold text-gold-bright tap-highlight-none"
+          >
+            <ZodicognacMark size={16} active /> Ask Zodicognac about this report
+          </Link>
         )}
 
         {/* Phones and tablets: the whole report as swipeable cards. */}

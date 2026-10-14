@@ -805,13 +805,23 @@ def get_shared_result(result_id: str):
 # Chat endpoint
 # ---------------------------------------------------------------------------
 
+def _chat_people(data: ChatInput):
+    """person_a / person_b / saved-reading context from a chat request.
+    `context.profile` stands in for person_a when the client didn't send one."""
+    ctx = data.context
+    person_a = data.person_a or (ctx.profile if ctx else None)
+    a = person_a.model_dump() if person_a else None
+    b = data.person_b.model_dump() if data.person_b else None
+    reading = ctx.reading.model_dump() if ctx and ctx.reading else None
+    return a, b, reading
+
+
 @app.post("/chat")
 def chat(data: ChatInput):
     def _run():
-        a = data.person_a.model_dump() if data.person_a else None
-        b = data.person_b.model_dump() if data.person_b else None
+        a, b, reading = _chat_people(data)
         history = [h.model_dump() for h in data.history]
-        return handle_chat(data.message, a, b, history)
+        return handle_chat(data.message, a, b, history, reading)
     return _wrap(_run)
 
 
@@ -819,13 +829,12 @@ def chat(data: ChatInput):
 async def chat_stream(data: ChatInput):
     """Stream a Zodicognac reply as SSE — same intent/engine pipeline as
     /chat, but the reply text arrives token-by-token instead of all at once."""
-    a = data.person_a.model_dump() if data.person_a else None
-    b = data.person_b.model_dump() if data.person_b else None
+    a, b, reading = _chat_people(data)
     history = [h.model_dump() for h in data.history]
 
     def _gen():
         try:
-            intent, engine_data, prompt = prepare_chat_stream(data.message, a, b, history)
+            intent, engine_data, prompt = prepare_chat_stream(data.message, a, b, history, reading)
             for chunk_text in stream_gemini(prompt):
                 yield f"data: {json.dumps({'chunk': chunk_text})}\n\n"
             yield f"data: {json.dumps({'done': True, 'intent': intent, 'data': engine_data})}\n\n"

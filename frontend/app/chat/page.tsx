@@ -1,6 +1,7 @@
 "use client";
 
-import { usePrefilledPerson } from "@/lib/profile";
+import { usePrefilledPerson, useProfile } from "@/lib/profile";
+import { starterQuestions, summarizeReading } from "@/lib/readingSummary";
 import { DUR, EASE } from "@/lib/motion";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -22,6 +23,17 @@ interface Message {
   /** True while this AI message is still streaming in — shows a cursor. */
   streaming?: boolean;
 }
+
+/** A saved reading the conversation is about (from /chat?r=<id>). */
+interface ReadingCtx {
+  id: string;
+  title: string;
+  type: string;
+  summary: string;
+  starters: string[];
+}
+
+const USE_PROFILE_KEY = "zodicog.chat.useProfile";
 
 // ── Session persistence — survives a page refresh ───────────────────────────
 
@@ -115,6 +127,11 @@ export default function ChatPage() {
   const [personB, setPersonB] = useState<PersonData>(emptyPerson());
   const [profileError, setProfileError] = useState("");
   const [profileSaved, setProfileSaved] = useState(false);
+  const saved = useProfile();
+  // "Using your profile": the saved profile is sent with every message unless turned off here.
+  const [useSavedProfile, setUseSavedProfile] = useState(true);
+  const [reading, setReading] = useState<ReadingCtx | null>(null);
+  const [readingError, setReadingError] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -130,6 +147,57 @@ export default function ChatPage() {
       // Storage full or unavailable — persistence is best-effort.
     }
   }, [messages]);
+
+  // The profile-sharing choice is remembered on this device.
+  useEffect(() => {
+    try {
+      if (window.localStorage.getItem(USE_PROFILE_KEY) === "off") setUseSavedProfile(false);
+    } catch {
+      /* default: on */
+    }
+  }, []);
+
+  function toggleSavedProfile() {
+    setUseSavedProfile((on) => {
+      try {
+        window.localStorage.setItem(USE_PROFILE_KEY, on ? "off" : "on");
+      } catch {
+        /* best effort */
+      }
+      return !on;
+    });
+  }
+
+  // /chat?r=<id>: talk about a saved reading. Load it and keep a compact summary to send along.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("r");
+    if (!id) return;
+    let cancelled = false;
+    fetch(`${API}/results/${encodeURIComponent(id)}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("not found"))))
+      .then((d: { title: string; analysis_type: string; payload: unknown }) => {
+        if (cancelled) return;
+        setReading({
+          id,
+          title: d.title || "your reading",
+          type: d.analysis_type,
+          summary: summarizeReading(d.analysis_type, d.title, d.payload),
+          starters: starterQuestions(d.analysis_type, d.payload),
+        });
+      })
+      .catch(() => !cancelled && setReadingError("Couldn't load that reading, so Zodicognac can't see it."));
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function dropReading() {
+    setReading(null);
+    setReadingError("");
+    const url = new URL(window.location.href);
+    url.searchParams.delete("r");
+    window.history.replaceState(null, "", url.toString());
+  }
 
   // Deep links from finished readings: /chat?ask=<question> prefills the input.
   useEffect(() => {
@@ -175,6 +243,13 @@ export default function ChatPage() {
     setInput("");
   }
 
+  const personAIsSaved =
+    !!saved &&
+    personA.name === saved.name &&
+    Number(personA.day) === saved.day &&
+    Number(personA.month) === saved.month &&
+    (personA.mbti || "") === (saved.mbti || "");
+
   async function send() {
     const msg = input.trim();
     if (!msg || loading) return;
@@ -198,6 +273,9 @@ export default function ChatPage() {
     }
     setProfileError("");
 
+    // "Using your profile" off: don't send the saved profile (a hand-edited Person A is still sent).
+    if (profileA && personAIsSaved && !useSavedProfile) profileA = null;
+
     setMessages((prev) => [...prev, { role: "user", text: msg }]);
     setLoading(true);
 
@@ -212,6 +290,7 @@ export default function ChatPage() {
     const body: Record<string, unknown> = { message: msg, history };
     if (profileA) body.person_a = profileA;
     if (profileB) body.person_b = profileB;
+    if (reading) body.context = { reading: { id: reading.id, type: reading.type, summary: reading.summary } };
 
     let appendedPlaceholder = false;
     let streamedText = "";
@@ -424,6 +503,55 @@ export default function ChatPage() {
         {/* Messages */}
         <div className="flex-1 overflow-y-auto" style={{ scrollbarWidth: "thin", scrollbarColor: "#27272a transparent" }}>
           <div className="max-w-[720px] mx-auto px-4 md:px-5 py-4 md:py-6 space-y-6 md:space-y-8">
+            {/* What Zodicognac can see: your profile and, when you came from a report, that report. */}
+            {((saved && personAIsSaved) || reading || readingError) && (
+              <div className="flex flex-wrap items-center gap-2" data-testid="chat-context">
+                {saved && personAIsSaved && (
+                  <button
+                    onClick={toggleSavedProfile}
+                    aria-pressed={useSavedProfile}
+                    data-testid="chat-profile-chip"
+                    className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+                      useSavedProfile
+                        ? "border-hairline-gold bg-gold/[0.06] text-gold-bright"
+                        : "border-hairline text-ink-muted hover:text-ink-secondary"
+                    }`}
+                  >
+                    {useSavedProfile ? `Using your profile · ${saved.name}` : "Not using your profile"}
+                    <span aria-hidden="true">{useSavedProfile ? "✕" : "+"}</span>
+                    <span className="sr-only">{useSavedProfile ? "Turn off" : "Turn on"}</span>
+                  </button>
+                )}
+                {reading && (
+                  <button
+                    onClick={dropReading}
+                    data-testid="chat-reading-chip"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-hairline-accent bg-accent/[0.08] px-3 py-1.5 text-xs font-medium text-accent-bright max-w-full"
+                  >
+                    <span className="truncate">Discussing: {reading.title}</span>
+                    <span aria-hidden="true">✕</span>
+                    <span className="sr-only">Stop discussing this reading</span>
+                  </button>
+                )}
+                {readingError && <span role="status" className="text-xs text-ink-muted">{readingError}</span>}
+              </div>
+            )}
+
+            {reading && messages.length <= 1 && (
+              <div className="flex flex-col gap-2" data-testid="chat-starters">
+                <p className="text-micro uppercase tracking-[0.2em] text-ink-muted">Start with</p>
+                {reading.starters.map((q) => (
+                  <button
+                    key={q}
+                    onClick={() => setInput(q)}
+                    className="text-left rounded-card border border-hairline bg-white/[0.03] px-4 py-2.5 text-sm text-ink-secondary hover:text-ink hover:border-hairline-strong transition-colors"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <AnimatePresence initial={false}>
               {messages.map((msg, i) => (
                 <motion.div
@@ -475,7 +603,7 @@ export default function ChatPage() {
             </AnimatePresence>
 
             {/* Empty state — starter prompts until the first question */}
-            {messages.length === 1 && !loading && (
+            {messages.length === 1 && !loading && !reading && (
               <div className="flex flex-wrap gap-2 pl-11">
                 {STARTERS.map((q) => (
                   <button

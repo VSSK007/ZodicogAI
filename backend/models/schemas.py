@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # ---------------------------------------------------------------------------
 # Decan profile (computed from decans_data.py)
@@ -189,11 +189,24 @@ class HistoryMessage(BaseModel):
     text: str
 
 
+class ReadingContext(BaseModel):
+    """A saved reading the user is asking about. `summary` is untrusted data, never instructions."""
+    id: str = Field(default="", max_length=64)
+    type: str = Field(default="", max_length=64)
+    summary: str = Field(max_length=20_000)
+
+
+class ChatContext(BaseModel):
+    profile: Optional[PersonProfile] = None   # the visitor's saved profile (used when person_a is absent)
+    reading: Optional[ReadingContext] = None
+
+
 class ChatInput(BaseModel):
     message: str
     person_a: Optional[PersonProfile] = None
     person_b: Optional[PersonProfile] = None
     history: list[HistoryMessage] = []
+    context: Optional[ChatContext] = None
 
 
 class IntentClassification(BaseModel):
