@@ -46,6 +46,27 @@ test("the hub links to every combination", async ({ page }) => {
   await expect(page.locator('a[href="/blog/types/leo-intj"]')).toHaveText("INTJ");
 });
 
+test("opening the hub or a guide never prefetches other guides (each prefetch would render, and so generate, one)", async ({ page }) => {
+  const guideRequests: string[] = [];
+  page.on("request", (r) => {
+    const u = new URL(r.url());
+    if (/^\/blog\/types\/[a-z]+-[a-z]{4}$/.test(u.pathname)) guideRequests.push(u.pathname);
+  });
+
+  await page.goto("/blog/types");
+  for (let y = 0; y <= 6000; y += 600) {
+    await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" }), y); // bring every link into view
+    await page.waitForTimeout(80);
+  }
+  await page.waitForTimeout(1500);
+  expect(guideRequests, "the hub's 192 links").toEqual([]);
+
+  await page.goto("/blog/types/leo-intj"); // 26 sibling links + best matches
+  await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
+  await page.waitForTimeout(1500);
+  expect(guideRequests.filter((p) => p !== "/blog/types/leo-intj"), "links on a guide").toEqual([]);
+});
+
 test("combinations that don't exist are a 404", async ({ request }) => {
   for (const path of ["/blog/types/ophiuchus-intj", "/blog/types/leo-xxxx", "/blog/types/leo", "/blog/types/leo-intj-extra"]) {
     expect((await request.get(path)).status(), path).toBe(404);

@@ -24,13 +24,16 @@ function recentlyDismissed(): boolean {
 
 export default function InstallBanner() {
   const { status } = useInstall();
-  const [dismissed, setDismissed] = useState(true); // hidden until we've read storage
+  // Rendered in the server HTML (and while the install state is still loading) so the page
+  // never jumps when it appears; globals.css hides it before first paint when the app is already
+  // installed or the banner was dismissed recently (flags set by the inline script in layout.tsx).
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     setDismissed(recentlyDismissed());
   }, []);
 
-  if (status === "loading" || status === "installed" || dismissed) return null;
+  if (status === "installed" || dismissed) return null;
 
   function dismiss() {
     try {
@@ -44,7 +47,7 @@ export default function InstallBanner() {
   return (
     <div
       data-testid="install-banner"
-      className="lg:hidden flex items-center gap-3 border-b border-hairline-gold bg-gold/[0.07] px-4 py-2.5"
+      className="install-banner lg:hidden flex items-center gap-3 border-b border-hairline-gold bg-gold/[0.07] px-4 py-2.5"
     >
       <Download className="size-4 shrink-0 text-gold-bright" aria-hidden="true" />
       <p className="min-w-0 flex-1 text-sm text-ink-secondary leading-snug">

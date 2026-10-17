@@ -52,6 +52,7 @@ export default function TypesHub() {
                 <li key={t}>
                   <Link
                     href={comboPath(sign, t)}
+                    prefetch={false}
                     className="block rounded-lg border border-hairline bg-white/[0.02] py-2 text-center text-xs font-mono font-semibold text-ink-secondary hover:border-hairline-gold hover:text-gold-bright transition-colors tap-highlight-none"
                   >
                     {t}

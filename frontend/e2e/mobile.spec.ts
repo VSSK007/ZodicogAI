@@ -186,6 +186,39 @@ test.describe("install banner (phones)", () => {
     await expect(page.locator("footer").getByRole("button", { name: "Install app" })).toHaveCount(0);
   });
 
+  /** Layout shift (excluding input-driven) accumulated while the homepage settles. */
+  async function homepageShift(page: import("@playwright/test").Page) {
+    await page.addInitScript(() => {
+      (window as unknown as { __cls: number }).__cls = 0;
+      new PerformanceObserver((list) => {
+        for (const e of list.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) {
+          if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+        }
+      }).observe({ type: "layout-shift", buffered: true });
+    });
+    await hydrated(page, "/");
+    await page.waitForTimeout(1500);
+    return page.evaluate(() => (window as unknown as { __cls: number }).__cls);
+  }
+
+  test("the banner is in the server HTML, so it never pushes the page down after loading", async ({ page }) => {
+    expect(await homepageShift(page)).toBeLessThan(0.02);
+    await expect(page.getByTestId("install-banner")).toBeVisible();
+  });
+
+  test("a dismissed banner is gone before first paint, with no shift either", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("zodicog.install.dismissed", String(Date.now())));
+    expect(await homepageShift(page)).toBeLessThan(0.02);
+    await expect(page.getByTestId("install-banner")).toHaveCount(0);
+    expect(await page.evaluate(() => document.documentElement.dataset.installDismissed)).toBe("true");
+  });
+
+  test("an old dismissal (over 30 days) lets the banner back", async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem("zodicog.install.dismissed", String(Date.now() - 31 * 86_400_000)));
+    await hydrated(page, "/");
+    await expect(page.getByTestId("install-banner")).toBeVisible();
+  });
+
   test("it only appears on the homepage", async ({ page }) => {
     await hydrated(page, "/about");
     await expect(page.getByTestId("install-banner")).toHaveCount(0);

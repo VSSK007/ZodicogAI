@@ -96,6 +96,7 @@ test("incomplete people are caught before any request", async ({ page }) => {
 
 for (const n of [3, 8]) {
   test(`${n} people: heat-map, web and summary`, async ({ page }) => {
+    test.setTimeout(120_000); // filling eight forms takes a while when the whole suite is running in parallel
     const bodies = await mockGroup(page);
     await page.goto("/analyze/group");
     for (let i = 3; i < n; i++) await page.getByRole("button", { name: "Add person" }).click();

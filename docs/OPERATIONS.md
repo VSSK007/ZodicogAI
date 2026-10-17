@@ -269,6 +269,20 @@ The AI writes the weekly outlook once per sign per week (at most 12 calls a week
 database and shared by every recipient of that sign. Mail clients' own "Unsubscribe" button uses the
 one-click `List-Unsubscribe-Post` header; a tampered link is rejected and changes nothing.
 
+## Sign x type guides (192 pages)
+
+`/blog/types/<sign>-<type>` pages are **not generated at build time**. The first request for one
+makes a single Gemini call and the backend stores the article permanently (`articles` table, never
+pruned), so each of the 192 is generated at most once, ever, and survives restarts and deploys.
+A failed generation (Gemini down) returns 503, is not stored, and the page shows a calm "being
+written" state (`noindex`) that refreshes hourly. Search engines crawling all 192 simply fill the
+table over time; the worst case is 192 calls in total.
+
+Two rules keep this safe, both covered by tests: links between guides use `prefetch={false}`
+(a prefetch renders the page and so would generate it), and the AI is told never to describe a real
+person or give a real person an MBTI type. To warm everything up yourself instead of waiting for
+crawlers, request each page once (192 requests; they are cached after that).
+
 ## Environment variable reference
 
 | Variable | Used by | Purpose |

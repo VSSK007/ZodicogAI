@@ -19,14 +19,17 @@ const COLUMNS: { title: string; links: { href: string; label: string }[] }[] = [
       { href: "/analyze/emotional",  label: "Emotional" },
       { href: "/analyze/sextrology", label: "Sextrology" },
       { href: "/dashboard",          label: "Full Report" },
+      { href: "/analyze/group",      label: "Group Chemistry" },
     ],
   },
   {
     title: "Explore",
     links: [
+      { href: "/today",       label: "Your day" },
       { href: "/horoscope",   label: "Horoscope" },
       { href: "/discover",    label: "Discover" },
       { href: "/celebrities", label: "Celebrities" },
+      { href: "/blog/types",  label: "Sign × type" },
       { href: "/blog",        label: "Blog" },
       { href: "/chat",        label: "Zodicognac" },
     ],

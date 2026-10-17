@@ -59,14 +59,18 @@ const GUIDES: Item[] = [
 
 const PAGES: Item[] = [
   { id: "p-chat", group: "Go to", label: "Zodicognac", hint: "Ask anything", href: "/chat", glyph: "star4", keywords: "chat ask ai" },
+  { id: "p-today", group: "Go to", label: "Your day", hint: "Today's card for your sign", href: "/today", glyph: "sun", keywords: "today daily card streak nudge" },
   { id: "p-horoscope", group: "Go to", label: "Daily horoscope", href: "/horoscope", glyph: "sun" },
   { id: "p-discover", group: "Go to", label: "Discover", hint: "Archetype, pattern, attraction, taste", href: "/discover", glyph: "crescent" },
   { id: "p-celebs", group: "Go to", label: "Celebrities", hint: "360 charts", href: "/celebrities", glyph: "star4" },
+  { id: "p-compare", group: "Go to", label: "Compare celebrities", hint: "Zodiac compatibility of any two", href: "/celebrities/compare", glyph: "star4", keywords: "compare two celebrity compatibility match" },
+  { id: "p-types", group: "Go to", label: "Sign × type guides", hint: "All 192 zodiac and MBTI combinations", href: "/blog/types", glyph: "mercury", keywords: "zodiac mbti combination leo intj personality" },
   { id: "p-blog", group: "Go to", label: "Blog", href: "/blog", glyph: "mercury" },
   { id: "p-faq", group: "Go to", label: "FAQ", href: "/blog/faq", glyph: "mercury" },
   { id: "p-about", group: "Go to", label: "About", href: "/about", glyph: "mercury" },
   { id: "p-readings", group: "Go to", label: "My readings", hint: "History on this device", href: "/readings", glyph: "infinity" },
   { id: "p-profile", group: "Go to", label: "My profile", hint: "Saved details", href: "/profile", glyph: "sun", keywords: "settings me account" },
+  { id: "p-welcome", group: "Go to", label: "Set up your profile", hint: "Name, birthday and type, once", href: "/welcome", glyph: "sun", keywords: "onboarding setup welcome get started" },
   { id: "p-install", group: "Go to", label: "Install app", hint: "Add ZodicogAI to your home screen or desktop", href: "#install", glyph: "star4", keywords: "pwa download app home screen" },
   { id: "p-login", group: "Go to", label: "Sign in", hint: "Sync your profile and readings across devices", href: "/login", glyph: "sun", keywords: "log in account email register" },
   ...[

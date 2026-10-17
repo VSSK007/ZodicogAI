@@ -24,6 +24,7 @@ const EXPLORE: { href: string; label: string }[] = [
   { href: "/horoscope", label: "Horoscope" },
   { href: "/discover", label: "Discover" },
   { href: "/celebrities", label: "Celebrities" },
+  { href: "/blog/types", label: "Sign × type" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
 ];

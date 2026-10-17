@@ -181,6 +181,7 @@ export default async function ComboPage({ params }: { params: Promise<{ combo: s
                   <li key={`${m.sign}-${m.mbti}`}>
                     <Link
                       href={comboPath(m.sign, m.mbti)}
+                      prefetch={false}
                       className="group flex items-start gap-3 rounded-card border border-hairline bg-white/[0.02] px-4 py-3 hover:border-hairline-gold transition-colors tap-highlight-none"
                     >
                       <span className="mt-0.5 shrink-0" style={{ color: SIGN_COLOR[m.sign] }}>

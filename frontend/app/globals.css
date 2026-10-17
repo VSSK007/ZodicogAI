@@ -302,6 +302,13 @@ html[data-has-profile="true"] .recent-readings {
   display: none;
 }
 
+/* The homepage install banner is in the server HTML (so it can't push the page down after
+   hydration); these hide it before first paint when it doesn't apply. */
+html[data-installed="true"] .install-banner,
+html[data-install-dismissed="true"] .install-banner {
+  display: none;
+}
+
 /* Content that only makes sense with a saved profile (same pre-paint flag as the strip). */
 .has-profile-only {
   display: none;

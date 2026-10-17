@@ -7,6 +7,9 @@
       "url": [
         "http://localhost:3100/",
         "http://localhost:3100/analyze/hybrid",
+        "http://localhost:3100/analyze/group",
+        "http://localhost:3100/today",
+        "http://localhost:3100/blog/types",
         "http://localhost:3100/celebrities/zendaya"
       ],
       "numberOfRuns": 3,

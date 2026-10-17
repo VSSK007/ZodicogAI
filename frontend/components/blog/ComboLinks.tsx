@@ -38,7 +38,7 @@ export default function ComboLinks({
           .filter((l) => l.key.toLowerCase() !== (current ?? "").toLowerCase())
           .map((l) => (
             <li key={l.key}>
-              <Link href={l.href} className={pill}>
+              <Link href={l.href} prefetch={false} className={pill}>
                 {l.label}
               </Link>
             </li>

@@ -52,6 +52,31 @@ should be read from Search Console / Sentry Web Vitals once traffic exists.
 7. **Celebrity photos** go through the Next image optimizer with a blur
    placeholder and `priority` on the avatar (was `unoptimized`).
 
+## Pages added with the feature roadmap (mobile Lighthouse, one run each)
+
+| Page | Perf | LCP | TBT | CLS |
+|---|---|---|---|---|
+| `/` | 87 | 3.8 s | 120 ms | 0 |
+| `/today` (first visit, no profile) | 89 | 3.7 s | 60 ms | 0.014 |
+| `/r/<id>` (saved full report) | 86 | 3.8 s | 190 ms | 0 |
+| `/analyze/group` | 93 | 3.3 s | 30 ms | 0 |
+| `/blog/types` (192 links) | 89 | 3.6 s | 70 ms | 0.001 |
+| `/blog/types/leo-intj` | 93 | 3.2 s | 30 ms | 0 |
+
+Two things the first run of this table caught, both fixed and covered by tests:
+
+- **Never let a page of links prefetch.** Next prefetches visible `<Link>`s in production, and a
+  prefetch of a not-yet-generated guide *renders it*, which calls the backend (and Gemini). The hub
+  and every guide-to-guide link therefore use `prefetch={false}`; before that the hub scored 52 with a
+  36 s LCP and would have triggered up to 192 generations from one visit.
+- **Anything decided from localStorage must be decided before first paint.** The mobile install banner
+  appeared after hydration and pushed the hero down (CLS 0.06). The inline script in `<head>` now sets
+  `data-installed`, `data-has-profile` and `data-install-dismissed`, the banner is in the server HTML,
+  and CSS hides it when it doesn't apply. The returning-visitor strip and celebrity matches use the same
+  pattern with fixed-height boxes.
+
+`lighthouserc.json` now also covers `/analyze/group`, `/today` and `/blog/types`.
+
 ## Remaining levers (largest first)
 
 - **Framer Motion** (~43 KB gzip) is in every page through the layout. Moving to
