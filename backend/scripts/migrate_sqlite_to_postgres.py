@@ -19,8 +19,14 @@ from sqlalchemy import create_engine, insert, select
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import db  # noqa: E402
 
-TABLES = [db.users, db.results, db.profiles, db.sessions, db.login_tokens]
-PK = {"users": "id", "results": "id", "profiles": "user_id", "sessions": "token_hash", "login_tokens": "token_hash"}
+TABLES = [
+    db.users, db.results, db.profiles, db.sessions, db.login_tokens,
+    db.invites, db.push_subscriptions, db.daily_cache,
+]
+PK = {
+    "users": "id", "results": "id", "profiles": "user_id", "sessions": "token_hash", "login_tokens": "token_hash",
+    "invites": "token", "push_subscriptions": "endpoint", "daily_cache": "key",
+}
 
 
 def migrate(source_url: str, target_url: str) -> dict[str, int]:

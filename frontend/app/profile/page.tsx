@@ -19,6 +19,7 @@ import { deleteAccount, signOut, useSession } from "@/lib/auth";
 import InstallButton from "@/components/InstallButton";
 import InviteButton from "@/components/invite/InviteButton";
 import CelebrityMatches from "@/components/CelebrityMatches";
+import DailyNudge from "@/components/DailyNudge";
 
 function AccountPanel() {
   const session = useSession();
@@ -150,7 +151,9 @@ export default function ProfilePage() {
         )}
       </div>
 
-      <InviteButton className="mt-10 block" />
+      <DailyNudge className="mt-10" />
+
+      <InviteButton className="mt-6 block" />
 
       <CelebrityMatches className="mt-10" />
 

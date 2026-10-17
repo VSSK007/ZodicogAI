@@ -16,6 +16,7 @@ Tables
   profiles      one saved "me" per user
   daily_cache   generated daily-card text, one row per (sign, mbti, date)
   invites       partner invite links (inviter snapshot, status, resulting report)
+  push_subscriptions  web-push subscriptions for the daily nudge (sign, tz, hour; no identity)
 """
 import os
 import threading
@@ -91,6 +92,19 @@ invites = Table(
     Column("status", String(16), nullable=False, server_default="pending"),
     Column("result_id", String(32), nullable=True),
     Index("ix_invites_user_id", "inviter_user_id"),
+)
+
+push_subscriptions = Table(
+    "push_subscriptions", metadata,
+    Column("endpoint", String(700), primary_key=True),
+    Column("p256dh", String(200), nullable=False),
+    Column("auth", String(100), nullable=False),
+    Column("sign", String(16), nullable=False),
+    Column("mbti", String(4), nullable=False, server_default=""),
+    Column("tz", String(64), nullable=False, server_default="UTC"),
+    Column("hour", Integer, nullable=False, server_default="8"),
+    Column("created_at", String(40), nullable=False),
+    Column("last_sent", String(10), nullable=True),   # local date (YYYY-MM-DD) of the last nudge
 )
 
 _engine: Engine | None = None

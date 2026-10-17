@@ -29,6 +29,7 @@ import accounts
 import daily
 import invites
 import metrics
+import push
 from chat.chat_handler import handle_chat, prepare_chat_stream
 from agent_controller import (
     run_analysis,
@@ -76,6 +77,7 @@ _STARTED_AT = time.time()
 app = FastAPI()
 app.include_router(accounts.router)
 app.include_router(invites.router)
+app.include_router(push.router)
 
 # CORS configuration — restrict to specific origins for security
 origins = [
@@ -575,24 +577,41 @@ from engines.horoscope_engine import compute_daily_scores, compute_lucky_number
 _VALID_HOROSCOPE_SIGNS = {"aries","taurus","gemini","cancer","leo","virgo","libra","scorpio","sagittarius","capricorn","aquarius","pisces"}
 
 
-def _horoscope_payload(s: str) -> dict:
-    today = datetime.utcnow().date()
-    scores = compute_daily_scores(s, today)
-    lucky_number = compute_lucky_number(s, today)
-    # Avoid strftime's %-d/%#d day-of-month flags - not portable across
-    # Windows (where this runs in production) and POSIX.
-    date_label = f"{today.strftime('%B')} {today.day}, {today.year}"
-    result = generate_daily_horoscope(s.capitalize(), date_label, scores)
-    return {
-        "sign": s,
-        "date": today.isoformat(),
-        "lucky_number": lucky_number,
-        **result,
-    }
-
-
 def _horoscope_key(s: str) -> str:
-    return f"horoscope:{s}:{datetime.utcnow().date().isoformat()}"
+    return daily.horoscope_key(s, datetime.utcnow().date())
+
+
+def _horoscope_payload(s: str) -> dict:
+    return daily.horoscope_payload(s, datetime.utcnow().date())
+
+
+def _horoscope_is_cached(s: str) -> bool:
+    """In memory, or stored by an earlier request / the push script today."""
+    with _content_cache_lock:
+        if _horoscope_key(s) in _content_cache:
+            return True
+    return daily.get_json(_horoscope_key(s)) is not None
+
+
+def _horoscope(s: str) -> dict:
+    """
+    Today's horoscope for a sign: memory, then the database (so a restart, a second
+    worker and the 8am push script all share one generation), else generate once.
+    Only a real generation costs AI budget.
+    """
+    key = _horoscope_key(s)
+    with _content_cache_lock:
+        hit = _content_cache.get(key)
+    if hit is not None:
+        return hit
+    stored = daily.get_json(key)
+    if stored is not None:
+        with _content_cache_lock:
+            _content_cache[key] = stored
+        return stored
+    result = _cached_generate(key, lambda: _horoscope_payload(s))
+    daily.store_json(key, result)  # not stored when Gemini returned the "-" placeholders
+    return result
 
 
 @app.get("/horoscope/{sign}")
@@ -600,7 +619,7 @@ def horoscope(sign: str):
     s = sign.lower()
     if s not in _VALID_HOROSCOPE_SIGNS:
         raise HTTPException(status_code=404, detail=f"Unknown sign: {sign}")
-    return _wrap(lambda: _cached_generate(_horoscope_key(s), lambda: _horoscope_payload(s)))
+    return _wrap(lambda: _horoscope(s))
 
 
 # ---------------------------------------------------------------------------
@@ -627,8 +646,7 @@ def daily_card(sign: str, request: Request, mbti: str = "", day: int = 0, month:
 
     today = datetime.utcnow().date()
     key = daily.tip_key(s, mbti, today)
-    with _content_cache_lock:
-        horoscope_cached = _horoscope_key(s) in _content_cache
+    horoscope_cached = _horoscope_is_cached(s)
     cached_tip = daily.get_cached_tip(key)
 
     # Per-IP budget is charged once, and only when this request will call Gemini.
@@ -640,7 +658,7 @@ def daily_card(sign: str, request: Request, mbti: str = "", day: int = 0, month:
             return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
 
     def _build():
-        base = _cached_generate(_horoscope_key(s), lambda: _horoscope_payload(s))
+        base = _horoscope(s)
         scores = base["scores"]
         tip = cached_tip
         if tip is None:

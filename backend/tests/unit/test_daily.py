@@ -69,7 +69,7 @@ def test_tip_survives_a_restart_of_the_in_memory_cache(client, gemini_calls):
     main._content_cache.clear()  # simulates a process restart
     client.get("/daily/virgo?mbti=ISFJ")
     assert gemini_calls["tip"] == 1  # came back from daily_cache
-    assert gemini_calls["horoscope"] == 2
+    assert gemini_calls["horoscope"] == 1  # so did the horoscope: one generation per sign per day, restart or not
 
 
 def test_works_without_a_profile(client, gemini_calls):

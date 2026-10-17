@@ -12,6 +12,7 @@ Failed generations (Gemini returns the "—" defaults) are never cached.
 """
 import json
 from datetime import date, datetime, timedelta, timezone
+from datetime import date as _date
 
 from sqlalchemy import delete, insert, select
 
@@ -42,16 +43,40 @@ def get_cached_tip(key: str) -> dict | None:
     return json.loads(row[0]) if row else None
 
 
+def _has_placeholder(value) -> bool:
+    if isinstance(value, dict):
+        return any(_has_placeholder(v) for v in value.values())
+    if isinstance(value, (list, tuple)):
+        return any(_has_placeholder(v) for v in value)
+    return value == PLACEHOLDER
+
+
+def get_json(key: str) -> dict | None:
+    """A previously stored generation (any shape), or None."""
+    return get_cached_tip(key)
+
+
+def store_json(key: str, value: dict) -> None:
+    """Persist a generation unless any field is the "—" failure placeholder."""
+    if _has_placeholder(value):
+        return
+    _store(key, value)
+
+
 def store_tip(key: str, tip: dict) -> None:
     """Store a good generation; ignore failures and the occasional duplicate race."""
     if any(v == PLACEHOLDER for v in tip.values()):
         return
+    _store(key, tip)
+
+
+def _store(key: str, payload: dict) -> None:
     c = db.daily_cache
     now = datetime.now(timezone.utc)
     try:
         with db.get_engine().begin() as conn:
             conn.execute(delete(c).where(c.c.created_at < (now - timedelta(days=KEEP_DAYS)).isoformat()))
-            conn.execute(insert(c).values(key=key, payload=json.dumps(tip), created_at=now.isoformat()))
+            conn.execute(insert(c).values(key=key, payload=json.dumps(payload), created_at=now.isoformat()))
     except Exception:
         # Another worker stored the same key first - the cached copy is equivalent.
         pass
@@ -73,3 +98,22 @@ def lucky_extras(sign: str, day: int, month: int, on: date) -> dict:
 def usable(tip: dict) -> dict:
     """Replace any failed field with the static fallback."""
     return {k: (FALLBACK[k] if tip.get(k, PLACEHOLDER) == PLACEHOLDER else tip[k]) for k in FALLBACK}
+
+
+# --- the horoscope itself (shared by the API and the push script) -----------------------
+
+def horoscope_key(sign: str, on: _date) -> str:
+    return f"horoscope:{sign.lower()}:{on.isoformat()}"
+
+
+def horoscope_payload(sign: str, on: _date) -> dict:
+    """Generate today's horoscope for a sign: deterministic scores + one Gemini narration."""
+    from engines.horoscope_engine import compute_daily_scores, compute_lucky_number
+    from gemini_client import generate_daily_horoscope
+
+    s = sign.lower()
+    scores = compute_daily_scores(s, on)
+    # strftime's %-d / %#d flags are not portable between Windows and POSIX.
+    date_label = f"{on.strftime('%B')} {on.day}, {on.year}"
+    result = generate_daily_horoscope(s.capitalize(), date_label, scores)
+    return {"sign": s, "date": on.isoformat(), "lucky_number": compute_lucky_number(s, on), **result}

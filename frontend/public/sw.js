@@ -1,20 +1,21 @@
 /*
  * ZodicogAI service worker.
  *
- * Deliberately small and conservative. It does three things:
+ * Deliberately small and conservative. It does four things:
  *   1. Makes the site installable and fast: hashed build assets (/_next/static)
  *      are cached on first use and served instantly afterwards.
  *   2. Shows a branded /offline page when a page can't be loaded without a network.
- *   3. Gets out of the way for everything else.
+ *   3. Shows the daily nudge (web push) and opens /today when it is tapped.
+ *   4. Gets out of the way for everything else.
  *
- * It never touches: non-GET requests, other origins (the API lives on its own
- * origin, so readings, sign-in and profile data are never cached or replayed),
+ * Its caching never touches: non-GET requests, other origins (the API lives on its
+ * own origin, so readings, sign-in and profile data are never cached or replayed),
  * Next's data/image endpoints, or HTML pages. Page HTML always comes from the
  * network, so a deploy is never masked by a stale cached page.
  *
  * Bump VERSION to drop every old cache on the next visit.
  */
-const VERSION = "v3";
+const VERSION = "v4";
 const CACHE = `zodicog-static-${VERSION}`;
 const OFFLINE_URL = "/offline";
 const MAX_ENTRIES = 160; // hashed assets pile up across deploys; keep the newest
@@ -125,4 +126,52 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(staleWhileRevalidate(request));
   }
   // Everything else (RSC payloads, /_next/image, API-ish paths): default browser behaviour.
+});
+
+// ── Daily nudge (web push) ──────────────────────────────────────────────────
+// The server sends JSON { title, body, url }. Nothing here reads the page or the
+// network; a notification is shown and that is all.
+
+/** Only same-site paths: a push payload must never be able to open another site. */
+function nudgeUrl(raw) {
+  return typeof raw === "string" && raw.startsWith("/") && !raw.startsWith("//") && !raw.startsWith("/\\")
+    ? raw
+    : "/today";
+}
+
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = {};
+  }
+  const title = typeof data.title === "string" && data.title ? data.title : "ZodicogAI";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: typeof data.body === "string" ? data.body : "",
+      icon: "/pwa-icon-192",
+      badge: "/pwa-icon-192",
+      tag: "daily", // a new nudge replaces yesterday's unread one
+      data: { url: nudgeUrl(data.url) },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const target = new URL(nudgeUrl(event.notification.data && event.notification.data.url), self.location.origin).href;
+  event.waitUntil(
+    (async () => {
+      const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      for (const w of windows) {
+        if (new URL(w.url).origin === self.location.origin) {
+          await w.focus();
+          if ("navigate" in w) await w.navigate(target).catch(() => {});
+          return;
+        }
+      }
+      await self.clients.openWindow(target);
+    })(),
+  );
 });

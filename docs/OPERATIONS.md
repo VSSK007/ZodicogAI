@@ -202,6 +202,44 @@ GA/PostHog/Sentry need a tested allow-list.
 The current PM2 deployment keeps working unchanged; moving to containers is
 opt-in.
 
+## Web push: the daily nudge
+
+Visitors with a saved profile can switch on a morning notification ("Your day,
+Pisces" plus the first line of today's horoscope). It needs three things on the VPS:
+VAPID keys, an hourly cron line, and `pip install -r backend/requirements.txt`
+(adds `pywebpush` and `tzdata`). Without keys the switch simply never appears.
+
+**1. Generate the keys once** (keep the private key secret, never regenerate: that
+silently invalidates every existing subscription):
+
+```bash
+cd ~/ZodicogAI/backend && venv/bin/python scripts/generate_vapid_keys.py
+```
+
+Paste the three printed lines (`VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`)
+into the backend `.env`, then `pm2 restart backend`. (`npx web-push generate-vapid-keys`
+gives a compatible pair too.)
+
+**2. The hourly cron line** (`crontab -e`). It sends each person their nudge at *their*
+chosen hour in *their* time zone, once a day, and deletes subscriptions the browser has
+dropped:
+
+```cron
+5 * * * *  cd /root/ZodicogAI/backend && venv/bin/python scripts/send_daily_push.py >> /var/log/zodicog-push.log 2>&1
+```
+
+The script reads `backend/.env` itself. Check it any time with
+`venv/bin/python scripts/send_daily_push.py --dry-run` (prints who is due and what they
+would get, sends nothing) or `--now 2026-10-20T02:35:00+00:00` to simulate a time.
+
+**What is stored:** per subscription only the push endpoint and keys, the sun sign, an
+optional MBTI type, the time zone and the chosen hour. No name, birth date or account.
+The horoscope text is the same single Gemini call per sign per day the website uses
+(stored in the database, so the 8am run and the site share it): at most 12 a day.
+
+**iPhone/iPad** only deliver web push to the *installed* app (iOS 16.4+); the site says
+so and shows the install steps there.
+
 ## Environment variable reference
 
 | Variable | Used by | Purpose |
@@ -216,6 +254,8 @@ opt-in.
 | `CORS_ORIGINS` | backend | extra allowed origins (staging, previews), comma-separated |
 | `AUTH_MAX_LINKS_PER_EMAIL_HOUR`, `AUTH_MAX_LINKS_PER_IP_HOUR` | backend | sign-in throttles (5 / 20) |
 | `INVITES_MAX_PER_IP_HOUR` | backend | partner invites a device may create per hour (default 20) |
+| `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | backend + cron | web push keys and contact (see *Web push*); push is off when unset |
+| `PUSH_MAX_PER_IP_HOUR` | backend | push subscribe/unsubscribe calls a device may make per hour (default 30) |
 | `AUTH_DEV_LINKS` | backend | `1` returns the link in the API response - **development and CI only** |
 | `NEXT_PUBLIC_API_URL` | frontend | backend base URL |
 | `NEXT_PUBLIC_SENTRY_DSN` | frontend | error monitoring |

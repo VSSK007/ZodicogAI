@@ -10,6 +10,7 @@ import DailyCard, { DailySkeleton } from "@/components/today/DailyCard";
 import PullToRefresh from "@/components/PullToRefresh";
 import CelebrityMatches from "@/components/CelebrityMatches";
 import LazyZodiacWheel from "@/components/LazyZodiacWheel";
+import DailyNudge from "@/components/DailyNudge";
 import { getSign } from "@/lib/zodiac";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -49,6 +50,8 @@ export default function TodayPage() {
         ) : (
           <NoProfile />
         )}
+
+        <DailyNudge className="mt-6" />
 
         {mounted && ready && profile && (
           <section aria-label="Your sign on the wheel" className="mt-10">
