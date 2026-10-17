@@ -240,6 +240,35 @@ The horoscope text is the same single Gemini call per sign per day the website u
 **iPhone/iPad** only deliver web push to the *installed* app (iOS 16.4+); the site says
 so and shows the install steps there.
 
+## Weekly email: "Your week ahead"
+
+Signed-in visitors can switch on a Monday email (profile page -> *Weekly email*). It is
+**off by default**, needs a saved profile (for the sign), and every email has a one-click
+unsubscribe link that works without signing in. You need an email provider that already
+sends sign-in links (`RESEND_API_KEY` or `SMTP_*`), plus two new variables in the backend `.env`:
+
+| Variable | What it is |
+|---|---|
+| `DIGEST_SECRET` | any long random string; signs the unsubscribe links (`openssl rand -hex 32`). Keep it stable: changing it breaks links already in people's inboxes. The script refuses to send without it. |
+| `BACKEND_PUBLIC_URL` | the public address of the API, e.g. `https://api.zodicogai.com`; used for the unsubscribe link and the `List-Unsubscribe` header (falls back to `NEXT_PUBLIC_API_URL`) |
+
+Set `MAIL_FROM` to an address on a domain you have verified with your provider, and keep
+`FRONTEND_URL` correct (the "Open your day" button). Then restart the backend, which adds the
+new `users` columns by itself, and add one cron line (`crontab -e`), Mondays 08:00 server time:
+
+```cron
+0 8 * * 1  cd /root/ZodicogAI/backend && venv/bin/python scripts/send_weekly_digest.py >> /var/log/zodicog-digest.log 2>&1
+```
+
+Check it first with `venv/bin/python scripts/send_weekly_digest.py --dry-run` (lists who would get
+an email, calls no AI, sends nothing). It is safe to run twice in a week: each person gets at most
+one email per ISO week, and a person whose send failed is retried by the next run. If no provider is
+configured the run reports `unsent=N` and sends nothing.
+
+The AI writes the weekly outlook once per sign per week (at most 12 calls a week), stored in the
+database and shared by every recipient of that sign. Mail clients' own "Unsubscribe" button uses the
+one-click `List-Unsubscribe-Post` header; a tampered link is rejected and changes nothing.
+
 ## Environment variable reference
 
 | Variable | Used by | Purpose |
@@ -256,6 +285,7 @@ so and shows the install steps there.
 | `INVITES_MAX_PER_IP_HOUR` | backend | partner invites a device may create per hour (default 20) |
 | `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` | backend + cron | web push keys and contact (see *Web push*); push is off when unset |
 | `PUSH_MAX_PER_IP_HOUR` | backend | push subscribe/unsubscribe calls a device may make per hour (default 30) |
+| `DIGEST_SECRET`, `BACKEND_PUBLIC_URL` | backend + cron | weekly email: unsubscribe-link signing secret and the API's public URL (see *Weekly email*) |
 | `AUTH_DEV_LINKS` | backend | `1` returns the link in the API response - **development and CI only** |
 | `NEXT_PUBLIC_API_URL` | frontend | backend base URL |
 | `NEXT_PUBLIC_SENTRY_DSN` | frontend | error monitoring |

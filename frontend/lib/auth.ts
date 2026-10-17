@@ -17,6 +17,8 @@ import { identify, resetIdentity } from "@/lib/posthog";
 export interface User {
   id: string;
   email: string;
+  /** Opted in to the Monday "Your week ahead" email. */
+  weekly_digest?: boolean;
 }
 
 export type Session =
@@ -114,6 +116,12 @@ export async function signOut() {
   }
   resetIdentity();
   clearToken();
+}
+
+/** Opt in or out of the weekly email (needs a saved profile; the server says so if not). */
+export async function setWeeklyDigest(enabled: boolean): Promise<void> {
+  await api("/me/digest", { method: "PUT", body: JSON.stringify({ enabled }) });
+  await refresh();
 }
 
 export async function deleteAccount() {

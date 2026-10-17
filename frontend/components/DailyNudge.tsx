@@ -12,6 +12,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Bell, BellOff } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { Switch } from "@/components/ui/Switch";
 import {
   DEFAULT_HOUR,
   disablePush,
@@ -124,21 +125,7 @@ export default function DailyNudge({ className = "" }: { className?: string }) {
 
       {(state === "off" || state === "on") && (
         <div className="mt-4 flex items-center gap-4 flex-wrap">
-          <button
-            role="switch"
-            aria-checked={on}
-            aria-label="Daily nudge"
-            onClick={() => void toggle()}
-            disabled={busy}
-            className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors disabled:opacity-50 tap-highlight-none ${
-              on ? "bg-gold border-gold" : "bg-white/[0.06] border-hairline-strong"
-            }`}
-          >
-            <span
-              aria-hidden="true"
-              className={`absolute top-0.5 size-5 rounded-full bg-white shadow transition-all ${on ? "left-[1.35rem]" : "left-0.5"}`}
-            />
-          </button>
+          <Switch label="Daily nudge" checked={on} onChange={() => void toggle()} disabled={busy} />
           <label className="flex items-center gap-2 text-sm text-ink-secondary">
             at
             <select

@@ -15,7 +15,8 @@ import { SignGlyph } from "@/components/ui/glyphs";
 import { emptyPerson, validatePerson, type PersonData } from "@/lib/api";
 import { getSign } from "@/lib/zodiac";
 import { clearProfile, saveProfile, useProfile } from "@/lib/profile";
-import { deleteAccount, signOut, useSession } from "@/lib/auth";
+import { deleteAccount, setWeeklyDigest, signOut, useSession } from "@/lib/auth";
+import { Switch } from "@/components/ui/Switch";
 import InstallButton from "@/components/InstallButton";
 import InviteButton from "@/components/invite/InviteButton";
 import CelebrityMatches from "@/components/CelebrityMatches";
@@ -25,6 +26,8 @@ function AccountPanel() {
   const session = useSession();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [digestBusy, setDigestBusy] = useState(false);
+  const [digestError, setDigestError] = useState("");
 
   if (session.status === "loading") return null;
 
@@ -49,6 +52,34 @@ function AccountPanel() {
       <p className="text-xs text-ink-muted uppercase tracking-wider">Signed in</p>
       <p className="mt-1 font-semibold text-ink break-all">{session.user.email}</p>
       <p className="mt-2 text-sm text-ink-secondary">Your profile and readings sync to this account.</p>
+
+      <div className="mt-5 border-t border-hairline pt-4" data-testid="digest-setting">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-semibold text-ink">Weekly email</p>
+            <p className="mt-0.5 text-xs text-ink-secondary leading-relaxed">
+              &ldquo;Your week ahead&rdquo; every Monday, written for your sign. One click to unsubscribe.
+            </p>
+          </div>
+          <Switch
+            label="Weekly email"
+            checked={session.user.weekly_digest ?? false}
+            disabled={digestBusy}
+            onChange={async (next) => {
+              setDigestBusy(true);
+              setDigestError("");
+              try {
+                await setWeeklyDigest(next);
+              } catch (e) {
+                setDigestError(e instanceof Error ? e.message : "Couldn't change that.");
+              } finally {
+                setDigestBusy(false);
+              }
+            }}
+          />
+        </div>
+        {digestError && <p role="alert" className="mt-2 text-sm text-danger">{digestError}</p>}
+      </div>
       <div className="mt-4 flex items-center gap-4 flex-wrap">
         <button onClick={() => void signOut()} className="text-sm font-semibold text-ink-secondary hover:text-ink transition-colors">
           Sign out

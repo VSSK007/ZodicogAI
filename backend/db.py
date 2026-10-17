@@ -10,7 +10,7 @@ table from before accounts existed is upgraded in place (user_id column added).
 
 Tables
   results       shared readings (optionally owned by a user)
-  users         one row per email address
+  users         one row per email address (+ weekly_digest opt-in)
   login_tokens  single-use, short-lived magic-link tokens (hashed)
   sessions      long-lived session tokens (hashed)
   profiles      one saved "me" per user
@@ -48,6 +48,8 @@ users = Table(
     Column("email", String(320), nullable=False, unique=True),
     Column("created_at", String(40), nullable=False),
     Column("last_login_at", String(40), nullable=True),
+    Column("weekly_digest", Integer, nullable=False, server_default="0"),   # opted in to the Monday email
+    Column("last_digest_week", String(10), nullable=True),                  # ISO week last sent, e.g. 2026-W43
 )
 
 login_tokens = Table(
@@ -135,6 +137,13 @@ def _upgrade(engine: Engine) -> None:
         if "user_id" not in cols:
             with engine.begin() as conn:
                 conn.execute(text("ALTER TABLE results ADD COLUMN user_id VARCHAR(32)"))
+    if "users" in insp.get_table_names():
+        cols = {c["name"] for c in insp.get_columns("users")}
+        with engine.begin() as conn:
+            if "weekly_digest" not in cols:
+                conn.execute(text("ALTER TABLE users ADD COLUMN weekly_digest INTEGER NOT NULL DEFAULT 0"))
+            if "last_digest_week" not in cols:
+                conn.execute(text("ALTER TABLE users ADD COLUMN last_digest_week VARCHAR(10)"))
 
 
 def get_engine() -> Engine:

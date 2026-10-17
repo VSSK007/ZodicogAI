@@ -130,7 +130,8 @@ def verify_login_token(token: str) -> tuple[str, dict]:
             raise AuthError("This sign-in link is invalid or has expired.")
 
         u = db.users
-        user = conn.execute(select(u.c.id, u.c.email).where(u.c.email == row.email)).first()
+        user = conn.execute(select(u.c.id, u.c.email, u.c.weekly_digest).where(u.c.email == row.email)).first()
+        digest_on = bool(user.weekly_digest) if user is not None else False
         if user is None:
             user_id = secrets.token_urlsafe(12)
             conn.execute(insert(u).values(id=user_id, email=row.email, created_at=_iso(_now()), last_login_at=_iso(_now())))
@@ -143,7 +144,7 @@ def verify_login_token(token: str) -> tuple[str, dict]:
             token_hash=_hash(session_token), user_id=user_id,
             created_at=_iso(_now()), expires_at=_iso(_now() + SESSION_TTL),
         ))
-    return session_token, {"id": user_id, "email": row.email}
+    return session_token, {"id": user_id, "email": row.email, "weekly_digest": digest_on}
 
 
 # --- sessions --------------------------------------------------------------------
@@ -154,11 +155,18 @@ def user_for_session(token: str | None) -> dict | None:
     s, u = db.sessions, db.users
     with db.get_engine().connect() as conn:
         row = conn.execute(
-            select(u.c.id, u.c.email, s.c.expires_at).join(s, s.c.user_id == u.c.id).where(s.c.token_hash == _hash(token))
+            select(u.c.id, u.c.email, u.c.weekly_digest, s.c.expires_at)
+            .join(s, s.c.user_id == u.c.id)
+            .where(s.c.token_hash == _hash(token))
         ).first()
     if row is None or row.expires_at < _iso(_now()):
         return None
-    return {"id": row.id, "email": row.email}
+    return {"id": row.id, "email": row.email, "weekly_digest": bool(row.weekly_digest)}
+
+
+def set_weekly_digest(user_id: str, enabled: bool) -> None:
+    with db.get_engine().begin() as conn:
+        conn.execute(update(db.users).where(db.users.c.id == user_id).values(weekly_digest=1 if enabled else 0))
 
 
 def logout(token: str | None) -> None:

@@ -1534,7 +1534,7 @@ Required JSON:
 from models.schemas import (
     LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
     SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
-    CelebrityArticle, HoroscopeArticle, DailyTip, GroupSummary,
+    CelebrityArticle, HoroscopeArticle, DailyTip, GroupSummary, WeeklyOutlook,
 )
 
 
@@ -1643,6 +1643,24 @@ def _prompt_group_summary(people: list[dict], result: dict) -> str:
 def generate_group_summary(people: list[dict], result: dict) -> dict:
     """ONE Gemini call for the whole group. `people` entries need name, sign and mbti."""
     return call_gemini(_prompt_group_summary(people, result), GroupSummary).model_dump()
+
+
+def _prompt_weekly_outlook(sign: str, week_label: str) -> str:
+    return (
+        f"You are writing the weekly email 'Your week ahead' for {sign} ({week_label}).\n\n"
+        f"Write:\n"
+        f"1. outlook - 3 sentences on the week ahead for {sign}: the theme, where energy goes, "
+        f"one thing to lean into and one to go easy on. Warm, specific, no hedging.\n"
+        f"2. compatibility_tip - 1-2 sentences of practical advice for a {sign} in their closest "
+        f"relationships this week (partner, friend or crush), grounded in {sign}'s element and modality.\n\n"
+        f"Speak directly to the reader. No emojis. Do not predict specific events, do not give medical, "
+        f"legal or financial advice, and do not mention that this is generated."
+    )
+
+
+def generate_weekly_outlook(sign: str, week_label: str) -> dict:
+    """ONE Gemini call per sign per week. Returns WeeklyOutlook fields as a dict."""
+    return call_gemini(_prompt_weekly_outlook(sign, week_label), WeeklyOutlook).model_dump()
 
 
 def generate_zodiac_compat_article(sign: str) -> dict:

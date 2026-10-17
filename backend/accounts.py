@@ -72,6 +72,10 @@ class ProfileInput(BaseModel):
         return v
 
 
+class DigestInput(BaseModel):
+    enabled: bool
+
+
 class ClaimInput(BaseModel):
     ids: list[str] = Field(default_factory=list, max_length=200)
 
@@ -125,6 +129,15 @@ def get_profile(user: dict = Depends(current_user)):
 def put_profile(data: ProfileInput, user: dict = Depends(current_user)):
     auth.set_profile(user["id"], data.model_dump())
     return {"profile": data.model_dump()}
+
+
+@router.put("/me/digest")
+def put_digest(data: DigestInput, user: dict = Depends(current_user)):
+    """Opt in or out of the Monday "Your week ahead" email. Needs a saved profile (we need the sign)."""
+    if data.enabled and auth.get_profile(user["id"]) is None:
+        raise HTTPException(status_code=400, detail="Save your profile first so we know your sign.")
+    auth.set_weekly_digest(user["id"], data.enabled)
+    return {"weekly_digest": data.enabled}
 
 
 @router.get("/me/readings")

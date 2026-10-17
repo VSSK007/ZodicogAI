@@ -27,6 +27,7 @@ from models.schemas import (
 )
 import accounts
 import daily
+import digest
 import invites
 import metrics
 import push
@@ -78,6 +79,7 @@ app = FastAPI()
 app.include_router(accounts.router)
 app.include_router(invites.router)
 app.include_router(push.router)
+app.include_router(digest.router)
 
 # CORS configuration — restrict to specific origins for security
 origins = [

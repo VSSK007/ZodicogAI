@@ -43,6 +43,45 @@ def _html(link: str) -> str:
     )
 
 
+def send_email(to: str, subject: str, text: str, html: str, headers: dict[str, str] | None = None) -> bool:
+    """
+    Send one email through whichever provider is configured (same selection as sign-in links).
+    `headers` carries things like List-Unsubscribe. Returns True if a real provider accepted it,
+    False when no provider is configured (the message is logged instead).
+    """
+    sender = os.getenv("MAIL_FROM", "ZodicogAI <login@zodicogai.com>")
+
+    if os.getenv("RESEND_API_KEY"):
+        payload = {"from": sender, "to": [to], "subject": subject, "text": text, "html": html}
+        if headers:
+            payload["headers"] = headers
+        r = httpx.post(
+            "https://api.resend.com/emails",
+            headers={"Authorization": f"Bearer {os.environ['RESEND_API_KEY']}"},
+            json=payload,
+            timeout=15,
+        )
+        r.raise_for_status()
+        return True
+
+    if os.getenv("SMTP_HOST"):
+        msg = EmailMessage()
+        msg["From"], msg["To"], msg["Subject"] = sender, to, subject
+        for k, v in (headers or {}).items():
+            msg[k] = v
+        msg.set_content(text)
+        msg.add_alternative(html, subtype="html")
+        with smtplib.SMTP(os.environ["SMTP_HOST"], int(os.getenv("SMTP_PORT", "587")), timeout=15) as smtp:
+            smtp.starttls()
+            if os.getenv("SMTP_USER"):
+                smtp.login(os.environ["SMTP_USER"], os.getenv("SMTP_PASSWORD", ""))
+            smtp.send_message(msg)
+        return True
+
+    _log.warning("No email provider configured (RESEND_API_KEY / SMTP_HOST). Not sent to %s: %s", to, subject)
+    return False
+
+
 def send_login_email(to: str, link: str) -> bool:
     """Send the sign-in link. Returns True if a real provider accepted it."""
     sender = os.getenv("MAIL_FROM", "ZodicogAI <login@zodicogai.com>")

@@ -461,6 +461,12 @@ class GroupSummary(BaseModel):
     tip: str = "—"
 
 
+class WeeklyOutlook(BaseModel):
+    """The generated part of the Monday email: one call per sign per week."""
+    outlook: str = "—"
+    compatibility_tip: str = "—"
+
+
 class DailyTip(BaseModel):
     """The generated part of the personal daily card (one call per sign x type x day)."""
     mbti_tip: str = "—"
