@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { ZODIAC_COLORS } from "@/lib/colors";
 import { SIGN_COLOR } from "@/lib/celebrities";
 import { Glyph, type GlyphName } from "@/components/ui/glyphs";
+import ComboLinks from "@/components/blog/ComboLinks";
 import {
   Breadcrumb,
   AmbientGlow,
@@ -256,6 +257,8 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
         text={`Get a personalized ${name} analysis with your exact birth date`}
         actions={[{ href: `/analyze/zodiac?name=${name}&day=${meta.day}&month=${meta.month}`, label: `Full ${name} reading →`, primary: true }]}
       />
+
+      <ComboLinks sign={key} className="mt-12" />
 
       {/* Wheel navigation */}
       <nav className="mt-10 grid grid-cols-2 gap-4">

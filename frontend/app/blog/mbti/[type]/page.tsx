@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { MBTI_DATA, ALL_TYPES, ROLE_COLOR } from "@/lib/mbti-data";
 import { renderMd } from "@/lib/renderMd";
 import { Breadcrumb, AmbientGlow, ArticleSection, ChipColumns, CtaBand } from "@/components/blog/editorial";
+import ComboLinks from "@/components/blog/ComboLinks";
 
 export async function generateStaticParams() {
   return ALL_TYPES.map((type) => ({ type: type.toLowerCase() }));
@@ -105,6 +106,8 @@ export default async function MbtiBlogPage({ params }: { params: Promise<{ type:
         text={`Get your full ${key} behavioral analysis combined with your zodiac sign`}
         actions={[{ href: "/analyze/hybrid", label: "Try Your Full Self Analysis →", primary: true }]}
       />
+
+      <ComboLinks mbti={key} className="mt-12" />
 
       {/* All types grid */}
       <div className="mt-10">

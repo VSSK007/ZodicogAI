@@ -461,6 +461,22 @@ class GroupSummary(BaseModel):
     tip: str = "—"
 
 
+class ComboMatch(BaseModel):
+    sign: str = ""
+    mbti: str = ""
+    why: str = ""
+
+
+class SignTypeArticle(BaseModel):
+    """A guide to one zodiac sign x MBTI type combination (the 192 /blog/types pages)."""
+    overview: str = "—"
+    strengths: list[str] = []
+    blind_spots: list[str] = []
+    in_love: str = "—"
+    at_work: str = "—"
+    best_matches: list[ComboMatch] = []
+
+
 class WeeklyOutlook(BaseModel):
     """The generated part of the Monday email: one call per sign per week."""
     outlook: str = "—"

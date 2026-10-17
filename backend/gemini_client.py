@@ -1534,7 +1534,7 @@ Required JSON:
 from models.schemas import (
     LoveLangArticle, LoveStyleArticle, NumerologyLifePathArticle,
     SextrologyGuideArticle, ZodiacCompatArticle, MbtiCompatArticle,
-    CelebrityArticle, HoroscopeArticle, DailyTip, GroupSummary, WeeklyOutlook,
+    CelebrityArticle, HoroscopeArticle, DailyTip, GroupSummary, WeeklyOutlook, SignTypeArticle,
 )
 
 
@@ -1661,6 +1661,40 @@ def _prompt_weekly_outlook(sign: str, week_label: str) -> str:
 def generate_weekly_outlook(sign: str, week_label: str) -> dict:
     """ONE Gemini call per sign per week. Returns WeeklyOutlook fields as a dict."""
     return call_gemini(_prompt_weekly_outlook(sign, week_label), WeeklyOutlook).model_dump()
+
+
+def _prompt_sign_type_article(sign: str, mbti: str, facts: dict) -> str:
+    gaps = "; ".join(
+        f"{g['axis']}: {sign} says {g['sign']}/10, {mbti} says {g['type']}/10" for g in facts["gaps"]
+    )
+    return f"""You are ZodicogAI, a behavioral intelligence engine. Write a magazine-quality guide to being a {sign} with the MBTI type {mbti} ({facts['type_name']}).
+
+Facts from our deterministic engines (use them, do not contradict them):
+- {sign} is a {facts['element']} / {facts['modality']} sign. {mbti} is "{facts['type_name']}".
+- How closely {sign}'s and {mbti}'s trait profiles line up: {facts['alignment']}% (100 = identical).
+- Where they pull apart most: {gaps}.
+
+Rules:
+- Write about the COMBINATION: how the sign and the type reinforce, soften or fight each other in one person.
+- Never name, quote or describe any real person, and never claim any real person has this type or sign combination.
+- Warm, direct, specific. No hedging filler, no emojis, no medical, legal or financial advice.
+- strengths and blind_spots: exactly 4 short phrases each (max 8 words).
+- best_matches: exactly 4 combinations that suit a {sign} {mbti} in love. Each is a real zodiac sign (aries, taurus, gemini, cancer, leo, virgo, libra, scorpio, sagittarius, capricorn, aquarius or pisces, lowercase) plus a real MBTI type (four capital letters) and one sentence on why. Do not include {sign.lower()} {mbti} itself.
+
+Required JSON:
+{{
+  "overview": "<3-4 sentences: who this person is, led by the combination's central tension or harmony>",
+  "strengths": ["<phrase>", "<phrase>", "<phrase>", "<phrase>"],
+  "blind_spots": ["<phrase>", "<phrase>", "<phrase>", "<phrase>"],
+  "in_love": "<3-4 sentences: how they love, pursue, argue and commit>",
+  "at_work": "<3-4 sentences: how they work, lead and burn out>",
+  "best_matches": [{{"sign": "<sign>", "mbti": "<TYPE>", "why": "<one sentence>"}}]
+}}"""
+
+
+def generate_sign_type_article(sign: str, mbti: str, facts: dict) -> dict:
+    """ONE Gemini call for one of the 192 combinations. Returns SignTypeArticle fields as a dict."""
+    return call_gemini(_prompt_sign_type_article(sign, mbti, facts), SignTypeArticle).model_dump()
 
 
 def generate_zodiac_compat_article(sign: str) -> dict:

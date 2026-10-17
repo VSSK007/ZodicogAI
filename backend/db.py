@@ -16,6 +16,7 @@ Tables
   profiles      one saved "me" per user
   daily_cache   generated daily-card text, one row per (sign, mbti, date)
   invites       partner invite links (inviter snapshot, status, resulting report)
+  articles      permanent generated guides (the 192 sign x type pages); never pruned
   push_subscriptions  web-push subscriptions for the daily nudge (sign, tz, hour; no identity)
 """
 import os
@@ -107,6 +108,13 @@ push_subscriptions = Table(
     Column("hour", Integer, nullable=False, server_default="8"),
     Column("created_at", String(40), nullable=False),
     Column("last_sent", String(10), nullable=True),   # local date (YYYY-MM-DD) of the last nudge
+)
+
+articles = Table(
+    "articles", metadata,
+    Column("key", String(160), primary_key=True),
+    Column("payload", Text, nullable=False),
+    Column("created_at", String(40), nullable=False),
 )
 
 _engine: Engine | None = None

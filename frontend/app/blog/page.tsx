@@ -182,6 +182,22 @@ export default function BlogIndexPage() {
         </div>
       </section>
 
+      {/* Sign x type */}
+      <section className="mb-14">
+        <SectionLabel id="combos">Sign × type</SectionLabel>
+        <Link
+          href="/blog/types"
+          className="group block rounded-card border border-hairline bg-white/[0.02] p-6 transition-colors hover:border-hairline-accent tap-highlight-none"
+        >
+          <p className="font-display font-extrabold text-base tracking-[-0.01em] text-ink mb-1">
+            All 192 sign and type combinations
+          </p>
+          <p className="text-sm text-ink-secondary">
+            A Leo INTJ and a Leo ENFP share a sign and almost nothing else. Find yours <span aria-hidden="true">→</span>
+          </p>
+        </Link>
+      </section>
+
       {/* FAQ */}
       <section>
         <SectionLabel id="faq">Questions</SectionLabel>

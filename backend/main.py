@@ -26,6 +26,7 @@ from models.schemas import (
     GroupInput,
 )
 import accounts
+import combo
 import daily
 import digest
 import invites
@@ -720,6 +721,48 @@ def blog_numerology_lp(number: str):
 @app.get("/blog/sextrology")
 def blog_sextrology_guide():
     return _wrap(lambda: _cached_generate("sextrology-guide", generate_sextrology_guide))
+
+
+_combo_locks: dict[str, threading.Lock] = {}
+_combo_locks_guard = threading.Lock()
+
+
+@app.get("/blog/combo/{sign}/{mbti}")
+def blog_combo(sign: str, mbti: str):
+    """
+    One of the 192 sign x type guides. Stored permanently after the first generation, so each is
+    generated at most once ever; a failed generation (Gemini down) is neither stored nor served (503).
+    """
+    s, t = sign.lower(), mbti.upper()
+    if not combo.valid(s, t):
+        raise HTTPException(status_code=404, detail=f"Unknown combination: {sign} {mbti}")
+
+    def _payload(article: dict) -> dict:
+        return {"sign": s, "mbti": t, **{k: v for k, v in combo.facts(s, t).items() if k in ("alignment", "blend", "gaps", "type_name")}, "article": article}
+
+    stored = combo.get(s, t)
+    if stored is not None:
+        return _payload(stored)
+
+    # One generation per combination at a time; a second caller waits and then finds it stored.
+    with _combo_locks_guard:
+        lock = _combo_locks.setdefault(combo.key(s, t), threading.Lock())
+    with lock:
+        stored = combo.get(s, t)
+        if stored is not None:
+            return _payload(stored)
+        try:
+            _consume_ai_budget()
+        except HTTPException as exc:
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+        try:
+            article = combo.generate(s, t)
+        except Exception as exc:  # noqa: BLE001
+            raise HTTPException(status_code=500, detail=str(exc))
+        if combo.failed(article):
+            raise HTTPException(status_code=503, detail="The guide couldn't be generated right now. Please try again shortly.")
+        combo.store(s, t, article)
+        return _payload(article)
 
 
 @app.get("/blog/compatibility/zodiac/{sign}")
