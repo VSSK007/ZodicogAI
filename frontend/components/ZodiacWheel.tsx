@@ -39,12 +39,15 @@ export default function ZodiacWheel({
   signs,
   className = "",
   showCaption = true,
+  neutral = false,
 }: {
   /** One or two signs ("Leo" or "leo"). Unknown names are ignored. */
   signs: string[];
   className?: string;
   /** The aspect name + meaning under the wheel. */
   showCaption?: boolean;
+  /** Describe the aspect in the third person (for comparing public figures) rather than to "you". */
+  neutral?: boolean;
 }) {
   const router = useRouter();
   const reduced = useReducedMotion();
@@ -67,7 +70,7 @@ export default function ZodiacWheel({
   }
 
   const description = aspect
-    ? `${label(first!)} and ${label(second!)}: ${aspect.name.toLowerCase()}, ${aspect.degrees} degrees. ${aspect.meaning}`
+    ? `${label(first!)} and ${label(second!)}: ${aspect.name.toLowerCase()}, ${aspect.degrees} degrees. ${neutral ? aspect.neutral : aspect.meaning}`
     : first
       ? `${label(first)} on the zodiac wheel.`
       : "The zodiac wheel.";
@@ -158,7 +161,7 @@ export default function ZodiacWheel({
       {showCaption && aspect && (
         <figcaption className="mt-3 text-center text-sm text-ink-secondary leading-relaxed max-w-sm mx-auto">
           <span className="font-semibold text-ink">{label(first!)} and {label(second!)}: {aspect.name.toLowerCase()}.</span>{" "}
-          {aspect.meaning}
+          {neutral ? aspect.neutral : aspect.meaning}
         </figcaption>
       )}
     </figure>

@@ -14,12 +14,21 @@ const Wheel = dynamic(() => import("@/components/ZodiacWheel"), {
   ),
 });
 
-export default function LazyZodiacWheel({ signs, className = "" }: { signs: string[]; className?: string }) {
+export default function LazyZodiacWheel({
+  signs,
+  className = "",
+  neutral = false,
+}: {
+  signs: string[];
+  className?: string;
+  /** Third-person aspect wording, for pages comparing public figures. */
+  neutral?: boolean;
+}) {
   const pair = signs.filter(Boolean).length >= 2;
   return (
     // 20rem square (w-full up to max) + 3 caption lines when there is an aspect to describe.
     <div className={className} style={{ minHeight: pair ? "calc(min(100%, 20rem) + 6rem)" : undefined }}>
-      <Wheel signs={signs} />
+      <Wheel signs={signs} neutral={neutral} />
     </div>
   );
 }

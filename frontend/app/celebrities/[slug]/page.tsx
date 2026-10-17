@@ -283,6 +283,16 @@ export default async function CelebrityPage({ params }: { params: Promise<{ slug
             </div>
           </div>
 
+          <p className="mb-4">
+            <Link
+              href={`/celebrities/compare?a=${celeb.slug}`}
+              data-testid="compare-with"
+              className="text-sm font-semibold text-accent-bright hover:text-gold-bright transition-colors"
+            >
+              Compare {celeb.name} with another celebrity →
+            </Link>
+          </p>
+
           <div id="match" className="scroll-mt-24">
             <CelebrityMatch
               celebName={celeb.name}

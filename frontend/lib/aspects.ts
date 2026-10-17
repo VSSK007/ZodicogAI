@@ -12,19 +12,28 @@ export type SignKey = (typeof SIGN_KEYS)[number];
 export interface Aspect {
   name: string;
   degrees: number;
-  /** One line on what the angle tends to feel like between two people. */
+  /** One line on what the angle tends to feel like between two people (addressed to "you"). */
   meaning: string;
+  /** The same idea in the third person, about two signs: for pages comparing public figures. */
+  neutral: string;
   tone: "harmonious" | "dynamic" | "neutral";
 }
 
 const ASPECTS: Record<number, Aspect> = {
-  0: { name: "Conjunct", degrees: 0, tone: "neutral", meaning: "Same sign: you see yourself in each other, the good and the not-so-good." },
-  1: { name: "Semi-sextile", degrees: 30, tone: "neutral", meaning: "Neighbours with little in common, so each has something new to learn from the other." },
-  2: { name: "Sextile", degrees: 60, tone: "harmonious", meaning: "An easy, friendly angle: ideas and energy flow when you make the effort." },
-  3: { name: "Square", degrees: 90, tone: "dynamic", meaning: "Friction that drives growth: you challenge each other, for better and worse." },
-  4: { name: "Trine", degrees: 120, tone: "harmonious", meaning: "The most natural flow: shared element, effortless understanding." },
-  5: { name: "Quincunx", degrees: 150, tone: "neutral", meaning: "An awkward fit that asks for adjustment from both sides." },
-  6: { name: "Opposite", degrees: 180, tone: "dynamic", meaning: "Pulls both ways: magnetic, complementary, and the hardest angle to keep balanced." },
+  0: { name: "Conjunct", degrees: 0, tone: "neutral", meaning: "Same sign: you see yourself in each other, the good and the not-so-good.",
+       neutral: "Same sign: the same temperament, strengths and blind spots on both sides." },
+  1: { name: "Semi-sextile", degrees: 30, tone: "neutral", meaning: "Neighbours with little in common, so each has something new to learn from the other.",
+       neutral: "Neighbouring signs with little in common, each holding what the other lacks." },
+  2: { name: "Sextile", degrees: 60, tone: "harmonious", meaning: "An easy, friendly angle: ideas and energy flow when you make the effort.",
+       neutral: "An easy angle: compatible energies that cooperate readily." },
+  3: { name: "Square", degrees: 90, tone: "dynamic", meaning: "Friction that drives growth: you challenge each other, for better and worse.",
+       neutral: "A tense angle: contrasting drives that create both friction and momentum." },
+  4: { name: "Trine", degrees: 120, tone: "harmonious", meaning: "The most natural flow: shared element, effortless understanding.",
+       neutral: "The most natural flow: a shared element and a similar way of moving through the world." },
+  5: { name: "Quincunx", degrees: 150, tone: "neutral", meaning: "An awkward fit that asks for adjustment from both sides.",
+       neutral: "An awkward fit: signs with little common ground." },
+  6: { name: "Opposite", degrees: 180, tone: "dynamic", meaning: "Pulls both ways: magnetic, complementary, and the hardest angle to keep balanced.",
+       neutral: "Opposite signs: polar temperaments that contrast and complement." },
 };
 
 /** Lowercase, tolerant of "Leo", "leo" and stray spaces; null when it isn't a sign. */

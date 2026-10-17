@@ -813,6 +813,22 @@ def celebrity_matches(name: str, day: int, month: int, limit: int = 5):
     return _wrap(_run)
 
 
+@app.get("/celebrities/compare/{slug_a}/{slug_b}")
+def celebrity_compare(slug_a: str, slug_b: str):
+    """
+    Zodiac + numerology compatibility of two public figures (deterministic, free, no MBTI,
+    no claims about their relationship). Slugs are the ones in the celebrity list.
+    """
+    from engines.celebrity_rank import compare
+
+    try:
+        return compare(slug_a, slug_b)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown celebrity: {exc.args[0]}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+
+
 @app.get("/celebrities/{slug}")
 def celebrity_profile(
     slug: str,
