@@ -404,15 +404,37 @@ backend/
 │   └── decan_engine.py              # 108 decan profiles + Hellenistic sub-rulers
 ├── models/
 │   └── schemas.py                   # All Pydantic v2 schemas (50+ dataclasses)
-├── results_store.py                 # SQLite store powering shareable /r/{id} readings
+├── db.py                            # SQLAlchemy Core: SQLite by default, Postgres via DATABASE_URL
+├── results_store.py                 # Shareable /r/{id} readings
+├── auth.py, accounts.py, mailer.py  # Passwordless accounts (magic links), profile sync, email
+├── daily.py                         # Personal daily card: cached text + deterministic extras
+├── invites.py                       # Partner invite links -> a shared full report
+├── combo.py                         # The 192 zodiac x MBTI guides (stored permanently)
+├── push.py                          # Web-push daily nudge: subscriptions, who is due, sending
+├── digest.py                        # Opt-in weekly email + one-click unsubscribe
+├── data/celebrities.json            # Generated from frontend/lib/celebrities.ts (test-checked)
+├── tests/unit/                      # pytest (Gemini stubbed): ~160 tests
 └── scripts/
-    └── generate_celeb_bios.py       # Batch Gemini generation for 360 celeb bios
+    ├── generate_celeb_bios.py       # Batch Gemini generation for 360 celeb bios
+    ├── send_daily_push.py           # Hourly cron: the morning notification
+    ├── send_weekly_digest.py        # Monday cron: "Your week ahead" email
+    ├── generate_vapid_keys.py       # One-off: web-push keys
+    └── export_celebrities.py        # Refresh data/celebrities.json from the TypeScript source
 ```
 
-**Cost controls:** a global daily AI-call budget guards `/chat`, `/analyze`, and
-`/discover`; blog articles and celebrity bios are deterministic per slug, so they
-are generated at most once per process and served from an in-memory content
-cache — cache hits cost nothing and never touch the budget.
+Engines added since: `group_engine.py` (3-8 people, every pair scored by the full-report engines),
+`celebrity_rank.py` (zodiac + numerology matching and comparison of the 360 public figures),
+`horoscope_engine.py` (daily scores). New endpoints: `/daily/{sign}`, `/invites`, `/analyze/group`,
+`/celebrities/matches`, `/celebrities/compare/{a}/{b}`, `/blog/combo/{sign}/{mbti}`, `/push/*`,
+`/me/digest`, `/email/unsubscribe`, and a `context` field on `/chat` (saved reading and profile).
+
+**Cost controls:** a global daily AI-call budget (plus a per-IP one) guards `/chat`,
+`/analyze`, and `/discover`; blog articles and celebrity bios are deterministic per slug, so they
+are generated at most once and served from a cache, and cache hits cost nothing and never touch the
+budget. Generated text that is the same for everyone is stored in the database so it survives restarts:
+the daily horoscope and daily tip (one call per sign and type per day), the weekly outlook (one call per
+sign per week) and the 192 sign x type guides (one call each, ever). Group chemistry makes one AI call per
+group however many pairs it scores. Failed generations are never stored.
 
 **Key schema:**
 ```python
@@ -446,7 +468,7 @@ frontend/
 │   ├── discover/page.tsx            # Single-profile identity discovery
 │   ├── r/[id]/page.tsx              # Shareable read-only reading permalinks
 │   ├── about/page.tsx               # Origin story + Zodicog etymology
-│   ├── analyze/                     # 9 analysis pages on a shared page shell
+│   ├── analyze/                     # 10 analysis pages on a shared page shell
 │   │   ├── hybrid/                  # Self-analysis (zodiac + MBTI + traits)
 │   │   ├── emotional/               # Emotional compatibility (SSE streaming)
 │   │   ├── romantic/                # Romantic compatibility (SSE streaming)
@@ -455,14 +477,22 @@ frontend/
 │   │   ├── love-language/           # Love language alignment
 │   │   ├── color/                   # Aura color analysis
 │   │   ├── numerology/              # Numerology (single + pair)
+│   │   ├── group/                   # Friend-group chemistry (3-8 people)
 │   │   └── zodiac/                  # Zodiac deep-dive article
 │   │                                #   (full synastry → /dashboard, 308 redirect)
+│   ├── welcome/                     # 3-step first-run setup (name, birthday, MBTI)
+│   ├── today/                       # Personal daily card, streak, nudge, celebrity matches
+│   ├── i/[token]/                   # Partner invite: add your details, get the shared report
+│   ├── story/                       # 1080x1920 story-card image routes (daily, celebrities)
+│   ├── profile/, readings/, login/  # Saved profile, reading history, passwordless sign-in
 │   ├── celebrities/
-│   │   ├── page.tsx                 # Searchable 360-celebrity explorer (sign filters)
-│   │   └── [slug]/page.tsx          # Static individual profiles (zero API cost)
+│   │   ├── page.tsx                 # Searchable 360-celebrity explorer (+ your 5 closest)
+│   │   ├── [slug]/page.tsx          # Individual profiles (zero API cost)
+│   │   └── compare/                 # Picker + /compare/[a]/[b] zodiac comparison pages
 │   └── blog/
 │       ├── zodiac/[sign]/           # 12 zodiac articles (ISR, 30d revalidate)
 │       ├── mbti/[type]/             # 16 MBTI type profiles (static)
+│       ├── types/[combo]/           # 192 sign x MBTI guides, generated on first request
 │       └── faq/                     # FAQ with JSON-LD FAQPage schema
 ├── components/
 │   ├── ui/                          # Design-system kit: Button, Card, Eyebrow,
@@ -485,7 +515,12 @@ frontend/
     ├── analyses.ts                  # Single registry of all analysis links (nav + home)
     ├── history.ts                   # Reading history (localStorage) + permalink save
     ├── zodiac.ts                    # Canonical sign lookup + per-sign metadata
-    ├── celebrities.ts               # 360 celebrity slug definitions
+    ├── celebrities.ts               # 360 celebrity definitions (source of truth)
+    ├── couples.ts                   # Owner-approved, sourced couples whose pages may be indexed (ships empty)
+    ├── aspects.ts, combos.ts        # Zodiac aspects; the 192 sign x type slugs
+    ├── profile.ts, auth.ts          # Saved profile (localStorage + account sync), sessions
+    ├── install.ts, push.ts          # PWA install prompt; web-push subscribe
+    ├── readingSummary.ts            # Compact report summary sent to Zodicognac
     ├── celeb-bios.json              # Pre-generated static bios (zero runtime cost)
     ├── mbti-data.ts                 # 16 MBTI type definitions
     └── motion.ts                    # Framer Motion easing presets
@@ -498,10 +533,33 @@ framed as live readings — thin violet→gold score bars, tabular numerals, and
 "Why:" explanation row — so the deterministic-engines-first pipeline is visible
 in the UI itself. Dark-only by design.
 
+**Beyond single analyses** (all of it works without an account; signing in adds sync):
+
+| Feature | What it does |
+|---|---|
+| Daily card (`/today`) | Horoscope, MBTI tip, lucky colour/number, do/avoid, a local-day streak; the home page shows a compact version to returning visitors |
+| Partner invites | A link that makes a partner add their own details; both get the full report. The partner sees only a first name and sun sign |
+| Story cards | 1080x1920 images of a reading, the daily card or your celebrity matches, rendered with `next/og` |
+| Report story mode | The synastry report as swipeable full-screen cards on phones |
+| Group chemistry | 3-8 people: glue person, strongest and spiciest pair, heat-map and web |
+| Celebrity matches and comparison | Your five closest of 360, and any two compared; zodiac + numerology only, never an MBTI type for a real person |
+| Zodiac wheel | Aspect between two signs (e.g. Leo and Aquarius: opposite) |
+| Zodicognac with context | Chat about a saved report (`/chat?r=<id>`) and your profile, with the report treated as untrusted data |
+| Installed app | Opens on `/today`, bottom tab bar, haptics, pull-to-refresh, daily web-push nudge |
+| Weekly email | Opt-in "Your week ahead", one-click unsubscribe |
+| 192 sign x type guides | `/blog/types/leo-intj` and the rest, generated once and stored |
+
+The design rules behind these: the deterministic engines produce every number and the AI only
+explains them; nothing is generated twice; anything decided from local storage is settled before
+first paint (no layout shift); and no personality type is ever assigned to a real person.
+Operations details are in `docs/OPERATIONS.md` (env vars, cron jobs, deploy), `docs/PWA.md`,
+`docs/TESTING.md` and `docs/PERFORMANCE.md`.
+
 **Shareable readings:** every finished analysis can be persisted (`POST /results`
 → short id, SQLite) and revisited at `/r/{id}` — a read-only rendering of the
 stored payload with OpenGraph metadata — while a localStorage history surfaces
-each visitor's recent readings on the homepage. No accounts required.
+each visitor's recent readings on the homepage. No accounts required; an optional
+passwordless account (emailed magic link) syncs the profile and history across devices.
 
 ---
 
@@ -528,11 +586,13 @@ each visitor's recent readings on the homepage. No accounts required.
 | Celebrity profiles | 360 | Static (build-time) | Manual re-generation |
 | MBTI type profiles | 16 | Static | Manual |
 | Zodiac sign articles | 12 | ISR (30d revalidate) | Auto-refreshed |
+| Sign x MBTI guides | 192 | On first request, then cached (hourly ISR) | Generated once, stored permanently |
+| Celebrity comparisons | 360 x 359 pairs | Dynamic; `noindex` except owner-listed couples | Deterministic |
 | Analysis pages | 9 | Dynamic (client fetch) | Real-time |
 | Shared readings (`/r/[id]`) | Unbounded | Dynamic (server fetch) | Created on demand |
 | FAQ page | 1 | Static + JSON-LD | Manual |
 
-**SEO infrastructure:** `sitemap.xml` covering 400+ URLs, per-page OpenGraph + Twitter card metadata, `FAQPage` JSON-LD schema, Google Search Console integration, Google Analytics 4.
+**SEO infrastructure:** `sitemap.xml` covering 600+ URLs (including all 192 sign x type guides), per-page OpenGraph + Twitter card metadata, `FAQPage` JSON-LD schema, Google Search Console integration, Google Analytics 4.
 
 ---
 
@@ -545,7 +605,12 @@ Internet → Nginx (SSL/TLS, reverse proxy)
                         └── Gemini API (dual-model, exponential backoff)
 ```
 
-**Backend restart (Windows VPS):**
+Two scheduled jobs run from cron on the server (see `docs/OPERATIONS.md`): an hourly web-push
+nudge (`scripts/send_daily_push.py`) and a Monday-morning email (`scripts/send_weekly_digest.py`);
+both support `--dry-run`. Web push needs VAPID keys and the email needs `DIGEST_SECRET` and an
+email provider; with those unset the features simply stay off.
+
+**Backend restart (Windows development machine):**
 ```bash
 # Kill all Python processes
 python3 -c "import subprocess; subprocess.run(['taskkill', '/IM', 'python.exe', '/F'])"
