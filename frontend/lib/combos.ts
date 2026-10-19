@@ -19,6 +19,9 @@ export const comboSlug = (sign: string, mbti: string) => `${sign.toLowerCase()}-
 export const comboPath = (sign: string, mbti: string) => `/blog/types/${comboSlug(sign, mbti)}`;
 export const signName = (sign: string) => sign.charAt(0).toUpperCase() + sign.slice(1).toLowerCase();
 
+/** Link text to a sign's celebrity list. Never "Ariess" or "Piscess": the sign name is used as is. */
+export const famousNativesLabel = (sign: string) => `See famous ${signName(sign)} natives →`;
+
 /** "leo-intj" -> { sign: "leo", mbti: "INTJ" }; null for anything that isn't one of the 192. */
 export function parseCombo(slug: string): Combo | null {
   const m = /^([a-z]+)-([a-z]{4})$/.exec(slug);

@@ -6,7 +6,7 @@ import { AmbientGlow, ArticleSection, Breadcrumb, ChipColumns, CtaBand } from "@
 import { Glyph, type GlyphName } from "@/components/ui/glyphs";
 import { API } from "@/lib/api";
 import { SIGN_COLOR } from "@/lib/celebrities";
-import { comboPath, parseCombo, signName, type ComboResponse } from "@/lib/combos";
+import { comboPath, famousNativesLabel, parseCombo, signName, type ComboResponse } from "@/lib/combos";
 import { MBTI_DATA } from "@/lib/mbti-data";
 import { SIGN_META } from "@/lib/zodiac";
 
@@ -205,7 +205,7 @@ export default async function ComboPage({ params }: { params: Promise<{ combo: s
             <p className="text-sm text-ink-secondary leading-relaxed">
               Public figures are listed by sun sign only; we don&apos;t assign personality types to real people.{" "}
               <Link href={`/blog/zodiac/${c.sign}#famous`} className="font-semibold text-accent-bright hover:text-gold-bright">
-                See famous {name}s →
+                {famousNativesLabel(c.sign)}
               </Link>
             </p>
           </ArticleSection>

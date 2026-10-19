@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { SIGN_KEYS } from "../lib/aspects";
-import { ALL_COMBOS, comboPath, comboSlug, MBTI_KEYS, parseCombo } from "../lib/combos";
+import { ALL_COMBOS, comboPath, comboSlug, famousNativesLabel, MBTI_KEYS, parseCombo } from "../lib/combos";
 
 /**
  * The 192 sign x type guides. The page shows the article when the backend has (or can
@@ -20,6 +20,15 @@ test.describe("combo helpers (pure)", () => {
   test("anything that is not one of the 192 is rejected", () => {
     for (const bad of ["leo", "leo-", "-intj", "leo-intjx", "ophiuchus-intj", "leo-abcd", "LEO-INTJ", "leo_intj", "leo-intj-x", "", "../etc"]) {
       expect(parseCombo(bad), bad).toBeNull();
+    }
+  });
+
+  test("the celebrity link never pluralises a sign name (no Ariess, Piscess, Geminis...)", () => {
+    expect(famousNativesLabel("aries")).toBe("See famous Aries natives →");
+    expect(famousNativesLabel("pisces")).toBe("See famous Pisces natives →");
+    for (const sign of SIGN_KEYS) {
+      const name = sign.charAt(0).toUpperCase() + sign.slice(1);
+      expect(famousNativesLabel(sign)).toBe(`See famous ${name} natives →`);
     }
   });
 
@@ -130,7 +139,7 @@ test.describe("a combination page", () => {
     // Famous people: by sign only, and said plainly.
     const famous = page.locator("#famous");
     await expect(famous).toContainText("don't assign personality types to real people");
-    await expect(famous.getByRole("link", { name: /See famous Leos/ })).toHaveAttribute("href", "/blog/zodiac/leo#famous");
+    await expect(famous.getByRole("link", { name: "See famous Leo natives →" })).toHaveAttribute("href", "/blog/zodiac/leo#famous");
   });
 
   test("never attaches a personality type to a real person", async ({ page }) => {

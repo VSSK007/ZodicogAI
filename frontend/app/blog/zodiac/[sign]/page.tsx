@@ -134,7 +134,7 @@ export default async function ZodiacBlogPage({ params }: { params: Promise<{ sig
     { id: "career", label: "Career & ambition" },
     { id: "relating", label: "Tips for relating" },
     { id: "matches", label: "Best matches" },
-    { id: "famous", label: `Famous ${name}s` },
+    { id: "famous", label: `Famous ${name} natives` },
   ];
 
   return (
